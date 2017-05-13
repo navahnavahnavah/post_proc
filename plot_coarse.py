@@ -22,37 +22,80 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 # col = ['maroon', 'r', 'darkorange', 'gold', 'lawngreen', 'g', 'darkcyan', 'c', 'b', 'navy','purple', 'm', 'hotpink', 'gray', 'k', 'sienna', 'saddlebrown']
 col = ['maroon', 'r', 'darkorange', 'lawngreen', 'g', 'c', 'b', 'navy','purple', 'hotpink', 'gray', 'k', 'sienna', 'saddlebrown']
 
-secondary = np.array(['', 'stilbite', 'aragonite', 'kaolinite', 'albite', 'saponite_mg', 'celadonite',
-'clinoptilolite', 'pyrite', 'mont_na', 'goethite', 'dolomite', 'smectite', 'saponite_k',
-'anhydrite', 'siderite', 'calcite', 'quartz', 'kspar', 'saponite_na', 'nont_na', 'nont_mg',
-'nont_k', 'nont_h', 'nont_ca', 'muscovite', 'mesolite', 'hematite', 'mont_ca', 'verm_ca',
-'analcime', 'phillipsite', 'diopside', 'epidote', 'gismondine', 'hedenbergite', 'chalcedony',
-'verm_mg', 'ferrihydrite', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite',
-'scolecite', 'chamosite7a', 'clinochlore14a', 'clinochlore7a', 'saponite_ca', 'verm_na',
-'pyrrhotite', 'magnetite', 'lepidocrocite', 'daphnite_7a', 'daphnite_14a', 'verm_k',
-'mont_k', 'mont_mg'])
+# secondary = np.array(['', 'stilbite', 'aragonite', 'kaolinite', 'albite', 'saponite_mg', 'celadonite', 7
+# 'clinoptilolite', 'pyrite', 'mont_na', 'goethite', 'dolomite', 'smectite', 'saponite_k',7
+# 'anhydrite', 'siderite', 'calcite', 'quartz', 'kspar', 'saponite_na', 'nont_na', 'nont_mg',8
+# 'nont_k', 'nont_h', 'nont_ca', 'muscovite', 'mesolite', 'hematite', 'mont_ca', 'verm_ca',8
+# 'analcime', 'phillipsite', 'diopside', 'epidote', 'gismondine', 'hedenbergite', 'chalcedony',7
+# 'verm_mg', 'ferrihydrite', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite',7
+# 'scolecite', 'chamosite7a', 'clinochlore14a', 'clinochlore7a', 'saponite_ca', 'verm_na',6
+# 'pyrrhotite', 'magnetite', 'lepidocrocite', 'daphnite_7a', 'daphnite_14a', 'verm_k',6
+# 'mont_k', 'mont_mg'])2
+
+secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
+'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
+'mesolite', 'hematite', 'mont_ca', 'verm_ca', 'analcime', 'philipsite', 'diopside', 'gismondine',
+'verm_mg', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite', 'scolecite', 'clinochlorte14a',
+'clinochlore7a', 'saponite_ca', 'verm_na', 'pyrrhotite', 'daphnite_7a', 'daphnite14a'])
 
 primary = np.array(['', '', 'plagioclase', 'pyroxene', 'olivine', 'basaltic glass'])
 
-density = np.array([0, 2.15, 2.93, 2.63, 2.62, 2.3, 3.0, 
-2.15, 5.02, 2.01, 4.27, 2.84, 2.01, 
-2.3, 2.97, 3.96, 2.71, 2.65, 2.56, 2.3, 
-2.3, 2.3, 2.3, 2.3, 2.3, 2.81, 2.29, 5.3,
-2.01, 2.5, 2.27, 2.2, 3.3, 3.41, 2.26, 
-3.56, 2.65, 2.5, 3.8, 2.23, 2.75, 2.01, 
-2.87, 2.468, 2.27, 3.0, 3.0, 3.0, 2.3,
-2.5, 4.62, 5.15, 4.08, 3.2, 3.2, 2.5,
-2.01, 2.01])
+density = 2.5*np.ones(37)
+molar = 200.0*np.ones(37)
 
-molar = np.array([0, 480.19, 100.19, 258.16, 263.02, 480.19, 429.02, 
-2742.13, 119.98, 549.07, 88.85, 180.4, 540.46, 
-480.19, 136.14, 115.86, 100.19, 60.08, 278.33, 480.19, 
-495.9, 495.9, 495.9, 495.9, 495.9, 398.71, 1164.9, 159.69,
-549.07, 504.19, 220.15, 704.93, 216.55, 519.3, 718.55, 
-248.08, 60.08, 504.19, 169.7, 380.22, 379.27, 540.46, 
-395.38, 67.4, 392.34, 664.18, 595.22, 595.22, 480.19,
-504.19, 85.12, 231.53, 88.85, 664.18, 664.18, 504.19,
-49.07, 549.07])
+# density = np.array([0, 2.63, 2.3, 3.0,
+# 2.15, 5.02, 2.01, 4.27,2.01,
+# 2.71, 2.56, 2.3, 2.3, 2.3,
+# 2.3, 2.29, 5.3, 2.01, 2.5,
+# 2.27, 2.2, 3.41, 2.26,
+# 2.5, 2.23, 2.75, 2.01, 2.87, 2.468,
+# 2.27, 3.0, 3.0, 3.0, 2.3,2.5,
+# 4.62, 3.2, 3.2])
+#
+#
+# density = np.array([0, 2.15-, 2.93-, 2.63, 2.62-, 2.3, 3.0,
+# 2.15, 5.02, 2.01, 4.27, 2.84-, 2.01, 2.3-,
+# 2.97-, 3.96-, 2.71, 2.65-, 2.56, 2.3, 2.3, 2.3,
+# 2.3-, 2.3-, 2.3, 2.81-, 2.29, 5.3, 2.01, 2.5,
+# 2.27, 2.2, 3.3-, 3.41, 2.26, 3.56-, 2.65-,
+# 2.5, 3.8-, 2.23, 2.75, 2.01, 2.87, 2.468,
+# 2.27, 3.0, 3.0, 3.0, 2.3,2.5,
+# 4.62, 5.15-, 4.08-, 3.2, 3.2, 2.5-,
+# 2.01-, 2.01-])
+#
+# molar = np.array([0, 480.19, 100.19, 258.16, 263.02, 480.19, 429.02,
+# 2742.13, 119.98, 549.07, 88.85, 180.4, 540.46, 480.19,
+# 136.14, 115.86, 100.19, 60.08, 278.33, 480.19, 495.9, 495.9,
+# 495.9, 495.9, 495.9, 398.71, 1164.9, 159.69, 549.07, 504.19,
+# 220.15, 704.93, 216.55, 519.3, 718.55, 248.08, 60.08,
+# 504.19, 169.7, 380.22, 379.27, 540.46, 395.38, 67.4,
+# 392.34, 664.18, 595.22, 595.22, 480.19, 504.19,
+# 85.12, 231.53, 88.85, 664.18, 664.18, 504.19,
+# 49.07, 549.07])
+
+# density = np.array([0, 2.15, 2.93, 2.63, 2.62, 2.3, 3.0,
+# 2.15, 5.02, 2.01, 4.27, 2.84, 2.01, 2.3,
+# 2.97, 3.96, 2.71, 2.65, 2.56, 2.3, 2.3, 2.3,
+# 2.3, 2.3, 2.3, 2.81, 2.29, 5.3, 2.01, 2.5,
+# 2.27, 2.2, 3.3, 3.41, 2.26, 3.56, 2.65,
+# 2.5, 3.8, 2.23, 2.75, 2.01, 2.87, 2.468,
+# 2.27, 3.0, 3.0, 3.0, 2.3,2.5,
+# 4.62, 5.15, 4.08, 3.2, 3.2, 2.5,
+# 2.01, 2.01])
+#
+# molar = np.array([0, 480.19, 100.19, 258.16, 263.02, 480.19, 429.02,
+# 2742.13, 119.98, 549.07, 88.85, 180.4, 540.46, 480.19,
+# 136.14, 115.86, 100.19, 60.08, 278.33, 480.19, 495.9, 495.9,
+# 495.9, 495.9, 495.9, 398.71, 1164.9, 159.69, 549.07, 504.19,
+# 220.15, 704.93, 216.55, 519.3, 718.55, 248.08, 60.08,
+# 504.19, 169.7, 380.22, 379.27, 540.46, 395.38, 67.4,
+# 392.34, 664.18, 595.22, 595.22, 480.19, 504.19,
+# 85.12, 231.53, 88.85, 664.18, 664.18, 504.19,
+# 49.07, 549.07])
+
+print secondary.shape
+print density.shape
+print molar.shape
 
 molar_pri = np.array([110.0, 153.0, 236.0, 277.0])
 
@@ -68,7 +111,7 @@ print molar.shape
 
 # #steps = 400
 # steps = 50
-# # corr = 20
+# # corr = 20 
 # corr = 5
 # minNum = 57
 # ison=10000
@@ -79,20 +122,32 @@ print molar.shape
 # cellx = 10
 # celly = 1
 
-#steps = 400
+# #steps = 400
+# steps = 20
+# # corr = 20
+# corr = 2
+# minNum = 37
+# ison=10000
+# trace = 0
+# chem = 1
+# iso = 0
+# cell = 1
+# cellx = 10
+# celly = 1
+
 steps = 25
-# corr = 20
-corr = 5
-minNum = 57
+corr = 2
+minNum = 37
 ison=10000
 trace = 0
 chem = 1
 iso = 0
-cell = 5
-cellx = 5
-celly = 2
+cell = 1
+cellx = 10
+celly = 1
 
-outpath = "../output/revival/coarse_grid/tues_coarse15/"
+#-LOAD PATH-#
+outpath = "../output/revival/coarse_grid/bi_2/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0 
@@ -102,11 +157,13 @@ param_w_rhs = 200.0
 x0 = np.loadtxt(path + 'x.txt',delimiter='\n')
 y0 = np.loadtxt(path + 'y.txt',delimiter='\n')
 
-
+#-BOOP-#
 
 # format plotting geometry
 x=x0
 y=y0
+
+
 
 asp = np.abs(np.max(x)/np.min(y))/4.0
 print asp
@@ -207,6 +264,8 @@ fig.savefig(outpath+'coarse_plot.png')
 
 
 
+
+
 def cut(geo0,index):
     #geo_cut = geo0[(index*len(y0)/cell):(index*len(y0)/cell+len(y0)/cell),:]
     geo_cut = geo0[:,(index*len(x0)):(index*len(x0)+len(x0))]
@@ -220,15 +279,10 @@ def cut_chem(geo0,index):
 
 
 
-
-#######################
-##### CHEM PCOLOR #####
-#######################
-
 def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
     #print cb_title
     #print np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep[varStep>0.0]))) 
-    if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep[varStep>0.0]))) > 0.0:
+    if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
         #cb_min=0.0
         if cb_min==-10.0 and cb_max==10.0:
             contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
@@ -267,11 +321,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
         #fig.set_tight_layout(True)
     return chemplot
     
-    
-########################
-##### CHEM CONTOUR #####
-########################
-    
+
 def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_color='r',to_hatch=0,hatching='*'):
     varStep[varStep>0.0] = 1.0
     if frame_lines==1:
@@ -296,11 +346,6 @@ def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
     plt.title(cp_title,fontsize=10)
     return chemcont
     
-    
-    
-##########################
-##### CHEM CONTOUR L #####
-##########################
     
 def chemcont_l(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_cmap=cm.coolwarm, cb_min=-10.0, cb_max=10.0):
     #varStep[varStep>0.0] = 1.0
@@ -423,7 +468,7 @@ if chem == 1:
     togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     # precip0 = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0 = glass0 + ol0 + pyr0 + plag0
-    pri_total0 = pri_total0/np.max(pri_total0)
+    #pri_total0 = pri_total0/np.max(pri_total0)
     
     
     
@@ -460,7 +505,7 @@ if chem == 1:
     # water0_a = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     # precip0_a = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
-    pri_total0_a = pri_total0_a/np.max(pri_total0_a)
+    #pri_total0_a = pri_total0_a/np.max(pri_total0_a)
     
 
     
@@ -498,7 +543,7 @@ if chem == 1:
     # water0_b = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     # precip0_b = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
-    pri_total0_b = pri_total0_b/np.max(pri_total0_b)
+    #pri_total0_b = pri_total0_b/np.max(pri_total0_b)
     
     
     print " "
@@ -534,7 +579,7 @@ if chem == 1:
     #water0_d = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     #precip0_d = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0_d = glass0_d + ol0_d + pyr0_d + plag0_d
-    pri_total0_d = pri_total0_d/np.max(pri_total0_d)
+    #pri_total0_d = pri_total0_d/np.max(pri_total0_d)
 
     print " "
     print " "
@@ -580,10 +625,14 @@ if chem == 1:
     zeolites0_d = np.zeros(secMat[:,:,1].shape)
     chlorites0_d = np.zeros(secMat[:,:,1].shape)
     alt_vol0_d = np.zeros(secMat[:,:,1].shape)
-    
-    smec_list = [9, 28, 56, 57, 5, 13, 19, 20, 21, 22, 23, 24, 48, 12, 41]
-    zeo_list = [6, 26, 30, 34, 38, 44, 39, 31]
-    chlor_list = [43, 45, 46, 47, 53, 54]
+    #
+    # smec_list = [9, 28, 56, 57, 5, 13, 19, 20, 21, 22, 23, 24, 48, 12, 41]
+    # zeo_list = [6, 26, 30, 34, 38, 44, 39, 31]
+    # chlor_list = [43, 45, 46, 47, 53, 54]
+    #
+    smec_list = [2, 6, 8, 11, 12, 13, 15, 18, 27, 33]
+    zeo_list = [4, 16, 20, 21, 23, 25, 30]
+    chlor_list = [29, 31, 32, 36, 37]
     
     for j in range(len(smec_list)):
         smectites0 = smectites0 + secMat[:,:,smec_list[j]]
@@ -665,28 +714,24 @@ conv_max_psi = 0.0
 conv_tot_hf = 0.0
 conv_count = 0
 
+
+
 #for i in range(4,steps,5):
 for i in range(0,steps,1): 
     #print " "
     #print " "
     print "step =", i
     
+#-TOG PLOT #
     if i == 1:
         fig=plt.figure()
         ax1=fig.add_subplot(1,1,1, frameon=False)
         plt.pcolor(togg)
         plt.pcolor(togg, cmap=cm.Greys_r, facecolor='none', edgecolor='w', zorder=2)
         fig.savefig(outpath+'togg_plot.png')
-    
-    # # single time slice matrices
-    # psi = psi0[:,i*len(x):((i)*len(x)+len(x))]
-    # rho = rho0[:,i*len(x):((i)*len(x)+len(x))]
-    # # perm = perm0[:,i*len(x):((i)*len(x)+len(x))]
-    # temp = temp0[:,i*len(x):((i)*len(x)+len(x))]
-    # u = u0[:,i*len(x):((i)*len(x)+len(x))]
-    # v = v0[:,i*len(x):((i)*len(x)+len(x))]
 
-    
+
+
     if chem == 1:
         for j in range(len(any_min)):
             secStep[:,:,any_min[j]] = cut_chem(secMat[:,:,any_min[j]],i)
@@ -934,69 +979,16 @@ for i in range(0,steps,1):
     
 
       
-    # #######################
-    # ##    CHEM 0 PLOT    ##
-    # #######################
-    #
-    # fig=plt.figure()
-    #
-    # # varMat = temp
-    # # varStep = temp
-    # # contours = np.linspace(np.min(varMat),np.max(varMat),20)
-    # # ax1=fig.add_subplot(3,1,1, aspect=asp*2.5,frameon=False)
-    # # pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
-    # # p = plt.contour(xg,yg,perm,[-12.0,-13.5],colors='black',linewidths=np.array([1.0]))
-    # # CS = plt.contour(xg, yg, psi, 4, colors='black',linewidths=np.array([0.5]))
-    # # cMask = plt.contourf(xg,yg,mask,[0.0,0.5],colors='white',alpha=1.0,zorder=10)
-    # # plt.title('TEMPERATURE [$^{o}$C]')
-    # # plt.ylim([np.min(y)/2.0,0.])
-    # # cbar= plt.colorbar(pGlass, orientation='horizontal',ticks=contours[::3])
-    #
-    # chemplot(ca0, ca, 2, 2, 1, 1, '[Ca]',0)
-    # chemplot(dic0, dic, 2, 2, 2, 1, '[DIC]',0)
-    # chemplot(glass0, glass, 2, 2, 3, 1, 'BASLATIC GLASS [mol]',1)
-    # # chemplot(secMat[:,:,14], secStep[:,:,14], 4, 2, 5, 4, 'ANHYDRITE [mol]')
-    # chemplot(secMat[:,:,16], secStep[:,:,16], 2, 2, 4, 1, 'CALCITE [mol]',0)
-    # # chemplot(secMat[:,:,3], secStep[:,:,3], 4, 2, 7, 4, 'KAOLINITE [mol]')
-    # # chemplot(secMat[:,:,5], secStep[:,:,5], 4, 2, 8, 4, 'SAPONITE MG [mol]')
-    # #
-    # # chemplot(uCoarseMat, uCoarseStep, 4, 2, 6, 4, 'uCoarse')
-    # # chemplot(vCoarseMat, vCoarseStep, 4, 2, 7, 4, 'vCoarse')
-    # # chemplot(psiCoarseMat, psiCoarseStep, 4, 2, 8, 4, 'psiCoarse')
-    #
-    # fig.set_tight_layout(True)
-    # plt.savefig(outpath+'jdfChem0_'+str(i+restart)+'.png')
-    #
-    
-    
-    
-    
-    # profile_mg = np.zeros(len(y))
-    # profile_mg_y = np.zeros(len(y))
-    # for j in range(len(y)):
-    #     if y[j] > -sed1[j]:
-    #         profile_mg[j] = mg[j,(param_w + 3300.0)/bitsx]
-    #         profile_mg_y[j] = y[j]
-    #         print profile_mg[j]
-    #
-    # fig=plt.figure()
-    # ax1=fig.add_subplot(2,2,1)
-    # plt.scatter(profile_mg,profile_mg_y)
-    #
-    #
-    # plt.savefig(outpath+'jdfProfile_'+str(i+restart)+'.png')
-    
+
     
     chem6 = 6
     
     if chem == 1:
         
-  
-        
-        ######################
-        ##    CHEM 0 SOL    ##
-        ######################
-    
+########################
+#-CHEM 0 PLOT-#        
+########################
+
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
@@ -1019,8 +1011,6 @@ for i in range(0,steps,1):
         chemplot(plt_d, plt_dd, 7, 5, 6, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 21, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 22, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        
-        
 
         plt_s = si0
         plt_a = si0_a
@@ -1039,7 +1029,6 @@ for i in range(0,steps,1):
         chemplot(plt_d, plt_dd, 7, 5, 26, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 61, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 62, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
 
         # # col 2
         plt_s = mg0
@@ -1060,8 +1049,6 @@ for i in range(0,steps,1):
         chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_b, plt_bb, 7, 10, 24, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-
-
         plt_s = fe0
         plt_a = fe0_a
         plt_b = fe0_b
@@ -1080,10 +1067,7 @@ for i in range(0,steps,1):
         chemplot(plt_a, plt_aa, 7, 10, 63, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 64, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-
-
         # # col 3
-
         plt_s = k0
         plt_a = k0_a
         plt_b = k0_b
@@ -1120,10 +1104,7 @@ for i in range(0,steps,1):
         chemplot(plt_a, plt_aa, 7, 10, 65, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 66, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-
-
         # # col 4
-
         plt_s = ph0
         plt_a = ph0_a
         plt_b = ph0_b
@@ -1140,8 +1121,6 @@ for i in range(0,steps,1):
         chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'ph_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'ph_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_b, plt_bb, 7, 10, 28, 1, 'ph_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
-
 
         plt_s = alt_vol0
         plt_a = alt_vol0_a
@@ -1161,28 +1140,7 @@ for i in range(0,steps,1):
         chemplot(plt_a, plt_aa, 7, 10, 67, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 68, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-
-
         # # col 5
-
-        # plt_s = dic0
-        # plt_a = dic0_a
-        # plt_b = dic0_b
-        # plt_d = dic0_d
-        # plt_ss = dic
-        # plt_aa = dic_a
-        # plt_bb = dic_b
-        # plt_dd = dic_d
-        # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        # c_min = np.amin(all_ch[all_ch>0.0])
-        # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        # c_max = np.amax(all_ch[all_ch>0.0])
-        # chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'dic_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='DIC')
-        # chemplot(plt_s, plt_dd, 7, 5, 10, 1, 'dic_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        # chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'dic_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        # chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'dic_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
-
         plt_s = al0
         plt_a = al0_a
         plt_b = al0_b
@@ -1199,11 +1157,7 @@ for i in range(0,steps,1):
         chemplot(plt_s, plt_dd, 7, 5, 10, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
-
-
-
-
+        
         plt_s = pri_total0
         plt_a = pri_total0_a
         plt_b = pri_total0_b
@@ -1222,212 +1176,205 @@ for i in range(0,steps,1):
         chemplot(plt_a, plt_aa, 7, 10, 69, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 70, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-
-
         plt.savefig(outpath+'jdfSol0_'+str(i+restart)+'.png')
         
+########################
+#-CHEM 2 SECONDARIES-#
+########################
+
+        fig=plt.figure(figsize=(13.0,7.0))
+        plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
         
+        for am in range(len(any_min)):
+            
+            if am < 5:
+                am_p = am
+                am_pp = 2*am+1
+                am_ppp = 2*(am-1)+1
+            if am >= 5:
+                am_p = 20+(am-5)
+                am_pp = 40 + 2*(am-5)+1
+                am_ppp = 50 + 2*(am-4)
+            
+            print any_min[am]
+            # # col 1
+            plt_s = secMat[:,:,any_min[am]]
+            plt_a = secMat_a[:,:,any_min[am]]
+            plt_b = secMat_b[:,:,any_min[am]]
+            plt_d = secMat_d[:,:,any_min[am]]
+            plt_ss = secStep[:,:,any_min[am]]
+            plt_aa = secStep_a[:,:,any_min[am]]
+            plt_bb = secStep_b[:,:,any_min[am]]
+            plt_dd = secStep_d[:,:,any_min[am]]
+            #all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+            c_min = 0.0#np.amin(all_ch[all_ch>0.0])
+            #print "c_min" , c_min
+            all_ch = [np.max(plt_s), np.max(plt_a), np.max(plt_b), np.max(plt_d)]
+            # c_max = np.amax(all_ch[all_ch>0.0])
+            c_max = np.max(all_ch)
+            #print "c_max" , c_max
+            #c_max = 0.015
         
+            chemplot(plt_s, plt_ss, 7, 5, 1+am_p, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
+            chemplot(plt_d, plt_dd, 7, 5, 6+am_p, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_a, plt_aa, 7, 10, 20+am_pp, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_bb, plt_bb, 7, 10, 21+am_pp, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+    
         
-        #
-        #
-        # ########################
-        # ##   CHEM PRIMARIES   ##
-        # ########################
-        #
-        fig=plt.figure(figsize=(13.0,3.5))
-        plt.subplots_adjust( wspace=0.03, bottom=0.15, top=0.97, left=0.01, right=0.99)
+        plt.savefig(outpath+'jdfChem2_'+str(i+restart)+'.png')
+        
+
+########################
+#-CHEM PRI 0 PRIMARIES-# 
+########################
+
+
+        fig=plt.figure(figsize=(13.0,7.0))
+        #plt.subplots_adjust( wspace=0.03, bottom=0.15, top=0.97, left=0.01, right=0.99)
+        plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
         # # col 1
         plt_s = pri_total0
-        plt_a = pri_total0_a
-        plt_b = pri_total0_b
-        plt_d = pri_total0_d
+        plt_a = pri_total0_d
+        plt_b = pri_total0_d
+        plt_d = pri_total0_d 
         plt_ss = pri_total
-        plt_aa = pri_total_a
-        plt_bb = pri_total_b
+        plt_aa = pri_total_d
+        plt_bb = pri_total_d
         plt_dd = pri_total_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
         c_min = np.amin(all_ch[all_ch>0.0])
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.amax(all_ch[all_ch>0.0])
 
-        chemplot(plt_s, plt_ss, 3, 5, 1, 1, 'basalt remaining s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='basalt remaining')
-        chemplot(plt_d, plt_dd, 3, 5, 6, 1, 'basalt remaining d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 3, 10, 21, 1, 'basalt remaining a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 3, 10, 22, 1, 'basalt remaining b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 5, 1, 1, 'basalt remaining s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='basalt remaining')
+        chemplot(plt_d, plt_dd, 7, 5, 6, 1, 'basalt remaining d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        # chemplot(plt_a, plt_aa, 3, 10, 21, 1, 'basalt remaining a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        # chemplot(plt_b, plt_bb, 3, 10, 22, 1, 'basalt remaining b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 2
         plt_s = glass0
         plt_a = glass0_a
         plt_b = glass0_a
-        plt_d = glass0_d
+        plt_d = glass0_a
         plt_ss = glass
         plt_aa = glass_a
         plt_bb = glass_a
-        plt_dd = glass_d
+        plt_dd = glass_a
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
         c_min = np.amin(all_ch[all_ch>0.0])
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.amax(all_ch[all_ch>0.0])
 
-        chemplot(plt_s, plt_ss, 3, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
-        # chemplot(plt_d, plt_dd, 3, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 3, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
+        chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #  chemplot(plt_a, plt_aa, 3, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         # chemplot(plt_bb, plt_bb, 3, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 3
         plt_s = ol0
         plt_a = ol0_b
         plt_b = ol0_b
-        plt_d = ol0_d
+        plt_d = ol0_b
         plt_ss = ol
         plt_aa = ol_b
         plt_bb = ol_b
-        plt_dd = ol_d
+        plt_dd = ol_b
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
         c_min = np.amin(all_ch[all_ch>0.0])
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.amax(all_ch[all_ch>0.0])
 
-        chemplot(plt_s, plt_ss, 3, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
-        # chemplot(plt_d, plt_dd, 3, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
+        chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         # chemplot(plt_a, plt_aa, 3, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 3, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        # chemplot(plt_b, plt_bb, 3, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 4
         plt_s = pyr0
         plt_a = pyr0_b
         plt_b = pyr0_b
-        plt_d = pyr0_d
+        plt_d = pyr0_b
         plt_ss = pyr
         plt_aa = pyr_b
         plt_bb = pyr_b
-        plt_dd = pyr_d
+        plt_dd = pyr_b
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
         c_min = np.amin(all_ch[all_ch>0.0])
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.amax(all_ch[all_ch>0.0])
-        chemplot(plt_s, plt_ss, 3, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
-        # chemplot(plt_d, plt_dd, 3, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
+        chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         # chemplot(plt_a, plt_aa, 3, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 3, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        # chemplot(plt_b, plt_bb, 3, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 5
         plt_s = plag0
         plt_a = plag0_b
         plt_b = plag0_b
-        plt_d = plag0_d
+        plt_d = plag0_b
         plt_ss = plag
         plt_aa = plag_b
         plt_bb = plag_b
-        plt_dd = plag_d
+        plt_dd = plag_b
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
         c_min = np.amin(all_ch[all_ch>0.0])
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.amax(all_ch[all_ch>0.0])
-        chemplot(plt_s, plt_ss, 3, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
-        # chemplot(plt_d, plt_dd, 3, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
+        chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         # chemplot(plt_a, plt_aa, 3, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 3, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
-
-
-
-
+        # chemplot(plt_b, plt_bb, 3, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         #fig.set_tight_layout(True)
         # plt.subplots_adjust( wspace=0.05 , bottom=0.04, top=0.97, left=0.03, right=0.975)
         plt.savefig(outpath+'jdfPri0_'+str(i+restart)+'.png')
 
 
-        #
-        
-        
-        
-        
-
-    
-        ######################
-        #    CHEM 1 PLOT    ##
-        ######################
+##############################
+#-CHEM 1 BINARY SECONDARIES-#
+##############################
 
         fig=plt.figure(figsize=(11.0,4.25))
-
-
-
 
         chemcont(smectites0, smectites, 3, 3, 1, 1, 'mineral distribution in solo chamber', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
         chemcont(zeolites0, zeolites, 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
         chemcont(chlorites0, chlorites, 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat[:,:,40], secStep[:,:,40], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat[:,:,10], secStep[:,:,10], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat[:,:,8], secStep[:,:,8], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat[:,:,6], secStep[:,:,6], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        chemcont(secMat[:,:,16], secStep[:,:,16], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        chemcont(secMat[:,:,26], secStep[:,:,26], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        chemcont(secMat[:,:,7], secStep[:,:,7], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        chemcont(secMat[:,:,5], secStep[:,:,5], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        chemcont(secMat[:,:,3], secStep[:,:,3], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        #chemcont(secMat[:,:,16], secStep[:,:,16], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
         chemcont(smectites0_d, smectites_d, 3, 3, 4, 1, 'mineral distribution in dual chamber (a + b)', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
         chemcont(zeolites0_d, zeolites_d, 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
         chemcont(chlorites0_d, chlorites_d, 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat_d[:,:,40], secStep_d[:,:,40], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat_d[:,:,10], secStep_d[:,:,10], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat_d[:,:,8], secStep_d[:,:,8], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_d[:,:,6], secStep_d[:,:,6], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        chemcont(secMat_d[:,:,16], secStep_d[:,:,16], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        chemcont(secMat_d[:,:,26], secStep_d[:,:,26], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        chemcont(secMat_d[:,:,7], secStep_d[:,:,7], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        chemcont(secMat_d[:,:,5], secStep_d[:,:,5], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        chemcont(secMat_d[:,:,3], secStep_d[:,:,3], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        #chemcont(secMat_d[:,:,16], secStep_d[:,:,16], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
         chemcont(smectites0_a, smectites_a, 3, 6, 13, 1, 'chamber a only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
         chemcont(zeolites0_a, zeolites_a, 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
         chemcont(chlorites0_a, chlorites_a, 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat_a[:,:,40], secStep_a[:,:,40], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat_a[:,:,10], secStep_a[:,:,10], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat_a[:,:,8], secStep_a[:,:,8], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_a[:,:,6], secStep_a[:,:,6], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        chemcont(secMat_a[:,:,16], secStep_a[:,:,16], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        chemcont(secMat_a[:,:,26], secStep_a[:,:,26], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        chemcont(secMat_a[:,:,7], secStep_a[:,:,7], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        chemcont(secMat_a[:,:,5], secStep_a[:,:,5], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        chemcont(secMat_a[:,:,3], secStep_a[:,:,3], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        #chemcont(secMat_a[:,:,16], secStep_a[:,:,16], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
         chemcont(smectites0_b, smectites_b, 3, 6, 14, 1, 'chamber b only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
         chemcont(zeolites0_b, zeolites_b, 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
         chemcont(chlorites0_b, chlorites_b, 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat_b[:,:,40], secStep_b[:,:,40], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat_b[:,:,10], secStep_b[:,:,10], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat_b[:,:,8], secStep_b[:,:,8], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_b[:,:,6], secStep_b[:,:,6], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        chemcont(secMat_b[:,:,16], secStep_b[:,:,16], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
-
-        # chemcont(secMat[:,:,16], secStep[:,:,16], 3, 3, 1, 1, 'mineral distribution in solo chamber', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-#         chemcont(secMat[:,:,46], secStep[:,:,46], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-#         chemcont(secMat[:,:,5], secStep[:,:,5], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-#         chemcont(secMat[:,:,10], secStep[:,:,10], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-#         chemcont(secMat[:,:,8], secStep[:,:,8], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-#         chemcont(secMat[:,:,6], secStep[:,:,6], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-
-
-        # chemcont(secMat_a[:,:,16]+secMat_b[:,:,16], secStep_a[:,:,16]+secStep_b[:,:,16], 3, 3, 4, 1, 'dual chamber (a+b total)', xtix=1, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        # chemcont(secMat_a[:,:,46]+secMat_b[:,:,46], secStep_a[:,:,46]+secStep_b[:,:,46], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        # chemcont(secMat_b[:,:,40], secStep_b[:,:,40], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        # chemcont(secMat_a[:,:,5]+secMat_b[:,:,5], secStep_a[:,:,5]+secStep_b[:,:,5], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        # chemcont(secMat_a[:,:,10]+secMat_b[:,:,10], secStep_a[:,:,10]+secStep_b[:,:,10], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        # chemcont(secMat_a[:,:,8]+secMat_b[:,:,8], secStep_a[:,:,8]+secStep_b[:,:,8], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        # chemcont(secMat_a[:,:,6]+secMat_b[:,:,6], secStep_a[:,:,6]+secStep_b[:,:,6], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #
-        #
-        # chemcont(secMat_a[:,:,16], secStep_a[:,:,16], 3, 6, 13, 1, 'chamber a only', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        # chemcont(secMat_a[:,:,46], secStep_a[:,:,46], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        # chemcont(secMat_a[:,:,5], secStep_a[:,:,5], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        # chemcont(secMat_a[:,:,10], secStep_a[:,:,10], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        # chemcont(secMat_a[:,:,8], secStep_a[:,:,8], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        # chemcont(secMat_a[:,:,6], secStep_a[:,:,6], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #
-        # chemcont(secMat_b[:,:,16], secStep_b[:,:,16], 3, 6, 14, 1, 'chamber b only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        # chemcont(secMat_b[:,:,46], secStep_b[:,:,46], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        # chemcont(secMat_b[:,:,40], secStep_b[:,:,40], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        # chemcont(secMat_b[:,:,5], secStep_b[:,:,5], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        # chemcont(secMat_b[:,:,10], secStep_b[:,:,10], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        # chemcont(secMat_b[:,:,8], secStep_b[:,:,8], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        # chemcont(secMat_b[:,:,6], secStep_b[:,:,6], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #
+        chemcont(secMat_b[:,:,26], secStep_b[:,:,26], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        chemcont(secMat_b[:,:,7], secStep_b[:,:,7], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        chemcont(secMat_b[:,:,5], secStep_b[:,:,5], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        chemcont(secMat_b[:,:,3], secStep_b[:,:,3], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        #chemcont(secMat_b[:,:,16], secStep_b[:,:,16], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
         lg1 = Patch(facecolor='r', label='smectites', alpha=0.5)
@@ -1508,68 +1455,11 @@ for i in range(0,steps,1):
         plt.subplots_adjust( wspace=0.05 , bottom=0.12, top=0.95, left=0.03, right=0.975)
         plt.savefig(outpath+'jdfChem1_'+str(i+restart)+'.png')
 
-
-
-    
-        ###########################
-        ##    SECONDARY PLOTZ    ##
-        ###########################
-    
-        # print " chem2: " ,
-        # fig=plt.figure()
-        #
-        # sp = 0
-        # j_last = 0
-        # for j in range(0,minNum):
-        #     if np.max(secMat[:,:,j]) > 0.0 and sp < 6:
-        #         sp = sp + 1
-        #         j_last = j
-        #         print j_last ,
-        #         chemplot(secMat[:,:,j], secStep[:,:,j], 3, 2, sp, 1, secondary[j] + ' [cm$^3$]',0 , 0, 0)
-        #
-        #
-        # fig.set_tight_layout(True)
-        # plt.savefig(outpath+'jdfChem2_'+str(i+restart)+'.png')
-    
-    
-
-    
-    
-        # print " "
-        # print " chem3: " ,
-        # fig=plt.figure()
-        #
-        # sp = 0
-        # for j in range(j_last+1,minNum):
-        #     if np.max(secMat[:,:,j]) > 0.0 and sp < 6:
-        #         sp = sp + 1
-        #         j_last = j
-        #         print j_last ,
-        #         chemplot(secMat[:,:,j], secStep[:,:,j], 3, 2, sp, 1, secondary[j] + ' [cm$^3$]',0 , 0, 0)
-        #
-        #
-        # fig.set_tight_layout(True)
-        # plt.savefig(outpath+'jdfChem3_'+str(i+restart)+'.png')
-        #
-        # print " "
-        # print " chem4: " ,
-        # fig=plt.figure()
-        #
-        # sp = 0
-        # for j in range(j_last+1,minNum):
-        #     if np.max(secMat[:,:,j]) > 0.0 and sp < 6:
-        #         sp = sp + 1
-        #         j_last = j
-        #         print j_last ,
-        #         chemplot(secMat[:,:,j], secStep[:,:,j], 3, 2, sp, 1, secondary[j] + ' [cm$^3$]',0 , 0, 0)
-        #
-        #
-        # fig.set_tight_layout(True)
-        # plt.savefig(outpath+'jdfChem4_'+str(i+restart)+'.png')
-    
-    
+ 
     plt.close('all')
     
+
+#-FULL SECONDARY SUMMARY-# 
 
 fig=plt.figure(figsize=(6.5,6.5))
 
@@ -1609,7 +1499,8 @@ for j in range(len(any_min)):
     plt.plot(np.arange(1,steps+1),norm_growth_rate2[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate[:,any_min[j]]/np.max(norm_growth_rate[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
-    plt.ylim([0.95,1.05])
+    #plt.ylim([0.95,1.05])
+    plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, solo',fontsize=10)
     
@@ -1628,7 +1519,8 @@ for j in range(len(any_min)):
     plt.plot(np.arange(1,steps+1),norm_growth_rate2_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_d[:,any_min[j]]/np.max(norm_growth_rate_d[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
-    plt.ylim([0.95,1.05])
+    #plt.ylim([0.95,1.05])
+    plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
@@ -1644,7 +1536,8 @@ for j in range(len(any_min)):
     plt.plot(np.arange(1,steps+1),norm_growth_rate2_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_a[:,any_min[j]]/np.max(norm_growth_rate_a[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
-    plt.ylim([0.95,1.05])
+    #plt.ylim([0.95,1.05])
+    plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
    
@@ -1660,7 +1553,8 @@ for j in range(len(any_min)):
     plt.plot(np.arange(1,steps+1),norm_growth_rate2_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_b[:,any_min[j]]/np.max(norm_growth_rate_b[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
-    plt.ylim([0.95,1.05])
+    #plt.ylim([0.95,1.05])
+    plt.ylim([0.0,1.05])
     plt.xlabel('time',fontsize=8)
     plt.title('min growth rate, b',fontsize=10)
     
@@ -1738,7 +1632,7 @@ plt.savefig(outpath+'all_ts_sec.png')
 
 
 
-
+#-FULL PRIMARY SUMMARY-# 
 
 fig=plt.figure(figsize=(6.5,6.5))
 
@@ -1756,10 +1650,11 @@ ax1=fig.add_subplot(4,2,1, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts[:,j])) > 0.0:
-        norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[:,j]))
+        # norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[:,j]))
+        norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[-1,j]))
     plt.plot(np.arange(1,steps+1),norm_loss_rate[:,j],label=primary[j],c=pri_col[j])
     plt.xlim([10,steps])
-    plt.ylim([0.75,1.05])
+    #plt.ylim([0.75,1.05])
     plt.xticks([])
     plt.title('primary loss rate, solo',fontsize=10)
     
@@ -1770,10 +1665,11 @@ ax1=fig.add_subplot(4,2,3, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts_d[:,j])) > 0.0:
-        norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[:,j]))
+        # norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[:,j]))
+        norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[-1,j]))
     plt.plot(np.arange(1,steps+1),norm_loss_rate_d[:,j],label=primary[j],c=pri_col[j])
     plt.xlim([10,steps])
-    plt.ylim([0.75,1.05])
+    #plt.ylim([0.75,1.05])
     plt.xticks([])
     plt.title('primary loss rate, dual',fontsize=10)
     
@@ -1782,10 +1678,11 @@ ax1=fig.add_subplot(4,2,5, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts_a[:,j])) > 0.0:
-        norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[:,j]))
+        # norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[:,j]))
+        norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[-1,j]))
     plt.plot(np.arange(1,steps+1),norm_loss_rate_a[:,j],label=primary[j],c=pri_col[j])
     plt.xlim([10,steps])
-    plt.ylim([0.75,1.05])
+    #plt.ylim([0.75,1.05])
     plt.xticks([])
     plt.title('primary loss rate, a',fontsize=10)
     
@@ -1794,10 +1691,11 @@ ax1=fig.add_subplot(4,2,7, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts_b[:,j])) > 0.0:
-        norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[:,j]))
+        # norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[:,j]))
+        norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[-1,j]))
     plt.plot(np.arange(1,steps+1),norm_loss_rate_b[:,j],label=primary[j],c=pri_col[j])
     plt.xlim([10,steps])
-    plt.ylim([0.75,1.05])
+    #plt.ylim([0.75,1.05])
     #plt.xticks([])
     plt.title('primary loss rate, b',fontsize=10)
 
