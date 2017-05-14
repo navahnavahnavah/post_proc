@@ -147,7 +147,7 @@ cellx = 10
 celly = 1
 
 #-LOAD PATH-#
-outpath = "../output/revival/coarse_grid/bi_2/"
+outpath = "../output/revival/coarse_grid/f1/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0 
@@ -282,6 +282,34 @@ def cut_chem(geo0,index):
 def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
     #print cb_title
     #print np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep[varStep>0.0]))) 
+    if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) <= 0.0:
+        if cb_min==-10.0 and cb_max==10.0:
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+        if cb_max!=10.0:
+            contours = np.linspace(cb_min,cb_max,5)
+            
+        ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
+        pGlass = plt.pcolor(xCell,yCell,np.zeros(varStep.shape),cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
+        plt.yticks([])
+        if ytix==1:
+            plt.yticks([-450, -400, -350])
+        if xtix==0:
+            plt.xticks([])
+        plt.ylim([np.min(yCell),0.])
+        plt.title(cp_title,fontsize=8)
+        plt.ylim([-525,-325.0])
+        if cb==1:
+            #cbaxes = fig.add_axes([0.5, 0.5, 0.3, 0.03]) 
+            #cbaxes = fig.add_axes([0.8, 0.1, 0.03, 0.8]) 
+            bbox = ax1.get_position()
+            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
+            cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
+            plt.title(cb_title,fontsize=10)
+            #cbar = plt.colorbar(pGlass, orientation='horizontal',ticks=contours[::contour_interval],shrink=0.9, pad = 0.5)
+            cbar.solids.set_rasterized(True)
+            cbar.solids.set_edgecolor("face")
+        
+        
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
         #cb_min=0.0
         if cb_min==-10.0 and cb_max==10.0:
@@ -304,7 +332,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
         plt.ylim([np.min(yCell),0.])
         #cMask = plt.contourf(xg,yg,maskP,[0.0,0.5],colors='white',alpha=1.0,zorder=10)
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-500,-325.0])
+        plt.ylim([-525,-325.0])
         #plt.ylim([-500,-200.0])
         pGlass.set_edgecolor("face")
         if cb==1:
@@ -342,7 +370,7 @@ def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
     if xtix==0:
         plt.xticks([])
     # plt.ylim([np.min(yCell),0.])
-    plt.ylim([-475.0,-325.0])
+    plt.ylim([-525.0,-325.0])
     plt.title(cp_title,fontsize=10)
     return chemcont
     
@@ -370,7 +398,7 @@ def chemcont_l(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
         plt.xticks([])
     # plt.ylim([np.min(yCell),0.])
     #plt.ylim([-500.0,-300.0])
-    plt.ylim([-450.0,-350.0])
+    plt.ylim([-525.0,-350.0])
     plt.title(cp_title,fontsize=10)
 
 
@@ -980,13 +1008,13 @@ for i in range(0,steps,1):
 
       
 
-    
+#-CHEM 6 THING-#
     chem6 = 6
     
-    if chem == 1:
+    if chem6 == 1:
         
 ########################
-#-CHEM 0 PLOT-#        
+#-CHEM 0 SOLUTES -#        
 ########################
 
         fig=plt.figure(figsize=(13.0,7.0))
@@ -1002,9 +1030,9 @@ for i in range(0,steps,1):
         plt_bb = ca_b
         plt_dd = ca_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
         #c_max = 0.015
         
         chemplot(plt_s, plt_ss, 7, 5, 1, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Ca] concentration')
@@ -1021,9 +1049,9 @@ for i in range(0,steps,1):
         plt_bb = si_b
         plt_dd = si_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 21, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Si] concentration')
         chemplot(plt_d, plt_dd, 7, 5, 26, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1040,9 +1068,9 @@ for i in range(0,steps,1):
         plt_bb = mg_b
         plt_dd = mg_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 2, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Mg] concentration')
         chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1058,9 +1086,9 @@ for i in range(0,steps,1):
         plt_bb = fe_b
         plt_dd = fe_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 22, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Fe] concentration')
         chemplot(plt_d, plt_dd, 7, 5, 27, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1077,9 +1105,9 @@ for i in range(0,steps,1):
         plt_bb = k1_b
         plt_dd = k1_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 3, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[K] concentration')
         chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1095,9 +1123,9 @@ for i in range(0,steps,1):
         plt_bb = alk_b
         plt_dd = alk_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 23, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Alkalinity')
         chemplot(plt_d, plt_dd, 7, 5, 28, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1114,9 +1142,10 @@ for i in range(0,steps,1):
         plt_bb = ph_b
         plt_dd = ph_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
+        
         chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'ph_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pH')
         chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'ph_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'ph_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1131,9 +1160,9 @@ for i in range(0,steps,1):
         plt_bb = alt_vol_b
         plt_dd = alt_vol_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 24, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Alteration volume')
         chemplot(plt_d, plt_dd, 7, 5, 29, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1150,9 +1179,10 @@ for i in range(0,steps,1):
         plt_bb = al_b
         plt_dd = al_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
+        
         chemplot(plt_s, plt_ss, 7, 5, 5, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Al]')
         chemplot(plt_s, plt_dd, 7, 5, 10, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1167,9 +1197,9 @@ for i in range(0,steps,1):
         plt_bb = pri_total_b
         plt_dd = pri_total_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 25, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Fraction basalt remaining')
         chemplot(plt_d, plt_dd, 7, 5, 30, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1196,7 +1226,7 @@ for i in range(0,steps,1):
                 am_pp = 40 + 2*(am-5)+1
                 am_ppp = 50 + 2*(am-4)
             
-            print any_min[am]
+            #print any_min[am]
             # # col 1
             plt_s = secMat[:,:,any_min[am]]
             plt_a = secMat_a[:,:,any_min[am]]
@@ -1243,9 +1273,9 @@ for i in range(0,steps,1):
         plt_bb = pri_total_d
         plt_dd = pri_total_d
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 1, 1, 'basalt remaining s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='basalt remaining')
         chemplot(plt_d, plt_dd, 7, 5, 6, 1, 'basalt remaining d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1262,9 +1292,9 @@ for i in range(0,steps,1):
         plt_bb = glass_a
         plt_dd = glass_a
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
         chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1281,9 +1311,9 @@ for i in range(0,steps,1):
         plt_bb = ol_b
         plt_dd = ol_b
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
 
         chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
         chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1318,9 +1348,10 @@ for i in range(0,steps,1):
         plt_bb = plag_b
         plt_dd = plag_b
         all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        c_min = np.amin(all_ch[all_ch>0.0])
+        c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        c_max = np.amax(all_ch[all_ch>0.0])
+        c_max = np.max(all_ch)
+        
         chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
         chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         # chemplot(plt_a, plt_aa, 3, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1343,7 +1374,7 @@ for i in range(0,steps,1):
         chemcont(secMat[:,:,26], secStep[:,:,26], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
         chemcont(secMat[:,:,7], secStep[:,:,7], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
         chemcont(secMat[:,:,5], secStep[:,:,5], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat[:,:,3], secStep[:,:,3], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        chemcont(secMat[:,:,3]+secMat[:,:,14], secStep[:,:,3]+secStep[:,:,14], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
         #chemcont(secMat[:,:,16], secStep[:,:,16], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
@@ -1353,7 +1384,7 @@ for i in range(0,steps,1):
         chemcont(secMat_d[:,:,26], secStep_d[:,:,26], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
         chemcont(secMat_d[:,:,7], secStep_d[:,:,7], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
         chemcont(secMat_d[:,:,5], secStep_d[:,:,5], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_d[:,:,3], secStep_d[:,:,3], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        chemcont(secMat_d[:,:,3]+secMat_d[:,:,14], secStep_d[:,:,3]+secStep_d[:,:,14], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
         #chemcont(secMat_d[:,:,16], secStep_d[:,:,16], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
@@ -1363,7 +1394,7 @@ for i in range(0,steps,1):
         chemcont(secMat_a[:,:,26], secStep_a[:,:,26], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
         chemcont(secMat_a[:,:,7], secStep_a[:,:,7], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
         chemcont(secMat_a[:,:,5], secStep_a[:,:,5], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_a[:,:,3], secStep_a[:,:,3], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        chemcont(secMat_a[:,:,3]+secMat_a[:,:,14], secStep_a[:,:,3]+secStep_a[:,:,14], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
         #chemcont(secMat_a[:,:,16], secStep_a[:,:,16], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
@@ -1373,7 +1404,7 @@ for i in range(0,steps,1):
         chemcont(secMat_b[:,:,26], secStep_b[:,:,26], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
         chemcont(secMat_b[:,:,7], secStep_b[:,:,7], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
         chemcont(secMat_b[:,:,5], secStep_b[:,:,5], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_b[:,:,3], secStep_b[:,:,3], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        chemcont(secMat_b[:,:,3]+secMat_b[:,:,14], secStep_b[:,:,3]+secStep_b[:,:,14], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
         #chemcont(secMat_b[:,:,16], secStep_b[:,:,16], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
 
 
@@ -1389,20 +1420,20 @@ for i in range(0,steps,1):
         plt.legend([lg1,lg2,lg3,lg4,lg5,lg6,lg7,lg8],['smectites','zeolites','talc', 'chlorites','goethite','pyrite','celadonite','caco3'],fontsize=10,ncol=3,bbox_to_anchor=(0.0, -2.0),loc=8)
 
 
-        if np.max(dsecStep[:,:,16]) != 0.0:
-            plt_s = dsecStep[:,:,16]
-            plt_a = dsecStep_a[:,:,16]
-            plt_b = dsecStep_b[:,:,16]
-            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0])]
-            c_min = np.amin(all_ch[all_ch>0.0])
-            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0])]
-            c_max = np.amax(all_ch[all_ch>0.0])
-
-            chemcont_l(dsecMat[:,:,16], dsecStep[:,:,16], 3, 3, 2, 1, 'calcite growth rate in solo chamber', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
-            chemcont_l(dsecMat_a[:,:,16]+dsecMat_b[:,:,16], dsecStep_a[:,:,16]+dsecStep_b[:,:,16], 3, 3, 5, 1, 'dual chamber (a+b growth rate)', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
-            chemcont_l(dsecMat_a[:,:,16], dsecStep_a[:,:,16], 3, 6, 15, 1, 'chamber a only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
-            chemcont_l(dsecMat_b[:,:,16], dsecStep_b[:,:,16], 3, 6, 16, 1, 'chamber b only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
-
+        # if np.max(dsecStep[:,:,16]) != 0.0:
+        #     plt_s = dsecStep[:,:,16]
+        #     plt_a = dsecStep_a[:,:,16]
+        #     plt_b = dsecStep_b[:,:,16]
+        #     all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0])]
+        #     c_min = np.amin(all_ch[all_ch>0.0])
+        #     all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0])]
+        #     c_max = np.amax(all_ch[all_ch>0.0])
+        #
+        #     chemcont_l(dsecMat[:,:,16], dsecStep[:,:,16], 3, 3, 2, 1, 'calcite growth rate in solo chamber', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
+        #     chemcont_l(dsecMat_a[:,:,16]+dsecMat_b[:,:,16], dsecStep_a[:,:,16]+dsecStep_b[:,:,16], 3, 3, 5, 1, 'dual chamber (a+b growth rate)', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
+        #     chemcont_l(dsecMat_a[:,:,16], dsecStep_a[:,:,16], 3, 6, 15, 1, 'chamber a only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
+        #     chemcont_l(dsecMat_b[:,:,16], dsecStep_b[:,:,16], 3, 6, 16, 1, 'chamber b only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_cmap=cm.Blues, cb_min=c_min, cb_max=c_max)
+        #
 
 
         # if np.max(dsecStep[:,:,16]) != 0.0:
@@ -1484,6 +1515,7 @@ norm_growth_rate2_a = np.zeros([steps,minNum+1])
 norm_growth_rate2_b = np.zeros([steps,minNum+1])
 
 # # COLUMN 1
+ng0 = 5
 
 print " "
 ax1=fig.add_subplot(4,2,1, frameon=True)
@@ -1494,13 +1526,13 @@ for j in range(len(any_min)):
     if np.max(dsecStep_ts[:,any_min[j]]) > 0.0:
         #print any_min[j]
         # norm_growth_rate[:,any_min[j]] = dsecStep_ts[:,any_min[j]]/np.max(dsecStep_ts[:,any_min[j]])
-        norm_growth_rate[:,any_min[j]] = dsecStep_ts[:,any_min[j]]#/dsecStep_ts[-1,any_min[j]]
-        norm_growth_rate2[:,any_min[j]] = dsecStep_ts[:,any_min[j]]/np.max(dsecStep_ts[:,any_min[j]])
-    plt.plot(np.arange(1,steps+1),norm_growth_rate2[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_growth_rate[ng0:,any_min[j]] = dsecStep_ts[ng0:,any_min[j]]#/dsecStep_ts[-1,any_min[j]]
+        norm_growth_rate2[ng0:,any_min[j]] = dsecStep_ts[ng0:,any_min[j]]/np.max(dsecStep_ts[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate[:,any_min[j]]/np.max(norm_growth_rate[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     #plt.ylim([0.95,1.05])
-    plt.ylim([0.0,1.05])
+    #plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, solo',fontsize=10)
     
@@ -1514,13 +1546,13 @@ for j in range(len(any_min)):
     if np.max(dsecStep_ts_d[:,any_min[j]]) > 0.0:
         #print any_min[j]
         # norm_growth_rate_d[:,any_min[j]] = dsecStep_ts_d[:,any_min[j]]/np.max(dsecStep_ts_d[:,any_min[j]])
-        norm_growth_rate_d[:,any_min[j]] = dsecStep_ts_d[:,any_min[j]]#/dsecStep_ts_d[-1,any_min[j]]
-        norm_growth_rate2_d[:,any_min[j]] = dsecStep_ts_d[:,any_min[j]]/np.max(dsecStep_ts_d[:,any_min[j]])
-    plt.plot(np.arange(1,steps+1),norm_growth_rate2_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_growth_rate_d[ng0:,any_min[j]] = dsecStep_ts_d[ng0:,any_min[j]]#/dsecStep_ts_d[-1,any_min[j]]
+        norm_growth_rate2_d[ng0:,any_min[j]] = dsecStep_ts_d[ng0:,any_min[j]]/np.max(dsecStep_ts_d[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_d[:,any_min[j]]/np.max(norm_growth_rate_d[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     #plt.ylim([0.95,1.05])
-    plt.ylim([0.0,1.05])
+    #plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
@@ -1531,13 +1563,13 @@ for j in range(len(any_min)):
     if np.max(secStep_ts_a[:,any_min[j]]) > 0.0:
         #print any_min[j]
         # norm_growth_rate_a[:,any_min[j]] = dsecStep_ts_a[:,any_min[j]]/np.max(dsecStep_ts_a[:,any_min[j]])
-        norm_growth_rate_a[:,any_min[j]] = dsecStep_ts_a[:,any_min[j]]#/dsecStep_ts_a[-1,any_min[j]]
-        norm_growth_rate2_a[:,any_min[j]] = dsecStep_ts_a[:,any_min[j]]/np.max(dsecStep_ts_a[:,any_min[j]])
-    plt.plot(np.arange(1,steps+1),norm_growth_rate2_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_growth_rate_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]#/dsecStep_ts_a[-1,any_min[j]]
+        norm_growth_rate2_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]/np.max(dsecStep_ts_a[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_a[:,any_min[j]]/np.max(norm_growth_rate_a[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     #plt.ylim([0.95,1.05])
-    plt.ylim([0.0,1.05])
+    #plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
    
@@ -1548,13 +1580,13 @@ for j in range(len(any_min)):
     if np.max(secStep_ts_b[:,any_min[j]]) > 0.0:
         #print any_min[j]
         #norm_growth_rate_b[:,any_min[j]] = dsecStep_ts_b[:,any_min[j]]/np.max(dsecStep_ts_b[:,any_min[j]])
-        norm_growth_rate_b[:,any_min[j]] = dsecStep_ts_b[:,any_min[j]]#/dsecStep_ts_b[-1,any_min[j]]
-        norm_growth_rate2_b[:,any_min[j]] = dsecStep_ts_b[:,any_min[j]]/np.max(dsecStep_ts_a[:,any_min[j]])
-    plt.plot(np.arange(1,steps+1),norm_growth_rate2_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_growth_rate_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]#/dsecStep_ts_b[-1,any_min[j]]
+        norm_growth_rate2_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]/np.max(dsecStep_ts_b[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_b[:,any_min[j]]/np.max(norm_growth_rate_b[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     #plt.ylim([0.95,1.05])
-    plt.ylim([0.0,1.05])
+    #plt.ylim([0.0,1.05])
     plt.xlabel('time',fontsize=8)
     plt.title('min growth rate, b',fontsize=10)
     
@@ -1616,6 +1648,10 @@ for j in range(len(any_min)):
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
 plt.savefig(outpath+'all_ts_sec.png')
+
+
+
+
 
 
 
