@@ -111,7 +111,7 @@ print molar.shape
 
 # #steps = 400
 # steps = 50
-# # corr = 20 
+# # corr = 20
 # corr = 5
 # minNum = 57
 # ison=10000
@@ -136,26 +136,32 @@ print molar.shape
 # celly = 1
 
 steps = 25
-corr = 2
+corr = 1
 minNum = 37
 ison=10000
 trace = 0
 chem = 1
 iso = 0
 cell = 1
-cellx = 10
+cellx = 20
 celly = 1
 
-#-LOAD PATH-#
-outpath = "../output/revival/coarse_grid/f1/"
+#hack: INPUT PATH
+outpath = "../output/revival/coarse_grid/f9/"
 path = outpath
 param_w = 300.0
-param_w_rhs = 200.0 
+param_w_rhs = 200.0
+
+#hack poop
+#hack1*
+# to do
 
 
-# load output
 x0 = np.loadtxt(path + 'x.txt',delimiter='\n')
 y0 = np.loadtxt(path + 'y.txt',delimiter='\n')
+
+def something():
+    return something
 
 #-BOOP-#
 
@@ -264,7 +270,7 @@ fig.savefig(outpath+'coarse_plot.png')
 
 
 
-
+# this thing
 
 def cut(geo0,index):
     #geo_cut = geo0[(index*len(y0)/cell):(index*len(y0)/cell+len(y0)/cell),:]
@@ -272,7 +278,7 @@ def cut(geo0,index):
     geo_cut = np.append(geo_cut, geo_cut[-1:,:], axis=0)
     geo_cut = np.append(geo_cut, geo_cut[:,-1:], axis=1)
     return geo_cut
-    
+
 def cut_chem(geo0,index):
     geo_cut_chem = geo0[:,(index*len(xCell)):(index*len(xCell)+len(xCell))]
     return geo_cut_chem
@@ -281,13 +287,13 @@ def cut_chem(geo0,index):
 
 def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
     #print cb_title
-    #print np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep[varStep>0.0]))) 
+    #print np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep[varStep>0.0])))
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) <= 0.0:
         if cb_min==-10.0 and cb_max==10.0:
             contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
         if cb_max!=10.0:
             contours = np.linspace(cb_min,cb_max,5)
-            
+
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
         pGlass = plt.pcolor(xCell,yCell,np.zeros(varStep.shape),cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
         plt.yticks([])
@@ -297,10 +303,10 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-525,-325.0])
+        plt.ylim([-505.0,-325.0])
         if cb==1:
-            #cbaxes = fig.add_axes([0.5, 0.5, 0.3, 0.03]) 
-            #cbaxes = fig.add_axes([0.8, 0.1, 0.03, 0.8]) 
+            #cbaxes = fig.add_axes([0.5, 0.5, 0.3, 0.03])
+            #cbaxes = fig.add_axes([0.8, 0.1, 0.03, 0.8])
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
@@ -308,8 +314,8 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
             #cbar = plt.colorbar(pGlass, orientation='horizontal',ticks=contours[::contour_interval],shrink=0.9, pad = 0.5)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
-        
-        
+
+
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
         #cb_min=0.0
         if cb_min==-10.0 and cb_max==10.0:
@@ -317,12 +323,12 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
         if cb_max!=10.0:
             contours = np.linspace(cb_min,cb_max,5)
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
-    
+
         #pGlass = plt.contourf(xCell,yCell,varStep,contours,cmap=cm.rainbow, alpha=1.0,linewidth=0.0,antialiased=True)
         #print contours
         # pGlass = plt.pcolor(xCell,yCell,np.round(varStep,7),cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
         pGlass = plt.pcolor(xCell,yCell,varStep,cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
-    
+
         #p = plt.contour(xgh,ygh,perm[:,:],[-14.9],colors='black',linewidths=np.array([1.5]))
         plt.yticks([])
         if ytix==1:
@@ -332,12 +338,12 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
         plt.ylim([np.min(yCell),0.])
         #cMask = plt.contourf(xg,yg,maskP,[0.0,0.5],colors='white',alpha=1.0,zorder=10)
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-525,-325.0])
+        plt.ylim([-505.0,-325.0])
         #plt.ylim([-500,-200.0])
         pGlass.set_edgecolor("face")
         if cb==1:
-            #cbaxes = fig.add_axes([0.5, 0.5, 0.3, 0.03]) 
-            #cbaxes = fig.add_axes([0.8, 0.1, 0.03, 0.8]) 
+            #cbaxes = fig.add_axes([0.5, 0.5, 0.3, 0.03])
+            #cbaxes = fig.add_axes([0.8, 0.1, 0.03, 0.8])
             bbox = ax1.get_position()
             #print bbox
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
@@ -348,7 +354,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
             cbar.solids.set_edgecolor("face")
         #fig.set_tight_layout(True)
     return chemplot
-    
+
 
 def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_color='r',to_hatch=0,hatching='*'):
     varStep[varStep>0.0] = 1.0
@@ -370,11 +376,11 @@ def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
     if xtix==0:
         plt.xticks([])
     # plt.ylim([np.min(yCell),0.])
-    plt.ylim([-525.0,-325.0])
+    plt.ylim([-520.0,-330.0])
     plt.title(cp_title,fontsize=10)
     return chemcont
-    
-    
+
+
 def chemcont_l(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_cmap=cm.coolwarm, cb_min=-10.0, cb_max=10.0):
     #varStep[varStep>0.0] = 1.0
     if frame_lines==1:
@@ -497,9 +503,9 @@ if chem == 1:
     # precip0 = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0 = glass0 + ol0 + pyr0 + plag0
     #pri_total0 = pri_total0/np.max(pri_total0)
-    
-    
-    
+
+
+
     print " "
     ch_path = path + 'ch_a/'
     print "ch_a/:"
@@ -534,10 +540,10 @@ if chem == 1:
     # precip0_a = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
     #pri_total0_a = pri_total0_a/np.max(pri_total0_a)
-    
 
-    
-    
+
+
+
     print " "
     ch_path = path + 'ch_b/'
     print "ch_b/:"
@@ -572,8 +578,8 @@ if chem == 1:
     # precip0_b = np.loadtxt(ch_path + 'z_med_precip.txt')
     pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
     #pri_total0_b = pri_total0_b/np.max(pri_total0_b)
-    
-    
+
+
     print " "
     ch_path = path + 'ch_d/'
     print "ch_d/:"
@@ -612,8 +618,8 @@ if chem == 1:
     print " "
     print " "
     print "any_min" , any_min
-    
-    
+
+
     ca0[np.isinf(ca0)] = 1.0
     ca0_a[np.isinf(ca0_a)] = 1.0
     ca0_b[np.isinf(ca0_b)] = 1.0
@@ -638,12 +644,12 @@ if chem == 1:
     zeolites0 = np.zeros(secMat[:,:,1].shape)
     chlorites0 = np.zeros(secMat[:,:,1].shape)
     alt_vol0 = np.zeros(secMat[:,:,1].shape)
-    
+
     smectites0_a = np.zeros(secMat[:,:,1].shape)
     zeolites0_a = np.zeros(secMat[:,:,1].shape)
     chlorites0_a = np.zeros(secMat[:,:,1].shape)
     alt_vol0_a = np.zeros(secMat[:,:,1].shape)
-    
+
     smectites0_b = np.zeros(secMat[:,:,1].shape)
     zeolites0_b = np.zeros(secMat[:,:,1].shape)
     chlorites0_b = np.zeros(secMat[:,:,1].shape)
@@ -661,7 +667,7 @@ if chem == 1:
     smec_list = [2, 6, 8, 11, 12, 13, 15, 18, 27, 33]
     zeo_list = [4, 16, 20, 21, 23, 25, 30]
     chlor_list = [29, 31, 32, 36, 37]
-    
+
     for j in range(len(smec_list)):
         smectites0 = smectites0 + secMat[:,:,smec_list[j]]
         smectites0_a = smectites0_a + secMat_a[:,:,smec_list[j]]
@@ -690,7 +696,7 @@ if chem == 1:
                 chlorites0[jj,j] = chlorites0[jj,j] / (pri_total0[jj,j] + chlorites0[jj,j])
             # if pri_total0[jj,j] + alt_vol0[jj,j] > 0.0:
             #     alt_vol0[jj,j] = alt_vol0[jj,j] #/ (pri_total0[jj,j] + alt_vol0[jj,j])
-                
+
     for j in range(len(xCell)*steps):
         for jj in range(len(yCell)):
             if pri_total0_a[jj,j] > 0.0:
@@ -703,8 +709,8 @@ if chem == 1:
                 chlorites0_a[jj,j] = chlorites0_a[jj,j] / (pri_total0_a[jj,j] + chlorites0_a[jj,j])
             # if pri_total0_a[jj,j] + alt_vol0_a[jj,j] > 0.0:
             #     alt_vol0_a[jj,j] = alt_vol0_a[jj,j] #/ (pri_total0_a[jj,j] + alt_vol0_a[jj,j])
-                
-                
+
+
     for j in range(len(xCell)*steps):
         for jj in range(len(yCell)):
             if pri_total0_b[jj,j] > 0.0:
@@ -717,9 +723,9 @@ if chem == 1:
                 chlorites0_b[jj,j] = chlorites0_b[jj,j] / (pri_total0_b[jj,j] + chlorites0_b[jj,j])
             # if pri_total0_b[jj,j] + alt_vol0_b[jj,j] > 0.0:
             #     alt_vol0_b[jj,j] = alt_vol0_b[jj,j] #/ (pri_total0_b[jj,j] + alt_vol0_b[jj,j])
-                
-                
-                
+
+
+
     for j in range(len(xCell)*steps):
             for jj in range(len(yCell)):
                 if pri_total0_d[jj,j] > 0.0:
@@ -734,7 +740,7 @@ if chem == 1:
                 #     alt_vol0_d[jj,j] = alt_vol0_d[jj,j] #/ (pri_total0_d[jj,j] + alt_vol0_d[jj,j])
 
 
-    
+
 conv_mean_qu = 0.0
 conv_max_qu = 0.0
 conv_mean_psi = 0.0
@@ -745,11 +751,11 @@ conv_count = 0
 
 
 #for i in range(4,steps,5):
-for i in range(0,steps,1): 
+for i in range(0,steps,1):
     #print " "
     #print " "
     print "step =", i
-    
+
 #-TOG PLOT #
     if i == 1:
         fig=plt.figure()
@@ -791,7 +797,7 @@ for i in range(0,steps,1):
         ol = cut_chem(ol0,i)
         pyr = cut_chem(pyr0,i)
         plag = cut_chem(plag0,i)
-        
+
         priStep_ts[i,5] = np.sum(glass)
         priStep_ts[i,4] = np.sum(ol)
         priStep_ts[i,3] = np.sum(pyr)
@@ -802,10 +808,10 @@ for i in range(0,steps,1):
             dpriStep_ts[i,3] = priStep_ts[i,3] - priStep_ts[i-1,3]
             dpriStep_ts[i,2] = priStep_ts[i,2] - priStep_ts[i-1,2]
         #print dpriStep_ts[i,2]
-        
-        
-        
-        
+
+
+
+
         for j in range(len(any_min)):
             secStep_a[:,:,any_min[j]] = cut_chem(secMat_a[:,:,any_min[j]],i)
             dsecStep_a[:,:,any_min[j]] = cut_chem(dsecMat_a[:,:,any_min[j]],i)
@@ -835,7 +841,7 @@ for i in range(0,steps,1):
         ol_a = cut_chem(ol0_a,i)
         pyr_a = cut_chem(pyr0_a,i)
         plag_a = cut_chem(plag0_a,i)
-        
+
         priStep_ts_a[i,5] = np.sum(glass_a)
         priStep_ts_a[i,4] = np.sum(ol_a)
         priStep_ts_a[i,3] = np.sum(pyr_a)
@@ -845,14 +851,16 @@ for i in range(0,steps,1):
             dpriStep_ts_a[i,4] = priStep_ts_a[i,4] - priStep_ts_a[i-1,4]
             dpriStep_ts_a[i,3] = priStep_ts_a[i,3] - priStep_ts_a[i-1,3]
             dpriStep_ts_a[i,2] = priStep_ts_a[i,2] - priStep_ts_a[i-1,2]
-        
-        
-        
-        
+
+
+
+
         for j in range(len(any_min)):
             secStep_b[:,:,any_min[j]] = cut_chem(secMat_b[:,:,any_min[j]],i)
             dsecStep_b[:,:,any_min[j]] = cut_chem(dsecMat_b[:,:,any_min[j]],i)
             secStep_ts_b[i,any_min[j]] = np.sum(secStep_b[:,:,any_min[j]])
+            # if any_min[j] == 13:
+            #     print secStep_ts_b[i,any_min[j]]
             if i > 0:
                 dsecStep_ts_b[i,any_min[j]] = secStep_ts_b[i,any_min[j]] - secStep_ts_b[i-1,any_min[j]]
         inert_b = cut_chem(inert0_b,i)
@@ -878,19 +886,19 @@ for i in range(0,steps,1):
         ol_b = cut_chem(ol0_b,i)
         pyr_b = cut_chem(pyr0_b,i)
         plag_b = cut_chem(plag0_b,i)
-        
+
         priStep_ts_b[i,5] = np.sum(glass_b)
         priStep_ts_b[i,4] = np.sum(ol_b)
         priStep_ts_b[i,3] = np.sum(pyr_b)
         priStep_ts_b[i,2] = np.sum(plag_b)
-        
+
         if i > 0:
             dpriStep_ts_b[i,5] = priStep_ts_b[i,5] - priStep_ts_b[i-1,5]
             dpriStep_ts_b[i,4] = priStep_ts_b[i,4] - priStep_ts_b[i-1,4]
             dpriStep_ts_b[i,3] = priStep_ts_b[i,3] - priStep_ts_b[i-1,3]
             dpriStep_ts_b[i,2] = priStep_ts_b[i,2] - priStep_ts_b[i-1,2]
         #print dpriStep_ts_b[i,2]
-        
+
         # for j in range(1,minNum):
         #     secStep_d[:,:,j] = cut_chem(secMat_d[:,:,j],i)
         #     dsecStep_d[:,:,j] = cut_chem(dsecMat_d[:,:,j],i)
@@ -924,7 +932,7 @@ for i in range(0,steps,1):
         ol_d = cut_chem(ol0_d,i)
         pyr_d = cut_chem(pyr0_d,i)
         plag_d = cut_chem(plag0_d,i)
-        
+
         priStep_ts_d[i,5] = np.sum(glass_d)
         priStep_ts_d[i,4] = np.sum(ol_d)
         priStep_ts_d[i,3] = np.sum(pyr_d)
@@ -934,8 +942,8 @@ for i in range(0,steps,1):
             dpriStep_ts_d[i,4] = priStep_ts_d[i,4] - priStep_ts_d[i-1,4]
             dpriStep_ts_d[i,3] = priStep_ts_d[i,3] - priStep_ts_d[i-1,3]
             dpriStep_ts_d[i,2] = priStep_ts_d[i,2] - priStep_ts_d[i-1,2]
-        
-        
+
+
 
     # alk_flux = np.zeros(secStep[:,:,1].shape)
     #
@@ -949,9 +957,9 @@ for i in range(0,steps,1):
     #     print "alk_flux sum" , np.sum(alk_flux)
 
 
-    
 
-        
+
+
     # ##########################
     # #        HEAT PLOT       #
     # ##########################
@@ -1004,18 +1012,17 @@ for i in range(0,steps,1):
     #
     #
     # plt.savefig(outpath+'jdf_'+str(i+restart)+'.png')
-    
 
-      
+
+
 
 #-CHEM 6 THING-#
     chem6 = 6
-    
-    if chem6 == 1:
-        
-########################
-#-CHEM 0 SOLUTES -#        
-########################
+
+
+
+
+    if chem == 1:
 
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
@@ -1034,7 +1041,7 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
         #c_max = 0.015
-        
+
         chemplot(plt_s, plt_ss, 7, 5, 1, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Ca] concentration')
         chemplot(plt_d, plt_dd, 7, 5, 6, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 21, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1145,7 +1152,7 @@ for i in range(0,steps,1):
         c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
-        
+
         chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'ph_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pH')
         chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'ph_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'ph_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1182,12 +1189,12 @@ for i in range(0,steps,1):
         c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
-        
+
         chemplot(plt_s, plt_ss, 7, 5, 5, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Al]')
         chemplot(plt_s, plt_dd, 7, 5, 10, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        
+
         plt_s = pri_total0
         plt_a = pri_total0_a
         plt_b = pri_total0_b
@@ -1207,16 +1214,18 @@ for i in range(0,steps,1):
         chemplot(plt_bb, plt_bb, 7, 10, 70, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         plt.savefig(outpath+'jdfSol0_'+str(i+restart)+'.png')
-        
-########################
-#-CHEM 2 SECONDARIES-#
-########################
+
+
 
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
-        
-        for am in range(len(any_min)):
-            
+
+        the_list = len(any_min)
+        if len(any_min) > 10:
+            the_list = 10
+
+        for am in range(the_list):
+
             if am < 5:
                 am_p = am
                 am_pp = 2*am+1
@@ -1225,7 +1234,7 @@ for i in range(0,steps,1):
                 am_p = 20+(am-5)
                 am_pp = 40 + 2*(am-5)+1
                 am_ppp = 50 + 2*(am-4)
-            
+
             #print any_min[am]
             # # col 1
             plt_s = secMat[:,:,any_min[am]]
@@ -1244,18 +1253,18 @@ for i in range(0,steps,1):
             c_max = np.max(all_ch)
             #print "c_max" , c_max
             #c_max = 0.015
-        
+
             chemplot(plt_s, plt_ss, 7, 5, 1+am_p, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
             chemplot(plt_d, plt_dd, 7, 5, 6+am_p, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
             chemplot(plt_a, plt_aa, 7, 10, 20+am_pp, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
             chemplot(plt_bb, plt_bb, 7, 10, 21+am_pp, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-    
-        
+
+
         plt.savefig(outpath+'jdfChem2_'+str(i+restart)+'.png')
-        
+
 
 ########################
-#-CHEM PRI 0 PRIMARIES-# 
+#-CHEM PRI 0 PRIMARIES-#
 ########################
 
 
@@ -1267,7 +1276,7 @@ for i in range(0,steps,1):
         plt_s = pri_total0
         plt_a = pri_total0_d
         plt_b = pri_total0_d
-        plt_d = pri_total0_d 
+        plt_d = pri_total0_d
         plt_ss = pri_total
         plt_aa = pri_total_d
         plt_bb = pri_total_d
@@ -1351,7 +1360,7 @@ for i in range(0,steps,1):
         c_min = np.min(all_ch)
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
-        
+
         chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
         chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         # chemplot(plt_a, plt_aa, 3, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
@@ -1417,7 +1426,7 @@ for i in range(0,steps,1):
         lg7 = Patch(facecolor='b', label='celadonite', alpha=0.5)
         lg8 = Patch(facecolor='grey', label='caco3', alpha=0.5)
 
-        plt.legend([lg1,lg2,lg3,lg4,lg5,lg6,lg7,lg8],['smectites','zeolites','talc', 'chlorites','goethite','pyrite','celadonite','caco3'],fontsize=10,ncol=3,bbox_to_anchor=(0.0, -2.0),loc=8)
+        plt.legend([lg1,lg2,lg3,lg4,lg5,lg6,lg7,lg8],['smectites','zeolites','talc', 'chlorites','goethite','pyrite','celadonite','caco3'],fontsize=8,ncol=3,bbox_to_anchor=(0.0, -1.45),loc=8)
 
 
         # if np.max(dsecStep[:,:,16]) != 0.0:
@@ -1486,13 +1495,13 @@ for i in range(0,steps,1):
         plt.subplots_adjust( wspace=0.05 , bottom=0.12, top=0.95, left=0.03, right=0.975)
         plt.savefig(outpath+'jdfChem1_'+str(i+restart)+'.png')
 
- 
+
     plt.close('all')
-    
 
-#-FULL SECONDARY SUMMARY-# 
 
-fig=plt.figure(figsize=(6.5,6.5))
+#-FULL SECONDARY SUMMARY-#
+
+fig=plt.figure(figsize=(12.5,6.5))
 
 # ax1=fig.add_subplot(4,2,1, frameon=True)
 #
@@ -1515,135 +1524,152 @@ norm_growth_rate2_a = np.zeros([steps,minNum+1])
 norm_growth_rate2_b = np.zeros([steps,minNum+1])
 
 # # COLUMN 1
-ng0 = 5
+ng0 = 2
 
-print " "
-ax1=fig.add_subplot(4,2,1, frameon=True)
+print "s "
+ax1=fig.add_subplot(2,4,1, frameon=True)
 
 for j in range(len(any_min)):
-    
+
     #norm_growth_rate[:,any_min[j]] = 1.0
-    if np.max(dsecStep_ts[:,any_min[j]]) > 0.0:
+    if np.max(dsecStep_ts[ng0:,any_min[j]]) > 0.0:
         #print any_min[j]
         # norm_growth_rate[:,any_min[j]] = dsecStep_ts[:,any_min[j]]/np.max(dsecStep_ts[:,any_min[j]])
         norm_growth_rate[ng0:,any_min[j]] = dsecStep_ts[ng0:,any_min[j]]#/dsecStep_ts[-1,any_min[j]]
         norm_growth_rate2[ng0:,any_min[j]] = dsecStep_ts[ng0:,any_min[j]]/np.max(dsecStep_ts[ng0:,any_min[j]])
     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+    print secondary[any_min[j]]
+    print norm_growth_rate2[ng0:,any_min[j]]
+    # print norm_growth_rate2[ng0:,any_min[j]]
+    # print " "
     #plt.plot(np.arange(1,steps+1),norm_growth_rate[:,any_min[j]]/np.max(norm_growth_rate[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
+    #plt.ylim([0.90,1.005])
     #plt.ylim([0.95,1.05])
     #plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, solo',fontsize=10)
-    
-plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.65))
 
-print " "
-ax1=fig.add_subplot(4,2,3, frameon=True)
+plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.25))
+
+print "d "
+ax1=fig.add_subplot(2,4,2, frameon=True)
 
 for j in range(len(any_min)):
     #norm_growth_rate_d[:,any_min[j]] = 1.0
-    if np.max(dsecStep_ts_d[:,any_min[j]]) > 0.0:
+    if np.max(dsecStep_ts_d[ng0:,any_min[j]]) > 0.0:
         #print any_min[j]
         # norm_growth_rate_d[:,any_min[j]] = dsecStep_ts_d[:,any_min[j]]/np.max(dsecStep_ts_d[:,any_min[j]])
         norm_growth_rate_d[ng0:,any_min[j]] = dsecStep_ts_d[ng0:,any_min[j]]#/dsecStep_ts_d[-1,any_min[j]]
         norm_growth_rate2_d[ng0:,any_min[j]] = dsecStep_ts_d[ng0:,any_min[j]]/np.max(dsecStep_ts_d[ng0:,any_min[j]])
     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+    print secondary[any_min[j]]
+    print norm_growth_rate2_d[ng0:,any_min[j]]
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_d[:,any_min[j]]/np.max(norm_growth_rate_d[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
+    #plt.ylim([0.90,1.005])
     #plt.ylim([0.95,1.05])
     #plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
-print " "
-ax1=fig.add_subplot(4,2,5, frameon=True)
+print "a "
+ax1=fig.add_subplot(2,4,5, frameon=True)
 
 for j in range(len(any_min)):
-    if np.max(secStep_ts_a[:,any_min[j]]) > 0.0:
+    if np.max(secStep_ts_a[ng0:,any_min[j]]) > 0.0:
         #print any_min[j]
         # norm_growth_rate_a[:,any_min[j]] = dsecStep_ts_a[:,any_min[j]]/np.max(dsecStep_ts_a[:,any_min[j]])
         norm_growth_rate_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]#/dsecStep_ts_a[-1,any_min[j]]
         norm_growth_rate2_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]/np.max(dsecStep_ts_a[ng0:,any_min[j]])
     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+    print secondary[any_min[j]]
+    print norm_growth_rate2_a[ng0:,any_min[j]]
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_a[:,any_min[j]]/np.max(norm_growth_rate_a[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
+    #plt.ylim([0.90,1.005])
     #plt.ylim([0.95,1.05])
     #plt.ylim([0.0,1.05])
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
-   
-print " " 
-ax1=fig.add_subplot(4,2,7, frameon=True)
+
+print "b "
+ax1=fig.add_subplot(2,4,6, frameon=True)
 
 for j in range(len(any_min)):
-    if np.max(secStep_ts_b[:,any_min[j]]) > 0.0:
+    if np.max(secStep_ts_b[ng0:,any_min[j]]) > 0.0:
         #print any_min[j]
         #norm_growth_rate_b[:,any_min[j]] = dsecStep_ts_b[:,any_min[j]]/np.max(dsecStep_ts_b[:,any_min[j]])
         norm_growth_rate_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]#/dsecStep_ts_b[-1,any_min[j]]
         norm_growth_rate2_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]/np.max(dsecStep_ts_b[ng0:,any_min[j]])
     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+    print secondary[any_min[j]]
+    print norm_growth_rate2_b[ng0:,any_min[j]]
     #plt.plot(np.arange(1,steps+1),norm_growth_rate_b[:,any_min[j]]/np.max(norm_growth_rate_b[:,any_min[j]]),label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
-    #plt.ylim([0.95,1.05])
+    #plt.ylim([0.90,1.005])
     #plt.ylim([0.0,1.05])
     plt.xlabel('time',fontsize=8)
     plt.title('min growth rate, b',fontsize=10)
-    
-    
-    
-# COLUMN 2 , BIG?
-    
+
 ax1=fig.add_subplot(2,2,2, frameon=True)
-
-plt.plot([0.0,1.0],[0.0, 1.0], lw=1.0, linestyle='--', c='#cccccc',zorder=-1)
 for j in range(len(any_min)):
-    print secondary[any_min[j]]
-    #print " "
-    # ax1_solo = 0.0
-    # ax2_dual = 0.0
-    # print any_min[j]
-    # if np.sum(secStep_ts[-1,any_min[j]]) > 0.0:
-    #     ax1_solo = np.max(dsecStep_ts[2:,any_min[j]])/np.sum(secStep_ts[-1,any_min[j]])
-    # if np.sum(secStep_ts_d[-1,any_min[j]]) > 0.0:
-    #     ax2_dual = np.max(dsecStep_ts_d[2:,any_min[j]])/np.sum(secStep_ts_d[-1,any_min[j]])
-    # print ax1_solo, ax2_dual
-    # print " "
-    max_both = 2.0*np.mean([np.max(norm_growth_rate_d[:,any_min[j]]), np.max(norm_growth_rate[:,any_min[j]])])
-    max_both = np.sum(norm_growth_rate[:,any_min[j]]) + np.sum(norm_growth_rate_d[:,any_min[j]])
-    print max_both
-    plt.scatter(np.sum(norm_growth_rate[2:,any_min[j]])/max_both,np.sum(norm_growth_rate_d[2:,any_min[j]])/max_both,marker='o',label=secondary[any_min[j]],s=40,facecolors=col[j],edgecolor=col[j],lw=2.0)
-    # plt.scatter(norm_growth_rate[-1,any_min[j]],norm_growth_rate_d[-1,any_min[j]],marker='o',label=secondary[any_min[j]],facecolors=col[j],edgecolor=col[j])
-    #plt.scatter(ax1_solo,ax2_dual,marker='o',label=secondary[any_min[j]],facecolors=col[j],edgecolor=col[j])
-    
-    plt.xlabel('solo growth rate',fontsize=8)
-    plt.ylabel('dual growth rate',fontsize=8)
-    # plt.xlim([-1.0,4.0])
-    # plt.ylim([-1.0,4.0])
-    plt.title('steady-state growth rate',fontsize=10)
-    
-    
-    
-ax1=fig.add_subplot(2,2,4, frameon=True)
+    plt.plot(dsecStep_ts_d[ng0:,any_min[j]]/dsecStep_ts[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
 
-plt.plot([0.0,steps],[1.0, 1.0], lw=40.0, c='#cccccc')
-plt.plot([0.0,steps],[1.0, 1.0], lw=20.0, c='#aaaaaa')
-for j in range(len(any_min)):
-    d_to_s = norm_growth_rate_d[:,any_min[j]]/norm_growth_rate[:,any_min[j]]
-    #d_to_s = d_to_s/np.max(d_to_s)
-    plt.plot(np.arange(1,steps+1),d_to_s,label=secondary[any_min[j]],c=col[j])
-    plt.xlim([10,steps])
-    #plt.ylim([0.95,1.05])
-    #plt.scatter(norm_growth_rate[:,any_min[j]],norm_growth_rate_d[:,any_min[j]],marker='o',label=secondary[any_min[j]],facecolors='none',edgecolor=col[j])
-    # for i in range(0,steps):
-    #     if norm_growth_rate[i,any_min[j]] == 0.0:
-    #         norm_growth_rate[i,any_min[j]] = None
-    #     if norm_growth_rate_d[i,any_min[j]] == 0.0:
-    #         norm_growth_rate_d[i,any_min[j]] = None
-    # plt.plot(norm_growth_rate[:,any_min[j]],norm_growth_rate_d[:,any_min[j]],label=secondary[any_min[j]])
-    #plt.ylim([0.95,1.05])
-    plt.xlabel('time',fontsize=8)
-    plt.title('dual:solo growth rate over time',fontsize=10)
+
+#
+# # COLUMN 2 , BIG?
+#
+# ax1=fig.add_subplot(2,2,2, frameon=True)
+#
+# plt.plot([0.0,1.0],[0.0, 1.0], lw=1.0, linestyle='--', c='#cccccc',zorder=-1)
+# for j in range(len(any_min)):
+#     print secondary[any_min[j]]
+#     #print " "
+#     # ax1_solo = 0.0
+#     # ax2_dual = 0.0
+#     # print any_min[j]
+#     # if np.sum(secStep_ts[-1,any_min[j]]) > 0.0:
+#     #     ax1_solo = np.max(dsecStep_ts[2:,any_min[j]])/np.sum(secStep_ts[-1,any_min[j]])
+#     # if np.sum(secStep_ts_d[-1,any_min[j]]) > 0.0:
+#     #     ax2_dual = np.max(dsecStep_ts_d[2:,any_min[j]])/np.sum(secStep_ts_d[-1,any_min[j]])
+#     # print ax1_solo, ax2_dual
+#     # print " "
+#     max_both = 2.0*np.mean([np.max(norm_growth_rate_d[:,any_min[j]]), np.max(norm_growth_rate[:,any_min[j]])])
+#     max_both = np.sum(norm_growth_rate[:,any_min[j]]) + np.sum(norm_growth_rate_d[:,any_min[j]])
+#     print max_both
+#     plt.scatter(np.sum(norm_growth_rate[2:,any_min[j]])/max_both,np.sum(norm_growth_rate_d[2:,any_min[j]])/max_both,marker='o',label=secondary[any_min[j]],s=40,facecolors=col[j],edgecolor=col[j],lw=2.0)
+#     # plt.scatter(norm_growth_rate[-1,any_min[j]],norm_growth_rate_d[-1,any_min[j]],marker='o',label=secondary[any_min[j]],facecolors=col[j],edgecolor=col[j])
+#     #plt.scatter(ax1_solo,ax2_dual,marker='o',label=secondary[any_min[j]],facecolors=col[j],edgecolor=col[j])
+#
+#     plt.xlabel('solo growth rate',fontsize=8)
+#     plt.ylabel('dual growth rate',fontsize=8)
+#     # plt.xlim([-1.0,4.0])
+#     # plt.ylim([-1.0,4.0])
+#     plt.title('steady-state growth rate',fontsize=10)
+#
+#
+#
+# ax1=fig.add_subplot(2,2,4, frameon=True)
+#
+# plt.plot([0.0,steps],[1.0, 1.0], lw=40.0, c='#cccccc')
+# plt.plot([0.0,steps],[1.0, 1.0], lw=20.0, c='#aaaaaa')
+# for j in range(len(any_min)):
+#     d_to_s = norm_growth_rate_d[:,any_min[j]]/norm_growth_rate[:,any_min[j]]
+#     #d_to_s = d_to_s/np.max(d_to_s)
+#     plt.plot(np.arange(1,steps+1),d_to_s,label=secondary[any_min[j]],c=col[j])
+#     plt.xlim([10,steps])
+#     #plt.ylim([0.95,1.05])
+#     #plt.scatter(norm_growth_rate[:,any_min[j]],norm_growth_rate_d[:,any_min[j]],marker='o',label=secondary[any_min[j]],facecolors='none',edgecolor=col[j])
+#     # for i in range(0,steps):
+#     #     if norm_growth_rate[i,any_min[j]] == 0.0:
+#     #         norm_growth_rate[i,any_min[j]] = None
+#     #     if norm_growth_rate_d[i,any_min[j]] == 0.0:
+#     #         norm_growth_rate_d[i,any_min[j]] = None
+#     # plt.plot(norm_growth_rate[:,any_min[j]],norm_growth_rate_d[:,any_min[j]],label=secondary[any_min[j]])
+#     #plt.ylim([0.95,1.05])
+#     plt.xlabel('time',fontsize=8)
+#     plt.title('dual:solo growth rate over time',fontsize=10)
 
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
@@ -1668,7 +1694,7 @@ plt.savefig(outpath+'all_ts_sec.png')
 
 
 
-#-FULL PRIMARY SUMMARY-# 
+#-FULL PRIMARY SUMMARY-#
 
 fig=plt.figure(figsize=(6.5,6.5))
 
@@ -1693,7 +1719,7 @@ for j in [2, 3, 4, 5]:
     #plt.ylim([0.75,1.05])
     plt.xticks([])
     plt.title('primary loss rate, solo',fontsize=10)
-    
+
 plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.65))
 
 
@@ -1708,8 +1734,8 @@ for j in [2, 3, 4, 5]:
     #plt.ylim([0.75,1.05])
     plt.xticks([])
     plt.title('primary loss rate, dual',fontsize=10)
-    
-    
+
+
 ax1=fig.add_subplot(4,2,5, frameon=True)
 
 for j in [2, 3, 4, 5]:
@@ -1721,8 +1747,8 @@ for j in [2, 3, 4, 5]:
     #plt.ylim([0.75,1.05])
     plt.xticks([])
     plt.title('primary loss rate, a',fontsize=10)
-    
-    
+
+
 ax1=fig.add_subplot(4,2,7, frameon=True)
 
 for j in [2, 3, 4, 5]:
