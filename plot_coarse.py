@@ -17,7 +17,7 @@ plt.rc('ytick', labelsize=7)
 plt.rcParams['axes.titlesize'] = 10
 #plt.rcParams['hatch.linewidth'] = 0.1
 
-plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
+plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 
 # col = ['maroon', 'r', 'darkorange', 'gold', 'lawngreen', 'g', 'darkcyan', 'c', 'b', 'navy','purple', 'm', 'hotpink', 'gray', 'k', 'sienna', 'saddlebrown']
 col = ['maroon', 'r', 'darkorange', 'lawngreen', 'g', 'c', 'b', 'navy','purple', 'hotpink', 'gray', 'k', 'sienna', 'saddlebrown']
@@ -32,16 +32,31 @@ col = ['maroon', 'r', 'darkorange', 'lawngreen', 'g', 'c', 'b', 'navy','purple',
 # 'pyrrhotite', 'magnetite', 'lepidocrocite', 'daphnite_7a', 'daphnite_14a', 'verm_k',6
 # 'mont_k', 'mont_mg'])2
 
+density = 2.5*np.ones(37)
+molar = 200.0*np.ones(37)
+
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
 'mesolite', 'hematite', 'mont_ca', 'verm_ca', 'analcime', 'philipsite', 'diopside', 'gismondine',
 'verm_mg', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite', 'scolecite', 'clinochlorte14a',
-'clinochlore7a', 'saponite_ca', 'verm_na', 'pyrrhotite', 'daphnite_7a', 'daphnite14a'])
-
+'clinochlore7a', 'saponite_ca', 'verm_na', 'pyrrhotite', 'fe_saponite_ca', 'fe_saponite_mg'])
 primary = np.array(['', '', 'plagioclase', 'pyroxene', 'olivine', 'basaltic glass'])
-
-density = 2.5*np.ones(37)
-molar = 200.0*np.ones(37)
+density = np.array([0.0, 2.65, 2.3, 3.05, 2.17, 5.01, 2.5, 3.8,
+2.7, 2.71, 2.56, 2.3, 2.28, 2.28, 3.05, 2.28,
+2.25, 5.3, 2.5, 2.55, 2.27, 2.2, 3.4, 2.26,
+2.55, 2.25, 2.75, 2.7, 2.87, 2.9, 2.275, 2.8,
+2.8, 2.3, 2.55, 4.61, 2.3, 2.3])
+molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
+549.07, 100.0869, 287.327, 480.19, 495.90, 495.90, 429.02, 495.90,
+380.22, 159.6882, 549.07, 504.19, 220.15, 649.86, 216.55, 649.86,
+504.19, 380.22, 379.259, 549.07, 395.38, 64.448, 392.34, 64.448,
+64.448, 480.19, 504.19, 85.12, 480.19, 480.19])
+# sap 480.19
+# cel 429.02
+# mont 549.07
+# nont 495.90
+# verm 504.19
+# chlor 64.448
 
 # density = np.array([0, 2.63, 2.3, 3.0,
 # 2.15, 5.02, 2.01, 4.27,2.01,
@@ -109,34 +124,10 @@ print molar.shape
 # INITIALIZE #
 ##############
 
-# #steps = 400
-# steps = 50
-# # corr = 20
-# corr = 5
-# minNum = 57
-# ison=10000
-# trace = 0
-# chem = 1
-# iso = 0
-# cell = 5
-# cellx = 10
-# celly = 1
+# ! something
 
-# #steps = 400
-# steps = 20
-# # corr = 20
-# corr = 2
-# minNum = 37
-# ison=10000
-# trace = 0
-# chem = 1
-# iso = 0
-# cell = 1
-# cellx = 10
-# celly = 1
-
-steps = 25
-corr = 1
+steps = 50
+corr = 2
 minNum = 37
 ison=10000
 trace = 0
@@ -147,29 +138,20 @@ cellx = 20
 celly = 1
 
 #hack: INPUT PATH
-outpath = "../output/revival/coarse_grid/f9/"
+outpath = "../output/revival/coarse_grid/f12/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
 
-#hack poop
-#hack1*
-# to do
 
 
 x0 = np.loadtxt(path + 'x.txt',delimiter='\n')
 y0 = np.loadtxt(path + 'y.txt',delimiter='\n')
 
-def something():
-    return something
-
-#-BOOP-#
-
-# format plotting geometry
 x=x0
 y=y0
 
-
+#fixme: blah
 
 asp = np.abs(np.max(x)/np.min(y))/4.0
 print asp
@@ -227,6 +209,7 @@ u_ts = np.zeros([steps])
 # lam = np.loadtxt(path + 'lambdaMat.txt')
 
 
+#hack: COARSE PLOT
 fig=plt.figure()
 
 grd_msh = np.ones(u_coarse[len(y):,:].shape)
@@ -283,7 +266,7 @@ def cut_chem(geo0,index):
     geo_cut_chem = geo0[:,(index*len(xCell)):(index*len(xCell)+len(xCell))]
     return geo_cut_chem
 
-
+#hack: hi
 
 def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
     #print cb_title
@@ -356,7 +339,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
     return chemplot
 
 
-def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_color='r',to_hatch=0,hatching='*'):
+def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_color='r',to_hatch=0,hatching='*',bg_alpha=0.5):
     varStep[varStep>0.0] = 1.0
     if frame_lines==1:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=True)
@@ -366,7 +349,7 @@ def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
         pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=0.0, edgecolors=[min_color],hatches=[hatching])
         #pGlass.set_linewidth(0.25)
     if to_hatch==0:
-        pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=0.5)
+        pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=bg_alpha)
     #pGlass = plt.contour(xCell,yCell,varStep,[0.5,1.0],colors=min_color, alpha=1.0)
     if perm_lines==1:
         p = plt.contour(xgh,ygh,perm[:,:],[-14.9],colors='black',linewidths=np.array([1.0]),zorder=-3)
@@ -467,6 +450,8 @@ dpriStep_ts_d = np.zeros([steps,6])
 
 any_min = []
 
+
+#hack: LOAD IN CHEM DATA
 if chem == 1:
     # IMPORT MINERALS
     print " "
@@ -639,6 +624,8 @@ if chem == 1:
 
 if chem == 1:
 
+    #hack: MAKE COMPOUND CHEM ARRAYS
+
     # lots of this stuff not done for _dual
     smectites0 = np.zeros(secMat[:,:,1].shape)
     zeolites0 = np.zeros(secMat[:,:,1].shape)
@@ -756,8 +743,8 @@ for i in range(0,steps,1):
     #print " "
     print "step =", i
 
-#-TOG PLOT #
     if i == 1:
+        #hack: TOGGLE PLOT
         fig=plt.figure()
         ax1=fig.add_subplot(1,1,1, frameon=False)
         plt.pcolor(togg)
@@ -765,7 +752,7 @@ for i in range(0,steps,1):
         fig.savefig(outpath+'togg_plot.png')
 
 
-
+    #hack: CUT UP ALL CHEMS
     if chem == 1:
         for j in range(len(any_min)):
             secStep[:,:,any_min[j]] = cut_chem(secMat[:,:,any_min[j]],i)
@@ -960,9 +947,7 @@ for i in range(0,steps,1):
 
 
 
-    # ##########################
-    # #        HEAT PLOT       #
-    # ##########################
+    #hack: HEAT PLOT (disabled)
     #
     # fig=plt.figure()
     #
@@ -1024,6 +1009,7 @@ for i in range(0,steps,1):
 
     if chem == 1:
 
+        #hack: JDF SOL 0 PLOT
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
@@ -1216,7 +1202,7 @@ for i in range(0,steps,1):
         plt.savefig(outpath+'jdfSol0_'+str(i+restart)+'.png')
 
 
-
+        #hack: JDF CHEM 2 SECONDARY PLOT
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
@@ -1263,11 +1249,8 @@ for i in range(0,steps,1):
         plt.savefig(outpath+'jdfChem2_'+str(i+restart)+'.png')
 
 
-########################
-#-CHEM PRI 0 PRIMARIES-#
-########################
 
-
+        #hack: JDF PRI 0 PLOT
         fig=plt.figure(figsize=(13.0,7.0))
         #plt.subplots_adjust( wspace=0.03, bottom=0.15, top=0.97, left=0.01, right=0.99)
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
@@ -1371,10 +1354,13 @@ for i in range(0,steps,1):
         plt.savefig(outpath+'jdfPri0_'+str(i+restart)+'.png')
 
 
-##############################
-#-CHEM 1 BINARY SECONDARIES-#
-##############################
 
+
+
+
+        f_colors=['#eb4dcd', 'rgb(73, 106, 163)', 'rgb(204, 120, 32)', 'rgb(243, 255, 20)', 'rgb(0, 54, 147)']
+
+        #hack: JDF CHEM 1 BINARY PLOT
         fig=plt.figure(figsize=(11.0,4.25))
 
         chemcont(smectites0, smectites, 3, 3, 1, 1, 'mineral distribution in solo chamber', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
@@ -1499,19 +1485,9 @@ for i in range(0,steps,1):
     plt.close('all')
 
 
-#-FULL SECONDARY SUMMARY-#
 
+#hack: FULL SECONDARY PLOT
 fig=plt.figure(figsize=(12.5,6.5))
-
-# ax1=fig.add_subplot(4,2,1, frameon=True)
-#
-# for j in range(len(any_min)):
-#     # print np.arange(1,steps).shape
-#     # print secStep_ts[:,any_min[j]].shape
-#     plt.plot(np.arange(1,steps+1),secStep_ts[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
-#     plt.title('all mins, solo',fontsize=10)
-#
-#
 
 norm_growth_rate = np.zeros([steps,minNum+1])
 norm_growth_rate_d = np.zeros([steps,minNum+1])
@@ -1694,8 +1670,7 @@ plt.savefig(outpath+'all_ts_sec.png')
 
 
 
-#-FULL PRIMARY SUMMARY-#
-
+#hack: FULL PRIMARY PLOT
 fig=plt.figure(figsize=(6.5,6.5))
 
 
