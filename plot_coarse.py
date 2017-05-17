@@ -22,33 +22,23 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 # col = ['maroon', 'r', 'darkorange', 'gold', 'lawngreen', 'g', 'darkcyan', 'c', 'b', 'navy','purple', 'm', 'hotpink', 'gray', 'k', 'sienna', 'saddlebrown']
 col = ['maroon', 'r', 'darkorange', 'lawngreen', 'g', 'c', 'b', 'navy','purple', 'hotpink', 'gray', 'k', 'sienna', 'saddlebrown']
 
-# secondary = np.array(['', 'stilbite', 'aragonite', 'kaolinite', 'albite', 'saponite_mg', 'celadonite', 7
-# 'clinoptilolite', 'pyrite', 'mont_na', 'goethite', 'dolomite', 'smectite', 'saponite_k',7
-# 'anhydrite', 'siderite', 'calcite', 'quartz', 'kspar', 'saponite_na', 'nont_na', 'nont_mg',8
-# 'nont_k', 'nont_h', 'nont_ca', 'muscovite', 'mesolite', 'hematite', 'mont_ca', 'verm_ca',8
-# 'analcime', 'phillipsite', 'diopside', 'epidote', 'gismondine', 'hedenbergite', 'chalcedony',7
-# 'verm_mg', 'ferrihydrite', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite',7
-# 'scolecite', 'chamosite7a', 'clinochlore14a', 'clinochlore7a', 'saponite_ca', 'verm_na',6
-# 'pyrrhotite', 'magnetite', 'lepidocrocite', 'daphnite_7a', 'daphnite_14a', 'verm_k',6
-# 'mont_k', 'mont_mg'])2
-
-density = 2.5*np.ones(37)
-molar = 200.0*np.ones(37)
-
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
-'mesolite', 'hematite', 'mont_ca', 'verm_ca', 'analcime', 'philipsite', 'diopside', 'gismondine',
+'mesolite', 'hematite', 'mont_ca', 'verm_ca', 'analcime', 'philipsite', 'mont_mg', 'gismondine',
 'verm_mg', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite', 'scolecite', 'clinochlorte14a',
 'clinochlore7a', 'saponite_ca', 'verm_na', 'pyrrhotite', 'fe_saponite_ca', 'fe_saponite_mg'])
+
 primary = np.array(['', '', 'plagioclase', 'pyroxene', 'olivine', 'basaltic glass'])
+
 density = np.array([0.0, 2.65, 2.3, 3.05, 2.17, 5.01, 2.5, 3.8,
 2.7, 2.71, 2.56, 2.3, 2.28, 2.28, 3.05, 2.28,
-2.25, 5.3, 2.5, 2.55, 2.27, 2.2, 3.4, 2.26,
+2.25, 5.3, 2.5, 2.55, 2.27, 2.2, 2.5, 2.26,
 2.55, 2.25, 2.75, 2.7, 2.87, 2.9, 2.275, 2.8,
 2.8, 2.3, 2.55, 4.61, 2.3, 2.3])
+
 molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 549.07, 100.0869, 287.327, 480.19, 495.90, 495.90, 429.02, 495.90,
-380.22, 159.6882, 549.07, 504.19, 220.15, 649.86, 216.55, 649.86,
+380.22, 159.6882, 549.07, 504.19, 220.15, 649.86, 549.07, 649.86,
 504.19, 380.22, 379.259, 549.07, 395.38, 64.448, 392.34, 64.448,
 64.448, 480.19, 504.19, 85.12, 480.19, 480.19])
 # sap 480.19
@@ -58,56 +48,6 @@ molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 # verm 504.19
 # chlor 64.448
 
-# density = np.array([0, 2.63, 2.3, 3.0,
-# 2.15, 5.02, 2.01, 4.27,2.01,
-# 2.71, 2.56, 2.3, 2.3, 2.3,
-# 2.3, 2.29, 5.3, 2.01, 2.5,
-# 2.27, 2.2, 3.41, 2.26,
-# 2.5, 2.23, 2.75, 2.01, 2.87, 2.468,
-# 2.27, 3.0, 3.0, 3.0, 2.3,2.5,
-# 4.62, 3.2, 3.2])
-#
-#
-# density = np.array([0, 2.15-, 2.93-, 2.63, 2.62-, 2.3, 3.0,
-# 2.15, 5.02, 2.01, 4.27, 2.84-, 2.01, 2.3-,
-# 2.97-, 3.96-, 2.71, 2.65-, 2.56, 2.3, 2.3, 2.3,
-# 2.3-, 2.3-, 2.3, 2.81-, 2.29, 5.3, 2.01, 2.5,
-# 2.27, 2.2, 3.3-, 3.41, 2.26, 3.56-, 2.65-,
-# 2.5, 3.8-, 2.23, 2.75, 2.01, 2.87, 2.468,
-# 2.27, 3.0, 3.0, 3.0, 2.3,2.5,
-# 4.62, 5.15-, 4.08-, 3.2, 3.2, 2.5-,
-# 2.01-, 2.01-])
-#
-# molar = np.array([0, 480.19, 100.19, 258.16, 263.02, 480.19, 429.02,
-# 2742.13, 119.98, 549.07, 88.85, 180.4, 540.46, 480.19,
-# 136.14, 115.86, 100.19, 60.08, 278.33, 480.19, 495.9, 495.9,
-# 495.9, 495.9, 495.9, 398.71, 1164.9, 159.69, 549.07, 504.19,
-# 220.15, 704.93, 216.55, 519.3, 718.55, 248.08, 60.08,
-# 504.19, 169.7, 380.22, 379.27, 540.46, 395.38, 67.4,
-# 392.34, 664.18, 595.22, 595.22, 480.19, 504.19,
-# 85.12, 231.53, 88.85, 664.18, 664.18, 504.19,
-# 49.07, 549.07])
-
-# density = np.array([0, 2.15, 2.93, 2.63, 2.62, 2.3, 3.0,
-# 2.15, 5.02, 2.01, 4.27, 2.84, 2.01, 2.3,
-# 2.97, 3.96, 2.71, 2.65, 2.56, 2.3, 2.3, 2.3,
-# 2.3, 2.3, 2.3, 2.81, 2.29, 5.3, 2.01, 2.5,
-# 2.27, 2.2, 3.3, 3.41, 2.26, 3.56, 2.65,
-# 2.5, 3.8, 2.23, 2.75, 2.01, 2.87, 2.468,
-# 2.27, 3.0, 3.0, 3.0, 2.3,2.5,
-# 4.62, 5.15, 4.08, 3.2, 3.2, 2.5,
-# 2.01, 2.01])
-#
-# molar = np.array([0, 480.19, 100.19, 258.16, 263.02, 480.19, 429.02,
-# 2742.13, 119.98, 549.07, 88.85, 180.4, 540.46, 480.19,
-# 136.14, 115.86, 100.19, 60.08, 278.33, 480.19, 495.9, 495.9,
-# 495.9, 495.9, 495.9, 398.71, 1164.9, 159.69, 549.07, 504.19,
-# 220.15, 704.93, 216.55, 519.3, 718.55, 248.08, 60.08,
-# 504.19, 169.7, 380.22, 379.27, 540.46, 395.38, 67.4,
-# 392.34, 664.18, 595.22, 595.22, 480.19, 504.19,
-# 85.12, 231.53, 88.85, 664.18, 664.18, 504.19,
-# 49.07, 549.07])
-
 print secondary.shape
 print density.shape
 print molar.shape
@@ -116,15 +56,10 @@ molar_pri = np.array([110.0, 153.0, 236.0, 277.0])
 
 density_pri = np.array([2.7, 3.0, 3.0, 3.0])
 
-print secondary.shape
-print density.shape
-print molar.shape
 
 ##############
 # INITIALIZE #
 ##############
-
-# ! something
 
 steps = 50
 corr = 2
@@ -138,12 +73,10 @@ cellx = 20
 celly = 1
 
 #hack: INPUT PATH
-outpath = "../output/revival/coarse_grid/f12/"
+outpath = "../output/revival/coarse_grid/f13/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
-
-
 
 x0 = np.loadtxt(path + 'x.txt',delimiter='\n')
 y0 = np.loadtxt(path + 'y.txt',delimiter='\n')
@@ -151,14 +84,13 @@ y0 = np.loadtxt(path + 'y.txt',delimiter='\n')
 x=x0
 y=y0
 
-#fixme: blah
-
 asp = np.abs(np.max(x)/np.min(y))/4.0
 print asp
 bitsx = len(x)
 bitsy = len(y)
 restart = 1
 print "bitsy" , bitsy
+
 
 
 
@@ -209,6 +141,9 @@ u_ts = np.zeros([steps])
 # lam = np.loadtxt(path + 'lambdaMat.txt')
 
 
+
+
+
 #hack: COARSE PLOT
 fig=plt.figure()
 
@@ -253,8 +188,6 @@ fig.savefig(outpath+'coarse_plot.png')
 
 
 
-# this thing
-
 def cut(geo0,index):
     #geo_cut = geo0[(index*len(y0)/cell):(index*len(y0)/cell+len(y0)/cell),:]
     geo_cut = geo0[:,(index*len(x0)):(index*len(x0)+len(x0))]
@@ -262,11 +195,11 @@ def cut(geo0,index):
     geo_cut = np.append(geo_cut, geo_cut[:,-1:], axis=1)
     return geo_cut
 
+
 def cut_chem(geo0,index):
     geo_cut_chem = geo0[:,(index*len(xCell)):(index*len(xCell)+len(xCell))]
     return geo_cut_chem
 
-#hack: hi
 
 def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
     #print cb_title
@@ -297,7 +230,6 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
             #cbar = plt.colorbar(pGlass, orientation='horizontal',ticks=contours[::contour_interval],shrink=0.9, pad = 0.5)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
-
 
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
         #cb_min=0.0
@@ -339,17 +271,20 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
     return chemplot
 
 
-def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_color='r',to_hatch=0,hatching='*',bg_alpha=0.5):
+def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=0, ytix=0, perm_lines=0, frame_lines=0, min_color='r', hatching='', bg_alpha=0.5, ed_col='k'):
     varStep[varStep>0.0] = 1.0
     if frame_lines==1:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=True)
     if frame_lines==0:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
-    if to_hatch==1:
+    if hatching!='':
         pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=0.0, edgecolors=[min_color],hatches=[hatching])
         #pGlass.set_linewidth(0.25)
-    if to_hatch==0:
-        pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=bg_alpha)
+    if hatching=='':
+        if ed_col=='w':
+            pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=bg_alpha, zorder=-10)
+        if ed_col!='w':
+            pGlass = plt.contour(xCell,yCell,varStep,[0.5,1.0],colors=[ed_col], lw=2, zorder=3)
     #pGlass = plt.contour(xCell,yCell,varStep,[0.5,1.0],colors=min_color, alpha=1.0)
     if perm_lines==1:
         p = plt.contour(xgh,ygh,perm[:,:],[-14.9],colors='black',linewidths=np.array([1.0]),zorder=-3)
@@ -364,7 +299,8 @@ def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
     return chemcont
 
 
-def chemcont_l(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, perm_lines=1, frame_lines=1, min_cmap=cm.coolwarm, cb_min=-10.0, cb_max=10.0):
+def chemcont_l(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1,
+perm_lines=1, frame_lines=1, min_cmap=cm.coolwarm, cb_min=-10.0, cb_max=10.0):
     #varStep[varStep>0.0] = 1.0
     if frame_lines==1:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4*1.5,frameon=True)
@@ -655,6 +591,8 @@ if chem == 1:
     zeo_list = [4, 16, 20, 21, 23, 25, 30]
     chlor_list = [29, 31, 32, 36, 37]
 
+
+
     for j in range(len(smec_list)):
         smectites0 = smectites0 + secMat[:,:,smec_list[j]]
         smectites0_a = smectites0_a + secMat_a[:,:,smec_list[j]]
@@ -670,6 +608,7 @@ if chem == 1:
         chlorites0_a = chlorites0_a + secMat_a[:,:,chlor_list[j]]
         chlorites0_b = chlorites0_b + secMat_b[:,:,chlor_list[j]]
         chlorites0_d = chlorites0_d + secMat_d[:,:,chlor_list[j]]
+
 
     for j in range(len(xCell)*steps):
         for jj in range(len(yCell)):
@@ -1360,59 +1299,286 @@ for i in range(0,steps,1):
 
         f_colors=['#eb4dcd', 'rgb(73, 106, 163)', 'rgb(204, 120, 32)', 'rgb(243, 255, 20)', 'rgb(0, 54, 147)']
 
-        #hack: JDF CHEM 1 BINARY PLOT
+        bin_u_smec = [11, 12]
+        bin_phil = [21]
+        bin_sap = [2, 33, 36, 37]
+        bin_fe_sap = [36, 37]
+        bin_verm = [19, 24, 34]
+        bin_talc = [26]
+        bin_nont = [12, 13]
+        bin_celad = [3, 14]
+        bin_chlor = []
+        bin_goet = [7]
+        bin_hem = [17]
+        bin_pyrite = [5]
+        bin_pyrr = [35]
+        bin_u_zeo = [20]
+
+
+        c_u_smec = dict(name='u smectites',
+                        ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_phil = dict(name='phillipsite', ind=[21], min_color='#FFFFFF', hatching='//', bg_alpha=1.0, ed_col='k')
+        c_sap = dict(name='mg-ca-saponites', ind=[2, 33, 36, 37], min_color='#FFFFFF', hatching='\\'+'\\', bg_alpha=1.0, ed_col='k')
+        c_pyrite = dict(name='pyrite', ind=[5], min_color='#FFFFFF', hatching='', bg_alpha=1.0, ed_col='#a38900')
+
+        c_talc = dict(name='talc', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_nont = dict(name='nontronite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_celad = dict(name='celadonite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_goet = dict(name='goethite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_u_zeo = dict(name='u zeolites', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_chlor = dict(name='chlorite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+
+        c_fe_sap = dict(name='fe-saponites', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_verm = dict(name='vermiculite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_hem = dict(name='hematite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+        c_pyrr = dict(name='pyrrhotite', ind=[11, 12],
+                        min_color='#eb4dcd',
+                        hatching='',
+                        bg_alpha=.8,
+                        ed_col='w')
+
+
+
+
+
+
+        # c_fe_sap = 'rgb(204, 120, 32)'
+        # c_verm = 'rgb(243, 255, 20)'
+        # c_talc = 'rgb(0, 54, 147)'
+        # c_nont = 'rgb(140, 203, 49)'
+        # c_celad = 'rgb(64, 64, 64)'
+
+
+
+        #hack: JDF NEW BINARY PLOT
         fig=plt.figure(figsize=(11.0,4.25))
 
-        chemcont(smectites0, smectites, 3, 3, 1, 1, 'mineral distribution in solo chamber', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        chemcont(zeolites0, zeolites, 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        chemcont(chlorites0, chlorites, 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat[:,:,26], secStep[:,:,26], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat[:,:,7], secStep[:,:,7], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat[:,:,5], secStep[:,:,5], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat[:,:,3]+secMat[:,:,14], secStep[:,:,3]+secStep[:,:,14], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #chemcont(secMat[:,:,16], secStep[:,:,16], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        bind = c_u_smec
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, 'solo chamber', xtix=0, ytix=1,perm_lines=0, frame_lines=1,
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg1 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
 
 
-        chemcont(smectites0_d, smectites_d, 3, 3, 4, 1, 'mineral distribution in dual chamber (a + b)', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        chemcont(zeolites0_d, zeolites_d, 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        chemcont(chlorites0_d, chlorites_d, 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat_d[:,:,26], secStep_d[:,:,26], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat_d[:,:,7], secStep_d[:,:,7], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat_d[:,:,5], secStep_d[:,:,5], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_d[:,:,3]+secMat_d[:,:,14], secStep_d[:,:,3]+secStep_d[:,:,14], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #chemcont(secMat_d[:,:,16], secStep_d[:,:,16], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        bind = c_sap
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg2 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
 
 
-        chemcont(smectites0_a, smectites_a, 3, 6, 13, 1, 'chamber a only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        chemcont(zeolites0_a, zeolites_a, 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        chemcont(chlorites0_a, chlorites_a, 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat_a[:,:,26], secStep_a[:,:,26], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat_a[:,:,7], secStep_a[:,:,7], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat_a[:,:,5], secStep_a[:,:,5], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_a[:,:,3]+secMat_a[:,:,14], secStep_a[:,:,3]+secStep_a[:,:,14], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #chemcont(secMat_a[:,:,16], secStep_a[:,:,16], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        bind = c_phil
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg3 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
 
 
-        chemcont(smectites0_b, smectites_b, 3, 6, 14, 1, 'chamber b only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
-        chemcont(zeolites0_b, zeolites_b, 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
-        chemcont(chlorites0_b, chlorites_b, 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
-        chemcont(secMat_b[:,:,26], secStep_b[:,:,26], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
-        chemcont(secMat_b[:,:,7], secStep_b[:,:,7], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
-        chemcont(secMat_b[:,:,5], secStep_b[:,:,5], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
-        chemcont(secMat_b[:,:,3]+secMat_b[:,:,14], secStep_b[:,:,3]+secStep_b[:,:,14], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
-        #chemcont(secMat_b[:,:,16], secStep_b[:,:,16], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        bind = c_pyrite
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg4 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
 
 
-        lg1 = Patch(facecolor='r', label='smectites', alpha=0.5)
-        lg2 = Patch(facecolor='g', label='zeolites', alpha=0.5)
-        lg3 = Patch(facecolor='gold', label='talc', alpha=0.5)
-        lg4 = Patch(facecolor='w', label='chlorites', hatch ='////')
-        lg5 = Patch(facecolor='w', label='goethite', hatch ='\\')
-        lg6 = Patch(facecolor='w', label='pyrite', hatch ='O')
-        lg7 = Patch(facecolor='b', label='celadonite', alpha=0.5)
-        lg8 = Patch(facecolor='grey', label='caco3', alpha=0.5)
+        bind = c_talc
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
 
-        plt.legend([lg1,lg2,lg3,lg4,lg5,lg6,lg7,lg8],['smectites','zeolites','talc', 'chlorites','goethite','pyrite','celadonite','caco3'],fontsize=8,ncol=3,bbox_to_anchor=(0.0, -1.45),loc=8)
+        lg5 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+        bind = c_nont
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg6 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+        bind = c_celad
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg7 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+        bind = c_goet
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg8 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+        bind = c_u_zeo
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg9 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+        bind = c_chlor
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+        lg10 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+        # bind = c_chlor
+        # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+        #
+        # lg10 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+        #
+        # bind = c_fe_sap
+        # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+        #
+        # bind = c_verm
+        # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+        #
+        # bind = c_hem
+        # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+        #
+        # bind = c_pyrr
+        # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 3, 1, 1, '',
+        # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+
+
+
+        #
+        # lg1 = Patch(facecolor=c_u_smec['min_color'], label='u smectites', alpha=c_u_smec['bg_alpha'], hatch=c_u_smec['hatching'])
+        # lg2 = Patch(facecolor=c_phil['min_color'], label='phillipsite', alpha=c_phil['bg_alpha'], hatch=c_phil['hatching'])
+        # lg2 = Patch(facecolor='g', label='zeolites', alpha=0.5)
+        # lg3 = Patch(facecolor='gold', label='talc', alpha=0.5)
+        # lg4 = Patch(facecolor='w', label='chlorites', hatch ='////')
+        # lg5 = Patch(facecolor='w', label='goethite', hatch ='\\')
+        # lg6 = Patch(facecolor='w', label='pyrite', hatch ='O')
+        # lg7 = Patch(facecolor='b', label='celadonite', alpha=0.5)
+        # lg8 = Patch(facecolor='grey', label='caco3', alpha=0.5)
+
+        # plt.legend([lg1, lg2, lg3, lg4],[lg1.get_label(), lg2.get_label(), lg3.get_label(), lg4.get_label()],fontsize=8,ncol=3,bbox_to_anchor=(1.0, -1.45),loc=8)
+
+        plt.legend([lg1, lg2, lg3, lg4, lg5, lg6, lg7, lg8, lg9, lg10],[lg1.get_label(), lg2.get_label(), lg3.get_label(), lg4.get_label(), lg5.get_label(), lg6.get_label(), lg7.get_label(), lg8.get_label(), lg9.get_label(), lg10.get_label()],fontsize=8,ncol=3,bbox_to_anchor=(1.0, -1.45),loc=8)
+
+        plt.subplots_adjust( wspace=0.05 , bottom=0.12, top=0.95, left=0.03, right=0.975)
+        plt.savefig(outpath+'jdfBin_'+str(i+restart)+'.png')
+
+
+
+
+
+
+
+
+
+
+
+        # #hack: JDF CHEM 1 BINARY PLOT
+        # fig=plt.figure(figsize=(11.0,4.25))
+        #
+        # chemcont(smectites0, smectites, 3, 3, 1, 1, 'mineral distribution in solo chamber', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
+        # chemcont(zeolites0, zeolites, 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
+        # chemcont(chlorites0, chlorites, 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
+        # chemcont(secMat[:,:,26], secStep[:,:,26], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        # chemcont(secMat[:,:,7], secStep[:,:,7], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        # chemcont(secMat[:,:,5], secStep[:,:,5], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        # chemcont(secMat[:,:,3]+secMat[:,:,14], secStep[:,:,3]+secStep[:,:,14], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        # #chemcont(secMat[:,:,16], secStep[:,:,16], 3, 3, 1, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        #
+        #
+        # chemcont(smectites0_d, smectites_d, 3, 3, 4, 1, 'mineral distribution in dual chamber (a + b)', xtix=0, ytix=1,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
+        # chemcont(zeolites0_d, zeolites_d, 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
+        # chemcont(chlorites0_d, chlorites_d, 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
+        # chemcont(secMat_d[:,:,26], secStep_d[:,:,26], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        # chemcont(secMat_d[:,:,7], secStep_d[:,:,7], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        # chemcont(secMat_d[:,:,5], secStep_d[:,:,5], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        # chemcont(secMat_d[:,:,3]+secMat_d[:,:,14], secStep_d[:,:,3]+secStep_d[:,:,14], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        # #chemcont(secMat_d[:,:,16], secStep_d[:,:,16], 3, 3, 4, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        #
+        #
+        # chemcont(smectites0_a, smectites_a, 3, 6, 13, 1, 'chamber a only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
+        # chemcont(zeolites0_a, zeolites_a, 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
+        # chemcont(chlorites0_a, chlorites_a, 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
+        # chemcont(secMat_a[:,:,26], secStep_a[:,:,26], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        # chemcont(secMat_a[:,:,7], secStep_a[:,:,7], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        # chemcont(secMat_a[:,:,5], secStep_a[:,:,5], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        # chemcont(secMat_a[:,:,3]+secMat_a[:,:,14], secStep_a[:,:,3]+secStep_a[:,:,14], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        # #chemcont(secMat_a[:,:,16], secStep_a[:,:,16], 3, 6, 13, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        #
+        #
+        # chemcont(smectites0_b, smectites_b, 3, 6, 14, 1, 'chamber b only', xtix=0, ytix=0,perm_lines=0, frame_lines=1, min_color='r',to_hatch=0)
+        # chemcont(zeolites0_b, zeolites_b, 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='g',to_hatch=0)
+        # chemcont(chlorites0_b, chlorites_b, 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=1,hatching='////')
+        # chemcont(secMat_b[:,:,26], secStep_b[:,:,26], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='gold',to_hatch=0)
+        # chemcont(secMat_b[:,:,7], secStep_b[:,:,7], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='\\')
+        # chemcont(secMat_b[:,:,5], secStep_b[:,:,5], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='k',to_hatch=1,hatching='O')
+        # chemcont(secMat_b[:,:,3]+secMat_b[:,:,14], secStep_b[:,:,3]+secStep_b[:,:,14], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='b',to_hatch=0)
+        # #chemcont(secMat_b[:,:,16], secStep_b[:,:,16], 3, 6, 14, 1, '', xtix=0, ytix=0,perm_lines=0, frame_lines=0, min_color='grey',to_hatch=0)
+        #
+        #
+        # lg1 = Patch(facecolor='r', label='smectites', alpha=0.5)
+        # lg2 = Patch(facecolor='g', label='zeolites', alpha=0.5)
+        # lg3 = Patch(facecolor='gold', label='talc', alpha=0.5)
+        # lg4 = Patch(facecolor='w', label='chlorites', hatch ='////')
+        # lg5 = Patch(facecolor='w', label='goethite', hatch ='\\')
+        # lg6 = Patch(facecolor='w', label='pyrite', hatch ='O')
+        # lg7 = Patch(facecolor='b', label='celadonite', alpha=0.5)
+        # lg8 = Patch(facecolor='grey', label='caco3', alpha=0.5)
+        #
+        # plt.legend([lg1,lg2,lg3,lg4,lg5,lg6,lg7,lg8],['smectites','zeolites','talc', 'chlorites','goethite','pyrite','celadonite','caco3'],fontsize=8,ncol=3,bbox_to_anchor=(0.0, -1.45),loc=8)
 
 
         # if np.max(dsecStep[:,:,16]) != 0.0:
