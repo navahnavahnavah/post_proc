@@ -51,10 +51,9 @@ print secondary.shape
 print density.shape
 print molar.shape
 
-molar_pri = np.array([110.0, 153.0, 236.0, 277.0])
+molar_pri = np.array([110.0, 153.0, 158.81, 277.0])
 
 density_pri = np.array([2.7, 3.0, 3.0, 3.0])
-
 
 ##############
 # INITIALIZE #
@@ -71,8 +70,8 @@ cell = 1
 cellx = 20
 celly = 1
 
-#hack: INPUT PATH
-outpath = "../output/revival/coarse_grid/f21/"
+#hack: input path
+outpath = "../output/revival/summer_coarse_grid/sites_90km_l/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
@@ -131,9 +130,8 @@ u_ts = np.zeros([steps])
 
 
 
-#hack: COARSE PLOT
+#todo: FIGURE: coarse_plot.png
 fig=plt.figure()
-
 grd_msh = np.ones(u_coarse[len(y):,:].shape)
 
 ax1=fig.add_subplot(2,2,1,frameon=False)
@@ -161,7 +159,6 @@ plt.title('v_coarse')
 plt.colorbar(pgv,orientation='horizontal')
 
 fig.savefig(outpath+'coarse_plot.png')
-
 
 
 def cut(geo0,index):
@@ -275,8 +272,10 @@ def chemcont_vol(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*2.75,frameon=True)
     if frame_lines==0:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*2.75,frameon=False)
-    contours = np.linspace(0.0,0.8,contour_interval)
+    contours = np.linspace(0.0,0.2,contour_interval)
     pGlass = plt.contourf(xCell,yCell,varStep,contours,cmap=cm.binary)
+    for c in pGlass.collections:
+        c.set_edgecolor("face")
     #pGlass.set_linewidth(0.0)
 
     plt.yticks([])
@@ -293,7 +292,7 @@ def chemcont_vol(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix
         bbox = ax1.get_position()
         #print bbox
         cax = fig.add_axes([bbox.xmin+bbox.width/7.5, bbox.ymin-0.56, bbox.width*0.8, bbox.height*0.13])
-        cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
+        cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=[0.0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2])
         plt.title(cb_title,fontsize=10)
         #cbar = plt.colorbar(pGlass, orientation='horizontal',ticks=contours[::contour_interval],shrink=0.9, pad = 0.5)
         cbar.solids.set_rasterized(True)
@@ -384,8 +383,7 @@ dpriStep_ts_d = np.zeros([steps,6])
 
 any_min = []
 
-
-#hack: LOAD IN CHEM DATA
+#hack: load in chem data
 if chem == 1:
     # IMPORT MINERALS
     print " "
@@ -541,7 +539,7 @@ if chem == 1:
 
 if chem == 1:
 
-    #hack: MAKE COMPOUND CHEM ARRAYS
+    #hack: make compound chem arrays
 
     alt_vol0 = np.zeros(secMat[:,:,1].shape)
     alt_vol0_a = np.zeros(secMat[:,:,1].shape)
@@ -588,7 +586,7 @@ for i in range(0,steps,1):
     print "step =", i
 
     if i == 1:
-        #hack: TOGGLE PLOT
+        #todo: FIGURE: togg_plot.png
         fig=plt.figure()
         ax1=fig.add_subplot(1,1,1, frameon=False)
         plt.pcolor(togg)
@@ -768,8 +766,8 @@ for i in range(0,steps,1):
     chem6 = 6
 
     if chem == 1:
-
-        #hack: JDF SOL 0 PLOT
+        print "jdf_Sol_Block plot"
+        #todo: FIGURE: jdf_Sol_Block
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
@@ -959,10 +957,11 @@ for i in range(0,steps,1):
         chemplot(plt_a, plt_aa, 7, 10, 69, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
         chemplot(plt_bb, plt_bb, 7, 10, 70, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-        plt.savefig(outpath+'jdfSol0_'+str(i+restart)+'.png')
+        plt.savefig(outpath+'jdf_Sol_Block_'+str(i+restart)+'.png')
 
 
-        #hack: JDF CHEM 2 SECONDARY PLOT
+        #todo: FIGURE: jdf_Sec_Block (secondary Pcolor plot)
+        print "jdf_Sec_Block_ plot"
         fig=plt.figure(figsize=(13.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
@@ -1006,11 +1005,12 @@ for i in range(0,steps,1):
             chemplot(plt_bb, plt_bb, 7, 10, 21+am_pp, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
-        plt.savefig(outpath+'jdfChem2_'+str(i+restart)+'.png')
+        plt.savefig(outpath+'jdf_Sec_Block_'+str(i+restart)+'.png')
 
 
 
-        #hack: JDF PRI 0 PLOT
+        #todo: FIGURE: jdf_Pri_Block (primary Pcolor plot)
+        print "jdf_Pri_Block plot"
         fig=plt.figure(figsize=(13.0,7.0))
         #plt.subplots_adjust( wspace=0.03, bottom=0.15, top=0.97, left=0.01, right=0.99)
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
@@ -1111,7 +1111,7 @@ for i in range(0,steps,1):
 
         #fig.set_tight_layout(True)
         # plt.subplots_adjust( wspace=0.05 , bottom=0.04, top=0.97, left=0.03, right=0.975)
-        plt.savefig(outpath+'jdfPri0_'+str(i+restart)+'.png')
+        plt.savefig(outpath+'jdf_Pri_Block_'+str(i+restart)+'.png')
 
 
 
@@ -1234,16 +1234,17 @@ for i in range(0,steps,1):
 
 
 
-        #hack: JDF NEW BINARY PLOT
+        #todo: FIGURE: jdf_Sec_Cont (binary contour plot)
+        print "jdf_Sec_Cont plot"
         fig=plt.figure(figsize=(11.0,4.6))
 
-        chemcont_vol(alt_vol0, alt_vol, 3, 2, 2, 20, 'solo chamber', xtix=0, ytix=0,frame_lines=1, cb=1, cb_title='alteration vol')
+        chemcont_vol(alt_vol0, alt_vol, 3, 2, 2, 10, 'solo chamber', xtix=1, ytix=0,frame_lines=1, cb=1, cb_title='alteration vol')
 
-        chemcont_vol(alt_vol0_d, alt_vol_d, 3, 2, 4, 20, 'dual chamber', xtix=0, ytix=0,frame_lines=1)
+        chemcont_vol(alt_vol0_d, alt_vol_d, 3, 2, 4, 10, 'dual chamber', xtix=0, ytix=0,frame_lines=1)
 
-        chemcont_vol(alt_vol0_a, alt_vol_a, 3, 4, 11, 20, 'chamber a only', xtix=0, ytix=0,frame_lines=1)
+        chemcont_vol(alt_vol0_a, alt_vol_a, 3, 4, 11, 10, 'chamber a only', xtix=0, ytix=0,frame_lines=1)
 
-        chemcont_vol(alt_vol0_b, alt_vol_b, 3, 4, 12, 20, 'chamber b only', xtix=0, ytix=0,frame_lines=1)
+        chemcont_vol(alt_vol0_b, alt_vol_b, 3, 4, 12, 10, 'chamber b only', xtix=0, ytix=0,frame_lines=1)
 
 
 
@@ -1252,7 +1253,7 @@ for i in range(0,steps,1):
 
 
         bind = c_u_smec
-        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, 'solo chamber', xtix=0, ytix=1, frame_lines=1,
+        chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, 'solo chamber', xtix=1, ytix=1, frame_lines=1,
         min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
 
         lg1 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
@@ -1525,8 +1526,319 @@ for i in range(0,steps,1):
 
 
         plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
-        plt.savefig(outpath+'jdfBin_'+str(i+restart)+'.png')
+        plt.savefig(outpath+'jdf_Sec_Cont_'+str(i+restart)+'.png')
 
+        #hack: .eps jdfChemCont
+        # plt.savefig(outpath+'jdfChemCont_'+str(i+restart)+'.eps')
+
+
+
+
+    #hack: chem0 switch
+    chem0 = 0
+
+    if chem0 == 0:
+
+
+        #todo: FIGURE: jdf_alt_plot, NXF
+        print "jdf_alt_plot plot"
+
+        nsites = 9
+        ebw = 800.0
+        dark_red = '#65091f'
+        plot_purple = '#b678f5'
+        plot_blue = '#4e94c1'
+        site_locations = np.array([22.742, 25.883, 33.872, 40.706, 45.633, 55.765, 75.368, 99.006, 102.491])
+        site_locations = (site_locations - 20.00)*1000.0
+        site_names = ["1023", "1024", "1025", "1031", "1028", "1029", "1032", "1026", "1027"]
+        alt_values = np.array([0.3219, 2.1072, 2.3626, 2.9470, 10.0476, 4.2820, 8.9219, 11.8331, 13.2392])
+        lower_eb = np.array([0.3219, 0.04506, 0.8783, 1.7094, 5.0974, 0.8994, 5.3745, 2.5097, 3.0084])
+        upper_eb = np.array([1.7081, 2.9330, 3.7662, 4.9273, 11.5331, 5.0247, 10.7375, 17.8566, 27.4308])
+
+        alt_col_mean_d = np.zeros(len(xCell))
+        alt_col_mean_s = np.zeros(len(xCell))
+
+        alt_col_mean_top_half_d = np.zeros(len(xCell))
+        alt_col_mean_top_half_s = np.zeros(len(xCell))
+
+        alt_col_mean_top_cell_d = np.zeros(len(xCell))
+        alt_col_mean_top_cell_s = np.zeros(len(xCell))
+
+        for j in range(len(xCell)):
+            # full column average
+            above_zero = alt_vol[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            alt_col_mean_s[j] = np.mean(above_zero)
+
+            above_zero = alt_vol_d[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            alt_col_mean_d[j] = np.mean(above_zero)
+
+
+            # top half of column average
+            above_zero = alt_vol[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            alt_col_mean_top_half_s[j] = np.mean(above_zero[len(above_zero)/2:])
+
+            above_zero = alt_vol_d[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            alt_col_mean_top_half_d[j] = np.mean(above_zero[len(above_zero)/2:])
+
+
+            # top cell of column
+            above_zero = alt_vol[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            alt_col_mean_top_cell_s[j] = np.mean(above_zero[-1:])
+
+            above_zero = alt_vol_d[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            alt_col_mean_top_cell_d[j] = np.mean(above_zero[-1:])
+
+
+
+        fig=plt.figure(figsize=(10.0,10.0))
+
+        # alteration data
+        ax=fig.add_subplot(2, 1, 1, frameon=True)
+        ax.grid(True)
+        plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+        plt.plot(site_locations,alt_values,color=dark_red,linestyle='-')
+
+        for j in range(nsites):
+            # error bar height
+            plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red)
+            # lower error bar
+            plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red)
+            # upper error bar
+            plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red)
+
+        # plot model column mean
+        plt.plot(xCell,alt_col_mean_s,color=plot_purple,lw=2, label="column mean solo")
+        plt.plot(xCell,alt_col_mean_d,color=plot_blue,lw=2, label="column mean dual")
+
+        # plot model top half mean
+        plt.plot(xCell,alt_col_mean_top_half_s,color=plot_purple,lw=2,linestyle='--')
+        plt.plot(xCell,alt_col_mean_top_half_d,color=plot_blue,lw=2,linestyle='--')
+
+        # plot model top cell
+        plt.plot(xCell,alt_col_mean_top_cell_s,color=plot_purple,lw=2,linestyle=':')
+        plt.plot(xCell,alt_col_mean_top_cell_d,color=plot_blue,lw=2,linestyle=':')
+
+
+
+        plt.legend(fontsize=10)
+        plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
+        plt.xlim([0.0, 90000.0])
+        plt.xlabel('Distance along transect [km]')
+
+        plt.yticks([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0],fontsize=12)
+        plt.ylim([0.0, 30.0])
+        plt.ylabel('Alteration volume $\%$')
+
+
+
+
+        #todo: FIGURE: FeO / FeOt plot
+        # FeO / FeOt data
+        fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
+        lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
+        upper_eb_fe = np.array([0.7753, 0.7442, 0.7519, 0.7812, 0.7110, 0.7610, 0.7396, 0.7104, 0.7026])
+
+        # calculate model FeO/FeOt column mean
+        fe_col_mean_d = np.zeros(len(xCell))
+        fe_col_mean_s = np.zeros(len(xCell))
+
+
+
+        fe_col_mean_top_half_d = np.zeros(len(xCell))
+        fe_col_mean_top_half_s = np.zeros(len(xCell))
+
+        fe_col_mean_top_cell_d = np.zeros(len(xCell))
+        fe_col_mean_top_cell_s = np.zeros(len(xCell))
+
+
+
+        feo_col_mean_temp = np.zeros(len(xCell))
+        feot_col_mean_temp = np.zeros(len(xCell))
+        for j in range(len(xCell)):
+
+            # solo, purple
+
+            secStep_temp = secStep
+            alt_vol_temp = alt_vol
+            glass_temp = glass
+            ol_temp = ol
+
+            above_zero = alt_vol_temp[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            above_zero_ind = np.nonzero(alt_vol_temp[:,j])
+
+            feo_col_mean_temp[j] = 0.0
+            # feo glass
+            # feo_col_mean_temp[j] = 0.149*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
+            # feo olivine
+            feo_col_mean_temp[j] = feo_col_mean_temp[j] + 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[1]/molar_pri[1])
+            # feo pyrite
+            feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+
+            feot_col_mean_temp[j] = 0.0
+            # feot goethite
+            feot_col_mean_temp[j] = np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+            # feot nont-mg
+            feot_col_mean_temp[j] = feot_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,13])*(density[13]/molar[13])
+            # feot glass
+            feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
+
+
+
+            fe_col_mean_s[j] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
+
+        print "FeO solo"
+        print feo_col_mean_temp
+        print "FeOt solo"
+        print feot_col_mean_temp
+        print "FeO / FeOt"
+        print fe_col_mean_s
+        print " "
+
+
+        feo_col_mean_temp = np.zeros(len(xCell))
+        feot_col_mean_temp = np.zeros(len(xCell))
+        for j in range(len(xCell)):
+            # dual, blue
+
+            secStep_temp = secStep_d
+            alt_vol_temp = alt_vol_d
+            glass_temp = glass_d
+            ol_temp = ol_d
+
+            above_zero = alt_vol_temp[:,j]*100.0
+            above_zero = above_zero[above_zero>0.0]
+            above_zero_ind = np.nonzero(alt_vol_temp[:,j])
+
+            feo_col_mean_temp[j] = 0.0
+            # feo glass
+            # feo_col_mean_temp[j] = 0.149*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
+            # feo olivine
+            feo_col_mean_temp[j] = feo_col_mean_temp[j] + 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[1]/molar_pri[1])
+            # feo pyrite
+            feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+
+            feot_col_mean_temp[j] = 0.0
+            # feot goethite
+            feot_col_mean_temp[j] = np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+            # feot nont-mg
+            feot_col_mean_temp[j] = feot_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,13])*(density[13]/molar[13])
+            # feo glass
+            feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
+
+
+
+            fe_col_mean_d[j] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
+
+
+        print "FeO solo"
+        print feo_col_mean_temp
+        print "FeOt solo"
+        print feot_col_mean_temp
+        print "FeO / FeOt"
+        print fe_col_mean_d
+
+
+
+
+        ax=fig.add_subplot(2, 1, 2, frameon=True)
+        ax.grid(True)
+        plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+        plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+
+
+        for j in range(nsites):
+            # error bar height
+            plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+            # lower error bar
+            plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+            # upper error bar
+            plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+
+
+        # plot model column mean
+        plt.plot(xCell,fe_col_mean_s,color=plot_purple,lw=2, label="column mean solo")
+        plt.plot(xCell,fe_col_mean_d,color=plot_blue,lw=2, label="column mean dual")
+
+        # # plot model top half mean
+        # plt.plot(xCell,alt_col_mean_top_half_s,color=plot_purple,lw=2,linestyle='--')
+        # plt.plot(xCell,alt_col_mean_top_half_d,color=plot_blue,lw=2,linestyle='--')
+        #
+        # # plot model top cell
+        # plt.plot(xCell,alt_col_mean_top_cell_s,color=plot_purple,lw=2,linestyle=':')
+        # plt.plot(xCell,alt_col_mean_top_cell_d,color=plot_blue,lw=2,linestyle=':')
+
+
+
+
+
+
+        plt.legend(fontsize=10)
+        plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
+        plt.xlim([0.0, 90000.0])
+        plt.xlabel('Distance along transect [km]')
+
+        #plt.yticks([0.6, 0.65, 0.70, 0.75, 0.80],fontsize=12)
+        #plt.ylim([0.6, 0.8])
+        plt.ylim([0.0, 1.0])
+        plt.ylabel('FeO / FeOt')
+
+
+        #plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
+        plt.savefig(outpath+"jdf_alt_plot_"+str(i+restart)+".png")
+
+
+
+
+
+
+
+
+
+        #todo: FIGURE: jdf_alt_plot, DSA
+        fig=plt.figure(figsize=(4.5,9.0))
+
+        ax=fig.add_subplot(2, 1, 1, frameon=True,aspect='equal')
+
+        xCell_90 = np.linspace(0.0, 90000.0, 90)
+        alt_values_interp = np.interp(xCell_90,site_locations,alt_values)
+
+        # column mean
+        alt_model_interp_s = np.ones(90)
+        alt_model_interp_s[:90] = alt_col_mean_s
+        alt_model_interp_s[alt_model_interp_s==1.0] = None
+
+        # sites interpolated
+        # alt_values_individual = np.ones(len(site_locations))
+        alt_model_individual = np.interp(site_locations,xCell_90,alt_model_interp_s)
+
+
+        plt.plot(alt_values_interp,alt_model_interp_s,c=dark_red)
+        plt.plot([0.0, 30.0],[0.0,30.0],c='k',linestyle='--')
+        plt.scatter(alt_values,alt_model_individual,s=40,c=dark_red,edgecolor=dark_red)
+
+
+        # sites error bars
+        ebw = 0.5
+        for j in range(nsites):
+            # error bar height
+            plt.plot([lower_eb[j],upper_eb[j]],[alt_model_individual[j],alt_model_individual[j]],c=dark_red)
+            # lower error bar
+            plt.plot([lower_eb[j],lower_eb[j]],[alt_model_individual[j]-ebw,alt_model_individual[j]+ebw],c=dark_red)
+            # upper error bar
+            plt.plot([upper_eb[j],upper_eb[j]],[alt_model_individual[j]-ebw,alt_model_individual[j]+ebw],c=dark_red)
+
+
+        plt.xlabel('Observed alteration fraction')
+        plt.ylabel('Model-predicted alteration fraction')
+
+        plt.savefig(outpath+"jdf_alt_plot_dsa_"+str(i+restart)+".png")
 
 
 
@@ -1534,7 +1846,7 @@ for i in range(0,steps,1):
 
 
 
-#hack: FULL SECONDARY PLOT
+#todo: FINAL FIG: all_secondary
 fig=plt.figure(figsize=(12.5,6.5))
 
 norm_growth_rate = np.zeros([steps,minNum+1])
@@ -1571,6 +1883,8 @@ for j in range(len(any_min)):
     #plt.ylim([0.90,1.005])
     #plt.ylim([0.95,1.05])
     #plt.ylim([0.0,1.05])
+    plt.ylim([-.05,1.05])
+    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, solo',fontsize=10)
 
@@ -1593,7 +1907,8 @@ for j in range(len(any_min)):
     plt.xlim([5,steps])
     #plt.ylim([0.90,1.005])
     #plt.ylim([0.95,1.05])
-    #plt.ylim([0.0,1.05])
+    plt.ylim([-.05,1.05])
+    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
@@ -1614,6 +1929,8 @@ for j in range(len(any_min)):
     #plt.ylim([0.90,1.005])
     #plt.ylim([0.95,1.05])
     #plt.ylim([0.0,1.05])
+    plt.ylim([-.05,1.05])
+    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
 
@@ -1633,12 +1950,14 @@ for j in range(len(any_min)):
     plt.xlim([5,steps])
     #plt.ylim([0.90,1.005])
     #plt.ylim([0.0,1.05])
+    plt.ylim([-.05,1.05])
+    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xlabel('time',fontsize=8)
     plt.title('min growth rate, b',fontsize=10)
 
-ax1=fig.add_subplot(2,2,2, frameon=True)
-for j in range(len(any_min)):
-    plt.plot(dsecStep_ts_d[ng0:,any_min[j]]/dsecStep_ts[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+# ax1=fig.add_subplot(2,2,2, frameon=True)
+# for j in range(len(any_min)):
+#     plt.plot(dsecStep_ts_d[ng0:,any_min[j]]/dsecStep_ts[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
 
 
 #
@@ -1697,7 +2016,11 @@ for j in range(len(any_min)):
 
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-plt.savefig(outpath+'all_ts_sec.png')
+plt.savefig(outpath+'all_secondary.png')
+
+
+# hack: .eps all_secondary
+# plt.savefig(outpath+'all_secondary.eps')
 
 
 
@@ -1717,8 +2040,7 @@ plt.savefig(outpath+'all_ts_sec.png')
 
 
 
-
-#hack: FULL PRIMARY PLOT
+#todo: FINAL FIG: all_primary
 fig=plt.figure(figsize=(6.5,6.5))
 
 
@@ -1786,4 +2108,4 @@ for j in [2, 3, 4, 5]:
 
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-plt.savefig(outpath+'all_ts_pri.png')
+plt.savefig(outpath+'all_primary.png')
