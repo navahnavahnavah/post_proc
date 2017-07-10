@@ -72,7 +72,7 @@ celly = 1
 sec_toggle = 0
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_90km_o/"
+outpath = "../output/revival/summer_coarse_grid/sites_90km_s/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
@@ -336,6 +336,15 @@ secMat_b = np.zeros([len(yCell),len(xCell)*steps+corr,minNum+1])
 secMat_d = np.zeros([len(yCell),len(xCell)*steps+corr,minNum+1])
 
 
+secVol0 = np.zeros([len(yCell),len(xCell)*steps+corr])
+secVol0_a = np.zeros([len(yCell),len(xCell)*steps+corr])
+secVol0_b = np.zeros([len(yCell),len(xCell)*steps+corr])
+secVol0_d = np.zeros([len(yCell),len(xCell)*steps+corr])
+
+secVol = np.zeros([len(yCell),len(xCell),minNum+1])
+secVol_a = np.zeros([len(yCell),len(xCell),minNum+1])
+secVol_b = np.zeros([len(yCell),len(xCell),minNum+1])
+secVol_d = np.zeros([len(yCell),len(xCell),minNum+1])
 
 #satMat = np.zeros([(bitsCy-1),(bitsCx-1)*steps,minNum+1])
 
@@ -411,6 +420,8 @@ if chem == 1:
             secMat[:,:,j] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
             secMat[:,:,j] = secMat[:,:,j]*molar[j]/density[j]
             dsecMat[:,2*len(xCell):,j] = secMat[:,len(xCell):-len(xCell),j] - secMat[:,2*len(xCell):,j]
+            secVol0 = secVol0 + secMat[:,:,j]
+            print np.max(secVol0)
     inert0 = np.loadtxt(ch_path + 'z_sol_inert.txt')
     dic0 = np.loadtxt(ch_path + 'z_sol_c.txt')
     ca0 = np.loadtxt(ch_path + 'z_sol_ca.txt')
@@ -422,6 +433,7 @@ if chem == 1:
     al0 = np.loadtxt(ch_path + 'z_sol_al.txt')
     ph0 = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0 = np.loadtxt(ch_path + 'z_sol_alk.txt')
+    solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
     glass0_p = glass0/(np.max(glass0))
     ol0 = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
@@ -429,6 +441,7 @@ if chem == 1:
     plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[3]/density_pri[3]
     togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     pri_total0 = glass0 + ol0 + pyr0 + plag0
+
     #pri_total0 = pri_total0/np.max(pri_total0)
 
 
@@ -455,6 +468,7 @@ if chem == 1:
     al0_a = np.loadtxt(ch_path + 'z_sol_al.txt')
     ph0_a = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0_a = np.loadtxt(ch_path + 'z_sol_alk.txt')
+    solw0_a = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_a = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
     glass0_p_a = glass0_a/(np.max(glass0_a))
     ol0_a = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
@@ -488,6 +502,7 @@ if chem == 1:
     al0_b = np.loadtxt(ch_path + 'z_sol_al.txt')
     ph0_b = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0_b = np.loadtxt(ch_path + 'z_sol_alk.txt')
+    solw0_b = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_b = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
     glass0_p_b = glass0_b#/(np.max(glass0_b))
     ol0_b = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
@@ -521,6 +536,7 @@ if chem == 1:
     al0_d = np.loadtxt(ch_path + 'z_sol_al.txt')
     ph0_d = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0_d = np.loadtxt(ch_path + 'z_sol_alk.txt')
+    solw0_d = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_d = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
     glass0_p_d = glass0_d/(np.max(glass0_d))
     ol0_d = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
@@ -623,6 +639,7 @@ for i in range(0,steps,1):
         ca = cut_chem(ca0,i)
         ph = cut_chem(ph0,i)
         alk = cut_chem(alk0,i)
+        solw = cut_chem(solw0,i)
         mg = cut_chem(mg0,i)
         fe = cut_chem(fe0,i)
         si = cut_chem(si0,i)
@@ -634,6 +651,7 @@ for i in range(0,steps,1):
         togg = cut_chem(togg0,i)
         alt_vol = cut_chem(alt_vol0,i)
         pri_total = cut_chem(pri_total0,i)
+        secVol = cut_chem(secVol0,i)
         ol = cut_chem(ol0,i)
         pyr = cut_chem(pyr0,i)
         plag = cut_chem(plag0,i)
@@ -664,6 +682,7 @@ for i in range(0,steps,1):
         ca_a = cut_chem(ca0_a,i)
         ph_a = cut_chem(ph0_a,i)
         alk_a = cut_chem(alk0_a,i)
+        solw_a = cut_chem(solw0_a,i)
         mg_a = cut_chem(mg0_a,i)
         fe_a = cut_chem(fe0_a,i)
         si_a = cut_chem(si0_a,i)
@@ -674,6 +693,7 @@ for i in range(0,steps,1):
         glass_p_a = cut_chem(glass0_p_a,i)
         alt_vol_a = cut_chem(alt_vol0_a,i)
         pri_total_a = cut_chem(pri_total0_a,i)
+        secVol_a[:,:,i] = cut_chem(secVol0_a,i)
         ol_a = cut_chem(ol0_a,i)
         pyr_a = cut_chem(pyr0_a,i)
         plag_a = cut_chem(plag0_a,i)
@@ -704,6 +724,7 @@ for i in range(0,steps,1):
         ca_b = cut_chem(ca0_b,i)
         ph_b = cut_chem(ph0_b,i)
         alk_b = cut_chem(alk0_b,i)
+        solw_b = cut_chem(solw0_b,i)
         mg_b = cut_chem(mg0_b,i)
         fe_b = cut_chem(fe0_b,i)
         si_b = cut_chem(si0_b,i)
@@ -714,6 +735,7 @@ for i in range(0,steps,1):
         glass_p_b = cut_chem(glass0_p_b,i)
         alt_vol_b = cut_chem(alt_vol0_b,i)
         pri_total_b = cut_chem(pri_total0_b,i)
+        secVol_b[:,:,i] = cut_chem(secVol0_b,i)
         ol_b = cut_chem(ol0_b,i)
         pyr_b = cut_chem(pyr0_b,i)
         plag_b = cut_chem(plag0_b,i)
@@ -745,6 +767,7 @@ for i in range(0,steps,1):
         ca_d = cut_chem(ca0_d,i)
         ph_d = cut_chem(ph0_d,i)
         alk_d = cut_chem(alk0_d,i)
+        solw_d = cut_chem(solw0_d,i)
         mg_d = cut_chem(mg0_d,i)
         fe_d = cut_chem(fe0_d,i)
         si_d = cut_chem(si0_d,i)
@@ -755,6 +778,7 @@ for i in range(0,steps,1):
         glass_p_d = cut_chem(glass0_p_d,i)
         alt_vol_d = cut_chem(alt_vol0_d,i)
         pri_total_d = cut_chem(pri_total0_d,i)
+        secVol_d[:,:,i] = cut_chem(secVol0_d,i)
         ol_d = cut_chem(ol0_d,i)
         pyr_d = cut_chem(pyr0_d,i)
         plag_d = cut_chem(plag0_d,i)
@@ -787,7 +811,7 @@ for i in range(0,steps,1):
     #hack: chem6 switch
     chem6 = 6
 
-    if chem6 == 1:
+    if chem == 1:
         print "jdf_Sol_Block plot"
         #todo: FIGURE: jdf_Sol_Block
         fig=plt.figure(figsize=(13.0,7.0))
@@ -1569,6 +1593,83 @@ for i in range(0,steps,1):
 
 
 
+        print "jdf_Solw plot"
+        #todo: FIGURE: jdf_Solw
+
+        fig=plt.figure(figsize=(10.0,5.0))
+
+        ax=fig.add_subplot(2, 2, 1, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,solw,vmin=np.min(solw0[solw0>0.0]),vmax=np.max(solw0))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('solw solo')
+
+        ax=fig.add_subplot(2, 2, 2, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,solw_d,vmin=np.min(solw0_d[solw0_d>0.0]),vmax=np.max(solw0_d))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('solw dual')
+
+        ax=fig.add_subplot(2, 2, 3, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,solw_a,vmin=np.min(solw0_a[solw0_a>0.0]),vmax=np.max(solw0_a))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('solw a')
+
+        ax=fig.add_subplot(2, 2, 4, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,solw_b,vmin=np.min(solw0_b[solw0_b>0.0]),vmax=np.max(solw0_b))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('solw b')
+
+        plt.savefig(outpath+'jdf_Solw_'+str(i+restart)+'.png')
+
+
+
+        print "jdf_Phi_calc plot"
+        #todo: FIGURE: jdf_Phi_calc
+
+        fig=plt.figure(figsize=(10.0,5.0))
+
+        phi_calc0 = solw0*1000.0/ (solw0*1000.0 + pri_total0 + secVol0)
+        phi_calc0[np.isinf(phi_calc0)] = 0.0
+        phi_calc0[np.isnan(phi_calc0)] = 0.0
+        phi_calc0[phi_calc0 == 1.0] = 0.0
+        phi_calc = solw*1000.0/ (solw*1000.0 + pri_total + secVol)
+        phi_calc[np.isinf(phi_calc)] = 0.0
+        phi_calc[np.isnan(phi_calc)] = 0.0
+        phi_calc[phi_calc == 1.0] = 0.0
+        print "max phi calc" , np.max(phi_calc)
+        ax=fig.add_subplot(2, 2, 1, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,phi_calc,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('solw solo')
+
+        # ax=fig.add_subplot(2, 2, 2, frameon=True, aspect=asp*4)
+        # plt.pcolor(xCell,yCell,solw_d,vmin=np.min(solw0_d[solw0_d>0.0]),vmax=np.max(solw0_d))
+        # plt.ylim([-505.0,-325.0])
+        # plt.colorbar(orientation='horizontal')
+        # plt.title('solw dual')
+        #
+        # ax=fig.add_subplot(2, 2, 3, frameon=True, aspect=asp*4)
+        # plt.pcolor(xCell,yCell,solw_a,vmin=np.min(solw0_a[solw0_a>0.0]),vmax=np.max(solw0_a))
+        # plt.ylim([-505.0,-325.0])
+        # plt.colorbar(orientation='horizontal')
+        # plt.title('solw a')
+        #
+        # ax=fig.add_subplot(2, 2, 4, frameon=True, aspect=asp*4)
+        # plt.pcolor(xCell,yCell,solw_b,vmin=np.min(solw0_b[solw0_b>0.0]),vmax=np.max(solw0_b))
+        # plt.ylim([-505.0,-325.0])
+        # plt.colorbar(orientation='horizontal')
+        # plt.title('solw b')
+
+        plt.savefig(outpath+'jdf_Phi_calc_'+str(i+restart)+'.png')
+
+
+
+
+
     #hack: chem0 switch
     chem0 = 0
 
@@ -1673,7 +1774,7 @@ for i in range(0,steps,1):
 
 
 
-        #todo: FIGURE: FeO / FeOt plot
+        #todo: FIGURE: FeO / FeOt plot, NXF
         # FeO / FeOt data
         fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
         lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
@@ -1700,7 +1801,7 @@ for i in range(0,steps,1):
             # solo, purple
 
             secStep_temp = secStep
-            alt_vol_temp = alt_vol
+            alt_vol_temp = pri_total
             glass_temp = glass
             ol_temp = ol
 
@@ -1743,7 +1844,7 @@ for i in range(0,steps,1):
             # dual, blue
 
             secStep_temp = secStep_d
-            alt_vol_temp = alt_vol_d
+            alt_vol_temp = pri_total_d
             glass_temp = glass_d
             ol_temp = ol_d
 
