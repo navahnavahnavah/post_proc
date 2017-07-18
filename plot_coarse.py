@@ -72,7 +72,7 @@ celly = 1
 sec_toggle = 0
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_90km_s/"
+outpath = "../output/revival/summer_coarse_grid/sites_f/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
@@ -233,6 +233,58 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
             cbar.solids.set_edgecolor("face")
         #fig.set_tight_layout(True)
     return chemplot
+
+
+def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
+    if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) <= 0.0:
+        if cb_min==-10.0 and cb_max==10.0:
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+        if cb_max!=10.0:
+            contours = np.linspace(cb_min,cb_max,5)
+
+        ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
+        pGlass = plt.pcolor(xCell,yCell,np.zeros(varStep.shape),cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
+        plt.yticks([])
+        if ytix==1:
+            plt.yticks([-450, -400, -350])
+        if xtix==0:
+            plt.xticks([])
+        plt.ylim([np.min(yCell),0.])
+        plt.title(cp_title,fontsize=8)
+        plt.ylim([-505.0,-325.0])
+        if cb==1:
+            bbox = ax1.get_position()
+            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.2, bbox.width*0.8, bbox.height*0.13])
+            cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
+            plt.title(cb_title,fontsize=10)
+            cbar.solids.set_rasterized(True)
+            cbar.solids.set_edgecolor("face")
+
+    if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
+        if cb_min==-10.0 and cb_max==10.0:
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+        if cb_max!=10.0:
+            contours = np.linspace(cb_min,cb_max,5)
+        ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
+        pGlass = plt.pcolor(xCell,yCell,varStep,cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
+
+        plt.yticks([])
+        if ytix==1:
+            plt.yticks([-450, -400, -350])
+        if xtix==0:
+            plt.xticks([])
+        plt.ylim([np.min(yCell),0.])
+        plt.title(cp_title,fontsize=8)
+        plt.ylim([-505.0,-325.0])
+        pGlass.set_edgecolor("face")
+        if cb==1:
+            bbox = ax1.get_position()
+            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.2, bbox.width*0.8, bbox.height*0.13])
+            cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
+            plt.title(cb_title,fontsize=10)
+            cbar.solids.set_rasterized(True)
+            cbar.solids.set_edgecolor("face")
+    return chemplot24
 
 
 def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=0, ytix=0, frame_lines=0, min_color='r', hatching='', bg_alpha=0.5, ed_col='k'):
@@ -421,7 +473,7 @@ if chem == 1:
             secMat[:,:,j] = secMat[:,:,j]*molar[j]/density[j]
             dsecMat[:,2*len(xCell):,j] = secMat[:,len(xCell):-len(xCell),j] - secMat[:,2*len(xCell):,j]
             secVol0 = secVol0 + secMat[:,:,j]
-            print np.max(secVol0)
+            #print np.max(secVol0)
     inert0 = np.loadtxt(ch_path + 'z_sol_inert.txt')
     dic0 = np.loadtxt(ch_path + 'z_sol_c.txt')
     ca0 = np.loadtxt(ch_path + 'z_sol_ca.txt')
@@ -457,6 +509,7 @@ if chem == 1:
             secMat_a[:,:,j] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
             secMat_a[:,:,j] = secMat_a[:,:,j]*molar[j]/density[j]
             dsecMat_a[:,2*len(xCell):,j] = secMat_a[:,len(xCell):-len(xCell),j] - secMat_a[:,2*len(xCell):,j]
+            secVol0_a = secVol0_a + secMat_a[:,:,j]
     inert0_a = np.loadtxt(ch_path + 'z_sol_inert.txt')
     dic0_a = np.loadtxt(ch_path + 'z_sol_c.txt')
     ca0_a = np.loadtxt(ch_path + 'z_sol_ca.txt')
@@ -491,6 +544,7 @@ if chem == 1:
             secMat_b[:,:,j] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
             secMat_b[:,:,j] = secMat_b[:,:,j]*molar[j]/density[j]
             dsecMat_b[:,2*len(xCell):,j] = secMat_b[:,len(xCell):-len(xCell),j] - secMat_b[:,2*len(xCell):,j]
+            secVol0_b = secVol0_b + secMat_b[:,:,j]
     inert0_b = np.loadtxt(ch_path + 'z_sol_inert.txt')
     dic0_b = np.loadtxt(ch_path + 'z_sol_c.txt')
     ca0_b = np.loadtxt(ch_path + 'z_sol_ca.txt')
@@ -525,6 +579,7 @@ if chem == 1:
             secMat_d[:,:,j] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
             secMat_d[:,:,j] = secMat_d[:,:,j]*molar[j]/density[j]
             dsecMat_d[:,2*len(xCell):,j] = secMat_d[:,len(xCell):-len(xCell),j] - secMat_d[:,2*len(xCell):,j]
+            secVol0_d = secVol0_d + secMat_d[:,:,j]
     inert0_d = np.loadtxt(ch_path + 'z_sol_inert.txt')
     dic0_d = np.loadtxt(ch_path + 'z_sol_c.txt')
     ca0_d = np.loadtxt(ch_path + 'z_sol_ca.txt')
@@ -693,7 +748,7 @@ for i in range(0,steps,1):
         glass_p_a = cut_chem(glass0_p_a,i)
         alt_vol_a = cut_chem(alt_vol0_a,i)
         pri_total_a = cut_chem(pri_total0_a,i)
-        secVol_a[:,:,i] = cut_chem(secVol0_a,i)
+        secVol_a = cut_chem(secVol0_a,i)
         ol_a = cut_chem(ol0_a,i)
         pyr_a = cut_chem(pyr0_a,i)
         plag_a = cut_chem(plag0_a,i)
@@ -735,7 +790,7 @@ for i in range(0,steps,1):
         glass_p_b = cut_chem(glass0_p_b,i)
         alt_vol_b = cut_chem(alt_vol0_b,i)
         pri_total_b = cut_chem(pri_total0_b,i)
-        secVol_b[:,:,i] = cut_chem(secVol0_b,i)
+        secVol_b = cut_chem(secVol0_b,i)
         ol_b = cut_chem(ol0_b,i)
         pyr_b = cut_chem(pyr0_b,i)
         plag_b = cut_chem(plag0_b,i)
@@ -778,7 +833,7 @@ for i in range(0,steps,1):
         glass_p_d = cut_chem(glass0_p_d,i)
         alt_vol_d = cut_chem(alt_vol0_d,i)
         pri_total_d = cut_chem(pri_total0_d,i)
-        secVol_d[:,:,i] = cut_chem(secVol0_d,i)
+        secVol_d = cut_chem(secVol0_d,i)
         ol_d = cut_chem(ol0_d,i)
         pyr_d = cut_chem(pyr0_d,i)
         plag_d = cut_chem(plag0_d,i)
@@ -1019,28 +1074,124 @@ for i in range(0,steps,1):
         plt.savefig(outpath+'jdf_Sol_Block_'+str(i+restart)+'.png')
 
 
-        #todo: FIGURE: jdf_Sec_Block (secondary Pcolor plot)
-        print "jdf_Sec_Block_ plot"
-        fig=plt.figure(figsize=(13.0,7.0))
-        plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
+        # #todo: FIGURE: jdf_Sec_Block (PCOLOR)
+        # print "jdf_Sec_Block_ plot"
+        # fig=plt.figure(figsize=(13.0,7.0))
+        # plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
+        #
+        # the_list = len(any_min)
+        # if len(any_min) > 10:
+        #     the_list = 10
+        #
+        # for am in range(the_list):
+        #
+        #     if am < 5:
+        #         am_p = am
+        #         am_pp = 2*am+1
+        #         am_ppp = 2*(am-1)+1
+        #     if am >= 5:
+        #         am_p = 20+(am-5)
+        #         am_pp = 40 + 2*(am-5)+1
+        #         am_ppp = 50 + 2*(am-4)
+        #
+        #     #print any_min[am]
+        #     # # col 1
+        #     plt_s = secMat[:,:,any_min[am]]
+        #     plt_a = secMat_a[:,:,any_min[am]]
+        #     plt_b = secMat_b[:,:,any_min[am]]
+        #     plt_d = secMat_d[:,:,any_min[am]]
+        #     plt_ss = secStep[:,:,any_min[am]]
+        #     plt_aa = secStep_a[:,:,any_min[am]]
+        #     plt_bb = secStep_b[:,:,any_min[am]]
+        #     plt_dd = secStep_d[:,:,any_min[am]]
+        #     #all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        #     c_min = 0.0#np.amin(all_ch[all_ch>0.0])
+        #     #print "c_min" , c_min
+        #     all_ch = [np.max(plt_s), np.max(plt_a), np.max(plt_b), np.max(plt_d)]
+        #     # c_max = np.amax(all_ch[all_ch>0.0])
+        #     c_max = np.max(all_ch)
+        #     #print "c_max" , c_max
+        #     #c_max = 0.015
+        #
+        #     chemplot(plt_s, plt_ss, 7, 5, 1+am_p, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
+        #     chemplot(plt_d, plt_dd, 7, 5, 6+am_p, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #     chemplot(plt_a, plt_aa, 7, 10, 20+am_pp, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #     chemplot(plt_bb, plt_bb, 7, 10, 21+am_pp, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #
+        #
+        # plt.savefig(outpath+'jdf_Sec_Block_'+str(i+restart)+'.png')
+
+
+
+        # if len(any_min) > 10:
+        #     #todo: FIGURE: jdf_Sec_Block2 (PCOLOR)
+        #     print "jdf_Sec_Block_ plot"
+        #     fig=plt.figure(figsize=(13.0,7.0))
+        #     plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
+        #     for am in range(len(any_min)-10):
+        #         if am < 5:
+        #             am_p = am
+        #             am_pp = 2*am+1
+        #             am_ppp = 2*(am-1)+1
+        #         if am >= 5:
+        #             am_p = 20+(am-5)
+        #             am_pp = 40 + 2*(am-5)+1
+        #             am_ppp = 50 + 2*(am-4)
+        #
+        #         #print any_min[am]
+        #         # # col 1
+        #         plt_s = secMat[:,:,any_min[am+10]]
+        #         plt_a = secMat_a[:,:,any_min[am+10]]
+        #         plt_b = secMat_b[:,:,any_min[am+10]]
+        #         plt_d = secMat_d[:,:,any_min[am+10]]
+        #         plt_ss = secStep[:,:,any_min[am+10]]
+        #         plt_aa = secStep_a[:,:,any_min[am+10]]
+        #         plt_bb = secStep_b[:,:,any_min[am+10]]
+        #         plt_dd = secStep_d[:,:,any_min[am+10]]
+        #         #all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        #         c_min = 0.0#np.amin(all_ch[all_ch>0.0])
+        #         #print "c_min" , c_min
+        #         all_ch = [np.max(plt_s), np.max(plt_a), np.max(plt_b), np.max(plt_d)]
+        #         # c_max = np.amax(all_ch[all_ch>0.0])
+        #         c_max = np.max(all_ch)
+        #         #print "c_max" , c_max
+        #         #c_max = 0.015
+        #
+        #         chemplot(plt_s, plt_ss, 7, 5, 1+am_p, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am+10]])
+        #         chemplot(plt_d, plt_dd, 7, 5, 6+am_p, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #         chemplot(plt_a, plt_aa, 7, 10, 20+am_pp, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #         chemplot(plt_bb, plt_bb, 7, 10, 21+am_pp, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        #
+        #
+        #     plt.savefig(outpath+'jdf_Sec_Block2_'+str(i+restart)+'.png')
+
+
+
+        #todo: FIGURE: jdf_Sec_Block24 (PCOLOR)
+        print "jdf_Sec_Block24_ plot"
+        fig=plt.figure(figsize=(19.0,9.5))
+        plt.subplots_adjust( wspace=0.05, bottom=0.05, top=0.97, left=0.01, right=0.99)
 
         the_list = len(any_min)
-        if len(any_min) > 10:
-            the_list = 10
+        if len(any_min) > 24:
+            the_list = 24
 
         for am in range(the_list):
 
-            if am < 5:
+            if am < 8:
                 am_p = am
                 am_pp = 2*am+1
                 am_ppp = 2*(am-1)+1
-            if am >= 5:
-                am_p = 20+(am-5)
-                am_pp = 40 + 2*(am-5)+1
-                am_ppp = 50 + 2*(am-4)
+            if am >= 8:
+                am_p = 32+(am-8)
+                am_pp = 64 + 2*(am-8)+1
+                am_ppp = 80 + 2*(am-7)
+            if am >= 16:
+                am_p = 64+(am-16)
+                am_pp = 112 + 2*(am-8)+1
+                am_ppp = 80 + 2*(am-7)
 
-            #print any_min[am]
-            # # col 1
+
             plt_s = secMat[:,:,any_min[am]]
             plt_a = secMat_a[:,:,any_min[am]]
             plt_b = secMat_b[:,:,any_min[am]]
@@ -1049,22 +1200,20 @@ for i in range(0,steps,1):
             plt_aa = secStep_a[:,:,any_min[am]]
             plt_bb = secStep_b[:,:,any_min[am]]
             plt_dd = secStep_d[:,:,any_min[am]]
-            #all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-            c_min = 0.0#np.amin(all_ch[all_ch>0.0])
-            #print "c_min" , c_min
+
+            c_min = 0.0
             all_ch = [np.max(plt_s), np.max(plt_a), np.max(plt_b), np.max(plt_d)]
-            # c_max = np.amax(all_ch[all_ch>0.0])
             c_max = np.max(all_ch)
-            #print "c_max" , c_max
-            #c_max = 0.015
 
-            chemplot(plt_s, plt_ss, 7, 5, 1+am_p, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
-            chemplot(plt_d, plt_dd, 7, 5, 6+am_p, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            chemplot(plt_a, plt_aa, 7, 10, 20+am_pp, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            chemplot(plt_bb, plt_bb, 7, 10, 21+am_pp, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot24(plt_s, plt_ss, 11, 8, 1+am_p, 1, 'solo', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
+            chemplot24(plt_d, plt_dd, 11, 8, 9+am_p, 1, 'dual', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot24(plt_a, plt_aa, 11, 16, 32+am_pp, 1, 'chamber a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'chamber b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
-        plt.savefig(outpath+'jdf_Sec_Block_'+str(i+restart)+'.png')
+        plt.savefig(outpath+'jdf_Sec_Block24_'+str(i+restart)+'.png')
+
+
 
 
 
@@ -1646,23 +1795,51 @@ for i in range(0,steps,1):
         plt.colorbar(orientation='horizontal')
         plt.title('solw solo')
 
-        # ax=fig.add_subplot(2, 2, 2, frameon=True, aspect=asp*4)
-        # plt.pcolor(xCell,yCell,solw_d,vmin=np.min(solw0_d[solw0_d>0.0]),vmax=np.max(solw0_d))
-        # plt.ylim([-505.0,-325.0])
-        # plt.colorbar(orientation='horizontal')
-        # plt.title('solw dual')
-        #
-        # ax=fig.add_subplot(2, 2, 3, frameon=True, aspect=asp*4)
-        # plt.pcolor(xCell,yCell,solw_a,vmin=np.min(solw0_a[solw0_a>0.0]),vmax=np.max(solw0_a))
-        # plt.ylim([-505.0,-325.0])
-        # plt.colorbar(orientation='horizontal')
-        # plt.title('solw a')
-        #
-        # ax=fig.add_subplot(2, 2, 4, frameon=True, aspect=asp*4)
-        # plt.pcolor(xCell,yCell,solw_b,vmin=np.min(solw0_b[solw0_b>0.0]),vmax=np.max(solw0_b))
-        # plt.ylim([-505.0,-325.0])
-        # plt.colorbar(orientation='horizontal')
-        # plt.title('solw b')
+        phi_calc0 = solw0_d*1000.0/ (solw0_d*1000.0 + pri_total0_d + secVol0_d)
+        phi_calc0[np.isinf(phi_calc0)] = 0.0
+        phi_calc0[np.isnan(phi_calc0)] = 0.0
+        phi_calc0[phi_calc0 == 1.0] = 0.0
+        phi_calc = solw_d*1000.0/ (solw_d*1000.0 + pri_total_d + secVol_d)
+        phi_calc[np.isinf(phi_calc)] = 0.0
+        phi_calc[np.isnan(phi_calc)] = 0.0
+        phi_calc[phi_calc == 1.0] = 0.0
+        print "max phi calc" , np.max(phi_calc)
+        ax=fig.add_subplot(2, 2, 2, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,phi_calc,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('solw dual')
+
+        phi_calc0 = solw0_a*1000.0/ (solw0_a*1000.0 + pri_total0_a + secVol0_a)
+        phi_calc0[np.isinf(phi_calc0)] = 0.0
+        phi_calc0[np.isnan(phi_calc0)] = 0.0
+        phi_calc0[phi_calc0 == 1.0] = 0.0
+        phi_calc = solw_a*1000.0/ (solw_a*1000.0 + pri_total_a + secVol_a)
+        phi_calc[np.isinf(phi_calc)] = 0.0
+        phi_calc[np.isnan(phi_calc)] = 0.0
+        phi_calc[phi_calc == 1.0] = 0.0
+        print "max phi calc" , np.max(phi_calc)
+        ax=fig.add_subplot(2, 2, 3, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,phi_calc,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('chamber a')
+
+        phi_calc0 = solw0_b*1000.0/ (solw0_b*1000.0 + pri_total0_b + secVol0_b)
+        phi_calc0[np.isinf(phi_calc0)] = 0.0
+        phi_calc0[np.isnan(phi_calc0)] = 0.0
+        phi_calc0[phi_calc0 == 1.0] = 0.0
+        phi_calc = solw_b*1000.0/ (solw_b*1000.0 + pri_total_b + secVol_b)
+        phi_calc[np.isinf(phi_calc)] = 0.0
+        phi_calc[np.isnan(phi_calc)] = 0.0
+        phi_calc[phi_calc == 1.0] = 0.0
+        print "max phi calc" , np.max(phi_calc)
+        ax=fig.add_subplot(2, 2, 4, frameon=True, aspect=asp*4)
+        plt.pcolor(xCell,yCell,phi_calc,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+        plt.ylim([-505.0,-325.0])
+        plt.colorbar(orientation='horizontal')
+        plt.title('chamber b')
+
 
         plt.savefig(outpath+'jdf_Phi_calc_'+str(i+restart)+'.png')
 
