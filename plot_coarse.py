@@ -110,13 +110,10 @@ mask = np.loadtxt(path + 'mask.txt')
 maskP = np.loadtxt(path + 'maskP.txt')
 mask_coarse = np.loadtxt(path + 'mask_coarse.txt')
 u1 = np.loadtxt(path + 'u.txt')
-
 v1 = np.loadtxt(path + 'v.txt')
-
 u_coarse = np.loadtxt(path + 'u_coarse.txt')
 v_coarse = np.loadtxt(path + 'v_coarse.txt')
 psi_coarse = np.loadtxt(path + 'psi_coarse.txt')
-
 perm = np.loadtxt(path + 'permeability.txt')
 
 
@@ -124,8 +121,6 @@ perm = np.log10(perm)
 
 
 u_ts = np.zeros([steps])
-
-# lam = np.loadtxt(path + 'lambdaMat.txt')
 
 
 
@@ -208,30 +203,23 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, 
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
         pGlass = plt.pcolor(xCell,yCell,varStep,cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
 
-        #p = plt.contour(xgh,ygh,perm[:,:],[-14.9],colors='black',linewidths=np.array([1.5]))
         plt.yticks([])
         if ytix==1:
             plt.yticks([-450, -400, -350])
         if xtix==0:
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
-        #cMask = plt.contourf(xg,yg,maskP,[0.0,0.5],colors='white',alpha=1.0,zorder=10)
         plt.title(cp_title,fontsize=8)
         plt.ylim([-505.0,-325.0])
-        #plt.ylim([-500,-200.0])
+
         pGlass.set_edgecolor("face")
         if cb==1:
-            #cbaxes = fig.add_axes([0.5, 0.5, 0.3, 0.03])
-            #cbaxes = fig.add_axes([0.8, 0.1, 0.03, 0.8])
             bbox = ax1.get_position()
-            #print bbox
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
             plt.title(cb_title,fontsize=10)
-            #cbar = plt.colorbar(pGlass, orientation='horizontal',ticks=contours[::contour_interval],shrink=0.9, pad = 0.5)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
-        #fig.set_tight_layout(True)
     return chemplot
 
 
@@ -254,7 +242,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
         plt.ylim([-505.0,-325.0])
         if cb==1:
             bbox = ax1.get_position()
-            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.2, bbox.width*0.8, bbox.height*0.13])
+            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
             plt.title(cb_title,fontsize=10)
             cbar.solids.set_rasterized(True)
@@ -279,7 +267,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
         pGlass.set_edgecolor("face")
         if cb==1:
             bbox = ax1.get_position()
-            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.2, bbox.width*0.8, bbox.height*0.13])
+            cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
             plt.title(cb_title,fontsize=10)
             cbar.solids.set_rasterized(True)
@@ -668,6 +656,7 @@ conv_count = 0
 
 #for i in range(4,steps,5):
 for i in range(0,steps,1):
+    print " "
     print "step =", i
 
     if i == 1:
@@ -869,7 +858,7 @@ for i in range(0,steps,1):
     if chem == 1:
         print "jdf_Sol_Block plot"
         #todo: FIGURE: jdf_Sol_Block
-        fig=plt.figure(figsize=(13.0,7.0))
+        fig=plt.figure(figsize=(17.0,7.0))
         plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
         # # col 1
@@ -887,10 +876,10 @@ for i in range(0,steps,1):
         c_max = np.max(all_ch)
         #c_max = 0.015
 
-        chemplot(plt_s, plt_ss, 7, 5, 1, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Ca] concentration')
-        chemplot(plt_d, plt_dd, 7, 5, 6, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 21, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_bb, plt_bb, 7, 10, 22, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 1, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Ca] concentration')
+        chemplot(plt_d, plt_dd, 7, 7, 8, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 29, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 30, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         plt_s = si0
         plt_a = si0_a
@@ -905,10 +894,10 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 21, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Si] concentration')
-        chemplot(plt_d, plt_dd, 7, 5, 26, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 61, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_bb, plt_bb, 7, 10, 62, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 29, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Si] concentration')
+        chemplot(plt_d, plt_dd, 7, 7, 36, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 29+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 30+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 2
         plt_s = mg0
@@ -924,10 +913,10 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 2, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Mg] concentration')
-        chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 7, 10, 24, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 2, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Mg] concentration')
+        chemplot(plt_d, plt_dd, 7, 7, 9, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 31, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_b, plt_bb, 7, 14, 32, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         plt_s = fe0
         plt_a = fe0_a
@@ -942,10 +931,10 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 22, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Fe] concentration')
-        chemplot(plt_d, plt_dd, 7, 5, 27, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 63, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_bb, plt_bb, 7, 10, 64, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 30, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Fe] concentration')
+        chemplot(plt_d, plt_dd, 7, 7, 37, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 31+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 32+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 3
         plt_s = k0
@@ -961,10 +950,10 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 3, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[K] concentration')
-        chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 25, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 7, 10, 26, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 3, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[K] concentration')
+        chemplot(plt_d, plt_dd, 7, 7, 10, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 33, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_b, plt_bb, 7, 14, 34, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         plt_s = alk0
         plt_a = alk0_a
@@ -979,10 +968,10 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 23, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Alkalinity')
-        chemplot(plt_d, plt_dd, 7, 5, 28, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 65, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_bb, plt_bb, 7, 10, 66, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 31, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Alkalinity')
+        chemplot(plt_d, plt_dd, 7, 7, 38, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 33+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 34+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 4
         plt_s = ph0
@@ -998,28 +987,28 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'ph_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pH')
-        chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'ph_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'ph_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 7, 10, 28, 1, 'ph_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 4, 1, 'ph_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pH')
+        chemplot(plt_d, plt_dd, 7, 7, 11, 1, 'ph_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 35, 1, 'ph_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_b, plt_bb, 7, 14, 36, 1, 'ph_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-        # plt_s = alt_vol0
-        # plt_a = alt_vol0_a
-        # plt_b = alt_vol0_b
-        # plt_d = alt_vol0_d
-        # plt_ss = alt_vol
-        # plt_aa = alt_vol_a
-        # plt_bb = alt_vol_b
-        # plt_dd = alt_vol_d
-        # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        # c_min = np.min(all_ch)
-        # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        # c_max = np.max(all_ch)
-        #
-        # chemplot(plt_s, plt_ss, 7, 5, 24, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Alteration volume')
-        # chemplot(plt_d, plt_dd, 7, 5, 29, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        # chemplot(plt_a, plt_aa, 7, 10, 67, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        # chemplot(plt_bb, plt_bb, 7, 10, 68, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        plt_s = alt_vol0
+        plt_a = alt_vol0_a
+        plt_b = alt_vol0_b
+        plt_d = alt_vol0_d
+        plt_ss = alt_vol
+        plt_aa = alt_vol_a
+        plt_bb = alt_vol_b
+        plt_dd = alt_vol_d
+        all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        c_min = np.min(all_ch)
+        all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+        c_max = np.max(all_ch)
+
+        chemplot(plt_s, plt_ss, 7, 7, 32, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='Alteration volume')
+        chemplot(plt_d, plt_dd, 7, 7, 39, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 35+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 36+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         # # col 5
         plt_s = al0
@@ -1035,23 +1024,10 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 5, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Al]')
-        chemplot(plt_s, plt_dd, 7, 5, 10, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
-        # plt_s = pri_total0
-        # plt_a = pri_total0_a
-        # plt_b = pri_total0_b
-        # plt_d = pri_total0_d
-        # plt_ss = pri_total
-        # plt_aa = pri_total_a
-        # plt_bb = pri_total_b
-        # plt_dd = pri_total_d
-        # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-        # c_min = np.min(all_ch)
-        # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-        # c_max = np.max(all_ch)
+        chemplot(plt_s, plt_ss, 7, 7, 5, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='[Al]')
+        chemplot(plt_s, plt_dd, 7, 7, 12, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 37, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_b, plt_bb, 7, 14, 38, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         plt_s = dic0
         plt_a = dic0_a
@@ -1066,12 +1042,91 @@ for i in range(0,steps,1):
         all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
         c_max = np.max(all_ch)
 
-        chemplot(plt_s, plt_ss, 7, 5, 25, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='DIC')
-        chemplot(plt_d, plt_dd, 7, 5, 30, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_a, plt_aa, 7, 10, 69, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-        chemplot(plt_bb, plt_bb, 7, 10, 70, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_s, plt_ss, 7, 7, 33, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='DIC')
+        chemplot(plt_d, plt_dd, 7, 7, 40, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 37+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 38+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
+        # # col 6
+        plt_s = pri_total0
+        plt_a = pri_total0_a
+        plt_b = pri_total0_b
+        plt_d = pri_total0_d
+        plt_ss = pri_total
+        plt_aa = pri_total_a
+        plt_bb = pri_total_b
+        plt_dd = pri_total_d
+        all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        c_min = np.min(all_ch)
+        all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+        c_max = np.max(all_ch)
+
+        chemplot(plt_s, plt_ss, 7, 7, 6, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pri_total')
+        chemplot(plt_s, plt_dd, 7, 7, 13, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 39, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_b, plt_bb, 7, 14, 40, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+        plt_s = dic0
+        plt_a = dic0_a
+        plt_b = dic0_b
+        plt_d = dic0_d
+        plt_ss = dic
+        plt_aa = dic_a
+        plt_bb = dic_b
+        plt_dd = dic_d
+        all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        c_min = np.min(all_ch)
+        all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+        c_max = np.max(all_ch)
+
+        chemplot(plt_s, plt_ss, 7, 7, 34, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='DIC (repeat)')
+        chemplot(plt_d, plt_dd, 7, 7, 41, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 39+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 40+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
+        # # col 7
+        plt_s = pri_total0
+        plt_a = pri_total0_a
+        plt_b = pri_total0_b
+        plt_d = pri_total0_d
+        plt_ss = pri_total
+        plt_aa = pri_total_a
+        plt_bb = pri_total_b
+        plt_dd = pri_total_d
+        all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        c_min = np.min(all_ch)
+        all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+        c_max = np.max(all_ch)
+
+        chemplot(plt_s, plt_ss, 7, 7, 7, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pri_total (repeat)')
+        chemplot(plt_s, plt_dd, 7, 7, 14, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 41, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_b, plt_bb, 7, 14, 42, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+        plt_s = dic0
+        plt_a = dic0_a
+        plt_b = dic0_b
+        plt_d = dic0_d
+        plt_ss = dic
+        plt_aa = dic_a
+        plt_bb = dic_b
+        plt_dd = dic_d
+        all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+        c_min = np.min(all_ch)
+        all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+        c_max = np.max(all_ch)
+
+        chemplot(plt_s, plt_ss, 7, 7, 35, 1, 's', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='DIC (repeat)')
+        chemplot(plt_d, plt_dd, 7, 7, 42, 1, 'd', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_a, plt_aa, 7, 14, 41+56, 1, 'a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+        chemplot(plt_bb, plt_bb, 7, 14, 42+56, 1, 'b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
         plt.savefig(outpath+'jdf_Sol_Block_'+str(i+restart)+'.png')
+
+
+
 
 
         #todo: FIGURE: jdf_Sec_Block24 (PCOLOR)
