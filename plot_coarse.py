@@ -76,7 +76,7 @@ xli = 45
 alt_plots = 1
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_0_f/"
+outpath = "../output/revival/summer_coarse_grid/sites_0_j/"
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
@@ -497,11 +497,11 @@ if chem == 1:
     ph0 = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0 = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
-    glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
+    glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
     glass0_p = glass0/(np.max(glass0))
-    ol0 = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
-    pyr0 = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[2]/density_pri[2]
-    plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[3]/density_pri[3]
+    ol0 = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
+    pyr0 = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
+    plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     phiCalcIn0 = np.loadtxt(ch_path + 'z_phiCalc.txt')
     pri_total0 = glass0 + ol0 + pyr0 + plag0
@@ -535,11 +535,11 @@ if chem == 1:
     ph0_a = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0_a = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_a = np.loadtxt(ch_path + 'z_sol_w.txt')
-    glass0_a = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
+    glass0_a = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
     glass0_p_a = glass0_a/(np.max(glass0_a))
-    ol0_a = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
-    pyr0_a = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[2]/density_pri[2]
-    plag0_a = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[3]/density_pri[3]
+    ol0_a = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
+    pyr0_a = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
+    plag0_a = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     phiCalcIn0_a = np.loadtxt(ch_path + 'z_phiCalc.txt')
     pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
     #pri_total0_a = pri_total0_a/np.max(pri_total0_a)
@@ -572,11 +572,11 @@ if chem == 1:
     ph0_b = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0_b = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_b = np.loadtxt(ch_path + 'z_sol_w.txt')
-    glass0_b = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
+    glass0_b = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
     glass0_p_b = glass0_b#/(np.max(glass0_b))
-    ol0_b = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
-    pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[2]/density_pri[2]
-    plag0_b = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[3]/density_pri[3]
+    ol0_b = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
+    pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
+    plag0_b = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
     #pri_total0_b = pri_total0_b/np.max(pri_total0_b)
 
@@ -608,11 +608,11 @@ if chem == 1:
     ph0_d = np.loadtxt(ch_path + 'z_sol_ph.txt')
     alk0_d = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_d = np.loadtxt(ch_path + 'z_sol_w.txt')
-    glass0_d = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[0]/density_pri[0]
+    glass0_d = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
     glass0_p_d = glass0_d/(np.max(glass0_d))
-    ol0_d = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[1]/density_pri[1]
-    pyr0_d = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[2]/density_pri[2]
-    plag0_d = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[3]/density_pri[3]
+    ol0_d = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
+    pyr0_d = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
+    plag0_d = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     pri_total0_d = glass0_d + ol0_d + pyr0_d + plag0_d
     #pri_total0_d = pri_total0_d/np.max(pri_total0_d)
 
