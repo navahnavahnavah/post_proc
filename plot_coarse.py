@@ -76,7 +76,7 @@ xli = 45
 alt_plots = 1
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_6_r/"
+outpath = "../output/revival/summer_coarse_grid/sites_7_b/"
 letter = outpath[-2]
 print letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -205,7 +205,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-505.0,-325.0])
+        plt.ylim([-505.0,-320.0])
         if cb==1:
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
@@ -236,7 +236,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-505.0,-325.0])
+        plt.ylim([-505.0,-320.0])
 
         pGlass.set_edgecolor("face")
         if cb==1:
@@ -267,7 +267,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-505.0,-325.0])
+        plt.ylim([-505.0,-320.0])
         if cb==1:
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
@@ -297,7 +297,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-505.0,-325.0])
+        plt.ylim([-505.0,-320.0])
         pGlass.set_edgecolor("face")
         if cb==1:
             bbox = ax1.get_position()
@@ -2033,7 +2033,7 @@ for i in range(0,steps,1):
         if alt_plots == 1:
 
             #todo: FIGURE: jdf_alt_plot, NXF
-            # print "jdf_alt_plot plot"
+            print "jdf_alt_plot plot"
 
             nsites = 9
             ebw = 800.0
@@ -2178,6 +2178,8 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
                 feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+                # feot hematite
+                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
                 # feot nont-mg
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,13])*(density[13]/molar[13])
                 # feot nont-ca
@@ -2217,6 +2219,8 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
                 feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+                # feot hematite
+                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
                 # feot nont-mg
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,13])*(density[13]/molar[13])
                 # feot nont-ca
