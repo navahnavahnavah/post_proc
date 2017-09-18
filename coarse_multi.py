@@ -13,8 +13,8 @@ from matplotlib.patches import Patch
 import matplotlib.ticker as ticker
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
-plt.rc('xtick', labelsize=7)
-plt.rc('ytick', labelsize=7)
+plt.rc('xtick', labelsize=9)
+plt.rc('ytick', labelsize=9)
 plt.rcParams['axes.titlesize'] = 10
 #plt.rcParams['hatch.linewidth'] = 0.1
 
@@ -58,7 +58,8 @@ cellx = 90
 celly = 1
 steps = 50
 minNum = 41
-max_step = 12
+# even number
+max_step = 18
 
 xCell = x0[1::cellx]
 yCell = y0[0::celly]
@@ -195,6 +196,12 @@ x_dsecStep_ts_a = np.zeros([steps,minNum+1,len(param_t_diff_string)])
 x_dsecStep_ts_b = np.zeros([steps,minNum+1,len(param_t_diff_string)])
 x_dsecStep_ts_d = np.zeros([steps,minNum+1,len(param_t_diff_string)])
 
+sec_binary = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string)])
+sec_binary_a = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string)])
+sec_binary_b = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string)])
+sec_binary_d = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string)])
+sec_binary_any = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string)])
+
 x_d = -5
 
 priStep_ts = np.zeros([steps,6])
@@ -267,6 +274,7 @@ for ii in range(len(param_t_diff)):
         pyr0 = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
         plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
         pri_total0 = glass0 + ol0 + pyr0 + plag0
+        print " "
 
     if ii > 0:
         secMat[:,:,:,ii] = secMat[:,:,:,ii-1]
@@ -298,6 +306,7 @@ for ii in range(len(param_t_diff)):
     pyr0_a = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_a = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
+    print " "
 
 
     ch_path = ii_path + 'ch_b/'
@@ -326,6 +335,7 @@ for ii in range(len(param_t_diff)):
     pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_b = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
+    print " "
 
 
 
@@ -355,6 +365,7 @@ for ii in range(len(param_t_diff)):
     pyr0_d = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_d = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     pri_total0_d = glass0_d + ol0_d + pyr0_d + plag0_d
+    print " "
 
 
 
@@ -498,12 +509,42 @@ for ii in range(len(param_t_diff)):
         plag_d = cut_chem(plag0,i)
 
 
-        #todo: FIGURE: jdf_alt_plot, NXF
-        #print "jdf_alt_plot plot"
 
 
 
-        print i
+
+
+        #hack: sec binary
+        f_thresh = 2.0
+        for k in range(minNum+1):
+            for j in range(len(xCell)):
+
+                #if np.max(secStep[:,j,k,i,ii]) > 0.0:
+                if np.max(secStep[:,j,k,i,ii]) > np.max(secStep[:,:,k,i,ii])/f_thresh:
+                    sec_binary[j,i,k,ii] = 1.0
+                else:
+                    sec_binary[j,i,k,ii] = None
+
+                if np.max(secStep_a[:,j,k,i,ii]) > np.max(secStep_a[:,:,k,i,ii])/f_thresh:
+                    sec_binary_a[j,i,k,ii] = 1.0
+                else:
+                    sec_binary_a[j,i,k,ii] = None
+
+                if np.max(secStep_b[:,j,k,i,ii]) > np.max(secStep_b[:,:,k,i,ii])/f_thresh:
+                    sec_binary_b[j,i,k,ii] = 1.0
+                else:
+                    sec_binary_b[j,i,k,ii] = None
+
+                if np.max(secStep_d[:,j,k,i,ii]) > np.max(secStep_d[:,:,k,i,ii])/f_thresh:
+                    sec_binary_d[j,i,k,ii] = 1.0
+                else:
+                    sec_binary_d[j,i,k,ii] = None
+
+
+
+
+        #hack: alt data
+
         for j in range(len(xCell)):
             # full column average
 
@@ -623,7 +664,7 @@ for ii in range(len(param_t_diff)):
 
 
 
-
+#todo: FIGURE: jdf_alt_plot, NXF
 fig=plt.figure(figsize=(10.0,10.0))
 
 plot_strings = [param_t_diff_string[0], param_t_diff_string[1], param_t_diff_string[2], 'solo']
@@ -660,10 +701,10 @@ for j in range(nsites):
 for ii in range(len(param_t_diff)+1):
 
     plt.plot(xCell,alt_col_mean[:,max_step-1,ii],color=plot_col[ii],lw=1, label=plot_strings[ii])
-    print " "
-    print " "
-    print ii
-    print alt_col_mean[:,max_step-1,ii]
+    # print " "
+    # print " "
+    # print ii
+    # print alt_col_mean[:,max_step-1,ii]
 
 
 plt.legend(fontsize=10)
@@ -703,10 +744,10 @@ for j in range(nsites):
 for ii in range(len(param_t_diff)+1):
 
     plt.plot(xCell,fe_col_mean[:,max_step-1,ii],color=plot_col[ii],lw=1, label=plot_strings[ii])
-    print " "
-    print " "
-    print ii
-    print fe_col_mean[:,max_step-1,ii]
+    # print " "
+    # print " "
+    # print ii
+    # print fe_col_mean[:,max_step-1,ii]
 
 
 
@@ -725,3 +766,53 @@ plt.ylabel('FeO / FeOt')
 
 #plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
 plt.savefig(batch_path+"the_batch_alt.png")
+
+
+
+
+
+#todo: FIGURE: sec_binary
+fig=plt.figure(figsize=(10.0,10.0))
+
+mindex = [2,3,5,14,17,22,26,30,31]
+
+
+ax=fig.add_subplot(2, 2, 1, frameon=True)
+#ax.grid(True)
+
+for k in range(len(mindex)):
+    plt.plot(xCell,(k+1.0)*sec_binary[:,max_step-1,mindex[k],0]+.15*(0-1.0)-.15,color=plot_col[len(param_t_diff)],lw=2)
+
+for ii in range(len(param_t_diff)):
+    for k in range(len(mindex)):
+        # plt.scatter(xCell,(k+1.0)*sec_binary_d[:,max_step-1,mindex[k],ii]+.2*(ii-1.0),color=plot_col[ii],edgecolor=plot_col[ii],s=5)
+        plt.plot(xCell,(k+1.0)*sec_binary_d[:,max_step-1,mindex[k],ii]+.15*(ii-1.0),color=plot_col[ii],lw=2)
+plt.yticks(range(1,len(mindex)+1), secondary[mindex])
+#plt.ylim([0.6, len(mindex)+1])
+
+
+plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=9)
+plt.xlim([0.0, 90000.0])
+plt.xlabel('Distance along transect [km]')
+plt.title('dual vs solo')
+
+
+
+
+ax=fig.add_subplot(2, 2, 2, frameon=True)
+
+for k in range(len(mindex)):
+    plt.plot(xCell,(k+1.0)*sec_binary[:,max_step-1,mindex[k],0]+.15*(0-1.0)-.15,color=plot_col[len(param_t_diff)],lw=2)
+
+for ii in range(len(param_t_diff)):
+    for k in range(len(mindex)):
+        plt.plot(xCell,(k+1.0)*sec_binary_a[:,max_step-1,mindex[k],ii]+.15*(ii-1.0),color=plot_col[ii],lw=2)
+
+plt.yticks([])
+plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=9)
+plt.xlim([0.0, 90000.0])
+plt.xlabel('Distance along transect [km]')
+plt.title('a only')
+
+plt.subplots_adjust( wspace=0.1 , bottom=0.2, top=0.95, left=0.1, right=0.975)
+plt.savefig(batch_path+"the_batch_binary.png")
