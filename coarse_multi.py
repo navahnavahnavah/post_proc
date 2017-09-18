@@ -776,6 +776,35 @@ fig=plt.figure(figsize=(10.0,10.0))
 
 mindex = [2,3,5,14,17,22,26,30,31]
 
+site_binary = np.zeros([9,minNum])
+
+# mg sap
+site_binary[:,2] = np.array([None, 1.0, None, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+# celadonite
+site_binary[:,3] = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+# pyrite
+site_binary[:,5] = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+# fe-celad
+site_binary[:,14] = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+# hematite
+site_binary[:,17] = np.array([None, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+# mont mg
+site_binary[:,22] = np.array([None, None, None, None, None, None, 1.0, 1.0, 1.0])
+
+# talc
+site_binary[:,26] = np.array([None, None, None, None, 1.0, None, 1.0, 1.0, 1.0])
+
+# scol (u zeolites)
+site_binary[:,30] = np.array([None, None, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+
+# chlorite (clinochlore)
+site_binary[:,31] = np.array([None, None, None, None, 1.0, None, 1.0, None, 1.0])
+
 
 ax=fig.add_subplot(2, 2, 1, frameon=True)
 #ax.grid(True)
@@ -787,10 +816,15 @@ for ii in range(len(param_t_diff)):
     for k in range(len(mindex)):
         # plt.scatter(xCell,(k+1.0)*sec_binary_d[:,max_step-1,mindex[k],ii]+.2*(ii-1.0),color=plot_col[ii],edgecolor=plot_col[ii],s=5)
         plt.plot(xCell,(k+1.0)*sec_binary_d[:,max_step-1,mindex[k],ii]+.15*(ii-1.0),color=plot_col[ii],lw=2)
+
+for k in range(len(mindex)):
+    for ii in range(len(site_locations)):
+        plt.plot([site_locations[ii], site_locations[ii]],[(k+1.0)*site_binary[ii,mindex[k]]-.3,(k+1.0)*site_binary[ii,mindex[k]]+0.2],color='#a6a6a6',lw=5,zorder=10)
+
+
+
 plt.yticks(range(1,len(mindex)+1), secondary[mindex])
 #plt.ylim([0.6, len(mindex)+1])
-
-
 plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=9)
 plt.xlim([0.0, 90000.0])
 plt.xlabel('Distance along transect [km]')
@@ -799,7 +833,7 @@ plt.title('dual vs solo')
 
 
 
-ax=fig.add_subplot(2, 2, 2, frameon=True)
+ax=fig.add_subplot(2, 2, 3, frameon=True)
 
 for k in range(len(mindex)):
     plt.plot(xCell,(k+1.0)*sec_binary[:,max_step-1,mindex[k],0]+.15*(0-1.0)-.15,color=plot_col[len(param_t_diff)],lw=2)
@@ -808,11 +842,32 @@ for ii in range(len(param_t_diff)):
     for k in range(len(mindex)):
         plt.plot(xCell,(k+1.0)*sec_binary_a[:,max_step-1,mindex[k],ii]+.15*(ii-1.0),color=plot_col[ii],lw=2)
 
-plt.yticks([])
+plt.yticks(range(1,len(mindex)+1), secondary[mindex])
 plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=9)
 plt.xlim([0.0, 90000.0])
 plt.xlabel('Distance along transect [km]')
 plt.title('a only')
+
+
+
+
+ax=fig.add_subplot(2, 2, 4, frameon=True)
+
+for k in range(len(mindex)):
+    plt.plot(xCell,(k+1.0)*sec_binary[:,max_step-1,mindex[k],0]+.15*(0-1.0)-.15,color=plot_col[len(param_t_diff)],lw=2)
+
+for ii in range(len(param_t_diff)):
+    for k in range(len(mindex)):
+        plt.plot(xCell,(k+1.0)*sec_binary_b[:,max_step-1,mindex[k],ii]+.15*(ii-1.0),color=plot_col[ii],lw=2)
+
+
+plt.yticks([])
+plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=9)
+plt.xlim([0.0, 90000.0])
+plt.xlabel('Distance along transect [km]')
+plt.title('b only')
+
+
 
 plt.subplots_adjust( wspace=0.1 , bottom=0.2, top=0.95, left=0.1, right=0.975)
 plt.savefig(batch_path+"the_batch_binary.png")
