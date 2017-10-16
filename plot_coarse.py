@@ -74,9 +74,11 @@ celly = 1
 sec_toggle = 0
 xli = 45
 alt_plots = 1
+d_only = 0
+param_b_g = 0
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_7_b/"
+outpath = "../output/revival/summer_coarse_grid/sites_12_q/"
 letter = outpath[-2]
 print letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -205,7 +207,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-505.0,-320.0])
+        plt.ylim([-510.0,-320.0])
         if cb==1:
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
@@ -236,7 +238,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
         plt.title(cp_title,fontsize=8)
-        plt.ylim([-505.0,-320.0])
+        plt.ylim([-510.0,-320.0])
 
         pGlass.set_edgecolor("face")
         if cb==1:
@@ -470,6 +472,9 @@ x_dsecStep_ts_b = np.zeros([steps,minNum+1])
 x_dsecStep_ts_d = np.zeros([steps,minNum+1])
 
 x_d = -5
+xd_move = 0
+# moves = np.array([2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42])
+moves = np.array([2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40])
 
 priStep_ts = np.zeros([steps,6])
 priStep_ts_a = np.zeros([steps,6])
@@ -489,8 +494,11 @@ any_min = []
 if chem == 1:
     # IMPORT MINERALS
     print " "
-    ch_path = path + 'ch_s/'
-    print "ch_s/:"
+    if d_only == 1:
+        ch_path = path + 'ch_a/'
+    if d_only == 0:
+        ch_path = path + 'ch_s/'
+    print ch_path
     for j in range(1,minNum):
         if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
             if not np.any(any_min == j):
@@ -516,11 +524,18 @@ if chem == 1:
     solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
     glass0_p = glass0/(np.max(glass0))
+    togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
+    phiCalcIn0 = np.loadtxt(ch_path + 'z_phiCalc.txt')
+    ph_fix0 = np.loadtxt(ch_path + 'z_ph_fix.txt')
+    # speed1_0 = np.loadtxt(ch_path + 'z_speed_1.txt')
+    # speed2_0 = np.loadtxt(ch_path + 'z_speed_2.txt')
+    # speed3_0 = np.loadtxt(ch_path + 'z_speed_3.txt')
+
+    if d_only == 1:
+        ch_path = path + 'ch_b/'
     ol0 = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0 = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-    togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
-    phiCalcIn0 = np.loadtxt(ch_path + 'z_phiCalc.txt')
     pri_total0 = glass0 + ol0 + pyr0 + plag0
 
     #pri_total0 = pri_total0/np.max(pri_total0)
@@ -529,7 +544,7 @@ if chem == 1:
 
     print " "
     ch_path = path + 'ch_a/'
-    print "ch_a/:"
+    print ch_path
     for j in range(1,minNum):
         if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
             if not np.any(any_min == j):
@@ -559,14 +574,18 @@ if chem == 1:
     plag0_a = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     phiCalcIn0_a = np.loadtxt(ch_path + 'z_phiCalc.txt')
     pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
+    ph_fix0_a = np.loadtxt(ch_path + 'z_ph_fix.txt')
     #pri_total0_a = pri_total0_a/np.max(pri_total0_a)
+    # speed1_0_a = np.loadtxt(ch_path + 'z_speed_1.txt')
+    # speed2_0_a = np.loadtxt(ch_path + 'z_speed_2.txt')
+    # speed3_0_a = np.loadtxt(ch_path + 'z_speed_3.txt')
 
 
 
 
     print " "
     ch_path = path + 'ch_b/'
-    print "ch_b/:"
+    print ch_path
     for j in range(1,minNum):
         if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
             if not np.any(any_min == j):
@@ -595,12 +614,16 @@ if chem == 1:
     pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_b = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
+    ph_fix0_b = np.loadtxt(ch_path + 'z_ph_fix.txt')
     #pri_total0_b = pri_total0_b/np.max(pri_total0_b)
+    # speed1_0_b = np.loadtxt(ch_path + 'z_speed_1.txt')
+    # speed2_0_b = np.loadtxt(ch_path + 'z_speed_2.txt')
+    # speed3_0_b = np.loadtxt(ch_path + 'z_speed_3.txt')
 
 
     print " "
     ch_path = path + 'ch_d/'
-    print "ch_d/:"
+    print ch_path
     for j in range(1,minNum):
         #if j % 5 ==0:
             #print 'loading minerals', str(j-5), "-", str(j)
@@ -704,6 +727,10 @@ for i in range(0,steps,1):
     print " "
     print "step =", i
 
+    if np.any(moves== i + restart):
+        xd_move = xd_move + 1
+    print xd_move
+
     if i == 1:
         #todo: FIGURE: togg_plot.png
         fig=plt.figure()
@@ -719,7 +746,7 @@ for i in range(0,steps,1):
             secStep[:,:,any_min[j]] = cut_chem(secMat[:,:,any_min[j]],i)
             dsecStep[:,:,any_min[j]] = cut_chem(dsecMat[:,:,any_min[j]],i)
             secStep_ts[i,any_min[j]] = np.sum(secStep[:,:,any_min[j]])
-            x_secStep_ts[i,any_min[j]] = np.sum(secStep[:,x_d,any_min[j]])
+            x_secStep_ts[i,any_min[j]] = np.sum(secStep[:,xd_move,any_min[j]])
             if i > 0:
                 dsecStep_ts[i,any_min[j]] = secStep_ts[i,any_min[j]] - secStep_ts[i-1,any_min[j]]
                 x_dsecStep_ts[i,any_min[j]] = x_secStep_ts[i,any_min[j]] - x_secStep_ts[i-1,any_min[j]]
@@ -746,6 +773,10 @@ for i in range(0,steps,1):
         pyr = cut_chem(pyr0,i)
         plag = cut_chem(plag0,i)
         phiCalcIn = cut_chem(phiCalcIn0,i)
+        ph_fix = cut_chem(ph_fix0,i)
+        # speed1 = cut_chem(speed1_0,i)
+        # speed2 = cut_chem(speed2_0,i)
+        # speed3 = cut_chem(speed3_0,i)
 
         priStep_ts[i,5] = np.sum(glass)
         priStep_ts[i,4] = np.sum(ol)
@@ -764,7 +795,7 @@ for i in range(0,steps,1):
             secStep_a[:,:,any_min[j]] = cut_chem(secMat_a[:,:,any_min[j]],i)
             dsecStep_a[:,:,any_min[j]] = cut_chem(dsecMat_a[:,:,any_min[j]],i)
             secStep_ts_a[i,any_min[j]] = np.sum(secStep_a[:,:,any_min[j]])
-            x_secStep_ts_a[i,any_min[j]] = np.sum(secStep_a[:,x_d,any_min[j]])
+            x_secStep_ts_a[i,any_min[j]] = np.sum(secStep_a[:,xd_move,any_min[j]])
             if i > 0:
                 dsecStep_ts_a[i,any_min[j]] = secStep_ts_a[i,any_min[j]] - secStep_ts_a[i-1,any_min[j]]
                 x_dsecStep_ts_a[i,any_min[j]] = x_secStep_ts_a[i,any_min[j]] - x_secStep_ts_a[i-1,any_min[j]]
@@ -790,6 +821,10 @@ for i in range(0,steps,1):
         pyr_a = cut_chem(pyr0_a,i)
         plag_a = cut_chem(plag0_a,i)
         phiCalcIn_a = cut_chem(phiCalcIn0_a,i)
+        ph_fix_a = cut_chem(ph_fix0_a,i)
+        # speed1_a = cut_chem(speed1_0_a,i)
+        # speed2_a = cut_chem(speed2_0_a,i)
+        # speed3_a = cut_chem(speed3_0_a,i)
 
         priStep_ts_a[i,5] = np.sum(glass_a)
         priStep_ts_a[i,4] = np.sum(ol_a)
@@ -808,7 +843,7 @@ for i in range(0,steps,1):
             secStep_b[:,:,any_min[j]] = cut_chem(secMat_b[:,:,any_min[j]],i)
             dsecStep_b[:,:,any_min[j]] = cut_chem(dsecMat_b[:,:,any_min[j]],i)
             secStep_ts_b[i,any_min[j]] = np.sum(secStep_b[:,:,any_min[j]])
-            x_secStep_ts_b[i,any_min[j]] = np.sum(secStep_b[:,x_d,any_min[j]])
+            x_secStep_ts_b[i,any_min[j]] = np.sum(secStep_b[:,xd_move,any_min[j]])
             if i > 0:
                 dsecStep_ts_b[i,any_min[j]] = secStep_ts_b[i,any_min[j]] - secStep_ts_b[i-1,any_min[j]]
                 x_dsecStep_ts_b[i,any_min[j]] = x_secStep_ts_b[i,any_min[j]] - x_secStep_ts_b[i-1,any_min[j]]
@@ -833,6 +868,10 @@ for i in range(0,steps,1):
         ol_b = cut_chem(ol0_b,i)
         pyr_b = cut_chem(pyr0_b,i)
         plag_b = cut_chem(plag0_b,i)
+        ph_fix_b = cut_chem(ph_fix0_b,i)
+        # speed1_b = cut_chem(speed1_0_b,i)
+        # speed2_b = cut_chem(speed2_0_b,i)
+        # speed3_b = cut_chem(speed3_0_b,i)
 
         priStep_ts_b[i,5] = np.sum(glass_b)
         priStep_ts_b[i,4] = np.sum(ol_b)
@@ -852,7 +891,7 @@ for i in range(0,steps,1):
             secStep_d[:,:,any_min[j]] = cut_chem(secMat_d[:,:,any_min[j]],i)
             dsecStep_d[:,:,any_min[j]] = cut_chem(dsecMat_d[:,:,any_min[j]],i)
             secStep_ts_d[i,any_min[j]] = np.sum(secStep_d[:,:,any_min[j]])
-            x_secStep_ts_d[i,any_min[j]] = np.sum(secStep_d[:,x_d,any_min[j]])
+            x_secStep_ts_d[i,any_min[j]] = np.sum(secStep_d[:,xd_move,any_min[j]])
             if i > 0:
                 dsecStep_ts_d[i,any_min[j]] = secStep_ts_d[i,any_min[j]] - secStep_ts_d[i-1,any_min[j]]
                 x_dsecStep_ts_d[i,any_min[j]] = x_secStep_ts_d[i,any_min[j]] - x_secStep_ts_d[i-1,any_min[j]]
@@ -1165,23 +1204,23 @@ for i in range(0,steps,1):
             chemplot(plt_a, plt_aa, 7, 14, 41, 1, 'cl a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
             chemplot(plt_b, plt_bb, 7, 14, 42, 1, 'cl b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-            plt_s = dic0
-            plt_a = dic0_a
-            plt_b = dic0_b
-            plt_d = dic0_d
-            plt_ss = dic
-            plt_aa = dic_a
-            plt_bb = dic_b
-            plt_dd = dic_d
-            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-            c_min = np.min(all_ch)
-            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-            c_max = np.max(all_ch)
-
-            chemplot(plt_s, plt_ss, 7, 7, 35, 1, 'dic repeat s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='DIC (repeat)')
-            chemplot(plt_d, plt_dd, 7, 7, 42, 1, 'dic repeat d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            chemplot(plt_a, plt_aa, 7, 14, 41+56, 1, 'dic repeat a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            chemplot(plt_bb, plt_bb, 7, 14, 42+56, 1, 'dic repeat b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            # plt_s = ph_fix0
+            # plt_a = ph_fix0_a
+            # plt_b = ph_fix0_b
+            # plt_d = ph_fix0_b
+            # plt_ss = ph_fix
+            # plt_aa = ph_fix_a
+            # plt_bb = ph_fix_b
+            # plt_dd = ph_fix_b
+            # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+            # c_min = np.min(all_ch)
+            # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+            # c_max = np.max(all_ch)
+            #
+            # chemplot(plt_s, plt_ss, 7, 7, 35, 1, 'ph fix s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pH fix')
+            # #chemplot(plt_d, plt_dd, 7, 7, 42, 1, 'ph fix d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            # chemplot(plt_a, plt_aa, 7, 14, 41+56, 1, 'ph fix a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            # chemplot(plt_bb, plt_bb, 7, 14, 42+56, 1, 'ph fix b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
             plt.savefig(outpath+'jdf_'+letter+'_Sol_Block_'+str(i+restart)+'.png')
 
@@ -1283,21 +1322,41 @@ for i in range(0,steps,1):
             # plt_dd = glass_a
             plt_s = glass0/np.max(glass0)
             plt_a = glass0_a/np.max(glass0_a)
-            plt_b = glass0_b/np.max(glass0_b)
+
+            if param_b_g == 1:
+                plt_b = glass0_b/np.max(glass0_b)
+            if param_b_g == 0:
+                plt_b = glass0_a/np.max(glass0_a)
+
             plt_d = glass0_d/np.max(glass0_d)
+
+
             plt_ss = glass/np.max(glass)
             plt_aa = glass_a/np.max(glass_a)
-            plt_bb = glass_b/np.max(glass_b)
+
+            if param_b_g == 1:
+                plt_bb = glass_b/np.max(glass_b)
+            if param_b_g == 0:
+                plt_bb = glass_a/np.max(glass_a)
+
+
+
             plt_dd = glass_d/np.max(glass_d)
             all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
             c_min = np.min(all_ch)
             all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
             c_max = np.max(all_ch)
 
+            # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_d[plt_d>0.0])]
+            # c_min = np.min(all_ch)
+            # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_d[plt_d>0.0])]
+            # c_max = np.max(all_ch)
+
             chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
             chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
             chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            if param_b_g == 1:
+                chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
             # # col 3
             # plt_s = ol0
@@ -1799,225 +1858,295 @@ for i in range(0,steps,1):
             # plt.savefig(outpath+'jdf_'+letter+'_Sec_Cont_'+str(i+restart)+'.png')
 
 
-
-            print "jdf_SolW_Phi plot"
-            #todo: FIGURE: jdf_SolW_Phi
-
             bar_bins = 5
 
-            fig=plt.figure(figsize=(16.0,8.0))
-
-            ax=fig.add_subplot(4, 4, 1, frameon=False, aspect=asp*4)
-            varStep = solw
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0[solw0>0.0]),vmax=np.max(solw0))
-            plt.ylim([-505.0,-325.0])
-            # plt.colorbar(orientation='horizontal',format=ticker.FuncFormatter(fmt))
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('sol_w solo')
-            plt.xticks([])
-            plt.yticks([])
-
-            ax=fig.add_subplot(4, 4, 2, frameon=False, aspect=asp*4)
-            varStep = solw_d
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0_d[solw0_d>0.0]),vmax=np.max(solw0_d))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('sol_w dual')
-            plt.xticks([])
-            plt.yticks([])
-
-            ax=fig.add_subplot(4, 4, 5, frameon=False, aspect=asp*4)
-            varStep = solw_a
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0_a[solw0_a>0.0]),vmax=np.max(solw0_a))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('sol_w a')
-            plt.xticks([])
-            plt.yticks([])
-
-            ax=fig.add_subplot(4, 4, 6, frameon=False, aspect=asp*4)
-            varStep = solw_b
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0_b[solw0_b>0.0]),vmax=np.max(solw0_b))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('sol_w b')
-            plt.xticks([])
-            plt.yticks([])
-
-
-
-            phi_calc0 = solw0*1000.0/ (solw0*1000.0 + pri_total0 + secVol0)
-            phi_calc0[np.isinf(phi_calc0)] = 0.0
-            phi_calc0[np.isnan(phi_calc0)] = 0.0
-            phi_calc0[phi_calc0 == 1.0] = 0.0
-            phi_calc = solw*1000.0/ (solw*1000.0 + pri_total + secVol)
-            phi_calc[np.isinf(phi_calc)] = 0.0
-            phi_calc[np.isnan(phi_calc)] = 0.0
-            phi_calc[phi_calc == 1.0] = 0.0
-            ax=fig.add_subplot(4, 4, 3, frameon=False, aspect=asp*4)
-            varStep = phi_calc
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('phi_calc solo')
-            plt.xticks([])
-            plt.yticks([])
-
-            phi_calc0 = solw0_d*1000.0/ (solw0_d*1000.0 + pri_total0_d + secVol0_d)
-            phi_calc0[np.isinf(phi_calc0)] = 0.0
-            phi_calc0[np.isnan(phi_calc0)] = 0.0
-            phi_calc0[phi_calc0 == 1.0] = 0.0
-            phi_calc = solw_d*1000.0/ (solw_d*1000.0 + pri_total_d + secVol_d)
-            phi_calc[np.isinf(phi_calc)] = 0.0
-            phi_calc[np.isnan(phi_calc)] = 0.0
-            phi_calc[phi_calc == 1.0] = 0.0
-            ax=fig.add_subplot(4, 4, 4, frameon=False, aspect=asp*4)
-            varStep = phi_calc
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('phi_calc dual')
-            plt.xticks([])
-            plt.yticks([])
-
-            phi_calc0 = solw0_a*1000.0/ (solw0_a*1000.0 + pri_total0_a + secVol0_a)
-            phi_calc0[np.isinf(phi_calc0)] = 0.0
-            phi_calc0[np.isnan(phi_calc0)] = 0.0
-            phi_calc0[phi_calc0 == 1.0] = 0.0
-            phi_calc = solw_a*1000.0/ (solw_a*1000.0 + pri_total_a + secVol_a)
-            phi_calc[np.isinf(phi_calc)] = 0.0
-            phi_calc[np.isnan(phi_calc)] = 0.0
-            phi_calc[phi_calc == 1.0] = 0.0
-            ax=fig.add_subplot(4, 4, 7, frameon=False, aspect=asp*4)
-            varStep = phi_calc
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('phi_calc chamber a')
-            plt.xticks([])
-            plt.yticks([])
-
-            phi_calc0 = solw0_b*1000.0/ (solw0_b*1000.0 + pri_total0_b + secVol0_b)
-            phi_calc0[np.isinf(phi_calc0)] = 0.0
-            phi_calc0[np.isnan(phi_calc0)] = 0.0
-            phi_calc0[phi_calc0 == 1.0] = 0.0
-            phi_calc = solw_b*1000.0/ (solw_b*1000.0 + pri_total_b + secVol_b)
-            phi_calc[np.isinf(phi_calc)] = 0.0
-            phi_calc[np.isnan(phi_calc)] = 0.0
-            phi_calc[phi_calc == 1.0] = 0.0
-            ax=fig.add_subplot(4, 4, 8, frameon=False, aspect=asp*4)
-            varStep = phi_calc
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
-
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('phi_calc chamber b')
-            plt.xticks([])
-            plt.yticks([])
 
 
 
 
-            ax=fig.add_subplot(4, 4, 11, frameon=False, aspect=asp*4)
-            varStep = phiCalcIn
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
+            #
+            # print "jdf_ph_fix plot"
+            # #todo: FIGURE: jdf_ph_fix
+            #
+            # fig=plt.figure(figsize=(16.0,8.0))
+            #
+            # ax=fig.add_subplot(2, 2, 1, frameon=False, aspect=asp*4)
+            # varStep = ph_fix
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(ph_fix0[ph_fix0>0]),vmax=np.max(ph_fix0))
+            # plt.ylim([-505.0,-325.0])
+            # # plt.colorbar(orientation='horizontal',format=ticker.FuncFormatter(fmt))
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('ph_fix solo')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            #
+            # ax=fig.add_subplot(2, 2, 3, frameon=False, aspect=asp*4)
+            # varStep = ph_fix_a
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(ph_fix0_a[ph_fix0_a>0]),vmax=np.max(ph_fix0_a))
+            # plt.ylim([-505.0,-325.0])
+            # # plt.colorbar(orientation='horizontal',format=ticker.FuncFormatter(fmt))
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('ph_fix a')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            #
+            # ax=fig.add_subplot(2, 2, 4, frameon=False, aspect=asp*4)
+            # varStep = ph_fix_b
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(ph_fix0_b[ph_fix0_b>0]),vmax=np.max(ph_fix0_b))
+            # plt.ylim([-505.0,-325.0])
+            # # plt.colorbar(orientation='horizontal',format=ticker.FuncFormatter(fmt))
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('ph_fix b')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            #
+            # plt.subplots_adjust( wspace=0.1 , bottom=0.05, top=0.95, left=0.03, right=0.98)
+            # plt.savefig(outpath+'jdf_'+letter+'_ph_fix_'+str(i+restart)+'.png')
 
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phiCalcIn0[phiCalcIn0>0.0]),vmax=np.max(phiCalcIn0[phiCalcIn0<1.0]))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('phiCalcIn')
-            plt.xticks([])
-            plt.yticks([])
 
 
-            ax=fig.add_subplot(4, 4, 15, frameon=False, aspect=asp*4)
-            varStep = phiCalcIn_a
-            xCell_t = []
-            xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            varStep_t[:,:len(xCell)] = varStep
 
-            plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phiCalcIn0_a[phiCalcIn0_a>0.0]),vmax=np.max(phiCalcIn0_a[phiCalcIn0_a<1.0]))
-            plt.ylim([-505.0,-325.0])
-            cb = plt.colorbar(orientation='horizontal')
-            tick_locator = ticker.MaxNLocator(nbins=bar_bins)
-            cb.locator = tick_locator
-            cb.update_ticks()
-            plt.title('phiCalcIn_a')
-            plt.xticks([])
-            plt.yticks([])
 
-            plt.subplots_adjust( wspace=0.1 , bottom=0.05, top=0.95, left=0.03, right=0.98)
-            plt.savefig(outpath+'jdf_'+letter+'_SolW_Phi_'+str(i+restart)+'.png')
+            # print "jdf_SolW_Phi plot"
+            # #todo: FIGURE: jdf_SolW_Phi
+            #
+            # fig=plt.figure(figsize=(16.0,8.0))
+            #
+            # ax=fig.add_subplot(4, 4, 1, frameon=False, aspect=asp*4)
+            # varStep = solw
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0[solw0>0.0]),vmax=np.max(solw0))
+            # plt.ylim([-505.0,-325.0])
+            # # plt.colorbar(orientation='horizontal',format=ticker.FuncFormatter(fmt))
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('sol_w solo')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # ax=fig.add_subplot(4, 4, 2, frameon=False, aspect=asp*4)
+            # varStep = solw_d
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0_d[solw0_d>0.0]),vmax=np.max(solw0_d))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('sol_w dual')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # ax=fig.add_subplot(4, 4, 5, frameon=False, aspect=asp*4)
+            # varStep = solw_a
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0_a[solw0_a>0.0]),vmax=np.max(solw0_a))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('sol_w a')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # ax=fig.add_subplot(4, 4, 6, frameon=False, aspect=asp*4)
+            # varStep = solw_b
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(solw0_b[solw0_b>0.0]),vmax=np.max(solw0_b))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('sol_w b')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            #
+            #
+            # phi_calc0 = solw0*1000.0/ (solw0*1000.0 + pri_total0 + secVol0)
+            # phi_calc0[np.isinf(phi_calc0)] = 0.0
+            # phi_calc0[np.isnan(phi_calc0)] = 0.0
+            # phi_calc0[phi_calc0 == 1.0] = 0.0
+            # phi_calc = solw*1000.0/ (solw*1000.0 + pri_total + secVol)
+            # phi_calc[np.isinf(phi_calc)] = 0.0
+            # phi_calc[np.isnan(phi_calc)] = 0.0
+            # phi_calc[phi_calc == 1.0] = 0.0
+            # ax=fig.add_subplot(4, 4, 3, frameon=False, aspect=asp*4)
+            # varStep = phi_calc
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('phi_calc solo')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # phi_calc0 = solw0_d*1000.0/ (solw0_d*1000.0 + pri_total0_d + secVol0_d)
+            # phi_calc0[np.isinf(phi_calc0)] = 0.0
+            # phi_calc0[np.isnan(phi_calc0)] = 0.0
+            # phi_calc0[phi_calc0 == 1.0] = 0.0
+            # phi_calc = solw_d*1000.0/ (solw_d*1000.0 + pri_total_d + secVol_d)
+            # phi_calc[np.isinf(phi_calc)] = 0.0
+            # phi_calc[np.isnan(phi_calc)] = 0.0
+            # phi_calc[phi_calc == 1.0] = 0.0
+            # ax=fig.add_subplot(4, 4, 4, frameon=False, aspect=asp*4)
+            # varStep = phi_calc
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('phi_calc dual')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # phi_calc0 = solw0_a*1000.0/ (solw0_a*1000.0 + pri_total0_a + secVol0_a)
+            # phi_calc0[np.isinf(phi_calc0)] = 0.0
+            # phi_calc0[np.isnan(phi_calc0)] = 0.0
+            # phi_calc0[phi_calc0 == 1.0] = 0.0
+            # phi_calc = solw_a*1000.0/ (solw_a*1000.0 + pri_total_a + secVol_a)
+            # phi_calc[np.isinf(phi_calc)] = 0.0
+            # phi_calc[np.isnan(phi_calc)] = 0.0
+            # phi_calc[phi_calc == 1.0] = 0.0
+            # ax=fig.add_subplot(4, 4, 7, frameon=False, aspect=asp*4)
+            # varStep = phi_calc
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('phi_calc chamber a')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # phi_calc0 = solw0_b*1000.0/ (solw0_b*1000.0 + pri_total0_b + secVol0_b)
+            # phi_calc0[np.isinf(phi_calc0)] = 0.0
+            # phi_calc0[np.isnan(phi_calc0)] = 0.0
+            # phi_calc0[phi_calc0 == 1.0] = 0.0
+            # phi_calc = solw_b*1000.0/ (solw_b*1000.0 + pri_total_b + secVol_b)
+            # phi_calc[np.isinf(phi_calc)] = 0.0
+            # phi_calc[np.isnan(phi_calc)] = 0.0
+            # phi_calc[phi_calc == 1.0] = 0.0
+            # ax=fig.add_subplot(4, 4, 8, frameon=False, aspect=asp*4)
+            # varStep = phi_calc
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phi_calc0[phi_calc0>0.0]),vmax=np.max(phi_calc0))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('phi_calc chamber b')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(4, 4, 11, frameon=False, aspect=asp*4)
+            # varStep = phiCalcIn
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phiCalcIn0[phiCalcIn0>0.0]),vmax=np.max(phiCalcIn0[phiCalcIn0<1.0]))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('phiCalcIn')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            #
+            # ax=fig.add_subplot(4, 4, 15, frameon=False, aspect=asp*4)
+            # varStep = phiCalcIn_a
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varStep
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=np.min(phiCalcIn0_a[phiCalcIn0_a>0.0]),vmax=np.max(phiCalcIn0_a[phiCalcIn0_a<1.0]))
+            # plt.ylim([-505.0,-325.0])
+            # cb = plt.colorbar(orientation='horizontal')
+            # tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+            # cb.locator = tick_locator
+            # cb.update_ticks()
+            # plt.title('phiCalcIn_a')
+            # plt.xticks([])
+            # plt.yticks([])
+            #
+            # plt.subplots_adjust( wspace=0.1 , bottom=0.05, top=0.95, left=0.03, right=0.98)
+            # plt.savefig(outpath+'jdf_'+letter+'_SolW_Phi_'+str(i+restart)+'.png')
 
 
 
@@ -2140,6 +2269,8 @@ for i in range(0,steps,1):
             fe_col_mean_d = np.zeros(len(xCell))
             fe_col_mean_s = np.zeros(len(xCell))
 
+            fe_col_mean_d_pri = np.zeros(len(xCell))
+            fe_col_mean_s_pri = np.zeros(len(xCell))
 
 
             fe_col_mean_top_half_d = np.zeros(len(xCell))
@@ -2178,6 +2309,8 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
                 feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+                # feot pyrite
+                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot hematite
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
                 # feot nont-mg
@@ -2190,6 +2323,8 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
 
                 fe_col_mean_s[j] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
+
+                fe_col_mean_s_pri[j] = 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2]) / ((1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])) + (0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])))
 
 
             feo_col_mean_temp = np.zeros(len(xCell))
@@ -2221,6 +2356,8 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
                 # feot hematite
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
+                # feot pyrite
+                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot nont-mg
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,13])*(density[13]/molar[13])
                 # feot nont-ca
@@ -2231,6 +2368,8 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
 
                 fe_col_mean_d[j] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
+
+                fe_col_mean_d_pri[j] = 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2]) / ((1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])) + (0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])))
 
 
 
@@ -2253,6 +2392,10 @@ for i in range(0,steps,1):
             plt.plot(xCell,fe_col_mean_s,color=plot_purple,lw=2, label="column mean solo")
             plt.plot(xCell,fe_col_mean_d,color=plot_blue,lw=2, label="column mean dual")
 
+
+            plt.plot(xCell,fe_col_mean_s_pri,color=plot_purple,lw=1, label="column mean solo pri")
+            plt.plot(xCell,fe_col_mean_d_pri,color=plot_blue,lw=1, label="column mean dual pri")
+
             # # plot model top half mean
             # plt.plot(xCell,alt_col_mean_top_half_s,color=plot_purple,lw=2,linestyle='--')
             # plt.plot(xCell,alt_col_mean_top_half_d,color=plot_blue,lw=2,linestyle='--')
@@ -2266,12 +2409,12 @@ for i in range(0,steps,1):
 
 
 
-            plt.legend(fontsize=10)
+            #plt.legend(fontsize=10)
             plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
             plt.xlim([0.0, 90000.0])
             plt.xlabel('Distance along transect [km]')
 
-            #plt.yticks([0.6, 0.65, 0.70, 0.75, 0.80],fontsize=12)
+            plt.yticks([0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80])
             #plt.ylim([0.6, 0.8])
             plt.ylim([0.6, 0.8])
             plt.ylabel('FeO / FeOt')
@@ -2283,12 +2426,144 @@ for i in range(0,steps,1):
 
 
 
+            #todo: FIG: speed
+            # print "jdf_Speed"
+            # fig=plt.figure(figsize=(10.0,14.0))
+            #
+            #
+            # if i == 0:
+            #     vvmin = np.min([speed3_0[speed3_0>0.0], speed3_0_a[speed3_0_a>0.0], speed3_0_b[speed3_0_b>0.0]])
+            #     vvmax = np.max([speed3_0, speed3_0_a, speed3_0_b])
+            # print "vvmax" , vvmax , "vvmin" , vvmin
+            #
+            # ax=fig.add_subplot(5, 3, 1, frameon=True, aspect=asp*4.0)
+            #
+            #
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = speed3
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
+            # plt.ylim([-510.0,-320.0])
+            # plt.xlim([0,90000])
+            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(5, 3, 2, frameon=True, aspect=asp*4.0)
+            #
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = speed3_a
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
+            # plt.ylim([-510.0,-320.0])
+            # plt.xlim([0,90000])
+            # plt.yticks([])
+            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(5, 3, 3, frameon=True, aspect=asp*4.0)
+            #
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = speed3_b
+            #
+            #
+            # pSpeed = plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
+            # plt.ylim([-510.0,-320.0])
+            # plt.xlim([0,90000])
+            # plt.yticks([])
+            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
+            #
+            # bbox = ax.get_position()
+            # cax = fig.add_axes([bbox.xmin+bbox.width-0.6, bbox.ymin+0.08, bbox.width*2.0, bbox.height*0.08])
+            # cbar = plt.colorbar(pSpeed, cax = cax,orientation='horizontal')
+            # #plt.title("ms",fontsize=10)
+            # cbar.solids.set_rasterized(True)
+            # cbar.solids.set_edgecolor("face")
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(5, 3, 4, frameon=True, aspect=asp*4.0)
+            #
+            # varSpeed = speed3#np.zeros(speed3.shape)
+            # varSpeed[speed1!=3.0] = 0.0
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = varSpeed
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
+            # plt.ylim([-510.0,-320.0])
+            # plt.xlim([0,90000])
+            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(5, 3, 5, frameon=True, aspect=asp*4.0)
+            #
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = speed3_a
+            #
+            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
+            # plt.ylim([-510.0,-320.0])
+            # plt.xlim([0,90000])
+            # plt.yticks([])
+            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(5, 3, 6, frameon=True, aspect=asp*4.0)
+            #
+            # xCell_t = []
+            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
+            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
+            # varStep_t[:,:len(xCell)] = speed3_b
+            #
+            #
+            # pSpeed = plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
+            # plt.ylim([-510.0,-320.0])
+            # plt.xlim([0,90000])
+            # plt.yticks([])
+            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
+            #
+            # # bbox = ax.get_position()
+            # # cax = fig.add_axes([bbox.xmin+bbox.width-0.6, bbox.ymin+0.08, bbox.width*2.0, bbox.height*0.08])
+            # # cbar = plt.colorbar(pSpeed, cax = cax,orientation='horizontal')
+            # # plt.title("ms",fontsize=10)
+            # # cbar.solids.set_rasterized(True)
+            # # cbar.solids.set_edgecolor("face")
+            #
+            #
+            #
+            #
+            #
+            #
+            # plt.subplots_adjust( wspace=0.1 , bottom=0.05, top=0.99, left=0.03, right=0.975)
+            # plt.savefig(outpath+"jdf_Speed_"+str(i+restart)+".png")
 
 
 
 
 
-            # #todo: FIGURE: jdf_alt_plot, DSA
+
+            # #todoo: FIGURE: jdf_alt_plot, DSA
             # fig=plt.figure(figsize=(4.5,9.0))
             #
             # ax=fig.add_subplot(2, 1, 1, frameon=True,aspect='equal')
@@ -2347,7 +2622,11 @@ norm_growth_rate2_a = np.zeros([steps,minNum+1])
 norm_growth_rate2_b = np.zeros([steps,minNum+1])
 
 # # COLUMN 1
-ng0 = 2
+ng0 = 1
+
+amt_lw = 2
+
+tsteps = np.arange(1+ng0,steps+1)
 
 print "s "
 ax1=fig.add_subplot(2,2,1, frameon=True)
@@ -2356,10 +2635,12 @@ for j in range(len(any_min)):
     if np.max(dsecStep_ts[ng0:,any_min[j]]) > 0.0:
         norm_growth_rate[ng0:,any_min[j]] = dsecStep_ts[ng0:,any_min[j]]
         norm_growth_rate2[ng0:,any_min[j]] = dsecStep_ts[ng0:,any_min[j]]/np.max(dsecStep_ts[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
-    plt.xlim([5,steps])
-    plt.ylim([-.05,1.05])
-    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+
+        norm_growth_rate2[30:-1,any_min[j]] = norm_growth_rate2[31:,any_min[j]]
+    plt.plot(tsteps[::2],norm_growth_rate2[ng0::2,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+    #plt.xlim([5,steps])
+    plt.ylim([.5,1.05])
+    #plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, solo',fontsize=10)
 
@@ -2372,10 +2653,12 @@ for j in range(len(any_min)):
     if np.max(dsecStep_ts_d[ng0:,any_min[j]]) > 0.0:
         norm_growth_rate_d[ng0:,any_min[j]] = dsecStep_ts_d[ng0:,any_min[j]]
         norm_growth_rate2_d[ng0:,any_min[j]] = dsecStep_ts_d[ng0:,any_min[j]]/np.max(dsecStep_ts_d[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
-    plt.xlim([5,steps])
-    plt.ylim([-.05,1.05])
-    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+
+        norm_growth_rate2_d[30:-1,any_min[j]] = norm_growth_rate2_d[31:,any_min[j]]
+    plt.plot(tsteps[::2],norm_growth_rate2_d[ng0::2,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+    #plt.xlim([5,steps])
+    plt.ylim([.5,1.05])
+    #plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
@@ -2386,10 +2669,13 @@ for j in range(len(any_min)):
     if np.max(secStep_ts_a[ng0:,any_min[j]]) > 0.0:
         norm_growth_rate_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]
         norm_growth_rate2_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]/np.max(dsecStep_ts_a[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
-    plt.xlim([5,steps])
-    plt.ylim([-.05,1.05])
-    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+
+        norm_growth_rate2_a[30:-1,any_min[j]] = norm_growth_rate2_a[31:,any_min[j]]
+
+    plt.plot(tsteps[::2],norm_growth_rate2_a[ng0::2,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+    #plt.xlim([5,steps])
+    plt.ylim([.5,1.05])
+    #plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
 
@@ -2400,10 +2686,15 @@ for j in range(len(any_min)):
     if np.max(secStep_ts_b[ng0:,any_min[j]]) > 0.0:
         norm_growth_rate_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]
         norm_growth_rate2_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]/np.max(dsecStep_ts_b[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
-    plt.xlim([5,steps])
-    plt.ylim([-.05,1.05])
-    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        if any_min[j] == 3:
+            print norm_growth_rate2_b[:,3]
+
+        norm_growth_rate2_b[30:-1,any_min[j]] = norm_growth_rate2_b[31:,any_min[j]]
+
+    plt.plot(tsteps[::2],norm_growth_rate2_b[ng0::2,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+    #plt.xlim([5,steps])
+    plt.ylim([.5,1.05])
+    #plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xlabel('time',fontsize=8)
     plt.title('min growth rate, b',fontsize=10)
 
@@ -2592,7 +2883,7 @@ norm_amount2_a = np.zeros([steps,minNum+1])
 norm_amount2_b = np.zeros([steps,minNum+1])
 
 #cutoff end!
-co = -10
+co = -1
 x_secStep_ts[co:] = 0.0
 x_secStep_ts_a[co:] = 0.0
 x_secStep_ts_b[co:] = 0.0
@@ -2765,6 +3056,110 @@ plt.savefig(outpath+'amount_'+letter+'_secondary_all.png')
 
 
 # plt.savefig(outpath+'amount_secondary_all.eps')
+
+
+
+
+
+
+
+
+
+
+
+
+
+# #todo: FINAL FIG: amount_sec_follow
+# fig=plt.figure(figsize=(9.5,9.5))
+#
+# moves = [2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42]
+#
+# norm_amount = np.zeros([steps,minNum+1])
+# norm_amount_d = np.zeros([steps,minNum+1])
+# norm_amount_a = np.zeros([steps,minNum+1])
+# norm_amount_b = np.zeros([steps,minNum+1])
+#
+# norm_amount2 = np.zeros([steps,minNum+1])
+# norm_amount2_d = np.zeros([steps,minNum+1])
+# norm_amount2_a = np.zeros([steps,minNum+1])
+# norm_amount2_b = np.zeros([steps,minNum+1])
+#
+# # # COLUMN 1
+# ng0 = 2
+#
+# print "s "
+# ax1=fig.add_subplot(2,2,1, frameon=True)
+#
+# for j in range(len(any_min)):
+#
+#     if np.max(secStep_ts[ng0:,any_min[j]]) > 0.0:
+#         norm_growth_rate[ng0:,any_min[j]] = secStep_ts[ng0:,any_min[j]]
+#         norm_growth_rate2[ng0:,any_min[j]] = secStep_ts[ng0:,any_min[j]]/np.max(secStep_ts[ng0:,any_min[j]])
+#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+#     plt.xlim([0,steps+co])
+#     plt.ylim([-.05,1.05])
+#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+#     plt.xticks([])
+#     plt.title('min amounts, solo',fontsize=10)
+#
+# plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
+#
+# print "d "
+# ax1=fig.add_subplot(2,2,2, frameon=True)
+#
+# for j in range(len(any_min)):
+#     if np.max(secStep_ts_d[ng0:,any_min[j]]) > 0.0:
+#         norm_growth_rate_d[ng0:,any_min[j]] = secStep_ts_d[ng0:,any_min[j]]
+#         norm_growth_rate2_d[ng0:,any_min[j]] = secStep_ts_d[ng0:,any_min[j]]/np.max(secStep_ts_d[ng0:,any_min[j]])
+#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+#     plt.xlim([0,steps+co])
+#     plt.ylim([-.05,1.05])
+#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+#     plt.xticks([])
+#     plt.title('min amounts, dual',fontsize=10)
+#
+# print "a "
+# ax1=fig.add_subplot(2,2,3, frameon=True)
+#
+# for j in range(len(any_min)):
+#     if np.max(secStep_ts_a[ng0:,any_min[j]]) > 0.0:
+#
+#         norm_growth_rate_a[ng0:,any_min[j]] = secStep_ts_a[ng0:,any_min[j]]
+#         norm_growth_rate2_a[ng0:,any_min[j]] = secStep_ts_a[ng0:,any_min[j]]/np.max(secStep_ts_a[ng0:,any_min[j]])
+#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+#     plt.xlim([0,steps+co])
+#     plt.ylim([-.05,1.05])
+#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+#     plt.xticks([])
+#     plt.title('min amounts, a',fontsize=10)
+#
+# print "b "
+# ax1=fig.add_subplot(2,2,4, frameon=True)
+#
+# for j in range(len(any_min)):
+#     if np.max(secStep_ts_b[ng0:,any_min[j]]) > 0.0:
+#         norm_growth_rate_b[ng0:,any_min[j]] = secStep_ts_b[ng0:,any_min[j]]
+#         norm_growth_rate2_b[ng0:,any_min[j]] = secStep_ts_b[ng0:,any_min[j]]/np.max(secStep_ts_b[ng0:,any_min[j]])
+#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+#     plt.xlim([0,steps+co])
+#     plt.ylim([-.05,1.05])
+#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+#     plt.xlabel('time',fontsize=8)
+#     plt.title('min amounts, b',fontsize=10)
+#
+#
+#
+# plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
+# plt.savefig(outpath+'amount_'+letter+'_sec_follow.png')
+#
+#
+# # plt.savefig(outpath+'amount_sec_follow.eps')
+
+
+
+
+
+
 
 
 
