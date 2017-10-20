@@ -20,7 +20,7 @@ plt.rcParams['axes.titlesize'] = 10
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 
-col = ['#880000', '#ff0000', '#ff7411', '#bddb00', '#159600', '#00ffc2', '#0000ff', '#2f3699','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#00530d', '#d9d9d9', '#e9acff']
+col = ['#880000', '#ff0000', '#ff7411', '#bddb00', '#159600', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#00530d', '#d9d9d9', '#e9acff']
 
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
@@ -75,10 +75,22 @@ sec_toggle = 0
 xli = 45
 alt_plots = 1
 d_only = 0
-param_b_g = 0
+param_b_g = 1
+
+
+
+pri_2_toggle = 0
+pri_3_toggle = 0
+pri_4_toggle = 1
+pri_5_toggle = 1
+
+pri_toggle = [0, 0, 0, 0, 1, 1]
+pri_toggle_a = [0, 0, 0, 0, 1, 1]
+pri_toggle_b = [0, 0, 0, 0, 0, 1]
+pri_toggle_d = [0, 0, 0, 0, 1, 1]
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_12_q/"
+outpath = "../output/revival/summer_coarse_grid/sites_13_q/"
 letter = outpath[-2]
 print letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -256,9 +268,9 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
 def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1, ytix=1, cb=1, cb_title='', cb_min=-10.0, cb_max=10.0):
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) <= 0.0:
         if cb_min==-10.0 and cb_max==10.0:
-            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),3)
         if cb_max!=10.0:
-            contours = np.linspace(cb_min,cb_max,5)
+            contours = np.linspace(cb_min,cb_max,3)
 
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
         pGlass = plt.pcolor(xCell,yCell,np.zeros(varStep.shape),cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
@@ -274,7 +286,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
-            plt.title(cb_title,fontsize=10)
+            plt.title(cb_title,fontsize=8)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
 
@@ -305,7 +317,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
-            plt.title(cb_title,fontsize=10)
+            plt.title(cb_title,fontsize=8)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
     return chemplot24
@@ -474,12 +486,23 @@ x_dsecStep_ts_d = np.zeros([steps,minNum+1])
 x_d = -5
 xd_move = 0
 # moves = np.array([2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42])
-moves = np.array([2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40])
+moves = np.array([5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42])
 
 priStep_ts = np.zeros([steps,6])
 priStep_ts_a = np.zeros([steps,6])
 priStep_ts_b = np.zeros([steps,6])
 priStep_ts_d = np.zeros([steps,6])
+
+
+x_priStep_ts = np.zeros([steps,6])
+x_priStep_ts_a = np.zeros([steps,6])
+x_priStep_ts_b = np.zeros([steps,6])
+x_priStep_ts_d = np.zeros([steps,6])
+
+x_dpriStep_ts = np.zeros([steps,6])
+x_dpriStep_ts_a = np.zeros([steps,6])
+x_dpriStep_ts_b = np.zeros([steps,6])
+x_dpriStep_ts_d = np.zeros([steps,6])
 
 
 dpriStep_ts = np.zeros([steps,6])
@@ -732,7 +755,7 @@ for i in range(0,steps,1):
     print xd_move
 
     if i == 1:
-        #todo: FIGURE: togg_plot.png
+        #tod0: FIGURE: togg_plot.png
         fig=plt.figure()
         ax1=fig.add_subplot(1,1,1, frameon=False)
         plt.pcolor(togg)
@@ -778,6 +801,9 @@ for i in range(0,steps,1):
         # speed2 = cut_chem(speed2_0,i)
         # speed3 = cut_chem(speed3_0,i)
 
+        x_priStep_ts[i,4] = np.sum(ol[:,xd_move])
+        x_priStep_ts[i,5] = np.sum(glass[:,xd_move])
+
         priStep_ts[i,5] = np.sum(glass)
         priStep_ts[i,4] = np.sum(ol)
         priStep_ts[i,3] = np.sum(pyr)
@@ -787,6 +813,13 @@ for i in range(0,steps,1):
             dpriStep_ts[i,4] = priStep_ts[i,4] - priStep_ts[i-1,4]
             dpriStep_ts[i,3] = priStep_ts[i,3] - priStep_ts[i-1,3]
             dpriStep_ts[i,2] = priStep_ts[i,2] - priStep_ts[i-1,2]
+
+            x_dpriStep_ts[i,5] = x_priStep_ts[i,5] - x_priStep_ts[i-1,5]
+            #print " X DPRI STEP TS" , x_dpriStep_ts[i,5]
+            x_dpriStep_ts[i,4] = x_priStep_ts[i,4] - x_priStep_ts[i-1,4]
+            x_dpriStep_ts[i,3] = x_priStep_ts[i,3] - x_priStep_ts[i-1,3]
+            x_dpriStep_ts[i,2] = x_priStep_ts[i,2] - x_priStep_ts[i-1,2]
+            x_dpriStep_ts[i,1] = x_priStep_ts[i,1] - x_priStep_ts[i-1,1]
 
 
 
@@ -826,6 +859,9 @@ for i in range(0,steps,1):
         # speed2_a = cut_chem(speed2_0_a,i)
         # speed3_a = cut_chem(speed3_0_a,i)
 
+        x_priStep_ts_a[i,4] = np.sum(ol_a[:,xd_move])
+        x_priStep_ts_a[i,5] = np.sum(glass_a[:,xd_move])
+
         priStep_ts_a[i,5] = np.sum(glass_a)
         priStep_ts_a[i,4] = np.sum(ol_a)
         priStep_ts_a[i,3] = np.sum(pyr_a)
@@ -835,6 +871,12 @@ for i in range(0,steps,1):
             dpriStep_ts_a[i,4] = priStep_ts_a[i,4] - priStep_ts_a[i-1,4]
             dpriStep_ts_a[i,3] = priStep_ts_a[i,3] - priStep_ts_a[i-1,3]
             dpriStep_ts_a[i,2] = priStep_ts_a[i,2] - priStep_ts_a[i-1,2]
+
+            x_dpriStep_ts_a[i,5] = x_priStep_ts_a[i,5] - x_priStep_ts_a[i-1,5]
+            x_dpriStep_ts_a[i,4] = x_priStep_ts_a[i,4] - x_priStep_ts_a[i-1,4]
+            x_dpriStep_ts_a[i,3] = x_priStep_ts_a[i,3] - x_priStep_ts_a[i-1,3]
+            x_dpriStep_ts_a[i,2] = x_priStep_ts_a[i,2] - x_priStep_ts_a[i-1,2]
+            x_dpriStep_ts_a[i,1] = x_priStep_ts_a[i,1] - x_priStep_ts_a[i-1,1]
 
 
 
@@ -873,6 +915,9 @@ for i in range(0,steps,1):
         # speed2_b = cut_chem(speed2_0_b,i)
         # speed3_b = cut_chem(speed3_0_b,i)
 
+        x_priStep_ts_b[i,4] = np.sum(ol_b[:,xd_move])
+        x_priStep_ts_b[i,5] = np.sum(glass_b[:,xd_move])
+
         priStep_ts_b[i,5] = np.sum(glass_b)
         priStep_ts_b[i,4] = np.sum(ol_b)
         priStep_ts_b[i,3] = np.sum(pyr_b)
@@ -883,6 +928,12 @@ for i in range(0,steps,1):
             dpriStep_ts_b[i,4] = priStep_ts_b[i,4] - priStep_ts_b[i-1,4]
             dpriStep_ts_b[i,3] = priStep_ts_b[i,3] - priStep_ts_b[i-1,3]
             dpriStep_ts_b[i,2] = priStep_ts_b[i,2] - priStep_ts_b[i-1,2]
+
+            x_dpriStep_ts_b[i,5] = x_priStep_ts_b[i,5] - x_priStep_ts_b[i-1,5]
+            x_dpriStep_ts_b[i,4] = x_priStep_ts_b[i,4] - x_priStep_ts_b[i-1,4]
+            x_dpriStep_ts_b[i,3] = x_priStep_ts_b[i,3] - x_priStep_ts_b[i-1,3]
+            x_dpriStep_ts_b[i,2] = x_priStep_ts_b[i,2] - x_priStep_ts_b[i-1,2]
+            x_dpriStep_ts_b[i,1] = x_priStep_ts_b[i,1] - x_priStep_ts_b[i-1,1]
 
 
 
@@ -917,6 +968,9 @@ for i in range(0,steps,1):
         pyr_d = cut_chem(pyr0_d,i)
         plag_d = cut_chem(plag0_d,i)
 
+        x_priStep_ts_d[i,4] = np.sum(ol_d[:,xd_move])
+        x_priStep_ts_d[i,5] = np.sum(glass_d[:,xd_move])
+
         priStep_ts_d[i,5] = np.sum(glass_d)
         priStep_ts_d[i,4] = np.sum(ol_d)
         priStep_ts_d[i,3] = np.sum(pyr_d)
@@ -926,6 +980,12 @@ for i in range(0,steps,1):
             dpriStep_ts_d[i,4] = priStep_ts_d[i,4] - priStep_ts_d[i-1,4]
             dpriStep_ts_d[i,3] = priStep_ts_d[i,3] - priStep_ts_d[i-1,3]
             dpriStep_ts_d[i,2] = priStep_ts_d[i,2] - priStep_ts_d[i-1,2]
+
+            x_dpriStep_ts_d[i,5] = x_priStep_ts_d[i,5] - x_priStep_ts_d[i-1,5]
+            x_dpriStep_ts_d[i,4] = x_priStep_ts_d[i,4] - x_priStep_ts_d[i-1,4]
+            x_dpriStep_ts_d[i,3] = x_priStep_ts_d[i,3] - x_priStep_ts_d[i-1,3]
+            x_dpriStep_ts_d[i,2] = x_priStep_ts_d[i,2] - x_priStep_ts_d[i-1,2]
+            x_dpriStep_ts_d[i,1] = x_priStep_ts_d[i,1] - x_priStep_ts_d[i-1,1]
 
 
 
@@ -943,7 +1003,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 6
+    chem6 = 5
 
     if chem6 == 6:
 
@@ -1230,7 +1290,7 @@ for i in range(0,steps,1):
 
             #todo: FIGURE: jdf_Sec_Block24 (PCOLOR)
             print "jdf_Sec_Block24_ plot"
-            fig=plt.figure(figsize=(19.0,9.5))
+            fig=plt.figure(figsize=(14.75,7.4))
             plt.subplots_adjust( wspace=0.05, bottom=0.05, top=0.97, left=0.01, right=0.99)
 
             the_list = len(any_min)
@@ -1311,132 +1371,147 @@ for i in range(0,steps,1):
             # chemplot(plt_a, plt_aa, 3, 10, 21, 1, 'basalt remaining a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
             # chemplot(plt_b, plt_bb, 3, 10, 22, 1, 'basalt remaining b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-            # # col 2
-            # plt_s = glass0
-            # plt_a = glass0_a
-            # plt_b = glass0_a
-            # plt_d = glass0_a
-            # plt_ss = glass
-            # plt_aa = glass_a
-            # plt_bb = glass_a
-            # plt_dd = glass_a
-            plt_s = glass0/np.max(glass0)
-            plt_a = glass0_a/np.max(glass0_a)
-
-            if param_b_g == 1:
-                plt_b = glass0_b/np.max(glass0_b)
-            if param_b_g == 0:
-                plt_b = glass0_a/np.max(glass0_a)
-
-            plt_d = glass0_d/np.max(glass0_d)
-
-
-            plt_ss = glass/np.max(glass)
-            plt_aa = glass_a/np.max(glass_a)
-
-            if param_b_g == 1:
-                plt_bb = glass_b/np.max(glass_b)
-            if param_b_g == 0:
-                plt_bb = glass_a/np.max(glass_a)
 
 
 
-            plt_dd = glass_d/np.max(glass_d)
-            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-            c_min = np.min(all_ch)
-            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-            c_max = np.max(all_ch)
+            if pri_5_toggle == 1:
 
-            # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_d[plt_d>0.0])]
-            # c_min = np.min(all_ch)
-            # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_d[plt_d>0.0])]
-            # c_max = np.max(all_ch)
+                # # col 2
+                # plt_s = glass0
+                # plt_a = glass0_a
+                # plt_b = glass0_a
+                # plt_d = glass0_a
+                # plt_ss = glass
+                # plt_aa = glass_a
+                # plt_bb = glass_a
+                # plt_dd = glass_a
+                plt_s = glass0/np.max(glass0)
+                plt_a = glass0_a/np.max(glass0_a)
 
-            chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
-            chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            if param_b_g == 1:
-                chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                if param_b_g == 1:
+                    plt_b = glass0_b/np.max(glass0_b)
+                if param_b_g == 0:
+                    plt_b = glass0_a/np.max(glass0_a)
 
-            # # col 3
-            # plt_s = ol0
-            # plt_a = ol0_b
-            # plt_b = ol0_b
-            # plt_d = ol0_b
-            # plt_ss = ol
-            # plt_aa = ol_b
-            # plt_bb = ol_b
-            # plt_dd = ol_b
-            plt_s = ol0/np.max(ol0)
-            plt_a = ol0_b/np.max(ol0_b)
-            plt_b = ol0_b/np.max(ol0_b)
-            plt_d = ol0_b/np.max(ol0_b)
-            plt_ss = ol/np.max(ol)
-            plt_aa = ol_b/np.max(ol_b)
-            plt_bb = ol_b/np.max(ol_b)
-            plt_dd = ol_b/np.max(ol_b)
-            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-            c_min = np.min(all_ch)
-            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-            c_max = np.max(all_ch)
+                plt_d = glass0_d/np.max(glass0_d)
 
-            chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
-            chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_a, plt_aa, 3, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_b, plt_bb, 3, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-            # # col 4
-            # plt_s = pyr0
-            # plt_a = pyr0_b
-            # plt_b = pyr0_b
-            # plt_d = pyr0_b
-            # plt_ss = pyr
-            # plt_aa = pyr_b
-            # plt_bb = pyr_b
-            # plt_dd = pyr_b
-            plt_s = pyr0/np.max(pyr0)
-            plt_a = pyr0_b/np.max(pyr0_b)
-            plt_b = pyr0_b/np.max(pyr0_b)
-            plt_d = pyr0_b/np.max(pyr0_b)
-            plt_ss = pyr/np.max(pyr)
-            plt_aa = pyr_b/np.max(pyr_b)
-            plt_bb = pyr_b/np.max(pyr_b)
-            plt_dd = pyr_b/np.max(pyr_b)
-            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-            c_min = np.amin(all_ch[all_ch>0.0])
-            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-            c_max = np.amax(all_ch[all_ch>0.0])
-            chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
-            chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_a, plt_aa, 3, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_b, plt_bb, 3, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                plt_ss = glass/np.max(glass)
+                plt_aa = glass_a/np.max(glass_a)
 
-            # # col 5
-            # plt_s = plag0
-            # plt_a = plag0_b
-            # plt_b = plag0_b
-            # plt_d = plag0_b
-            # plt_ss = plag
-            # plt_aa = plag_b
-            # plt_bb = plag_b
-            # plt_dd = plag_b
-            plt_s = plag0/np.max(plag0)
-            plt_a = plag0_b/np.max(plag0_b)
-            plt_b = plag0_b/np.max(plag0_b)
-            plt_d = plag0_b/np.max(plag0_b)
-            plt_ss = plag/np.max(plag)
-            plt_aa = plag_b/np.max(plag_b)
-            plt_bb = plag_b/np.max(plag_b)
-            plt_dd = plag_b/np.max(plag_b)
-            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-            c_min = np.min(all_ch)
-            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-            c_max = np.max(all_ch)
+                if param_b_g == 1:
+                    plt_bb = glass_b/np.max(glass_b)
+                if param_b_g == 0:
+                    plt_bb = glass_a/np.max(glass_a)
 
-            chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
-            chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_a, plt_aa, 3, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_b, plt_bb, 3, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
+                plt_dd = glass_d/np.max(glass_d)
+                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+                c_min = np.min(all_ch)
+                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+                c_max = np.max(all_ch)
+
+                # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_d[plt_d>0.0])]
+                # c_min = np.min(all_ch)
+                # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_d[plt_d>0.0])]
+                # c_max = np.max(all_ch)
+
+                chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
+                chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                if param_b_g == 1:
+                    chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
+            if pri_4_toggle == 1:
+
+                # # col 3
+                # plt_s = ol0
+                # plt_a = ol0_b
+                # plt_b = ol0_b
+                # plt_d = ol0_b
+                # plt_ss = ol
+                # plt_aa = ol_b
+                # plt_bb = ol_b
+                # plt_dd = ol_b
+                plt_s = ol0/np.max(ol0)
+                plt_a = ol0_a/np.max(ol0_a)
+                plt_b = ol0_a/np.max(ol0_a)
+                plt_d = ol0_a/np.max(ol0_a)
+                plt_ss = ol/np.max(ol)
+                plt_aa = ol_a/np.max(ol_a)
+                plt_bb = ol_a/np.max(ol_a)
+                plt_dd = ol_a/np.max(ol_a)
+                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+                c_min = np.min(all_ch)
+                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+                c_max = np.max(all_ch)
+
+                chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
+                chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                # chemplot(plt_a, plt_aa, 3, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                # chemplot(plt_b, plt_bb, 3, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
+
+            if pri_3_toggle == 1:
+
+                # # col 4
+                # plt_s = pyr0
+                # plt_a = pyr0_b
+                # plt_b = pyr0_b
+                # plt_d = pyr0_b
+                # plt_ss = pyr
+                # plt_aa = pyr_b
+                # plt_bb = pyr_b
+                # plt_dd = pyr_b
+                plt_s = pyr0/np.max(pyr0)
+                plt_a = pyr0_b/np.max(pyr0_b)
+                plt_b = pyr0_b/np.max(pyr0_b)
+                plt_d = pyr0_b/np.max(pyr0_b)
+                plt_ss = pyr/np.max(pyr)
+                plt_aa = pyr_b/np.max(pyr_b)
+                plt_bb = pyr_b/np.max(pyr_b)
+                plt_dd = pyr_b/np.max(pyr_b)
+                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+                c_min = np.amin(all_ch[all_ch>0.0])
+                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+                c_max = np.amax(all_ch[all_ch>0.0])
+                chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
+                chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                # chemplot(plt_a, plt_aa, 3, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                # chemplot(plt_b, plt_bb, 3, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
+            if pri_2_toggle == 1:
+
+                # # col 5
+                # plt_s = plag0
+                # plt_a = plag0_b
+                # plt_b = plag0_b
+                # plt_d = plag0_b
+                # plt_ss = plag
+                # plt_aa = plag_b
+                # plt_bb = plag_b
+                # plt_dd = plag_b
+                plt_s = plag0/np.max(plag0)
+                plt_a = plag0_b/np.max(plag0_b)
+                plt_b = plag0_b/np.max(plag0_b)
+                plt_d = plag0_b/np.max(plag0_b)
+                plt_ss = plag/np.max(plag)
+                plt_aa = plag_b/np.max(plag_b)
+                plt_bb = plag_b/np.max(plag_b)
+                plt_dd = plag_b/np.max(plag_b)
+                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+                c_min = np.min(all_ch)
+                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+                c_max = np.max(all_ch)
+
+                chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
+                chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                # chemplot(plt_a, plt_aa, 3, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                # chemplot(plt_b, plt_bb, 3, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
             #fig.set_tight_layout(True)
             # plt.subplots_adjust( wspace=0.05 , bottom=0.04, top=0.97, left=0.03, right=0.975)
@@ -1563,7 +1638,7 @@ for i in range(0,steps,1):
 
 
 
-            #todo: FIGURE: jdf_Sec_Cont (binary contour plot)
+            # tod0: FIGURE: jdf_Sec_Cont (binary contour plot)
             # print "jdf_Sec_Cont plot"
             # fig=plt.figure(figsize=(11.0,4.6))
             #
@@ -2253,7 +2328,7 @@ for i in range(0,steps,1):
             plt.xlabel('Distance along transect [km]')
 
             plt.yticks([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0],fontsize=12)
-            plt.ylim([0.0, 30.0])
+            plt.ylim([0.0, 80.0])
             plt.ylabel('Alteration volume $\%$')
 
 
@@ -2604,6 +2679,351 @@ for i in range(0,steps,1):
 
 
 
+            #todo: NON-FINAL FIG: amount_secondary_x
+            fig=plt.figure(figsize=(9.5,9.5))
+
+            amt_lw = 2
+
+            norm_amount = np.zeros([steps,minNum+1])
+            norm_amount_d = np.zeros([steps,minNum+1])
+            norm_amount_a = np.zeros([steps,minNum+1])
+            norm_amount_b = np.zeros([steps,minNum+1])
+
+            norm_growth_rate2 = np.zeros([steps,minNum+1])
+            norm_growth_rate2_d = np.zeros([steps,minNum+1])
+            norm_growth_rate2_a = np.zeros([steps,minNum+1])
+            norm_growth_rate2_b = np.zeros([steps,minNum+1])
+
+            #cutoff end!
+            co = -1
+            x_secStep_ts[co:] = 0.0
+            x_secStep_ts_a[co:] = 0.0
+            x_secStep_ts_b[co:] = 0.0
+            x_secStep_ts_d[co:] = 0.0
+
+            secStep_ts[co:] = 0.0
+            secStep_ts_a[co:] = 0.0
+            secStep_ts_b[co:] = 0.0
+            secStep_ts_d[co:] = 0.0
+
+            # # COLUMN 1
+            ng0 = 2
+
+
+
+            ax1=fig.add_subplot(2,2,1, frameon=True)
+
+            for j in range(len(any_min)):
+
+                if np.max(x_secStep_ts[ng0:,any_min[j]]) > 0.0:
+                    norm_amount[ng0:,any_min[j]] = x_secStep_ts[ng0:,any_min[j]]/np.max(x_secStep_ts[ng0:,any_min[j]])
+                plt.plot(np.arange(1+ng0,steps+1),norm_amount[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+                plt.xlim([0,steps+co])
+                plt.ylim([-.05,1.05])
+                plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+                plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+                #plt.xticks([])
+                plt.title('min amounts, solo',fontsize=10)
+
+            plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
+
+
+            ax1=fig.add_subplot(2,2,2, frameon=True)
+
+            for j in range(len(any_min)):
+                if np.max(x_secStep_ts_d[ng0:,any_min[j]]) > 0.0:
+                    norm_amount_d[ng0:,any_min[j]] = x_secStep_ts_d[ng0:,any_min[j]]/np.max(x_secStep_ts_d[ng0:,any_min[j]])
+                plt.plot(np.arange(1+ng0,steps+1),norm_amount_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+                plt.xlim([0,steps+co])
+                plt.ylim([-.05,1.05])
+                plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+                plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+                #plt.xticks([])
+                plt.title('min amounts, dual',fontsize=10)
+
+
+            ax1=fig.add_subplot(2,2,3, frameon=True)
+
+            for j in range(len(any_min)):
+                if np.max(x_secStep_ts_a[ng0:,any_min[j]]) > 0.0:
+                    norm_amount_a[ng0:,any_min[j]] = x_secStep_ts_a[ng0:,any_min[j]]/np.max(x_secStep_ts_a[ng0:,any_min[j]])
+                plt.plot(np.arange(1+ng0,steps+1),norm_amount_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+                plt.xlim([0,steps+co])
+
+                plt.ylim([-.05,1.05])
+                plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+                plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+                #plt.xticks([])
+                plt.title('min amounts, a',fontsize=10)
+
+
+            ax1=fig.add_subplot(2,2,4, frameon=True)
+
+            for j in range(len(any_min)):
+                if np.max(x_secStep_ts_b[ng0:,any_min[j]]) > 0.0:
+                    norm_amount_b[ng0:,any_min[j]] = x_secStep_ts_b[ng0:,any_min[j]]/np.max(x_secStep_ts_b[ng0:,any_min[j]])
+                plt.plot(np.arange(1+ng0,steps+1),norm_amount_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+                plt.xlim([0,steps+co])
+                plt.ylim([-.05,1.05])
+                plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+                plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+                plt.xlabel('time',fontsize=8)
+                plt.title('min amounts, b',fontsize=10)
+
+
+
+            plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
+            plt.savefig(outpath+'jdf_'+letter+'_amount_sec_x'+str(i+restart)+'.png')
+
+
+
+
+
+
+
+
+            #todo: NON-FINAL FIG: amount_primary_x
+            fig=plt.figure(figsize=(9.5,9.5))
+
+
+            norm_loss_rate = np.zeros([steps,6])
+            norm_loss_rate_d = np.zeros([steps,6])
+            norm_loss_rate_a = np.zeros([steps,6])
+            norm_loss_rate_b = np.zeros([steps,6])
+
+            pri_col = ['', '', '#855d05', '#224e8f', '#156b2d', '#797979']
+
+            # # COLUMN 1
+
+            ax1=fig.add_subplot(4,2,1, frameon=True)
+            ax1.grid(True)
+
+            for j in [2, 3, 4, 5]:
+                if pri_toggle[j] == 1:
+                    plt.plot(np.arange(1,steps+1),x_priStep_ts[:,j]/np.max(x_priStep_ts[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
+            plt.xlim([1,steps])
+            plt.ylim([0.0,1.05])
+            plt.xticks(np.linspace(0,50,11))
+            #plt.yticks(np.linspace(0,1.0,11))
+            plt.title('primary amount, solo',fontsize=10)
+
+            plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.35))
+
+
+            ax1=fig.add_subplot(4,2,3, frameon=True)
+            ax1.grid(True)
+
+            for j in [2, 3, 4, 5]:
+                if pri_toggle_d[j] == 1:
+                    plt.plot(np.arange(1,steps+1),x_priStep_ts_d[:,j]/np.max(x_priStep_ts_d[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
+            plt.xlim([1,steps])
+            plt.ylim([0.0,1.05])
+            plt.xticks(np.linspace(0,50,11))
+            plt.title('primary amount, dual',fontsize=10)
+
+
+            ax1=fig.add_subplot(4,2,5, frameon=True)
+            ax1.grid(True)
+
+            for j in [2, 3, 4, 5]:
+                if pri_toggle_a[j] == 1:
+                    plt.plot(np.arange(1,steps+1),x_priStep_ts_a[:,j]/np.max(x_priStep_ts_a[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
+            plt.xlim([1,steps])
+            plt.ylim([0.0,1.05])
+            plt.xticks(np.linspace(0,50,11))
+            plt.title('primary amount, a',fontsize=10)
+
+
+            ax1=fig.add_subplot(4,2,7, frameon=True)
+            ax1.grid(True)
+
+            for j in [2, 3, 4, 5]:
+                if pri_toggle_b[j] == 1:
+                    plt.plot(np.arange(1,steps+1),x_priStep_ts_b[:,j]/np.max(x_priStep_ts_b[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
+            plt.xlim([1,steps])
+            plt.ylim([0.0,1.05])
+            plt.xticks(np.linspace(0,50,11))
+            plt.title('primary amount, b',fontsize=10)
+
+
+            plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
+            plt.savefig(outpath+'jdf_'+letter+'_amount_pri_x'+str(i+restart)+'.png')
+
+            # print "x_priStep_ts[:,5]"
+            # print x_priStep_ts[:,5]
+            # print " "
+            #
+            # print "x_priStep_ts_d[:,5]"
+            # print x_priStep_ts_d[:,5]
+            # print " "
+            #
+            # print "x_priStep_ts_a[:,5]"
+            # print x_priStep_ts_a[:,5]
+            # print " "
+            #
+            # print "x_priStep_ts_b[:,5]"
+            # print x_priStep_ts_b[:,5]
+            # print " "
+
+            # if i > 0:
+            #
+            #     print "x_priStep_ts[:,5]"
+            #     print x_priStep_ts[i,4]-x_priStep_ts[i-1,4]
+            #     print " "
+            #
+            #     print "x_priStep_ts_d[:,5]"
+            #     print x_priStep_ts_d[i,4]-x_priStep_ts_d[i-1,4]
+            #     print " "
+            #
+            #     print "x_priStep_ts_a[:,5]"
+            #     print x_priStep_ts_a[i,4]-x_priStep_ts_a[i-1,4]
+            #     print " "
+            #
+            #     print "x_priStep_ts_b[:,5]"
+            #     print x_priStep_ts_b[i,4]-x_priStep_ts_b[i-1,4]
+            #     print " "
+
+
+
+
+
+            #todo: NON-FINAL FIG: jdf_corr_x
+            fig=plt.figure(figsize=(7.0,11.0))
+            print "jdf_corr plot"
+
+            amt_lw = 1.5
+
+            corr_glass = np.zeros([steps,minNum+1])
+            corr_glass_d = np.zeros([steps,minNum+1])
+            corr_glass_a = np.zeros([steps,minNum+1])
+            corr_glass_b = np.zeros([steps,minNum+1])
+            corr_glass[corr_glass==0.0] = None
+            corr_glass_d[corr_glass_d==0.0] = None
+            corr_glass_a[corr_glass_a==0.0] = None
+            corr_glass_b[corr_glass_b==0.0] = None
+
+
+
+            # COLUMN 1 - GLASS GROWTH RATE
+
+            ax1=fig.add_subplot(4,2,1, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts[iii,any_min[j]] > 0.0 and x_dpriStep_ts[iii,5] < 0.0:
+                        corr_glass[iii,any_min[j]] = (x_dsecStep_ts[iii,any_min[j]]/np.max(x_dsecStep_ts[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts[:,5]/np.min(x_dpriStep_ts[:,5])),corr_glass[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, solo',fontsize=10)
+
+            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
+
+
+            ax1=fig.add_subplot(4,2,3, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts_d[iii,any_min[j]] > 0.0 and x_dpriStep_ts_d[iii,5] < 0.0:
+                        corr_glass_d[iii,any_min[j]] = (x_dsecStep_ts_d[iii,any_min[j]]/np.max(x_dsecStep_ts_d[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts_d[:,5]/np.min(x_dpriStep_ts_d[:,5])),corr_glass_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, d',fontsize=10)
+
+
+            ax1=fig.add_subplot(4,2,5, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts_a[iii,any_min[j]] > 0.0 and x_dpriStep_ts_a[iii,5] < 0.0:
+                        corr_glass_a[iii,any_min[j]] = (x_dsecStep_ts_a[iii,any_min[j]]/np.max(x_dsecStep_ts_a[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts_a[:,5]/np.min(x_dpriStep_ts_a[:,5])),corr_glass_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, a',fontsize=10)
+
+
+            ax1=fig.add_subplot(4,2,7, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts_b[iii,any_min[j]] > 0.0 and x_dpriStep_ts_b[iii,5] < 0.0:
+                        corr_glass_b[iii,any_min[j]] = (x_dsecStep_ts_b[iii,any_min[j]]/np.max(x_dsecStep_ts_b[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts_b[:,5]/np.min(x_dpriStep_ts_b[:,5])),corr_glass_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, b',fontsize=10)
+
+
+
+            # COLUMN 2 - GLASS AMOUNT
+
+            corr_glass_amount = np.zeros([steps,minNum+1])
+            corr_glass_amount_d = np.zeros([steps,minNum+1])
+            corr_glass_amount_a = np.zeros([steps,minNum+1])
+            corr_glass_amount_b = np.zeros([steps,minNum+1])
+            corr_glass_amount[corr_glass_amount==0.0] = None
+            corr_glass_amount_d[corr_glass_amount_d==0.0] = None
+            corr_glass_amount_a[corr_glass_amount_a==0.0] = None
+            corr_glass_amount_b[corr_glass_amount_b==0.0] = None
+
+            ax1=fig.add_subplot(4,2,2, frameon=True)
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_secStep_ts[iii,any_min[j]] > 0.0 and x_priStep_ts[iii,5] > 0.0:
+                        corr_glass_amount[iii,any_min[j]] = (x_secStep_ts[iii,any_min[j]]/np.max(x_secStep_ts[:,any_min[j]])) / 1.0
+                plt.plot((x_priStep_ts[:,5]/np.max(x_priStep_ts[:,5])),corr_glass_amount[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            plt.title('corr glass amount, solo',fontsize=10)
+
+            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
+
+
+            ax1=fig.add_subplot(4,2,4, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts_d[iii,any_min[j]] > 0.0 and x_dpriStep_ts_d[iii,5] < 0.0:
+                        corr_glass_d[iii,any_min[j]] = (x_dsecStep_ts_d[iii,any_min[j]]/np.max(x_dsecStep_ts_d[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts_d[:,5]/np.min(x_dpriStep_ts_d[:,5])),corr_glass_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, d',fontsize=10)
+
+
+            ax1=fig.add_subplot(4,2,6, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts_a[iii,any_min[j]] > 0.0 and x_dpriStep_ts_a[iii,5] < 0.0:
+                        corr_glass_a[iii,any_min[j]] = (x_dsecStep_ts_a[iii,any_min[j]]/np.max(x_dsecStep_ts_a[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts_a[:,5]/np.min(x_dpriStep_ts_a[:,5])),corr_glass_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, a',fontsize=10)
+
+
+            ax1=fig.add_subplot(4,2,8, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_dsecStep_ts_b[iii,any_min[j]] > 0.0 and x_dpriStep_ts_b[iii,5] < 0.0:
+                        corr_glass_b[iii,any_min[j]] = (x_dsecStep_ts_b[iii,any_min[j]]/np.max(x_dsecStep_ts_b[:,any_min[j]])) / 1.0
+                plt.plot((x_dpriStep_ts_b[:,5]/np.min(x_dpriStep_ts_b[:,5])),corr_glass_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass, b',fontsize=10)
+
+
+
+            plt.subplots_adjust(top=0.90, bottom=0.03,hspace=0.15,left=0.05,right=0.95)
+            plt.savefig(outpath+'jdf_'+letter+'_corr_x'+str(i+restart)+'.png')
+
+
+
     plt.close('all')
 
 
@@ -2628,7 +3048,7 @@ amt_lw = 2
 
 tsteps = np.arange(1+ng0,steps+1)
 
-print "s "
+
 ax1=fig.add_subplot(2,2,1, frameon=True)
 
 for j in range(len(any_min)):
@@ -2646,7 +3066,7 @@ for j in range(len(any_min)):
 
 plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
 
-print "d "
+
 ax1=fig.add_subplot(2,2,2, frameon=True)
 
 for j in range(len(any_min)):
@@ -2662,7 +3082,7 @@ for j in range(len(any_min)):
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
-print "a "
+
 ax1=fig.add_subplot(2,2,3, frameon=True)
 
 for j in range(len(any_min)):
@@ -2679,7 +3099,7 @@ for j in range(len(any_min)):
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
 
-print "b "
+
 ax1=fig.add_subplot(2,2,4, frameon=True)
 
 for j in range(len(any_min)):
@@ -2776,29 +3196,22 @@ plt.savefig(outpath+'all_'+letter+'_secondary.png')
 #todo: FINAL FIG: all_secondary_x
 fig=plt.figure(figsize=(9.5,9.5))
 
-norm_growth_rate = np.zeros([steps,minNum+1])
-norm_growth_rate_d = np.zeros([steps,minNum+1])
-norm_growth_rate_a = np.zeros([steps,minNum+1])
-norm_growth_rate_b = np.zeros([steps,minNum+1])
-
-norm_growth_rate2 = np.zeros([steps,minNum+1])
-norm_growth_rate2_d = np.zeros([steps,minNum+1])
-norm_growth_rate2_a = np.zeros([steps,minNum+1])
-norm_growth_rate2_b = np.zeros([steps,minNum+1])
+norm_amount = np.zeros([steps,minNum+1])
+norm_amount_d = np.zeros([steps,minNum+1])
+norm_amount_a = np.zeros([steps,minNum+1])
+norm_amount_b = np.zeros([steps,minNum+1])
 
 # # COLUMN 1
 ng0 = 2
 
-print "s "
 ax1=fig.add_subplot(2,2,1, frameon=True)
 
 for j in range(len(any_min)):
 
     #norm_growth_rate[:,any_min[j]] = 1.0
     if np.max(x_dsecStep_ts[ng0:,any_min[j]]) > 0.0:
-        norm_growth_rate[ng0:,any_min[j]] = x_dsecStep_ts[ng0:,any_min[j]]
-        norm_growth_rate2[ng0:,any_min[j]] = x_dsecStep_ts[ng0:,any_min[j]]/np.max(x_dsecStep_ts[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_amount[:,any_min[j]] = x_dsecStep_ts[:,any_min[j]]/np.max(x_dsecStep_ts[:,any_min[j]])
+    plt.plot(np.arange(1,steps+1),norm_amount[:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
@@ -2807,43 +3220,37 @@ for j in range(len(any_min)):
 
 plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
 
-print "d "
 ax1=fig.add_subplot(2,2,2, frameon=True)
 
 for j in range(len(any_min)):
     #norm_growth_rate_d[:,any_min[j]] = 1.0
     if np.max(x_dsecStep_ts_d[ng0:,any_min[j]]) > 0.0:
-        norm_growth_rate_d[ng0:,any_min[j]] = x_dsecStep_ts_d[ng0:,any_min[j]]
-        norm_growth_rate2_d[ng0:,any_min[j]] = x_dsecStep_ts_d[ng0:,any_min[j]]/np.max(x_dsecStep_ts_d[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_amount_d[ng0:,any_min[j]] = x_dsecStep_ts_d[ng0:,any_min[j]]/np.max(x_dsecStep_ts_d[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_amount_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, dual',fontsize=10)
 
-print "a "
 ax1=fig.add_subplot(2,2,3, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_dsecStep_ts_a[ng0:,any_min[j]]) > 0.0:
-        norm_growth_rate_a[ng0:,any_min[j]] = x_dsecStep_ts_a[ng0:,any_min[j]]
-        norm_growth_rate2_a[ng0:,any_min[j]] = x_dsecStep_ts_a[ng0:,any_min[j]]/np.max(x_dsecStep_ts_a[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_amount_a[ng0:,any_min[j]] = x_dsecStep_ts_a[ng0:,any_min[j]]/np.max(x_dsecStep_ts_a[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_amount_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     plt.xticks([])
     plt.title('min growth rate, a',fontsize=10)
 
-print "b "
 ax1=fig.add_subplot(2,2,4, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_dsecStep_ts_b[ng0:,any_min[j]]) > 0.0:
-        norm_growth_rate_b[ng0:,any_min[j]] = x_dsecStep_ts_b[ng0:,any_min[j]]
-        norm_growth_rate2_b[ng0:,any_min[j]] = x_dsecStep_ts_b[ng0:,any_min[j]]/np.max(x_dsecStep_ts_b[ng0:,any_min[j]])
-    plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
+        norm_amount_b[ng0:,any_min[j]] = x_dsecStep_ts_b[ng0:,any_min[j]]/np.max(x_dsecStep_ts_b[ng0:,any_min[j]])
+    plt.plot(np.arange(1+ng0,steps+1),norm_amount_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j])
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
@@ -2897,7 +3304,6 @@ secStep_ts_d[co:] = 0.0
 # # COLUMN 1
 ng0 = 2
 
-print "s "
 ax1=fig.add_subplot(2,2,1, frameon=True)
 
 for j in range(len(any_min)):
@@ -2909,12 +3315,11 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
     plt.title('min amounts, solo',fontsize=10)
 
 plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
 
-print "d "
 ax1=fig.add_subplot(2,2,2, frameon=True)
 
 for j in range(len(any_min)):
@@ -2925,10 +3330,9 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
     plt.title('min amounts, dual',fontsize=10)
 
-print "a "
 ax1=fig.add_subplot(2,2,3, frameon=True)
 
 for j in range(len(any_min)):
@@ -2941,10 +3345,9 @@ for j in range(len(any_min)):
 
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
     plt.title('min amounts, a',fontsize=10)
 
-print "b "
 ax1=fig.add_subplot(2,2,4, frameon=True)
 
 for j in range(len(any_min)):
@@ -2955,6 +3358,7 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
     plt.xlabel('time',fontsize=8)
     plt.title('min amounts, b',fontsize=10)
 
@@ -2989,7 +3393,6 @@ norm_amount2_b = np.zeros([steps,minNum+1])
 # # COLUMN 1
 ng0 = 2
 
-print "s "
 ax1=fig.add_subplot(2,2,1, frameon=True)
 
 for j in range(len(any_min)):
@@ -3006,7 +3409,6 @@ for j in range(len(any_min)):
 
 plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
 
-print "d "
 ax1=fig.add_subplot(2,2,2, frameon=True)
 
 for j in range(len(any_min)):
@@ -3020,7 +3422,6 @@ for j in range(len(any_min)):
     plt.xticks([])
     plt.title('min amounts, dual',fontsize=10)
 
-print "a "
 ax1=fig.add_subplot(2,2,3, frameon=True)
 
 for j in range(len(any_min)):
@@ -3035,7 +3436,6 @@ for j in range(len(any_min)):
     plt.xticks([])
     plt.title('min amounts, a',fontsize=10)
 
-print "b "
 ax1=fig.add_subplot(2,2,4, frameon=True)
 
 for j in range(len(any_min)):
@@ -3157,6 +3557,173 @@ plt.savefig(outpath+'amount_'+letter+'_secondary_all.png')
 
 
 
+
+
+
+
+
+
+
+#todo: FINAL FIG: amount_primary
+fig=plt.figure(figsize=(9.5,9.5))
+
+
+norm_loss_rate = np.zeros([steps,6])
+norm_loss_rate_d = np.zeros([steps,6])
+norm_loss_rate_a = np.zeros([steps,6])
+norm_loss_rate_b = np.zeros([steps,6])
+
+pri_col = ['', '', 'darkorange', 'grey', 'g', 'k']
+
+# # COLUMN 1
+
+ax1=fig.add_subplot(4,2,1, frameon=True)
+
+for j in [2, 3, 4, 5]:
+    if np.max(np.abs(dpriStep_ts[:,j])) > 0.0:
+        # norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[:,j]))
+        norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[-1,j]))
+    plt.plot(np.arange(1,steps+1),priStep_ts[:,5],label=primary[j],c=pri_col[j])
+    plt.xlim([1,steps])
+    #plt.ylim([0.75,1.05])
+    plt.xticks([])
+    plt.title('primary amount, solo',fontsize=10)
+
+plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.65))
+
+
+ax1=fig.add_subplot(4,2,3, frameon=True)
+
+for j in [2, 3, 4, 5]:
+    if np.max(np.abs(dpriStep_ts_d[:,j])) > 0.0:
+        # norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[:,j]))
+        norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[-1,j]))
+    plt.plot(np.arange(1,steps+1),priStep_ts_d[:,5],label=primary[j],c=pri_col[j])
+    plt.xlim([1,steps])
+    #plt.ylim([0.75,1.05])
+    plt.xticks([])
+    plt.title('primary amount, dual',fontsize=10)
+
+
+ax1=fig.add_subplot(4,2,5, frameon=True)
+
+for j in [2, 3, 4, 5]:
+    if np.max(np.abs(dpriStep_ts_a[:,j])) > 0.0:
+        # norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[:,j]))
+        norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[-1,j]))
+    plt.plot(np.arange(1,steps+1),priStep_ts_a[:,5],label=primary[j],c=pri_col[j])
+    plt.xlim([1,steps])
+    #plt.ylim([0.75,1.05])
+    plt.xticks([])
+    plt.title('primary amount, a',fontsize=10)
+
+
+ax1=fig.add_subplot(4,2,7, frameon=True)
+
+for j in [2, 3, 4, 5]:
+    if np.max(np.abs(dpriStep_ts_b[:,j])) > 0.0:
+        # norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[:,j]))
+        norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[-1,j]))
+    plt.plot(np.arange(1,steps+1),priStep_ts_b[:,5],label=primary[j],c=pri_col[j])
+    plt.xlim([1,steps])
+    #plt.ylim([0.75,1.05])
+    #plt.xticks([])
+    plt.title('primary amount, b',fontsize=10)
+
+
+plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
+plt.savefig(outpath+'amount_'+letter+'_primary.png')
+
+
+
+
+
+
+
+
+
+#todo: FINAL FIG: amount_primary_x
+fig=plt.figure(figsize=(9.5,9.5))
+
+
+norm_loss_rate = np.zeros([steps,6])
+norm_loss_rate_d = np.zeros([steps,6])
+norm_loss_rate_a = np.zeros([steps,6])
+norm_loss_rate_b = np.zeros([steps,6])
+
+pri_col = ['', '', '#855d05', '#224e8f', '#156b2d', '#797979']
+
+# # COLUMN 1
+
+ax1=fig.add_subplot(4,2,1, frameon=True)
+ax1.grid(True)
+
+for j in [2, 3, 4, 5]:
+    if pri_toggle[j] == 1:
+        plt.plot(np.arange(1,steps+1),x_priStep_ts[:,j]/np.max(x_priStep_ts[:,j]),label=primary[j],c=pri_col[j],lw=2)
+plt.xlim([1,steps])
+plt.ylim([0.0,1.05])
+plt.xticks(np.linspace(0,50,11))
+#plt.yticks(np.linspace(0,1.0,11))
+plt.title('primary amount, solo',fontsize=10)
+
+plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.65))
+
+
+ax1=fig.add_subplot(4,2,3, frameon=True)
+ax1.grid(True)
+
+for j in [2, 3, 4, 5]:
+    if pri_toggle_d[j] == 1:
+        plt.plot(np.arange(1,steps+1),x_priStep_ts_d[:,j]/np.max(x_priStep_ts_d[:,j]),label=primary[j],c=pri_col[j],lw=2)
+plt.xlim([1,steps])
+plt.ylim([0.0,1.05])
+plt.xticks(np.linspace(0,50,11))
+plt.title('primary amount, dual',fontsize=10)
+
+
+ax1=fig.add_subplot(4,2,5, frameon=True)
+ax1.grid(True)
+
+for j in [2, 3, 4, 5]:
+    if pri_toggle_a[j] == 1:
+        plt.plot(np.arange(1,steps+1),x_priStep_ts_a[:,j]/np.max(x_priStep_ts_a[:,j]),label=primary[j],c=pri_col[j],lw=2)
+plt.xlim([1,steps])
+plt.ylim([0.0,1.05])
+plt.xticks(np.linspace(0,50,11))
+plt.title('primary amount, a',fontsize=10)
+
+
+ax1=fig.add_subplot(4,2,7, frameon=True)
+ax1.grid(True)
+
+for j in [2, 3, 4, 5]:
+    if pri_toggle_b[j] == 1:
+        plt.plot(np.arange(1,steps+1),x_priStep_ts_b[:,j]/np.max(x_priStep_ts_b[:,j]),label=primary[j],c=pri_col[j],lw=2)
+plt.xlim([1,steps])
+plt.ylim([0.0,1.05])
+plt.xticks(np.linspace(0,50,11))
+plt.title('primary amount, b',fontsize=10)
+
+
+plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
+plt.savefig(outpath+'amount_'+letter+'_primary_x.png')
+
+# print "x_priStep_ts[:,5]"
+# print x_priStep_ts[:,5]
+# print " "
+#
+# print "x_priStep_ts_d[:,5]"
+# print x_priStep_ts_d[:,5]
+# print " "
+#
+# print "x_priStep_ts_a[:,5]"
+# print x_priStep_ts_a[:,5]
+# print " "
+#
+# print "x_priStep_ts_b[:,5]"
+# print x_priStep_ts_b[:,5]
+# print " "
 
 
 
