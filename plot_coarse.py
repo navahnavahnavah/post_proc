@@ -13,8 +13,8 @@ from matplotlib.patches import Patch
 import matplotlib.ticker as ticker
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
-plt.rc('xtick', labelsize=7)
-plt.rc('ytick', labelsize=7)
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
 plt.rcParams['axes.titlesize'] = 10
 #plt.rcParams['hatch.linewidth'] = 0.1
 
@@ -179,6 +179,8 @@ plt.colorbar(pgv,orientation='horizontal')
 fig.savefig(outpath+'coarse_plot.png')
 
 
+
+
 def cut(geo0,index):
     #geo_cut = geo0[(index*len(y0)/cell):(index*len(y0)/cell+len(y0)/cell),:]
     geo_cut = geo0[:,(index*len(x0)):(index*len(x0)+len(x0))]
@@ -286,15 +288,16 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
+            cbar.ax.tick_params(labelsize=8)
             plt.title(cb_title,fontsize=8)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
 
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
         if cb_min==-10.0 and cb_max==10.0:
-            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),3)
         if cb_max!=10.0:
-            contours = np.linspace(cb_min,cb_max,5)
+            contours = np.linspace(cb_min,cb_max,3)
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
 
         xCell_t = []
@@ -317,6 +320,7 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.19, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
+            cbar.ax.tick_params(labelsize=8)
             plt.title(cb_title,fontsize=8)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
@@ -1008,8 +1012,13 @@ for i in range(0,steps,1):
     if chem6 == 6:
 
         if chem == 1:
-            print "jdf_Sol_Block plot"
-            #todo: FIGURE: jdf_Sol_Block
+
+            if not os.path.exists(outpath+'jdf_sol_block/'):
+                os.makedirs(outpath+'jdf_sol_block/')
+
+
+            print "jdf_sol_block"
+            #todo: FIGURE: jdf_sol_block
             fig=plt.figure(figsize=(17.0,7.0))
             plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
 
@@ -1282,14 +1291,20 @@ for i in range(0,steps,1):
             # chemplot(plt_a, plt_aa, 7, 14, 41+56, 1, 'ph fix a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
             # chemplot(plt_bb, plt_bb, 7, 14, 42+56, 1, 'ph fix b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
-            plt.savefig(outpath+'jdf_'+letter+'_Sol_Block_'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_sol_block/jdf_'+letter+'_Sol_Block_'+str(i+restart)+'.png')
 
 
 
 
 
-            #todo: FIGURE: jdf_Sec_Block24 (PCOLOR)
-            print "jdf_Sec_Block24_ plot"
+
+            if not os.path.exists(outpath+'jdf_sec_block/'):
+                os.makedirs(outpath+'jdf_sec_block/')
+
+
+
+            #todo: FIGURE: jdf_sec_block
+            print "jdf_sec_block"
             fig=plt.figure(figsize=(14.75,7.4))
             plt.subplots_adjust( wspace=0.05, bottom=0.05, top=0.97, left=0.01, right=0.99)
 
@@ -1332,14 +1347,18 @@ for i in range(0,steps,1):
                 chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'chamber b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
-            plt.savefig(outpath+'jdf_'+letter+'_Sec_Block24_'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_sec_block/jdf_'+letter+'_Sec_Block24_'+str(i+restart)+'.png')
 
 
 
 
 
-            #todo: FIGURE: jdf_Pri_Block (primary Pcolor plot)
-            print "jdf_Pri_Block plot"
+            if not os.path.exists(outpath+'jdf_pri_block/'):
+                os.makedirs(outpath+'jdf_pri_block/')
+
+
+            #todo: FIGURE: jdf_pri_block
+            print "jdf_pri_block"
             fig=plt.figure(figsize=(13.0,7.0))
             #plt.subplots_adjust( wspace=0.03, bottom=0.15, top=0.97, left=0.01, right=0.99)
             plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
@@ -1515,7 +1534,7 @@ for i in range(0,steps,1):
 
             #fig.set_tight_layout(True)
             # plt.subplots_adjust( wspace=0.05 , bottom=0.04, top=0.97, left=0.03, right=0.975)
-            plt.savefig(outpath+'jdf_'+letter+'_Pri_Block_'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_pri_block/jdf_'+letter+'_Pri_Block_'+str(i+restart)+'.png')
 
 
 
@@ -1941,7 +1960,7 @@ for i in range(0,steps,1):
 
             #
             # print "jdf_ph_fix plot"
-            # #todo: FIGURE: jdf_ph_fix
+            # #tod0: FIGURE: jdf_ph_fix
             #
             # fig=plt.figure(figsize=(16.0,8.0))
             #
@@ -2007,7 +2026,7 @@ for i in range(0,steps,1):
 
 
             # print "jdf_SolW_Phi plot"
-            # #todo: FIGURE: jdf_SolW_Phi
+            # #tod0: FIGURE: jdf_SolW_Phi
             #
             # fig=plt.figure(figsize=(16.0,8.0))
             #
@@ -2235,6 +2254,9 @@ for i in range(0,steps,1):
 
 
         if alt_plots == 1:
+
+            if not os.path.exists(outpath+'jdf_alt/'):
+                os.makedirs(outpath+'jdf_alt/')
 
             #todo: FIGURE: jdf_alt_plot, NXF
             print "jdf_alt_plot plot"
@@ -2496,12 +2518,12 @@ for i in range(0,steps,1):
 
 
             #plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
-            plt.savefig(outpath+"jdf_"+letter+"_alt_plot_"+str(i+restart)+".png")
+            plt.savefig(outpath+"jdf_alt/jdf_"+letter+"_alt_"+str(i+restart)+".png")
 
 
 
 
-            #todo: FIG: speed
+            #tod0: FIG: speed
             # print "jdf_Speed"
             # fig=plt.figure(figsize=(10.0,14.0))
             #
@@ -2679,7 +2701,10 @@ for i in range(0,steps,1):
 
 
 
-            #todo: NON-FINAL FIG: amount_secondary_x
+            if not os.path.exists(outpath+'jdf_sec_amount_x/'):
+                os.makedirs(outpath+'jdf_sec_amount_x/')
+
+            #todo: NON-FINAL FIG: sec_amount_x
             fig=plt.figure(figsize=(9.5,9.5))
 
             amt_lw = 2
@@ -2773,7 +2798,7 @@ for i in range(0,steps,1):
 
 
             plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-            plt.savefig(outpath+'jdf_'+letter+'_amount_sec_x'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_sec_amount_x/jdf_'+letter+'_sec_amount_x'+str(i+restart)+'.png')
 
 
 
@@ -2782,7 +2807,11 @@ for i in range(0,steps,1):
 
 
 
-            #todo: NON-FINAL FIG: amount_primary_x
+
+            if not os.path.exists(outpath+'jdf_pri_amount_x/'):
+                os.makedirs(outpath+'jdf_pri_amount_x/')
+
+            #todo: NON-FINAL FIG: pri_amount_x
             fig=plt.figure(figsize=(9.5,9.5))
 
 
@@ -2847,7 +2876,7 @@ for i in range(0,steps,1):
 
 
             plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-            plt.savefig(outpath+'jdf_'+letter+'_amount_pri_x'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_pri_amount_x/jdf_'+letter+'_pri_amount_x'+str(i+restart)+'.png')
 
             # print "x_priStep_ts[:,5]"
             # print x_priStep_ts[:,5]
@@ -2885,150 +2914,411 @@ for i in range(0,steps,1):
 
 
 
-
+            if not os.path.exists(outpath+'jdf_corr_x/'):
+                os.makedirs(outpath+'jdf_corr_x/')
 
             #todo: NON-FINAL FIG: jdf_corr_x
-            fig=plt.figure(figsize=(7.0,11.0))
+            fig=plt.figure(figsize=(12.0,7.0))
             print "jdf_corr plot"
 
             amt_lw = 1.5
 
-            corr_glass = np.zeros([steps,minNum+1])
-            corr_glass_d = np.zeros([steps,minNum+1])
-            corr_glass_a = np.zeros([steps,minNum+1])
-            corr_glass_b = np.zeros([steps,minNum+1])
-            corr_glass[corr_glass==0.0] = None
-            corr_glass_d[corr_glass_d==0.0] = None
-            corr_glass_a[corr_glass_a==0.0] = None
-            corr_glass_b[corr_glass_b==0.0] = None
+
+            xlim_b = 0.05
+            ylim_b = 0.05
 
 
-
-            # COLUMN 1 - GLASS GROWTH RATE
-
-            ax1=fig.add_subplot(4,2,1, frameon=True, aspect='equal')
-
-            for j in range(len(any_min)):
-                for iii in range(1,i+1):
-                    if x_dsecStep_ts[iii,any_min[j]] > 0.0 and x_dpriStep_ts[iii,5] < 0.0:
-                        corr_glass[iii,any_min[j]] = (x_dsecStep_ts[iii,any_min[j]]/np.max(x_dsecStep_ts[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts[:,5]/np.min(x_dpriStep_ts[:,5])),corr_glass[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass, solo',fontsize=10)
-
-            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
+            # COLUMN 1 - GLASS AMOUNT
 
 
-            ax1=fig.add_subplot(4,2,3, frameon=True, aspect='equal')
+            #plt.scatter(((x_priStep_ts[:,5]-min_maybe)/(np.max(x_priStep_ts[:,5])-min_maybe)),corr_glass_amount[:,any_min[j]],c=col[j], marker='o',lw=0)
 
-            for j in range(len(any_min)):
-                for iii in range(1,i+1):
-                    if x_dsecStep_ts_d[iii,any_min[j]] > 0.0 and x_dpriStep_ts_d[iii,5] < 0.0:
-                        corr_glass_d[iii,any_min[j]] = (x_dsecStep_ts_d[iii,any_min[j]]/np.max(x_dsecStep_ts_d[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts_d[:,5]/np.min(x_dpriStep_ts_d[:,5])),corr_glass_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass, d',fontsize=10)
+            corr_glass_amount = np.zeros([steps,minNum+1,2])
+            corr_glass_amount_d = np.zeros([steps,minNum+1,2])
+            corr_glass_amount_a = np.zeros([steps,minNum+1,2])
+            corr_glass_amount_b = np.zeros([steps,minNum+1,2])
+            corr_glass_amount[corr_glass_amount==0.0] = -1.0
+            corr_glass_amount_d[corr_glass_amount_d==0.0] = -1.0
+            corr_glass_amount_a[corr_glass_amount_a==0.0] = -1.0
+            corr_glass_amount_b[corr_glass_amount_b==0.0] = -1.0
 
-
-            ax1=fig.add_subplot(4,2,5, frameon=True, aspect='equal')
-
-            for j in range(len(any_min)):
-                for iii in range(1,i+1):
-                    if x_dsecStep_ts_a[iii,any_min[j]] > 0.0 and x_dpriStep_ts_a[iii,5] < 0.0:
-                        corr_glass_a[iii,any_min[j]] = (x_dsecStep_ts_a[iii,any_min[j]]/np.max(x_dsecStep_ts_a[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts_a[:,5]/np.min(x_dpriStep_ts_a[:,5])),corr_glass_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass, a',fontsize=10)
-
-
-            ax1=fig.add_subplot(4,2,7, frameon=True, aspect='equal')
-
-            for j in range(len(any_min)):
-                for iii in range(1,i+1):
-                    if x_dsecStep_ts_b[iii,any_min[j]] > 0.0 and x_dpriStep_ts_b[iii,5] < 0.0:
-                        corr_glass_b[iii,any_min[j]] = (x_dsecStep_ts_b[iii,any_min[j]]/np.max(x_dsecStep_ts_b[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts_b[:,5]/np.min(x_dpriStep_ts_b[:,5])),corr_glass_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass, b',fontsize=10)
-
-
-
-            # COLUMN 2 - GLASS AMOUNT
-
-            corr_glass_amount = np.zeros([steps,minNum+1])
-            corr_glass_amount_d = np.zeros([steps,minNum+1])
-            corr_glass_amount_a = np.zeros([steps,minNum+1])
-            corr_glass_amount_b = np.zeros([steps,minNum+1])
-            corr_glass_amount[corr_glass_amount==0.0] = None
-            corr_glass_amount_d[corr_glass_amount_d==0.0] = None
-            corr_glass_amount_a[corr_glass_amount_a==0.0] = None
-            corr_glass_amount_b[corr_glass_amount_b==0.0] = None
-
-            ax1=fig.add_subplot(4,2,2, frameon=True)
+            ax1=fig.add_subplot(2,4,1, frameon=True, aspect='equal')
 
             for j in range(len(any_min)):
                 for iii in range(1,i+1):
                     if x_secStep_ts[iii,any_min[j]] > 0.0 and x_priStep_ts[iii,5] > 0.0:
-                        corr_glass_amount[iii,any_min[j]] = (x_secStep_ts[iii,any_min[j]]/np.max(x_secStep_ts[:,any_min[j]])) / 1.0
-                plt.plot((x_priStep_ts[:,5]/np.max(x_priStep_ts[:,5])),corr_glass_amount[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-            # plt.xlim([-0.05,1.05])
-            # plt.ylim([-0.05,1.05])
+                        corr_glass_amount[iii,any_min[j],1] = (x_secStep_ts[iii,any_min[j]]/np.max(x_secStep_ts[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts[:,5]) > 0.0:
+                    min_array = x_priStep_ts[:,5]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount[:,any_min[j],0] = ((x_priStep_ts[:,5]-min_maybe)/(np.max(x_priStep_ts[:,5])-min_maybe))
+                plt.plot(corr_glass_amount[:,any_min[j],0],corr_glass_amount[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            # plt.plot([0.0-xlim_b,1.0+xlim_b],[1.0+ylim_b,0.0-ylim_b],lw=20,linestyle='-',c='#eeeeee',zorder=-12)
+            # plt.plot([0.0-xlim_b,1.0+xlim_b],[1.0+ylim_b,0.0-ylim_b],lw=50,linestyle='-',c='#f1f1f1',zorder=-13)
+            # plt.plot([0.0-xlim_b,1.1+xlim_b],[1.1+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+            # plt.plot([0.0-xlim_b,0.9+xlim_b],[0.9+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+
+            plt.xlim([0.0-xlim_b,1.0+xlim_b])
+            plt.ylim([0.0-ylim_b,1.0+ylim_b])
+            plt.xlabel('amount of primary phase (normalized)',fontsize=9)
+            plt.ylabel('amount of secondary phase (normalized)',fontsize=9)
             plt.title('corr glass amount, solo',fontsize=10)
 
-            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
+            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.35))
 
 
-            ax1=fig.add_subplot(4,2,4, frameon=True, aspect='equal')
-
-            for j in range(len(any_min)):
-                for iii in range(1,i+1):
-                    if x_dsecStep_ts_d[iii,any_min[j]] > 0.0 and x_dpriStep_ts_d[iii,5] < 0.0:
-                        corr_glass_d[iii,any_min[j]] = (x_dsecStep_ts_d[iii,any_min[j]]/np.max(x_dsecStep_ts_d[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts_d[:,5]/np.min(x_dpriStep_ts_d[:,5])),corr_glass_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass, d',fontsize=10)
-
-
-            ax1=fig.add_subplot(4,2,6, frameon=True, aspect='equal')
+            ax1=fig.add_subplot(2,4,2, frameon=True, aspect='equal')
 
             for j in range(len(any_min)):
                 for iii in range(1,i+1):
-                    if x_dsecStep_ts_a[iii,any_min[j]] > 0.0 and x_dpriStep_ts_a[iii,5] < 0.0:
-                        corr_glass_a[iii,any_min[j]] = (x_dsecStep_ts_a[iii,any_min[j]]/np.max(x_dsecStep_ts_a[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts_a[:,5]/np.min(x_dpriStep_ts_a[:,5])),corr_glass_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+                    if x_secStep_ts_d[iii,any_min[j]] > 0.0 and x_priStep_ts_d[iii,5] > 0.0:
+                        corr_glass_amount_d[iii,any_min[j],1] = (x_secStep_ts_d[iii,any_min[j]]/np.max(x_secStep_ts_d[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts_d[:,5]) > 0.0:
+                    min_array = x_priStep_ts_d[:,5]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount_d[:,any_min[j],0] = ((x_priStep_ts_d[:,5]-min_maybe)/(np.max(x_priStep_ts_d[:,5])-min_maybe))
+                plt.plot(corr_glass_amount_d[:,any_min[j],0],corr_glass_amount_d[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
             plt.xlim([-0.05,1.05])
             plt.ylim([-0.05,1.05])
-            plt.title('corr glass, a',fontsize=10)
+            plt.title('corr glass amount, d',fontsize=10)
 
 
-            ax1=fig.add_subplot(4,2,8, frameon=True, aspect='equal')
+            ax1=fig.add_subplot(2,4,3, frameon=True, aspect='equal')
 
             for j in range(len(any_min)):
                 for iii in range(1,i+1):
-                    if x_dsecStep_ts_b[iii,any_min[j]] > 0.0 and x_dpriStep_ts_b[iii,5] < 0.0:
-                        corr_glass_b[iii,any_min[j]] = (x_dsecStep_ts_b[iii,any_min[j]]/np.max(x_dsecStep_ts_b[:,any_min[j]])) / 1.0
-                plt.plot((x_dpriStep_ts_b[:,5]/np.min(x_dpriStep_ts_b[:,5])),corr_glass_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+                    if x_secStep_ts_a[iii,any_min[j]] > 0.0 and x_priStep_ts_a[iii,5] > 0.0:
+                        corr_glass_amount_a[iii,any_min[j],1] = (x_secStep_ts_a[iii,any_min[j]]/np.max(x_secStep_ts_a[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts_a[:,5]) > 0.0:
+                    min_array = x_priStep_ts_a[:,5]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount_a[:,any_min[j],0] = ((x_priStep_ts_a[:,5]-min_maybe)/(np.max(x_priStep_ts_a[:,5])-min_maybe))
+                plt.plot(corr_glass_amount_a[:,any_min[j],0],corr_glass_amount_a[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
             plt.xlim([-0.05,1.05])
             plt.ylim([-0.05,1.05])
-            plt.title('corr glass, b',fontsize=10)
+            plt.title('corr glass amount, a',fontsize=10)
+
+
+            ax1=fig.add_subplot(2,4,4, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_secStep_ts_b[iii,any_min[j]] > 0.0 and x_priStep_ts_b[iii,5] > 0.0:
+                        corr_glass_amount_b[iii,any_min[j],1] = (x_secStep_ts_b[iii,any_min[j]]/np.max(x_secStep_ts_b[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts_b[:,5]) > 0.0:
+                    min_array = x_priStep_ts_b[:,5]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount_b[:,any_min[j],0] = ((x_priStep_ts_b[:,5]-min_maybe)/(np.max(x_priStep_ts_b[:,5])-min_maybe))
+                plt.plot(corr_glass_amount_b[:,any_min[j],0],corr_glass_amount_b[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr glass amount, b',fontsize=10)
+
+
+
+
+
+
+
+
+
+            # COLUMN 2 - OLIVINE AMOUNT
+
+            corr_ol_amount = np.zeros([steps,minNum+1,2])
+            corr_ol_amount_d = np.zeros([steps,minNum+1,2])
+            corr_ol_amount_a = np.zeros([steps,minNum+1,2])
+            corr_ol_amount_b = np.zeros([steps,minNum+1,2])
+            corr_ol_amount[corr_ol_amount==0.0] = -1.0
+            corr_ol_amount_d[corr_ol_amount_d==0.0] = -1.0
+            corr_ol_amount_a[corr_ol_amount_a==0.0] = -1.0
+            corr_ol_amount_b[corr_ol_amount_b==0.0] = -1.0
+
+            ax1=fig.add_subplot(2,4,5, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_secStep_ts[iii,any_min[j]] > 0.0 and x_priStep_ts[iii,4] > 0.0:
+                        corr_glass_amount[iii,any_min[j],1] = (x_secStep_ts[iii,any_min[j]]/np.max(x_secStep_ts[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts[:,4]) > 0.0:
+                    min_array = x_priStep_ts[:,4]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount[:,any_min[j],0] = ((x_priStep_ts[:,4]-min_maybe)/(np.max(x_priStep_ts[:,4])-min_maybe))
+                plt.plot(corr_glass_amount[:,any_min[j],0],corr_glass_amount[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            # plt.plot([0.0-xlim_b,1.0+xlim_b],[1.0+ylim_b,0.0-ylim_b],lw=20,linestyle='-',c='#eeeeee',zorder=-12)
+            # plt.plot([0.0-xlim_b,1.0+xlim_b],[1.0+ylim_b,0.0-ylim_b],lw=50,linestyle='-',c='#f1f1f1',zorder=-13)
+            # plt.plot([0.0-xlim_b,1.1+xlim_b],[1.1+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+            # plt.plot([0.0-xlim_b,0.9+xlim_b],[0.9+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+
+            plt.xlim([0.0-xlim_b,1.0+xlim_b])
+            plt.ylim([0.0-ylim_b,1.0+ylim_b])
+            plt.xlabel('amount of primary phase (normalized)',fontsize=9)
+            plt.ylabel('amount of secondary phase (normalized)',fontsize=9)
+            plt.title('corr ol amount, solo',fontsize=10)
+
+
+            ax1=fig.add_subplot(2,4,6, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_secStep_ts_d[iii,any_min[j]] > 0.0 and x_priStep_ts_d[iii,4] > 0.0:
+                        corr_glass_amount_d[iii,any_min[j],1] = (x_secStep_ts_d[iii,any_min[j]]/np.max(x_secStep_ts_d[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts_d[:,4]) > 0.0:
+                    min_array = x_priStep_ts_d[:,4]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount_d[:,any_min[j],0] = ((x_priStep_ts_d[:,4]-min_maybe)/(np.max(x_priStep_ts_d[:,4])-min_maybe))
+                plt.plot(corr_glass_amount_d[:,any_min[j],0],corr_glass_amount_d[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr ol amount, d',fontsize=10)
+
+
+            ax1=fig.add_subplot(2,4,7, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_secStep_ts_a[iii,any_min[j]] > 0.0 and x_priStep_ts_a[iii,4] > 0.0:
+                        corr_glass_amount_a[iii,any_min[j],1] = (x_secStep_ts_a[iii,any_min[j]]/np.max(x_secStep_ts_a[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts_a[:,4]) > 0.0:
+                    min_array = x_priStep_ts_a[:,4]
+                    min_maybe = np.min(min_array[min_array>0.0])
+                corr_glass_amount_a[:,any_min[j],0] = ((x_priStep_ts_a[:,4]-min_maybe)/(np.max(x_priStep_ts_a[:,4])-min_maybe))
+                plt.plot(corr_glass_amount_a[:,any_min[j],0],corr_glass_amount_a[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr ol amount, a',fontsize=10)
+
+
+            ax1=fig.add_subplot(2,4,8, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                for iii in range(1,i+1):
+                    if x_secStep_ts_b[iii,any_min[j]] > 0.0 and x_priStep_ts_b[iii,4] > 0.0:
+                        corr_glass_amount_b[iii,any_min[j],1] = (x_secStep_ts_b[iii,any_min[j]]/np.max(x_secStep_ts_b[:,any_min[j]])) / 1.0
+                min_maybe = -1.0
+                if np.max(x_priStep_ts_b[:,4]) > 0.0:
+                    min_array = x_priStep_ts_b[:,4]
+                    min_maybe = np.min(min_array[min_brray>0.0])
+                corr_glass_amount_b[:,any_min[j],0] = ((x_priStep_ts_b[:,4]-min_maybe)/(np.max(x_priStep_ts_b[:,4])-min_maybe))
+                plt.plot(corr_glass_amount_b[:,any_min[j],0],corr_glass_amount_b[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            plt.xlim([-0.05,1.05])
+            plt.ylim([-0.05,1.05])
+            plt.title('corr ol amount, b',fontsize=10)
 
 
 
             plt.subplots_adjust(top=0.90, bottom=0.03,hspace=0.15,left=0.05,right=0.95)
-            plt.savefig(outpath+'jdf_'+letter+'_corr_x'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_corr_x/jdf_'+letter+'_corr_x'+str(i+restart)+'.png')
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if not os.path.exists(outpath+'jdf_corr_min_x/'):
+                os.makedirs(outpath+'jdf_corr_min_x/')
+
+            #todo: NON-FINAL FIG: jdf_corr_min_x
+            fig=plt.figure(figsize=(12.0,7.0))
+            print "jdf_corr plot"
+
+            amt_lw = 1.5
+
+            xlim_b = 0.05
+            ylim_b = 0.05
+
+
+            # COLUMN 1 - GLASS AMOUNT
+
+            # corr_glass_amount = np.zeros([steps,minNum+1])
+            # corr_glass_amount_d = np.zeros([steps,minNum+1])
+            # corr_glass_amount_a = np.zeros([steps,minNum+1])
+            # corr_glass_amount_b = np.zeros([steps,minNum+1])
+            # corr_glass_amount[corr_glass_amount==0.0] = -1.0
+            # corr_glass_amount_d[corr_glass_amount_d==0.0] = -1.0
+            # corr_glass_amount_a[corr_glass_amount_a==0.0] = -1.0
+            # corr_glass_amount_b[corr_glass_amount_b==0.0] = -1.0
+
+            ax1=fig.add_subplot(2,4,1, frameon=True, aspect='equal')
+
+            for j in range(len(any_min)):
+                plt.plot(corr_glass_amount[:,any_min[j],0],corr_glass_amount[:,any_min[j],1],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            # plt.plot([0.0-xlim_b,1.1+xlim_b],[1.1+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+            # plt.plot([0.0-xlim_b,0.9+xlim_b],[0.9+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+
+            plt.xlim([0.0-xlim_b,1.0+xlim_b])
+            plt.ylim([0.0-ylim_b,1.0+ylim_b])
+            plt.xlabel('amount of primary phase (normalized)',fontsize=9)
+            plt.ylabel('amount of secondary phase (normalized)',fontsize=9)
+            plt.title('corr glass amount, solo',fontsize=10)
+
+            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.35))
+            #
+            #
+            # ax1=fig.add_subplot(2,4,2, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts_d[iii,any_min[j]] > 0.0 and x_priStep_ts_d[iii,5] > 0.0:
+            #     #         corr_glass_amount_d[iii,any_min[j]] = (x_secStep_ts_d[iii,any_min[j]]/np.max(x_secStep_ts_d[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts_d[:,5]) > 0.0:
+            #     #     min_array = x_priStep_ts_d[:,5]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts_d[:,5]-min_maybe)/(np.max(x_priStep_ts_d[:,5])-min_maybe)),corr_glass_amount_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts_d[:,5]-min_maybe)/(np.max(x_priStep_ts_d[:,5])-min_maybe)),corr_glass_amount_d[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr glass amount, d',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,3, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts_a[iii,any_min[j]] > 0.0 and x_priStep_ts_a[iii,5] > 0.0:
+            #     #         corr_glass_amount_a[iii,any_min[j]] = (x_secStep_ts_a[iii,any_min[j]]/np.max(x_secStep_ts_a[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts_a[:,5]) > 0.0:
+            #     #     min_array = x_priStep_ts_a[:,5]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts_a[:,5]-min_maybe)/(np.max(x_priStep_ts_a[:,5])-min_maybe)),corr_glass_amount_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts_a[:,5]-min_maybe)/(np.max(x_priStep_ts_a[:,5])-min_maybe)),corr_glass_amount_a[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr glass amount, a',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,4, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts_b[iii,any_min[j]] > 0.0 and x_priStep_ts_b[iii,5] > 0.0:
+            #     #         corr_glass_amount_b[iii,any_min[j]] = (x_secStep_ts_b[iii,any_min[j]]/np.max(x_secStep_ts_b[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts_b[:,5]) > 0.0:
+            #     #     min_array = x_priStep_ts_b[:,5]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts_b[:,5]-min_maybe)/(np.max(x_priStep_ts_b[:,5])-min_maybe)),corr_glass_amount_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts_b[:,5]-min_maybe)/(np.max(x_priStep_ts_b[:,5])-min_maybe)),corr_glass_amount_b[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr glass amount, b',fontsize=10)
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            # # COLUMN 2 - OLIVINE AMOUNT
+            #
+            # # corr_ol_amount = np.zeros([steps,minNum+1])
+            # # corr_ol_amount_d = np.zeros([steps,minNum+1])
+            # # corr_ol_amount_a = np.zeros([steps,minNum+1])
+            # # corr_ol_amount_b = np.zeros([steps,minNum+1])
+            # # corr_ol_amount[corr_ol_amount==0.0] = -1.0
+            # # corr_ol_amount_d[corr_ol_amount_d==0.0] = -1.0
+            # # corr_ol_amount_a[corr_ol_amount_a==0.0] = -1.0
+            # # corr_ol_amount_b[corr_ol_amount_b==0.0] = -1.0
+            #
+            # ax1=fig.add_subplot(2,4,5, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts[iii,any_min[j]] > 0.0 and x_priStep_ts[iii,4] > 0.0:
+            #     #         corr_ol_amount[iii,any_min[j]] = (x_secStep_ts[iii,any_min[j]]/np.max(x_secStep_ts[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts[:,4]) > 0.0:
+            #     #     min_array = x_priStep_ts[:,4]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts[:,4]-min_maybe)/(np.max(x_priStep_ts[:,4])-min_maybe)),corr_ol_amount[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts[:,5]-min_maybe)/(np.max(x_priStep_ts[:,5])-min_maybe)),corr_ol_amount[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, solo',fontsize=10)
+            #
+            # #plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
+            #
+            #
+            # ax1=fig.add_subplot(2,4,6, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts_d[iii,any_min[j]] > 0.0 and x_priStep_ts_d[iii,4] > 0.0:
+            #     #         corr_ol_amount_d[iii,any_min[j]] = (x_secStep_ts_d[iii,any_min[j]]/np.max(x_secStep_ts_d[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts_d[:,4]) > 0.0:
+            #     #     min_array = x_priStep_ts_d[:,4]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts_d[:,4]-min_maybe)/(np.max(x_priStep_ts_d[:,4])-min_maybe)),corr_ol_amount_d[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts_d[:,5]-min_maybe)/(np.max(x_priStep_ts_d[:,5])-min_maybe)),corr_ol_amount_d[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, d',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,7, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts_a[iii,any_min[j]] > 0.0 and x_priStep_ts_a[iii,4] > 0.0:
+            #     #         corr_ol_amount_a[iii,any_min[j]] = (x_secStep_ts_a[iii,any_min[j]]/np.max(x_secStep_ts_a[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts_a[:,4]) > 0.0:
+            #     #     min_array = x_priStep_ts_a[:,4]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts_a[:,4]-min_maybe)/(np.max(x_priStep_ts_a[:,4])-min_maybe)),corr_ol_amount_a[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts_a[:,5]-min_maybe)/(np.max(x_priStep_ts_a[:,5])-min_maybe)),corr_ol_amount_a[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, a',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,8, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min)):
+            #     # for iii in range(1,i+1):
+            #     #     if x_secStep_ts_b[iii,any_min[j]] > 0.0 and x_priStep_ts_b[iii,4] > 0.0:
+            #     #         corr_ol_amount_b[iii,any_min[j]] = (x_secStep_ts_b[iii,any_min[j]]/np.max(x_secStep_ts_b[:,any_min[j]])) / 1.0
+            #     # min_maybe = -1.0
+            #     # if np.max(x_priStep_ts_b[:,4]) > 0.0:
+            #     #     min_array = x_priStep_ts_b[:,4]
+            #     #     min_maybe = np.min(min_array[min_array>0.0])
+            #     plt.plot(((x_priStep_ts_b[:,4]-min_maybe)/(np.max(x_priStep_ts_b[:,4])-min_maybe)),corr_ol_amount_b[:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
+            #     #plt.scatter(((x_priStep_ts_b[:,5]-min_maybe)/(np.max(x_priStep_ts_b[:,5])-min_maybe)),corr_ol_amount_b[:,any_min[j]],c=col[j], marker='o',lw=0)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, b',fontsize=10)
+            #
+            #
+
+            plt.subplots_adjust(top=0.90, bottom=0.03,hspace=0.15,left=0.05,right=0.95)
+            plt.savefig(outpath+'jdf_corr_min_x/jdf_'+letter+'_corr_min_x'+str(i+restart)+'.png')
 
 
     plt.close('all')
 
 
 
-#todo: FINAL FIG: all_secondary
+#todo: FINAL FIG: secondary_rate
 fig=plt.figure(figsize=(9.5,9.5))
 
 norm_growth_rate = np.zeros([steps,minNum+1])
@@ -3179,7 +3469,7 @@ for j in range(len(any_min)):
 
 
 plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-plt.savefig(outpath+'all_'+letter+'_secondary.png')
+plt.savefig(outpath+'jdf_secondary_rate_'+letter+'.png')
 
 
 
@@ -3193,7 +3483,7 @@ plt.savefig(outpath+'all_'+letter+'_secondary.png')
 
 
 
-#todo: FINAL FIG: all_secondary_x
+#todo: FINAL FIG: secondary_rate_x
 fig=plt.figure(figsize=(9.5,9.5))
 
 norm_amount = np.zeros([steps,minNum+1])
@@ -3260,8 +3550,7 @@ for j in range(len(any_min)):
 
 
 plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-plt.savefig(outpath+'all_'+letter+'_secondary_x.png')
-
+plt.savefig(outpath+'jdf_secondary_rate_x'+letter+'.png')
 
 # plt.savefig(outpath+'all_secondary_x.eps')
 
@@ -3274,7 +3563,7 @@ plt.savefig(outpath+'all_'+letter+'_secondary_x.png')
 
 
 
-#todo: FINAL FIG: amount_secondary_x
+#todo: FINAL FIG: secondary_amount_x
 fig=plt.figure(figsize=(9.5,9.5))
 
 amt_lw = 2
@@ -3365,8 +3654,7 @@ for j in range(len(any_min)):
 
 
 plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-plt.savefig(outpath+'amount_'+letter+'_secondary_x.png')
-
+plt.savefig(outpath+'jdf_secondary_amount_x_'+letter+'.png')
 
 # plt.savefig(outpath+'amount_secondary_x.eps')
 
@@ -3377,7 +3665,7 @@ plt.savefig(outpath+'amount_'+letter+'_secondary_x.png')
 
 
 
-#todo: FINAL FIG: amount_secondary_all
+#todo: FINAL FIG: secondary_amount
 fig=plt.figure(figsize=(9.5,9.5))
 
 norm_amount = np.zeros([steps,minNum+1])
@@ -3452,8 +3740,7 @@ for j in range(len(any_min)):
 
 
 plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-plt.savefig(outpath+'amount_'+letter+'_secondary_all.png')
-
+plt.savefig(outpath+'jdf_secondary_amount_'+letter+'.png')
 
 # plt.savefig(outpath+'amount_secondary_all.eps')
 
@@ -3564,7 +3851,7 @@ plt.savefig(outpath+'amount_'+letter+'_secondary_all.png')
 
 
 
-#todo: FINAL FIG: amount_primary
+#todo: FINAL FIG: primary_amount
 fig=plt.figure(figsize=(9.5,9.5))
 
 
@@ -3632,7 +3919,7 @@ for j in [2, 3, 4, 5]:
 
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-plt.savefig(outpath+'amount_'+letter+'_primary.png')
+plt.savefig(outpath+'jdf_primary_amount_'+letter+'.png')
 
 
 
@@ -3642,7 +3929,7 @@ plt.savefig(outpath+'amount_'+letter+'_primary.png')
 
 
 
-#todo: FINAL FIG: amount_primary_x
+#todo: FINAL FIG: primary_amount_x
 fig=plt.figure(figsize=(9.5,9.5))
 
 
@@ -3707,7 +3994,7 @@ plt.title('primary amount, b',fontsize=10)
 
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-plt.savefig(outpath+'amount_'+letter+'_primary_x.png')
+plt.savefig(outpath+'jdf_primary_amount_x_'+letter+'.png')
 
 # print "x_priStep_ts[:,5]"
 # print x_priStep_ts[:,5]
@@ -3733,7 +4020,7 @@ plt.savefig(outpath+'amount_'+letter+'_primary_x.png')
 
 
 
-#todo: FINAL FIG: all_primary
+#todo: FINAL FIG: primary_rate
 fig=plt.figure(figsize=(9.5,9.5))
 
 
@@ -3801,4 +4088,4 @@ for j in [2, 3, 4, 5]:
 
 
 plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-plt.savefig(outpath+'all_'+letter+'_primary.png')
+plt.savefig(outpath+'jdf_primary_rate_'+letter+'.png')
