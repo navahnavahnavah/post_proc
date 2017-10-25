@@ -81,18 +81,19 @@ param_b_g = 1
 
 
 
-pri_2_toggle = 0
-pri_3_toggle = 0
+pri_2_toggle = 1
+pri_3_toggle = 1
 pri_4_toggle = 1
 pri_5_toggle = 1
 
-pri_toggle = [0, 0, 0, 0, 1, 1]
-pri_toggle_a = [0, 0, 0, 0, 1, 1]
+pri_toggle = [0, 0, 1, 1, 1, 1]
+pri_toggle_d = [0, 0, 1, 1, 1, 1]
+pri_toggle_a = [0, 0, 1, 1, 1, 0]
 pri_toggle_b = [0, 0, 0, 0, 0, 1]
-pri_toggle_d = [0, 0, 0, 0, 1, 1]
+
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_14_b/"
+outpath = "../output/revival/summer_coarse_grid/sites_14_e/"
 letter = outpath[-2]
 print letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -1018,6 +1019,11 @@ for i in range(0,steps,1):
             if not os.path.exists(outpath+'jdf_block_sol/'):
                 os.makedirs(outpath+'jdf_block_sol/')
 
+            if np.max(ca) == 0.0:
+                plt.close('all')
+                quit()
+
+
 
             print "jdf_sol_block"
             #todo: FIGURE: jdf_sol_block
@@ -1300,8 +1306,8 @@ for i in range(0,steps,1):
 
 
 
-            if not os.path.exists(outpath+'jdf_block_sol/'):
-                os.makedirs(outpath+'jdf_block_sol/')
+            if not os.path.exists(outpath+'jdf_block_sec/'):
+                os.makedirs(outpath+'jdf_block_sec/')
 
 
 
@@ -1349,7 +1355,7 @@ for i in range(0,steps,1):
                 chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'chamber b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
-            plt.savefig(outpath+'jdf_sec_block/jdf_'+letter+'_block_sec_'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_block_sec/jdf_'+letter+'_block_sec_'+str(i+restart)+'.png')
 
 
 
@@ -1357,6 +1363,9 @@ for i in range(0,steps,1):
 
             if not os.path.exists(outpath+'jdf_block_pri/'):
                 os.makedirs(outpath+'jdf_block_pri/')
+
+
+            min_stand = 0.001
 
 
             #todo: FIGURE: jdf_pri_block
@@ -1389,8 +1398,8 @@ for i in range(0,steps,1):
 
             chemplot(plt_s, plt_ss, 7, 5, 1, 1, 'basalt remaining s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='basalt remaining')
             chemplot(plt_d, plt_dd, 7, 5, 6, 1, 'basalt remaining d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_a, plt_aa, 3, 10, 21, 1, 'basalt remaining a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-            # chemplot(plt_b, plt_bb, 3, 10, 22, 1, 'basalt remaining b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_a, plt_aa, 7, 10, 21, 1, 'basalt remaining a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_b, plt_bb, 7, 10, 22, 1, 'basalt remaining b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
 
@@ -1407,29 +1416,35 @@ for i in range(0,steps,1):
                 # plt_bb = glass_a
                 # plt_dd = glass_a
                 plt_s = glass0/np.max(glass0)
-                plt_a = glass0_a/np.max(glass0_a)
-
-                if param_b_g == 1:
-                    plt_b = glass0_b/np.max(glass0_b)
-                if param_b_g == 0:
-                    plt_b = glass0_a/np.max(glass0_a)
-
                 plt_d = glass0_d/np.max(glass0_d)
+                plt_a = glass0_a/np.max(glass0_a)
+                plt_b = glass0_b/np.max(glass0_b)
 
 
                 plt_ss = glass/np.max(glass)
                 plt_aa = glass_a/np.max(glass_a)
-
-                if param_b_g == 1:
-                    plt_bb = glass_b/np.max(glass_b)
-                if param_b_g == 0:
-                    plt_bb = glass_a/np.max(glass_a)
-
-
-
+                plt_bb = glass_d/np.max(glass_b)
                 plt_dd = glass_d/np.max(glass_d)
+
+                if pri_toggle[5] == 0:
+                    plt_s[1,1] = min_stand
+                    plt_ss[1,1] = min_stand
+                if pri_toggle_d[5] == 0:
+                    plt_d[1,1] = min_stand
+                    plt_dd[1,1] = min_stand
+                if pri_toggle_a[5] == 0:
+                    plt_a[1,1] = min_stand
+                    plt_aa[1,1] = min_stand
+                if pri_toggle_b[5] == 0:
+                    plt_b[1,1] = min_stand
+                    plt_bb[1,1] = min_stand
+
+
+
+
+
                 all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.min(all_ch)
+                c_min = np.min(all_ch[all_ch>min_stand])
                 all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
                 c_max = np.max(all_ch)
 
@@ -1441,8 +1456,9 @@ for i in range(0,steps,1):
                 chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
                 chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
                 chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                if param_b_g == 1:
-                    chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+
+
 
 
             if pri_4_toggle == 1:
@@ -1458,21 +1474,36 @@ for i in range(0,steps,1):
                 # plt_dd = ol_b
                 plt_s = ol0/np.max(ol0)
                 plt_a = ol0_a/np.max(ol0_a)
-                plt_b = ol0_a/np.max(ol0_a)
-                plt_d = ol0_a/np.max(ol0_a)
+                plt_b = ol0_b/np.max(ol0_b)
+                plt_d = ol0_d/np.max(ol0_d)
                 plt_ss = ol/np.max(ol)
                 plt_aa = ol_a/np.max(ol_a)
-                plt_bb = ol_a/np.max(ol_a)
-                plt_dd = ol_a/np.max(ol_a)
+                plt_bb = ol_b/np.max(ol_b)
+                plt_dd = ol_d/np.max(ol_d)
+
+                if pri_toggle[4] == 0:
+                    plt_s[1,1] = min_stand
+                    plt_ss[1,1] = min_stand
+                if pri_toggle_d[4] == 0:
+                    plt_d[1,1] = min_stand
+                    plt_dd[1,1] = min_stand
+                if pri_toggle_a[4] == 0:
+                    plt_a[1,1] = min_stand
+                    plt_aa[1,1] = min_stand
+                if pri_toggle_b[4] == 0:
+                    plt_b[1,1] = min_stand
+                    plt_bb[1,1] = min_stand
+
+
                 all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.min(all_ch)
+                c_min = np.min(all_ch[all_ch>min_stand])
                 all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
                 c_max = np.max(all_ch)
 
                 chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
                 chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                # chemplot(plt_a, plt_aa, 3, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                # chemplot(plt_b, plt_bb, 3, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_a, plt_aa, 7, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_b, plt_bb, 7, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
 
@@ -1488,21 +1519,36 @@ for i in range(0,steps,1):
                 # plt_bb = pyr_b
                 # plt_dd = pyr_b
                 plt_s = pyr0/np.max(pyr0)
-                plt_a = pyr0_b/np.max(pyr0_b)
+                plt_a = pyr0_a/np.max(pyr0_a)
                 plt_b = pyr0_b/np.max(pyr0_b)
-                plt_d = pyr0_b/np.max(pyr0_b)
+                plt_d = pyr0_d/np.max(pyr0_d)
                 plt_ss = pyr/np.max(pyr)
-                plt_aa = pyr_b/np.max(pyr_b)
+                plt_aa = pyr_a/np.max(pyr_a)
                 plt_bb = pyr_b/np.max(pyr_b)
-                plt_dd = pyr_b/np.max(pyr_b)
+                plt_dd = pyr_d/np.max(pyr_d)
+
+                if pri_toggle[3] == 0:
+                    plt_s[1,1] = min_stand
+                    plt_ss[1,1] = min_stand
+                if pri_toggle_d[3] == 0:
+                    plt_d[1,1] = min_stand
+                    plt_dd[1,1] = min_stand
+                if pri_toggle_a[3] == 0:
+                    plt_a[1,1] = min_stand
+                    plt_aa[1,1] = min_stand
+                if pri_toggle_b[3] == 0:
+                    plt_b[1,1] = min_stand
+                    plt_bb[1,1] = min_stand
+
+
                 all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.amin(all_ch[all_ch>0.0])
+                c_min = np.amin(all_ch[all_ch>min_stand])
                 all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
                 c_max = np.amax(all_ch[all_ch>0.0])
                 chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
                 chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                # chemplot(plt_a, plt_aa, 3, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                # chemplot(plt_b, plt_bb, 3, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_b, plt_bb, 7, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
             if pri_2_toggle == 1:
@@ -1517,22 +1563,38 @@ for i in range(0,steps,1):
                 # plt_bb = plag_b
                 # plt_dd = plag_b
                 plt_s = plag0/np.max(plag0)
-                plt_a = plag0_b/np.max(plag0_b)
+                plt_a = plag0_a/np.max(plag0_a)
                 plt_b = plag0_b/np.max(plag0_b)
-                plt_d = plag0_b/np.max(plag0_b)
+                plt_d = plag0_d/np.max(plag0_d)
                 plt_ss = plag/np.max(plag)
-                plt_aa = plag_b/np.max(plag_b)
+                plt_aa = plag_a/np.max(plag_a)
                 plt_bb = plag_b/np.max(plag_b)
-                plt_dd = plag_b/np.max(plag_b)
+                plt_dd = plag_d/np.max(plag_d)
+
+
+                if pri_toggle[2] == 0:
+                    plt_s[1,1] = min_stand
+                    plt_ss[1,1] = min_stand
+                if pri_toggle_d[2] == 0:
+                    plt_d[1,1] = min_stand
+                    plt_dd[1,1] = min_stand
+                if pri_toggle_a[2] == 0:
+                    plt_a[1,1] = min_stand
+                    plt_aa[1,1] = min_stand
+                if pri_toggle_b[2] == 0:
+                    plt_b[1,1] = min_stand
+                    plt_bb[1,1] = min_stand
+
+
                 all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.min(all_ch)
+                c_min = np.min(all_ch[all_ch>min_stand])
                 all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
                 c_max = np.max(all_ch)
 
                 chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
                 chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                # chemplot(plt_a, plt_aa, 3, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                # chemplot(plt_b, plt_bb, 3, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+                chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
             #fig.set_tight_layout(True)
             # plt.subplots_adjust( wspace=0.05 , bottom=0.04, top=0.97, left=0.03, right=0.975)
@@ -2924,7 +2986,7 @@ for i in range(0,steps,1):
 
             #todo: NON-FINAL FIG: jdf_corr_x
             fig=plt.figure(figsize=(12.0,7.0))
-            print "jdf_corr plot"
+            print "jdf_corr_x plot"
 
             amt_lw = 1.5
 
@@ -3149,9 +3211,9 @@ for i in range(0,steps,1):
             if not os.path.exists(outpath+'jdf_corr_min_x/'):
                 os.makedirs(outpath+'jdf_corr_min_x/')
 
-            #todo: NON-FINAL FIG: jdf_corr_min_x
+            #todo: FIG: jdf_corr_min_x
             fig=plt.figure(figsize=(12.0,7.0))
-            print "jdf_corr plot"
+            print "jdf_corr_min_x plot"
 
             amt_lw = 1.0
             ls2 = '--'
@@ -3274,6 +3336,74 @@ for i in range(0,steps,1):
 
             if i == 50 or i == 49:
                 plt.savefig(outpath+'jdf_corr_min_x/jdf_'+letter+'_corr_min_X_'+str(i+restart)+'.eps')
+
+
+
+
+
+
+
+
+
+            if not os.path.exists(outpath+'jdf_deriv2_sim/'):
+                os.makedirs(outpath+'jdf_deriv2_sim/')
+
+            #todo: FIG: jdf_deriv2_sim
+            fig=plt.figure(figsize=(9.0,9.0))
+            print "jdf_deriv2_sim"
+
+
+            deriv2 = np.zeros([steps,minNum+1])
+            deriv2_d = np.zeros([steps,minNum+1])
+            deriv2_a = np.zeros([steps,minNum+1])
+            deriv2_b = np.zeros([steps,minNum+1])
+
+
+
+            for j in range(len(any_min)):
+                for iii in range(6,i-1):
+                    # deriv2[iii,any_min[j]] = (x_secStep_ts[iii-1,any_min[j]] - 2.0*x_secStep_ts[iii,any_min[j]] + x_secStep_ts[iii+1,any_min[j]])/(1.0*1.0)
+                    # deriv2_d[iii,any_min[j]] = (x_secStep_ts_d[iii-1,any_min[j]] - 2.0*x_secStep_ts_d[iii,any_min[j]] + x_secStep_ts_d[iii+1,any_min[j]])/(1.0*1.0)
+                    # deriv2_a[iii,any_min[j]] = (x_secStep_ts_a[iii-1,any_min[j]] - 2.0*x_secStep_ts_a[iii,any_min[j]] + x_secStep_ts_a[iii+1,any_min[j]])/(1.0*1.0)
+                    # deriv2_b[iii,any_min[j]] = (x_secStep_ts_b[iii-1,any_min[j]] - 2.0*x_secStep_ts_b[iii,any_min[j]] + x_secStep_ts_b[iii+1,any_min[j]])/(1.0*1.0)
+
+                    deriv2[iii,any_min[j]] = (norm_amount[iii-1,any_min[j]] - 2.0*norm_amount[iii,any_min[j]] + norm_amount[iii+1,any_min[j]])/(1.0*1.0)
+                    deriv2_d[iii,any_min[j]] = (norm_amount_d[iii-1,any_min[j]] - 2.0*norm_amount_d[iii,any_min[j]] + norm_amount_d[iii+1,any_min[j]])/(1.0*1.0)
+                    deriv2_a[iii,any_min[j]] = (norm_amount_a[iii-1,any_min[j]] - 2.0*norm_amount_a[iii,any_min[j]] + norm_amount_a[iii+1,any_min[j]])/(1.0*1.0)
+                    deriv2_b[iii,any_min[j]] = (norm_amount_b[iii-1,any_min[j]] - 2.0*norm_amount_b[iii,any_min[j]] + norm_amount_b[iii+1,any_min[j]])/(1.0*1.0)
+
+
+
+
+            ax=fig.add_subplot(2, 1, 1, frameon=True)
+            plt.plot([-0.5, len(any_min)+1], [0.0, 0.0], c='k', lw=1)
+            for j in range(len(any_min)):
+                plt.scatter(j,np.mean(deriv2[2:i-2,any_min[j]]), marker='o', s=50, edgecolor=col[j], facecolor='none', lw=1.5, label=secondary[any_min[j]])
+                plt.scatter(j,np.mean(deriv2_d[2:i-2,any_min[j]]), marker='s', s=50, edgecolor=col[j], facecolor='none', lw=1.5)
+                # plt.scatter(j,np.mean(deriv2_a[2:i-2,any_min[j]]), marker='^', s=50, edgecolor=col[j], facecolor='none', lw=1)
+                # plt.scatter(j,np.mean(deriv2_b[2:i-2,any_min[j]]), marker='v', s=50, edgecolor=col[j], facecolor='none', lw=1)
+            plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=9)
+            plt.xlim([-0.5,len(any_min)-0.5])
+
+            #if np.max(np.abs(deriv2)) > 0.0:
+                #plt.legend(fontsize=10, ncol=4, labelspacing=0.0, columnspacing=0.0, bbox_to_anchor=(1.0, 1.15))
+
+
+
+
+
+            ax=fig.add_subplot(2, 1, 2, frameon=True)
+
+            print deriv2[:,any_min[j]].shape
+            for j in range(len(any_min)):
+                plt.plot(deriv2[:,any_min[j]],c=col[j],label=secondary[any_min[j]])
+
+            if np.max(np.abs(deriv2)) > 0.0:
+                plt.legend(fontsize=10, ncol=4, labelspacing=0.0, columnspacing=0.0, bbox_to_anchor=(1.0, 1.05))
+
+
+            plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
+            plt.savefig(outpath+"jdf_deriv2_sim/jdf_deriv2_sim_"+str(i+restart)+".png")
 
 
     plt.close('all')
