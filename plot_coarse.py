@@ -80,20 +80,50 @@ d_only = 0
 param_b_g = 1
 
 
+# all phenos
 
-pri_2_toggle = 1
-pri_3_toggle = 1
-pri_4_toggle = 1
+# pri_2_toggle = 1
+# pri_3_toggle = 1
+# pri_4_toggle = 1
+# pri_5_toggle = 1
+#
+# pri_toggle = [0, 0, 1, 1, 1, 1]
+# pri_toggle_d = [0, 0, 1, 1, 1, 1]
+# pri_toggle_a = [0, 0, 1, 1, 1, 0]
+# pri_toggle_b = [0, 0, 0, 0, 0, 1]
+#
+
+
+
+# # glass and olivine
+#
+# pri_2_toggle = 0
+# pri_3_toggle = 0
+# pri_4_toggle = 1
+# pri_5_toggle = 1
+#
+# pri_toggle = [0, 0, 0, 0, 1, 1]
+# pri_toggle_d = [0, 0, 0, 0, 1, 1]
+# pri_toggle_a = [0, 0, 0, 0, 1, 0]
+# pri_toggle_b = [0, 0, 0, 0, 0, 1]
+
+
+
+# glass/meso only
+
+pri_2_toggle = 0
+pri_3_toggle = 0
+pri_4_toggle = 0
 pri_5_toggle = 1
 
-pri_toggle = [0, 0, 1, 1, 1, 1]
-pri_toggle_d = [0, 0, 1, 1, 1, 1]
-pri_toggle_a = [0, 0, 1, 1, 1, 0]
+pri_toggle = [0, 0, 0, 0, 0, 1]
+pri_toggle_d = [0, 0, 0, 0, 0, 1]
+pri_toggle_a = [0, 0, 0, 0, 0, 1]
 pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_14_e/"
+outpath = "../output/revival/summer_coarse_grid/sites_meso_1e11/"
 letter = outpath[-2]
 print letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -808,6 +838,8 @@ for i in range(0,steps,1):
         # speed2 = cut_chem(speed2_0,i)
         # speed3 = cut_chem(speed3_0,i)
 
+        x_priStep_ts[i,2] = np.sum(plag[:,xd_move])
+        x_priStep_ts[i,3] = np.sum(pyr[:,xd_move])
         x_priStep_ts[i,4] = np.sum(ol[:,xd_move])
         x_priStep_ts[i,5] = np.sum(glass[:,xd_move])
 
@@ -866,6 +898,8 @@ for i in range(0,steps,1):
         # speed2_a = cut_chem(speed2_0_a,i)
         # speed3_a = cut_chem(speed3_0_a,i)
 
+        x_priStep_ts_a[i,2] = np.sum(plag_a[:,xd_move])
+        x_priStep_ts_a[i,3] = np.sum(pyr_a[:,xd_move])
         x_priStep_ts_a[i,4] = np.sum(ol_a[:,xd_move])
         x_priStep_ts_a[i,5] = np.sum(glass_a[:,xd_move])
 
@@ -922,6 +956,8 @@ for i in range(0,steps,1):
         # speed2_b = cut_chem(speed2_0_b,i)
         # speed3_b = cut_chem(speed3_0_b,i)
 
+        x_priStep_ts_b[i,2] = np.sum(plag_b[:,xd_move])
+        x_priStep_ts_b[i,3] = np.sum(pyr_b[:,xd_move])
         x_priStep_ts_b[i,4] = np.sum(ol_b[:,xd_move])
         x_priStep_ts_b[i,5] = np.sum(glass_b[:,xd_move])
 
@@ -975,6 +1011,8 @@ for i in range(0,steps,1):
         pyr_d = cut_chem(pyr0_d,i)
         plag_d = cut_chem(plag0_d,i)
 
+        x_priStep_ts_d[i,2] = np.sum(plag_d[:,xd_move])
+        x_priStep_ts_d[i,3] = np.sum(pyr_d[:,xd_move])
         x_priStep_ts_d[i,4] = np.sum(ol_d[:,xd_move])
         x_priStep_ts_d[i,5] = np.sum(glass_d[:,xd_move])
 
@@ -1010,7 +1048,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 6
+    chem6 = 5
 
     if chem6 == 6:
 
@@ -1416,14 +1454,14 @@ for i in range(0,steps,1):
                 # plt_bb = glass_a
                 # plt_dd = glass_a
                 plt_s = glass0/np.max(glass0)
-                plt_d = glass0_d/np.max(glass0_d)
                 plt_a = glass0_a/np.max(glass0_a)
                 plt_b = glass0_b/np.max(glass0_b)
+                plt_d = glass0_d/np.max(glass0_d)
 
 
                 plt_ss = glass/np.max(glass)
                 plt_aa = glass_a/np.max(glass_a)
-                plt_bb = glass_d/np.max(glass_b)
+                plt_bb = glass_b/np.max(glass_b)
                 plt_dd = glass_d/np.max(glass_d)
 
                 if pri_toggle[5] == 0:
@@ -2414,7 +2452,7 @@ for i in range(0,steps,1):
             plt.xlabel('Distance along transect [km]')
 
             plt.yticks([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0],fontsize=12)
-            plt.ylim([0.0, 80.0])
+            plt.ylim([0.0, 30.0])
             plt.ylabel('Alteration volume $\%$')
 
 
@@ -2903,7 +2941,7 @@ for i in range(0,steps,1):
             #plt.yticks(np.linspace(0,1.0,11))
             plt.title('primary amount, solo',fontsize=10)
 
-            plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.35))
+            plt.legend(fontsize=10,ncol=2,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.45))
 
 
             ax1=fig.add_subplot(4,2,3, frameon=True)
@@ -3376,12 +3414,14 @@ for i in range(0,steps,1):
 
 
             ax=fig.add_subplot(2, 1, 1, frameon=True)
-            plt.plot([-0.5, len(any_min)+1], [0.0, 0.0], c='k', lw=1)
+            plt.plot([-0.5, len(any_min)+1], [0.0, 0.0], c='#5d5d5d', lw=0.5,zorder=-10)
             for j in range(len(any_min)):
                 plt.scatter(j,np.mean(deriv2[2:i-2,any_min[j]]), marker='o', s=50, edgecolor=col[j], facecolor='none', lw=1.5, label=secondary[any_min[j]])
-                plt.scatter(j,np.mean(deriv2_d[2:i-2,any_min[j]]), marker='s', s=50, edgecolor=col[j], facecolor='none', lw=1.5)
-                # plt.scatter(j,np.mean(deriv2_a[2:i-2,any_min[j]]), marker='^', s=50, edgecolor=col[j], facecolor='none', lw=1)
-                # plt.scatter(j,np.mean(deriv2_b[2:i-2,any_min[j]]), marker='v', s=50, edgecolor=col[j], facecolor='none', lw=1)
+                plt.scatter(j,np.mean(deriv2_d[2:i-2,any_min[j]]), marker='s', s=20, edgecolor=col[j], facecolor=col[j], lw=1.5)
+                if np.abs(np.mean(deriv2_a[2:i-2,any_min[j]])) > 0.0:
+                    plt.scatter(j,np.mean(deriv2_a[2:i-2,any_min[j]]), marker='^', s=20, edgecolor='k', facecolor='none', lw=1)
+                if np.abs(np.mean(deriv2_b[2:i-2,any_min[j]])) > 0.0:
+                    plt.scatter(j,np.mean(deriv2_b[2:i-2,any_min[j]]), marker='v', s=20, edgecolor='k', facecolor='none', lw=1)
             plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=9)
             plt.xlim([-0.5,len(any_min)-0.5])
 
@@ -3394,12 +3434,39 @@ for i in range(0,steps,1):
 
             ax=fig.add_subplot(2, 1, 2, frameon=True)
 
-            print deriv2[:,any_min[j]].shape
-            for j in range(len(any_min)):
-                plt.plot(deriv2[:,any_min[j]],c=col[j],label=secondary[any_min[j]])
+            # print deriv2[:,any_min[j]].shape
+            # for j in range(len(any_min)):
+            #     plt.plot(deriv2[:,any_min[j]],c=col[j],label=secondary[any_min[j]])
+            #
+            # if np.max(np.abs(deriv2)) > 0.0:
+            #     plt.legend(fontsize=10, ncol=4, labelspacing=0.0, columnspacing=0.0, bbox_to_anchor=(1.0, 1.05))
 
-            if np.max(np.abs(deriv2)) > 0.0:
-                plt.legend(fontsize=10, ncol=4, labelspacing=0.0, columnspacing=0.0, bbox_to_anchor=(1.0, 1.05))
+            plt.plot([-0.5, len(any_min)+1], [0.0, 0.0], c='#5d5d5d', lw=0.5,zorder=-10)
+            for j in range(len(any_min)):
+                if np.mean(deriv2[2:i-2,any_min[j]]) > 0.0:
+                    plt.scatter(j,1.0, marker='o', s=50, edgecolor=col[j], facecolor='none', lw=1.5)
+                if np.mean(deriv2[2:i-2,any_min[j]]) < 0.0:
+                    plt.scatter(j,-1.0, marker='o', s=50, edgecolor=col[j], facecolor='none', lw=1.5)
+
+                if np.mean(deriv2_d[2:i-2,any_min[j]]) > 0.0:
+                    plt.scatter(j,1.0, marker='s', s=20, edgecolor=col[j], facecolor=col[j], lw=1.5)
+                if np.mean(deriv2_d[2:i-2,any_min[j]]) < 0.0:
+                    plt.scatter(j,-1.0, marker='s', s=20, edgecolor=col[j], facecolor=col[j], lw=1.5)
+
+                if np.mean(deriv2_a[2:i-2,any_min[j]]) > 0.0:
+                    plt.scatter(j,1.0, marker='^', s=20, edgecolor='k', facecolor='none', lw=1)
+                if np.mean(deriv2_a[2:i-2,any_min[j]]) < 0.0:
+                    plt.scatter(j,-1.0, marker='^', s=20, edgecolor='k', facecolor='none', lw=1)
+
+
+                if np.mean(deriv2_b[2:i-2,any_min[j]]) > 0.0:
+                    plt.scatter(j,1.0, marker='v', s=20, edgecolor='k', facecolor='none', lw=1)
+                if np.mean(deriv2_b[2:i-2,any_min[j]]) < 0.0:
+                    plt.scatter(j,-1.0, marker='v', s=20, edgecolor='k', facecolor='none', lw=1)
+
+
+            plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=9)
+            plt.xlim([-0.5,len(any_min)-0.5])
 
 
             plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
@@ -4046,7 +4113,7 @@ plt.xticks(np.linspace(0,50,11))
 #plt.yticks(np.linspace(0,1.0,11))
 plt.title('primary amount, solo',fontsize=10)
 
-plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.65))
+plt.legend(fontsize=10,ncol=2,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.65))
 
 
 ax1=fig.add_subplot(4,2,3, frameon=True)
