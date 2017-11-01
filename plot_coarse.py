@@ -123,9 +123,9 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/sites_meso_1e11/"
-letter = outpath[-2]
-print letter
+outpath = "../output/revival/summer_coarse_grid/v7_2e10/"
+letter = outpath[outpath.index('grid/v7_')+len('grid/v7_'):-1]
+print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
 path = outpath
 param_w = 300.0
@@ -241,7 +241,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
         cb_min=-2.0
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) <= 0.0:
         if cb_min==-10.0 and cb_max==10.0:
-            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),3)
         if cb_max!=10.0:
             contours = np.linspace(cb_min,cb_max,5)
 
@@ -259,13 +259,14 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
-            plt.title(cb_title,fontsize=10)
+            cbar.ax.tick_params(labelsize=8)
+            plt.title(cb_title,fontsize=8)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
 
     if np.abs(np.abs(np.max(varStep)) - np.abs(np.min(varStep))) > 0.0:
         if cb_min==-10.0 and cb_max==10.0:
-            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),5)
+            contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),3)
         if cb_max!=10.0:
             contours = np.linspace(cb_min,cb_max,5)
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
@@ -292,7 +293,8 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
-            plt.title(cb_title,fontsize=10)
+            cbar.ax.tick_params(labelsize=8)
+            plt.title(cb_title,fontsize=8)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
     return chemplot
@@ -1048,7 +1050,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 5
+    chem6 = 6
 
     if chem6 == 6:
 
@@ -2495,21 +2497,22 @@ for i in range(0,steps,1):
                 above_zero = above_zero[above_zero>0.0]
                 above_zero_ind = np.nonzero(alt_vol_temp[:,j])
 
+
                 feo_col_mean_temp[j] = 0.0
                 # feo glass
                 # feo_col_mean_temp[j] = 0.149*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
                 # feo olivine
-                feo_col_mean_temp[j] = feo_col_mean_temp[j] + 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])
-                # feo pyrite
-                feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                feo_col_mean_temp[j] = feo_col_mean_temp[j] + 0.166*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                # # feo pyrite
+                # feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feo fe-celad
                 feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,14])*(density[14]/molar[14])
 
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
-                feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
-                # feot pyrite
-                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                # # feot pyrite
+                # feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot hematite
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
                 # feot nont-mg
@@ -2518,12 +2521,16 @@ for i in range(0,steps,1):
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,15])*(density[15]/molar[15])
                 # feot nont-na
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,12])*(density[12]/molar[12])
-                # feot glass
-                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+
+
 
                 fe_col_mean_s[j] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
 
+
                 fe_col_mean_s_pri[j] = 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2]) / ((1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])) + (0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])))
+
+
+            # print "fe_col_mean_s" , fe_col_mean_s
 
 
             feo_col_mean_temp = np.zeros(len(xCell))
@@ -2540,35 +2547,36 @@ for i in range(0,steps,1):
                 above_zero = above_zero[above_zero>0.0]
                 above_zero_ind = np.nonzero(alt_vol_temp[:,j])
 
+
                 feo_col_mean_temp[j] = 0.0
                 # feo glass
                 # feo_col_mean_temp[j] = 0.149*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
                 # feo olivine
-                feo_col_mean_temp[j] = feo_col_mean_temp[j] + 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])
-                # feo pyrite
-                feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                feo_col_mean_temp[j] = feo_col_mean_temp[j] + 0.166*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                # # feo pyrite
+                # feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feo fe-celad
                 feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,14])*(density[14]/molar[14])
 
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
-                feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+                feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                # # feot pyrite
+                # feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot hematite
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
-                # feot pyrite
-                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot nont-mg
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,13])*(density[13]/molar[13])
                 # feot nont-ca
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,15])*(density[15]/molar[15])
                 # feot nont-na
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,12])*(density[12]/molar[12])
-                # feo glass
-                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
 
                 fe_col_mean_d[j] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
 
                 fe_col_mean_d_pri[j] = 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2]) / ((1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])) + (0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])))
+
+            # print "fe_col_mean_d" , fe_col_mean_d
 
 
 
@@ -2592,8 +2600,8 @@ for i in range(0,steps,1):
             plt.plot(xCell,fe_col_mean_d,color=plot_blue,lw=2, label="column mean dual")
 
 
-            plt.plot(xCell,fe_col_mean_s_pri,color=plot_purple,lw=1, label="column mean solo pri")
-            plt.plot(xCell,fe_col_mean_d_pri,color=plot_blue,lw=1, label="column mean dual pri")
+            # plt.plot(xCell,fe_col_mean_s_pri,color=plot_purple,lw=1, label="column mean solo pri")
+            # plt.plot(xCell,fe_col_mean_d_pri,color=plot_blue,lw=1, label="column mean dual pri")
 
             # # plot model top half mean
             # plt.plot(xCell,alt_col_mean_top_half_s,color=plot_purple,lw=2,linestyle='--')
@@ -3250,130 +3258,128 @@ for i in range(0,steps,1):
                 os.makedirs(outpath+'jdf_corr_min_x/')
 
             #todo: FIG: jdf_corr_min_x
-            fig=plt.figure(figsize=(12.0,7.0))
-            print "jdf_corr_min_x plot"
-
-            amt_lw = 1.0
-            ls2 = '--'
-
-            xlim_b = 0.05
-            ylim_b = 0.05
-
-            any_min_sel = [14, 16, 17]
 
 
-            # COLUMN 1 - GLASS AMOUNT
-
-            # corr_glass_amount = np.zeros([steps,minNum+1])
-            # corr_glass_amount_d = np.zeros([steps,minNum+1])
-            # corr_glass_amount_a = np.zeros([steps,minNum+1])
-            # corr_glass_amount_b = np.zeros([steps,minNum+1])
-            # corr_glass_amount[corr_glass_amount==0.0] = -1.0
-            # corr_glass_amount_d[corr_glass_amount_d==0.0] = -1.0
-            # corr_glass_amount_a[corr_glass_amount_a==0.0] = -1.0
-            # corr_glass_amount_b[corr_glass_amount_b==0.0] = -1.0
-
-            ax1=fig.add_subplot(2,4,1, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_glass_amount[:,any_min_sel[j],0],corr_glass_amount[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-                plt.plot(corr_ol_amount[:,any_min_sel[j],0],corr_ol_amount[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
-            # plt.plot([0.0-xlim_b,1.1+xlim_b],[1.1+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
-            # plt.plot([0.0-xlim_b,0.9+xlim_b],[0.9+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
-
-            plt.xlim([0.0-xlim_b,1.0+xlim_b])
-            plt.ylim([0.0-ylim_b,1.0+ylim_b])
-            plt.xlabel('amount of primary phase (normalized)',fontsize=9)
-            plt.ylabel('amount of secondary phase (normalized)',fontsize=9)
-            plt.title('corr glass amount, solo',fontsize=10)
-
-            plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.35))
-
-
-            ax1=fig.add_subplot(2,4,2, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_glass_amount_d[:,any_min_sel[j],0],corr_glass_amount_d[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-                plt.plot(corr_ol_amount_d[:,any_min_sel[j],0],corr_ol_amount_d[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass amount, d',fontsize=10)
-
-
-            ax1=fig.add_subplot(2,4,3, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_glass_amount_a[:,any_min_sel[j],0],corr_glass_amount_a[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-                plt.plot(corr_ol_amount_a[:,any_min_sel[j],0],corr_ol_amount_a[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass amount, a',fontsize=10)
-
-
-            ax1=fig.add_subplot(2,4,4, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_glass_amount_b[:,any_min_sel[j],0],corr_glass_amount_b[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-                plt.plot(corr_ol_amount_b[:,any_min_sel[j],0],corr_ol_amount_b[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr glass amount, b',fontsize=10)
-
-
-
-
-
-
-
-
-
-            # COLUMN 2 - OLIVINE AMOUNT
-
-
-            ax1=fig.add_subplot(2,4,5, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_ol_amount[:,any_min_sel[j],0],corr_ol_amount[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr ol amount, solo',fontsize=10)
-
-            #plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
-
-
-            ax1=fig.add_subplot(2,4,6, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_ol_amount_d[:,any_min_sel[j],0],corr_ol_amount_d[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr ol amount, d',fontsize=10)
-
-
-            ax1=fig.add_subplot(2,4,7, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_ol_amount_a[:,any_min_sel[j],0],corr_ol_amount_a[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr ol amount, a',fontsize=10)
-
-
-            ax1=fig.add_subplot(2,4,8, frameon=True, aspect='equal')
-
-            for j in range(len(any_min_sel)):
-                plt.plot(corr_ol_amount_b[:,any_min_sel[j],0],corr_ol_amount_b[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
-            plt.xlim([-0.05,1.05])
-            plt.ylim([-0.05,1.05])
-            plt.title('corr ol amount, b',fontsize=10)
-
-
-
-            plt.subplots_adjust(top=0.90, bottom=0.03,hspace=0.15,left=0.05,right=0.95)
-            plt.savefig(outpath+'jdf_corr_min_x/jdf_'+letter+'_corr_min_x'+str(i+restart)+'.png')
-
-            if i == 50 or i == 49:
-                plt.savefig(outpath+'jdf_corr_min_x/jdf_'+letter+'_corr_min_X_'+str(i+restart)+'.eps')
+            # fig=plt.figure(figsize=(12.0,7.0))
+            # print "jdf_corr_min_x plot"
+            #
+            # amt_lw = 1.0
+            # ls2 = '--'
+            #
+            # xlim_b = 0.05
+            # ylim_b = 0.05
+            #
+            # any_min_sel = [14, 16, 17]
+            #
+            #
+            # # COLUMN 1 - GLASS AMOUNT
+            #
+            # # corr_glass_amount = np.zeros([steps,minNum+1])
+            # # corr_glass_amount_d = np.zeros([steps,minNum+1])
+            # # corr_glass_amount_a = np.zeros([steps,minNum+1])
+            # # corr_glass_amount_b = np.zeros([steps,minNum+1])
+            # # corr_glass_amount[corr_glass_amount==0.0] = -1.0
+            # # corr_glass_amount_d[corr_glass_amount_d==0.0] = -1.0
+            # # corr_glass_amount_a[corr_glass_amount_a==0.0] = -1.0
+            # # corr_glass_amount_b[corr_glass_amount_b==0.0] = -1.0
+            #
+            # ax1=fig.add_subplot(2,4,1, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_glass_amount[:,any_min_sel[j],0],corr_glass_amount[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            #     plt.plot(corr_ol_amount[:,any_min_sel[j],0],corr_ol_amount[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
+            # # plt.plot([0.0-xlim_b,1.1+xlim_b],[1.1+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+            # # plt.plot([0.0-xlim_b,0.9+xlim_b],[0.9+ylim_b,0.0-ylim_b],lw=0.5,linestyle='-',c='#a7a7a7')
+            #
+            # plt.xlim([0.0-xlim_b,1.0+xlim_b])
+            # plt.ylim([0.0-ylim_b,1.0+ylim_b])
+            # plt.xlabel('amount of primary phase (normalized)',fontsize=9)
+            # plt.ylabel('amount of secondary phase (normalized)',fontsize=9)
+            # plt.title('corr glass amount, solo',fontsize=10)
+            #
+            # plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.35))
+            #
+            #
+            # ax1=fig.add_subplot(2,4,2, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_glass_amount_d[:,any_min_sel[j],0],corr_glass_amount_d[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            #     plt.plot(corr_ol_amount_d[:,any_min_sel[j],0],corr_ol_amount_d[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr glass amount, d',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,3, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_glass_amount_a[:,any_min_sel[j],0],corr_glass_amount_a[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            #     plt.plot(corr_ol_amount_a[:,any_min_sel[j],0],corr_ol_amount_a[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr glass amount, a',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,4, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_glass_amount_b[:,any_min_sel[j],0],corr_glass_amount_b[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            #     plt.plot(corr_ol_amount_b[:,any_min_sel[j],0],corr_ol_amount_b[:,any_min_sel[j],1],c=col_sel[j],lw=amt_lw,linestyle=ls2)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr glass amount, b',fontsize=10)
+            #
+            #
+            #
+            #
+            #
+            # # COLUMN 2 - OLIVINE AMOUNT
+            #
+            #
+            # ax1=fig.add_subplot(2,4,5, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_ol_amount[:,any_min_sel[j],0],corr_ol_amount[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, solo',fontsize=10)
+            #
+            # #plt.legend(fontsize=10,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(2.1, 1.45))
+            #
+            #
+            # ax1=fig.add_subplot(2,4,6, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_ol_amount_d[:,any_min_sel[j],0],corr_ol_amount_d[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, d',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,7, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_ol_amount_a[:,any_min_sel[j],0],corr_ol_amount_a[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, a',fontsize=10)
+            #
+            #
+            # ax1=fig.add_subplot(2,4,8, frameon=True, aspect='equal')
+            #
+            # for j in range(len(any_min_sel)):
+            #     plt.plot(corr_ol_amount_b[:,any_min_sel[j],0],corr_ol_amount_b[:,any_min_sel[j],1],label=secondary[any_min_sel[j]],c=col_sel[j],lw=amt_lw)
+            # plt.xlim([-0.05,1.05])
+            # plt.ylim([-0.05,1.05])
+            # plt.title('corr ol amount, b',fontsize=10)
+            #
+            #
+            #
+            # plt.subplots_adjust(top=0.90, bottom=0.03,hspace=0.15,left=0.05,right=0.95)
+            # plt.savefig(outpath+'jdf_corr_min_x/jdf_'+letter+'_corr_min_x'+str(i+restart)+'.png')
+            #
+            # if i == 50 or i == 49:
+            #     plt.savefig(outpath+'jdf_corr_min_x/jdf_'+letter+'_corr_min_X_'+str(i+restart)+'.eps')
 
 
 
