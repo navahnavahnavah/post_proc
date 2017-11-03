@@ -11,6 +11,7 @@ import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.patches import Patch
 import matplotlib.ticker as ticker
+import ternary
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
 plt.rc('xtick', labelsize=10)
@@ -123,8 +124,8 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/v7_2e10/"
-letter = outpath[outpath.index('grid/v7_')+len('grid/v7_'):-1]
+outpath = "../output/revival/summer_coarse_grid/v7_6e10_shift/"
+letter = "6e10"
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
 path = outpath
@@ -1050,7 +1051,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 6
+    chem6 = 5
 
     if chem6 == 6:
 
@@ -2359,6 +2360,50 @@ for i in range(0,steps,1):
 
         if alt_plots == 1:
 
+
+            if not os.path.exists(outpath+'jdf_ternary/'):
+                os.makedirs(outpath+'jdf_ternary/')
+
+            #todo: FIG: jdf_ternary
+            #fig=plt.figure(figsize=(9.0,9.0))
+            print "jdf_ternary"
+
+            # ternary values for explicit phases
+            # K, Mg, Fe
+            tern_size = 10
+            tern_saponite_mg = [[0.0, 1.0, 0.0]]
+            tern_fe_celadonite = [[0.5, 0.5, 0.0]]
+            tern_fe_oxide = [[0.0, 0.0, 1.0]]
+
+
+            fig, tax = ternary.figure(scale=1.0)
+            tax.boundary()
+
+            #points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
+            tax.gridlines(multiple=0.2, color="black")
+            tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
+            tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
+            tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
+            tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
+            tax.set_title("Fe/Mg/K ternary plot")
+            tax.left_axis_label("Fe - Mg")
+            tax.right_axis_label("Mg - K")
+            tax.bottom_axis_label("Fe - K")
+            tax.legend(fontsize=9)
+            tax.clear_matplotlib_ticks()
+            #tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
+
+            tax.get_axes().axis('off')
+
+
+            #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
+            plt.savefig(outpath+"jdf_ternary/jdf_ternary_"+letter+"_"+str(i+restart)+".png")
+
+
+
+
+
+
             if not os.path.exists(outpath+'jdf_alt/'):
                 os.makedirs(outpath+'jdf_alt/')
 
@@ -3477,6 +3522,13 @@ for i in range(0,steps,1):
 
             plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
             plt.savefig(outpath+"jdf_deriv2_sim/jdf_deriv2_sim_"+str(i+restart)+".png")
+
+
+
+
+
+
+
 
 
     plt.close('all')
