@@ -11,6 +11,7 @@ import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.patches import Patch
 import matplotlib.ticker as ticker
+import ternary
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
 plt.rc('xtick', labelsize=11)
@@ -22,7 +23,7 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 #hack: colors
 col = ['#880000', '#ff0000', '#ff7411', '#bddb00', '#159600', '#00ffc2', '#0000ff', '#2f3699','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#00530d', '#d9d9d9', '#e9acff']
 
-plot_col = ['#cf4848', '#fc8800', '#2ab407', '#6aabf7']
+plot_col = ['#940000', '#cf5448', '#fc8800', '#2ab407', '#6aabf7', '#bb43e6']
 
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
@@ -49,10 +50,20 @@ molar_pri = np.array([277.0, 153.0, 158.81, 110.0])
 density_pri = np.array([2.7, 3.0, 3.0, 3.0])
 
 batch_path = "../output/revival/summer_coarse_grid/"
-batch_path_ex = "../output/revival/summer_coarse_grid/v3_1e10/"
+batch_path_ex = "../output/revival/summer_coarse_grid/v7_8e10_shift/"
 
-param_t_diff = np.array([10e10, 5e10, 1e10])
-param_t_diff_string = ['10e10' , '5e10' , '1e10']
+#hack: param_t_diff listed here
+# param_t_diff = np.array([10e10, 5e10, 1e10])
+# param_t_diff_string = ['10e10' , '5e10' , '1e10']
+param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
+param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
+plot_strings = ['10e10', '8e10', '6e10', '4e10', '2e10', 'solo']
+
+
+# param_t_diff = np.array([8e10, 6e10, 4e10, 2e10, 1e10])
+# param_t_diff_string = ['8e10' , '6e10' , '4e10', '2e10', '1e10']
+#
+# plot_strings = ['8e10', '6e10', '4e10', '2e10', '1e10', 'solo']
 
 
 
@@ -64,7 +75,7 @@ celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 50
+max_step = 40
 
 xCell = x0[1::cellx]
 yCell = y0[0::celly]
@@ -236,20 +247,42 @@ fe_col_mean = np.zeros([len(xCell),steps,len(param_t_diff_string)+1])
 fe_col_mean_top_half = np.zeros([len(xCell),steps,len(param_t_diff_string)+1])
 fe_col_mean_top_cell = np.zeros([len(xCell),steps,len(param_t_diff_string)+1])
 
+
+ternK = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternK_a = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternK_b = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternK_d = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+
+ternMg = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternMg_a = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternMg_b = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternMg_d = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+
+ternFe = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternFe_a = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternFe_b = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+ternFe_d = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string)])
+
+tern_list = np.zeros([len(yCell)*len(xCell),steps,3,len(param_t_diff_string)])
+tern_list_a = np.zeros([len(yCell)*len(xCell),steps,3,len(param_t_diff_string)])
+tern_list_b = np.zeros([len(yCell)*len(xCell),steps,3,len(param_t_diff_string)])
+tern_list_d = np.zeros([len(yCell)*len(xCell),steps,3,len(param_t_diff_string)])
+
 #todo: loop through param_t_diff
 for ii in range(len(param_t_diff)):
     print " "
     print " "
     print "param:" , param_t_diff_string[ii]
 
-    ii_path = batch_path + "v3_" + param_t_diff_string[ii] + "/"
+    #todo: ii_path goes here!!
+    ii_path = batch_path + "v7_" + param_t_diff_string[ii] + "_shift/"
     #print "ii_path: " , ii_path
 
 
 
     any_min = []
 
-    #todo: load in chem data
+    #hack: load in chem data
     if ii == 0:
 
         ch_path = ii_path + 'ch_s/'
@@ -516,6 +549,83 @@ for ii in range(len(param_t_diff)):
 
 
 
+        #hack: ternary K, Fe, Mg processing
+        for k in range(len(yCell)):
+            for j in range(len(xCell)):
+
+                ternK[k,j,i,ii] = 1.0*secStep[k,j,14,i,ii]
+                ternFe[k,j,i,ii] = 1.0*secStep[k,j,14,i,ii] + 2.0*secStep[k,j,22,i,ii] + 2.0*secStep[k,j,17,i,ii] + 1.0*secStep[k,j,5,i,ii]
+                ternMg[k,j,i,ii] = 0.165*secStep[k,j,22,i,ii] + 5.0*secStep[k,j,31,i,ii] + 3.0*secStep[k,j,11,i,ii] + 3.165*secStep[k,j,2,i,ii]
+
+                ternK_d[k,j,i,ii] = 1.0*secStep_d[k,j,14,i,ii]
+                ternFe_d[k,j,i,ii] = 1.0*secStep_d[k,j,14,i,ii] + 2.0*secStep_d[k,j,22,i,ii] + 2.0*secStep_d[k,j,17,i,ii] + 1.0*secStep_d[k,j,5,i,ii]
+                ternMg_d[k,j,i,ii] = 0.165*secStep_d[k,j,22,i,ii] + 5.0*secStep_d[k,j,31,i,ii] + 3.0*secStep_d[k,j,11,i,ii] + 3.165*secStep_d[k,j,2,i,ii]
+
+                ternK_a[k,j,i,ii] = 1.0*secStep_a[k,j,14,i,ii]
+                ternFe_a[k,j,i,ii] = 1.0*secStep_a[k,j,14,i,ii] + 2.0*secStep_a[k,j,22,i,ii] + 2.0*secStep_a[k,j,17,i,ii] + 1.0*secStep_a[k,j,5,i,ii]
+                ternMg_a[k,j,i,ii] = 0.165*secStep_a[k,j,22,i,ii] + 5.0*secStep_a[k,j,31,i,ii] + 3.0*secStep_a[k,j,11,i,ii] + 3.165*secStep_a[k,j,2,i,ii]
+
+                ternK_b[k,j,i,ii] = 1.0*secStep_b[k,j,14,i,ii]
+                ternFe_b[k,j,i,ii] = 1.0*secStep_b[k,j,14,i,ii] + 2.0*secStep_b[k,j,22,i,ii] + 2.0*secStep_b[k,j,17,i,ii] + 1.0*secStep_b[k,j,5,i,ii]
+                ternMg_b[k,j,i,ii] = 0.165*secStep_b[k,j,22,i,ii] + 5.0*secStep_b[k,j,31,i,ii] + 3.0*secStep_b[k,j,11,i,ii] + 3.165*secStep_b[k,j,2,i,ii]
+
+        # ternK = 39.0*ternK
+        # ternK_d = 39.0*ternK_d
+        # ternK_a = 39.0*ternK_a
+        # ternK_b = 39.0*ternK_b
+        #
+        # ternFe = 55.0*ternFe
+        # ternFe_d = 55.0*ternFe_d
+        # ternFe_a = 55.0*ternFe_a
+        # ternFe_b = 55.0*ternFe_b
+        #
+        # ternMg = 23.0*ternMg
+        # ternMg_d = 23.0*ternMg_d
+        # ternMg_a = 23.0*ternMg_a
+        # ternMg_b = 23.0*ternMg_b
+
+        tern_count = 0
+        for k in range(len(yCell)):
+            for j in range(len(xCell)):
+                tern_list[tern_count,i,0,ii] = 39.0*ternK[k,j,i,ii]
+                tern_list[tern_count,i,1,ii] = 23.0*ternMg[k,j,i,ii]
+                tern_list[tern_count,i,2,ii] = 56.0*ternFe[k,j,i,ii]
+                #tern_list[tern_count,i,:,ii] = tern_list[tern_count,i,:,ii]/np.sum(tern_list[tern_count,i,:,ii])
+                if np.max(tern_list[tern_count,i,:,ii]) > 0.0:
+                    tern_list[tern_count,i,:,ii] = tern_list[tern_count,i,:,ii]/(1.0*tern_list[tern_count,i,0,ii] + 1.0*tern_list[tern_count,i,1,ii] + 1.0*tern_list[tern_count,i,2,ii])
+                    if i == 20:
+                        print "S" , tern_list[tern_count,i,:,ii]
+
+                tern_list_d[tern_count,i,0,ii] = 39.0*ternK_d[k,j,i,ii]
+                tern_list_d[tern_count,i,1,ii] = 23.0*ternMg_d[k,j,i,ii]
+                tern_list_d[tern_count,i,2,ii] = 56.0*ternFe_d[k,j,i,ii]
+                #tern_list_d[tern_count,i,:,ii] = tern_list_d[tern_count,i,:,ii]/np.sum(tern_list_d[tern_count,i,:,ii])
+                if np.max(tern_list_d[tern_count,i,:,ii]) > 0.0:
+                    tern_list_d[tern_count,i,:,ii] = tern_list_d[tern_count,i,:,ii]/(1.0*tern_list_d[tern_count,i,0,ii] + 1.0*tern_list_d[tern_count,i,1,ii] + 1.0*tern_list_d[tern_count,i,2,ii])
+                    if i == 20:
+                        print "D" , tern_list_d[tern_count,i,:,ii]
+
+                tern_list_a[tern_count,i,0,ii] = 39.0*ternK_a[k,j,i,ii]
+                tern_list_a[tern_count,i,1,ii] = 23.0*ternMg_a[k,j,i,ii]
+                tern_list_a[tern_count,i,2,ii] = 56.0*ternFe_a[k,j,i,ii]
+                #tern_list_a[tern_count,i,:,ii] = tern_list_a[tern_count,i,:,ii]/np.sum(tern_list_a[tern_count,i,:,ii])
+                if np.max(tern_list_a[tern_count,i,:,ii]) > 0.0:
+                    tern_list_a[tern_count,i,:,ii] = tern_list_a[tern_count,i,:,ii]/(1.0*tern_list_a[tern_count,i,0,ii] + 1.0*tern_list_a[tern_count,i,1,ii] + 1.0*tern_list_a[tern_count,i,2,ii])
+                    if i == 20:
+                        print "A" , tern_list_a[tern_count,i,:,ii]
+
+                tern_list_b[tern_count,i,0,ii] = 39.0*ternK_b[k,j,i,ii]
+                tern_list_b[tern_count,i,1,ii] = 23.0*ternMg_b[k,j,i,ii]
+                tern_list_b[tern_count,i,2,ii] = 56.0*ternFe_b[k,j,i,ii]
+                #tern_list_b[tern_count,i,:,ii] = tern_list_b[tern_count,i,:,ii]/np.sum(tern_list_b[tern_count,i,:,ii])
+                if np.max(tern_list_b[tern_count,i,:,ii]) > 0.0:
+                    tern_list_b[tern_count,i,:,ii] = tern_list_b[tern_count,i,:,ii]/(1.0*tern_list_b[tern_count,i,0,ii] + 1.0*tern_list_b[tern_count,i,1,ii] + 1.0*tern_list_b[tern_count,i,2,ii])
+                    if i == 20:
+                        print "B" , tern_list_b[tern_count,i,:,ii]
+
+                tern_count = tern_count + 1
+
+
 
 
         #hack: sec binary
@@ -600,19 +710,25 @@ for ii in range(len(param_t_diff)):
                 above_zero_ind = np.nonzero(alt_vol_temp[:,j])
 
                 for j in range(len(xCell)):
+
                     feo_col_mean_temp[j] = 0.0
+                    # feo glass
+                    # feo_col_mean_temp[j] = 0.149*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
                     # feo olivine
-                    feo_col_mean_temp[j] = feo_col_mean_temp[j] + 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])
-                    # feo pyrite
-                    feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                    feo_col_mean_temp[j] = feo_col_mean_temp[j] + 0.166*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                    # # feo pyrite
+                    # feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                     # feo fe-celad
                     feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,14])*(density[14]/molar[14])
 
+
                     feot_col_mean_temp[j] = 0.0
                     # feot goethite
-                    feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
-                    # feot pyrite
-                    feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                    feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                    # feo goethite
+                    feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+                    # # feot pyrite
+                    # feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                     # feot hematite
                     feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
                     # feot nont-mg
@@ -621,8 +737,6 @@ for ii in range(len(param_t_diff)):
                     feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,15])*(density[15]/molar[15])
                     # feot nont-na
                     feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,12])*(density[12]/molar[12])
-                    # feot glass
-                    feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
 
                     fe_col_mean[j,i,len(param_t_diff_string)] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
 
@@ -638,18 +752,23 @@ for ii in range(len(param_t_diff)):
 
             for j in range(len(xCell)):
                 feo_col_mean_temp[j] = 0.0
+                # feo glass
+                # feo_col_mean_temp[j] = 0.149*np.mean(glass_temp[above_zero_ind,j])*(density_pri[0]/molar_pri[0])
                 # feo olivine
-                feo_col_mean_temp[j] = feo_col_mean_temp[j] + 1.0*np.mean(ol_temp[above_zero_ind,j])*(density_pri[2]/molar_pri[2])
-                # feo pyrite
-                feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                feo_col_mean_temp[j] = feo_col_mean_temp[j] + 0.166*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                # # feo pyrite
+                # feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feo fe-celad
                 feo_col_mean_temp[j] = feo_col_mean_temp[j] + np.mean(secStep_temp[above_zero_ind,j,14])*(density[14]/molar[14])
 
+
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
-                feot_col_mean_temp[j] = 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
-                # feot pyrite
-                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
+                feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                # feo goethite
+                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
+                # # feot pyrite
+                # feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot hematite
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,17])*(density[17]/molar[17])
                 # feot nont-mg
@@ -658,10 +777,13 @@ for ii in range(len(param_t_diff)):
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,15])*(density[15]/molar[15])
                 # feot nont-na
                 feot_col_mean_temp[j] = feot_col_mean_temp[j] + 2.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,12])*(density[12]/molar[12])
-                # feot glass
-                feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.149*2.0*0.8998*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
 
                 fe_col_mean[j,i,ii] = feo_col_mean_temp[j] / (feo_col_mean_temp[j] + feot_col_mean_temp[j])
+
+
+
+
+
 
 
 
@@ -671,7 +793,7 @@ for ii in range(len(param_t_diff)):
 #todo: FIGURE: jdf_alt_plot, NXF
 fig=plt.figure(figsize=(10.0,10.0))
 
-plot_strings = ['1e10', '5e10', '10e10', 'solo']
+
 
 
 nsites = 9
@@ -723,7 +845,7 @@ plt.ylabel('Alteration volume $\%$')
 
 
 
-#todo: FIGURE: FeO / FeOt plot, NXF
+#todo: FIGURE: FeO / FeOt plot
 # FeO / FeOt data
 fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
 lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
@@ -762,7 +884,8 @@ plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 
 plt.xlim([0.0, 90000.0])
 plt.xlabel('Distance along transect [km]', fontsize=9)
 
-plt.yticks([0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80])
+#plt.yticks([0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80])
+plt.yticks([0.6, 0.65, 0.7, 0.75, 0.80])
 #plt.ylim([0.6, 0.8])
 plt.ylim([0.6, 0.8])
 plt.ylabel('FeO / FeOt')
@@ -770,6 +893,7 @@ plt.ylabel('FeO / FeOt')
 
 #plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
 plt.savefig(batch_path+"the_batch_alt.png")
+plt.savefig(batch_path+"the_batch_alt.eps")
 
 
 
@@ -781,7 +905,7 @@ fig=plt.figure(figsize=(9.0,7.0))
 site_locations = site_locations + 5000.0
 
 # mindex = [2,3,5,14,17,22,26,30,31]
-mindex = [2,3,5,17,22,26,30,31]
+mindex = [2,14,5,17,13,26,16,31]
 data_col = '#222222'
 
 site_binary = np.zeros([9,minNum])
@@ -789,8 +913,8 @@ site_binary = np.zeros([9,minNum])
 # mg sap
 site_binary[:,2] = np.array([None, 1.0, None, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 
-# celadonite
-site_binary[:,3] = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+# # celadonite
+# site_binary[:,14] = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 
 # pyrite
 site_binary[:,5] = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
@@ -883,6 +1007,86 @@ plt.title('dual vs solo')
 
 plt.subplots_adjust( wspace=0.05 , bottom=0.05, top=0.95, left=0.15, right=0.975)
 plt.savefig(batch_path+"the_batch_binary.png")
+
+
+
+
+
+
+#todo: FIGURE: ternary K, Fe, Mg
+fig=plt.figure(figsize=(10.0,10.0))
+
+
+# ternary values for explicit phases
+# K, Mg, Fe
+tern_size = 10
+tern_size_small = 5
+tern_saponite_mg = [[0.0, 1.0, 0.0]]
+tern_fe_celadonite = [[0.5, 0.0, 0.5]]
+tern_fe_oxide = [[0.0, 0.0, 1.0]]
+
+ax=fig.add_subplot(1, 2, 1)
+fig, tax = ternary.figure(scale=1.0)
+tax.boundary()
+
+#points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
+tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
+tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
+#tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
+for ii in range(len(param_t_diff)):
+#for ii in [3]:
+    tax.plot(tern_list[:,20,:,ii], color='b', markersize=tern_size_small*2, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii])
+    #tax.plot(tern_list_d[:,20,:,ii], color='none', markersize=tern_size_small, markeredgecolor=plot_col[ii], marker='s', linewidth=0.0)
+    tax.plot(tern_list_a[:,20,:,ii], color='r', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' a')
+    tax.plot(tern_list_b[:,20,:,ii], color='g', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' b')
+tax.set_title("Fe/Mg/K ternary plot")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,)
+tax.clear_matplotlib_ticks()
+#tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
+
+tax.get_axes().axis('off')
+
+
+ax=fig.add_subplot(1, 2, 2)
+fig, tax = ternary.figure(scale=1.0)
+tax.boundary()
+
+#points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
+tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
+tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
+#tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
+for ii in range(len(param_t_diff)):
+#for ii in [3]:
+    tax.plot(tern_list[:,20,:,ii], color='b', markersize=tern_size_small*2, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii])
+    #tax.plot(tern_list_d[:,20,:,ii], color='none', markersize=tern_size_small, markeredgecolor=plot_col[ii], marker='s', linewidth=0.0)
+    tax.plot(tern_list_a[:,20,:,ii], color='r', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' a')
+    tax.plot(tern_list_b[:,20,:,ii], color='g', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' b')
+tax.set_title("Fe/Mg/K ternary plot")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,)
+tax.clear_matplotlib_ticks()
+#tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
+
+tax.get_axes().axis('off')
+
+plt.savefig(batch_path+"the_ternary_"+str(max_step)+".png")
+
+
+
+
+other_step = 39
+
+
+
 
 
 #todo: FINAL FIG: all_secondary

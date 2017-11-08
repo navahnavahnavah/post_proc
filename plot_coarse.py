@@ -124,8 +124,8 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/v7_6e10_shift/"
-letter = "6e10"
+outpath = "../output/revival/summer_coarse_grid/v7_10e10_shift/"
+letter = "10e10"
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
 path = outpath
@@ -1051,7 +1051,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 5
+    chem6 = 6
 
     if chem6 == 6:
 
