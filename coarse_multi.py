@@ -49,15 +49,15 @@ molar_pri = np.array([277.0, 153.0, 158.81, 110.0])
 
 density_pri = np.array([2.7, 3.0, 3.0, 3.0])
 
+#hack: path stuff
 batch_path = "../output/revival/summer_coarse_grid/"
 batch_path_ex = "../output/revival/summer_coarse_grid/v7_8e10_shift/"
+prefix_string = "v7_"
+suffix_string = "_shift/"
 
 #hack: param_t_diff listed here
 # param_t_diff = np.array([10e10, 5e10, 1e10])
 # param_t_diff_string = ['10e10' , '5e10' , '1e10']
-param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
-param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
-plot_strings = ['10e10', '8e10', '6e10', '4e10', '2e10', 'solo']
 
 
 # param_t_diff = np.array([8e10, 6e10, 4e10, 2e10, 1e10])
@@ -65,17 +65,26 @@ plot_strings = ['10e10', '8e10', '6e10', '4e10', '2e10', 'solo']
 #
 # plot_strings = ['8e10', '6e10', '4e10', '2e10', '1e10', 'solo']
 
+param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
+param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
+plot_strings = ['10e10 (least mixing)', '8e10', '6e10', '4e10', '2e10 (most mixing)', 'solo']
+
+# param_t_diff = np.array([8e10, 6e10, 4e10, 2e10])
+# param_t_diff_string = ['8e10' , '6e10' , '4e10', '2e10']
+# plot_strings = ['8e10 (least mixing ish)', '6e10', '4e10', '2e10 (most mixing)', 'solo']
+
 
 
 x0 = np.loadtxt(batch_path_ex + 'x.txt',delimiter='\n')
 y0 = np.loadtxt(batch_path_ex + 'y.txt',delimiter='\n')
 
+#hack: params here
 cellx = 90
 celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 40
+max_step = 48
 
 xCell = x0[1::cellx]
 yCell = y0[0::celly]
@@ -274,8 +283,8 @@ for ii in range(len(param_t_diff)):
     print " "
     print "param:" , param_t_diff_string[ii]
 
-    #todo: ii_path goes here!!
-    ii_path = batch_path + "v7_" + param_t_diff_string[ii] + "_shift/"
+    # ii_path goes here
+    ii_path = batch_path + prefix_string + param_t_diff_string[ii] + suffix_string
     #print "ii_path: " , ii_path
 
 
@@ -593,8 +602,8 @@ for ii in range(len(param_t_diff)):
                 #tern_list[tern_count,i,:,ii] = tern_list[tern_count,i,:,ii]/np.sum(tern_list[tern_count,i,:,ii])
                 if np.max(tern_list[tern_count,i,:,ii]) > 0.0:
                     tern_list[tern_count,i,:,ii] = tern_list[tern_count,i,:,ii]/(1.0*tern_list[tern_count,i,0,ii] + 1.0*tern_list[tern_count,i,1,ii] + 1.0*tern_list[tern_count,i,2,ii])
-                    if i == 20:
-                        print "S" , tern_list[tern_count,i,:,ii]
+                    # if i == 20:
+                    #     print "S" , tern_list[tern_count,i,:,ii]
 
                 tern_list_d[tern_count,i,0,ii] = 39.0*ternK_d[k,j,i,ii]
                 tern_list_d[tern_count,i,1,ii] = 23.0*ternMg_d[k,j,i,ii]
@@ -602,8 +611,8 @@ for ii in range(len(param_t_diff)):
                 #tern_list_d[tern_count,i,:,ii] = tern_list_d[tern_count,i,:,ii]/np.sum(tern_list_d[tern_count,i,:,ii])
                 if np.max(tern_list_d[tern_count,i,:,ii]) > 0.0:
                     tern_list_d[tern_count,i,:,ii] = tern_list_d[tern_count,i,:,ii]/(1.0*tern_list_d[tern_count,i,0,ii] + 1.0*tern_list_d[tern_count,i,1,ii] + 1.0*tern_list_d[tern_count,i,2,ii])
-                    if i == 20:
-                        print "D" , tern_list_d[tern_count,i,:,ii]
+                    # if i == 20:
+                    #     print "D" , tern_list_d[tern_count,i,:,ii]
 
                 tern_list_a[tern_count,i,0,ii] = 39.0*ternK_a[k,j,i,ii]
                 tern_list_a[tern_count,i,1,ii] = 23.0*ternMg_a[k,j,i,ii]
@@ -611,8 +620,8 @@ for ii in range(len(param_t_diff)):
                 #tern_list_a[tern_count,i,:,ii] = tern_list_a[tern_count,i,:,ii]/np.sum(tern_list_a[tern_count,i,:,ii])
                 if np.max(tern_list_a[tern_count,i,:,ii]) > 0.0:
                     tern_list_a[tern_count,i,:,ii] = tern_list_a[tern_count,i,:,ii]/(1.0*tern_list_a[tern_count,i,0,ii] + 1.0*tern_list_a[tern_count,i,1,ii] + 1.0*tern_list_a[tern_count,i,2,ii])
-                    if i == 20:
-                        print "A" , tern_list_a[tern_count,i,:,ii]
+                    # if i == 20:
+                    #     print "A" , tern_list_a[tern_count,i,:,ii]
 
                 tern_list_b[tern_count,i,0,ii] = 39.0*ternK_b[k,j,i,ii]
                 tern_list_b[tern_count,i,1,ii] = 23.0*ternMg_b[k,j,i,ii]
@@ -620,8 +629,8 @@ for ii in range(len(param_t_diff)):
                 #tern_list_b[tern_count,i,:,ii] = tern_list_b[tern_count,i,:,ii]/np.sum(tern_list_b[tern_count,i,:,ii])
                 if np.max(tern_list_b[tern_count,i,:,ii]) > 0.0:
                     tern_list_b[tern_count,i,:,ii] = tern_list_b[tern_count,i,:,ii]/(1.0*tern_list_b[tern_count,i,0,ii] + 1.0*tern_list_b[tern_count,i,1,ii] + 1.0*tern_list_b[tern_count,i,2,ii])
-                    if i == 20:
-                        print "B" , tern_list_b[tern_count,i,:,ii]
+                    # if i == 20:
+                    #     print "B" , tern_list_b[tern_count,i,:,ii]
 
                 tern_count = tern_count + 1
 
@@ -892,8 +901,8 @@ plt.ylabel('FeO / FeOt')
 
 
 #plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
-plt.savefig(batch_path+"the_batch_alt.png")
-plt.savefig(batch_path+"the_batch_alt.eps")
+plt.savefig(batch_path+prefix_string+"the_batch_alt.png")
+#plt.savefig(batch_path+prefix_string+"the_batch_alt.eps")
 
 
 
@@ -1006,7 +1015,7 @@ plt.title('dual vs solo')
 
 
 plt.subplots_adjust( wspace=0.05 , bottom=0.05, top=0.95, left=0.15, right=0.975)
-plt.savefig(batch_path+"the_batch_binary.png")
+plt.savefig(batch_path+prefix_string+"the_batch_binary.png")
 
 
 
@@ -1014,71 +1023,196 @@ plt.savefig(batch_path+"the_batch_binary.png")
 
 
 #todo: FIGURE: ternary K, Fe, Mg
-fig=plt.figure(figsize=(10.0,10.0))
+fig=plt.figure(figsize=(11.0,5.5))
 
 
 # ternary values for explicit phases
 # K, Mg, Fe
-tern_size = 10
-tern_size_small = 5
+tern_size = 8
+tern_size_small = 10
 tern_saponite_mg = [[0.0, 1.0, 0.0]]
 tern_fe_celadonite = [[0.5, 0.0, 0.5]]
 tern_fe_oxide = [[0.0, 0.0, 1.0]]
+tern_min_col = '#524aaf'
 
-ax=fig.add_subplot(1, 2, 1)
-fig, tax = ternary.figure(scale=1.0)
+# tern_min_kwargs = {'marker': 's', 'color': tern_min_col}
+tern_min_kwargs = dict(color=tern_min_col, marker='s', markersize=tern_size, markeredgecolor='k', linewidth=0.0, zorder=10)
+tern_model_kwargs = dict(marker='.', markersize=tern_size_small, markeredgecolor='none', linewidth=0.0, zorder=10)
+
+ax=fig.add_subplot(2, 4, 1)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
 tax.boundary()
 
-#points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
 tax.gridlines(multiple=0.2, color="black")
-tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
-tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
-tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
-#tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
+tax.plot(tern_saponite_mg, label='sap, clin', **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, label="fe-celadonite", **tern_min_kwargs)
+tax.plot(tern_fe_oxide, label="fe-oxides, pyrite", **tern_min_kwargs)
 for ii in range(len(param_t_diff)):
 #for ii in [3]:
-    tax.plot(tern_list[:,20,:,ii], color='b', markersize=tern_size_small*2, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii])
-    #tax.plot(tern_list_d[:,20,:,ii], color='none', markersize=tern_size_small, markeredgecolor=plot_col[ii], marker='s', linewidth=0.0)
-    tax.plot(tern_list_a[:,20,:,ii], color='r', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' a')
-    tax.plot(tern_list_b[:,20,:,ii], color='g', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' b')
-tax.set_title("Fe/Mg/K ternary plot")
+    tax.plot(tern_list[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii], **tern_model_kwargs)
+tax.set_title("solo")
 tax.left_axis_label("Fe - Mg")
 tax.right_axis_label("Mg - K")
 tax.bottom_axis_label("Fe - K")
-tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,)
+tax.legend(fontsize=9, bbox_to_anchor=(1.45, 1.2), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
 tax.clear_matplotlib_ticks()
-#tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
 
 tax.get_axes().axis('off')
 
 
-ax=fig.add_subplot(1, 2, 2)
-fig, tax = ternary.figure(scale=1.0)
+
+
+ax=fig.add_subplot(2, 4, 2)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
 tax.boundary()
 
-#points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
+
 tax.gridlines(multiple=0.2, color="black")
-tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
-tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
-tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
-#tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
-for ii in range(len(param_t_diff)):
-#for ii in [3]:
-    tax.plot(tern_list[:,20,:,ii], color='b', markersize=tern_size_small*2, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii])
-    #tax.plot(tern_list_d[:,20,:,ii], color='none', markersize=tern_size_small, markeredgecolor=plot_col[ii], marker='s', linewidth=0.0)
-    tax.plot(tern_list_a[:,20,:,ii], color='r', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' a')
-    tax.plot(tern_list_b[:,20,:,ii], color='g', markersize=tern_size_small, markeredgecolor='none', marker='.', linewidth=0.0, label=plot_strings[ii]+' b')
-tax.set_title("Fe/Mg/K ternary plot")
+tax.plot(tern_saponite_mg, **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+tax.plot(tern_fe_oxide, **tern_min_kwargs)
+#for ii in range(len(param_t_diff)):
+for ii in [4]:
+    tax.plot(tern_list_d[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii]+'d', **tern_model_kwargs)
+tax.set_title("dual")
 tax.left_axis_label("Fe - Mg")
 tax.right_axis_label("Mg - K")
 tax.bottom_axis_label("Fe - K")
-tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,)
+#tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,numpoints=1)
 tax.clear_matplotlib_ticks()
-#tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
 
 tax.get_axes().axis('off')
 
-plt.savefig(batch_path+"the_ternary_"+str(max_step)+".png")
+
+
+ax=fig.add_subplot(2, 4, 3)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
+tax.boundary()
+
+
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+tax.plot(tern_fe_oxide, **tern_min_kwargs)
+#for ii in range(len(param_t_diff)):
+for ii in [4]:
+    tax.plot(tern_list_a[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii]+'a', **tern_model_kwargs)
+tax.set_title("a")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+#tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+tax.clear_matplotlib_ticks()
+
+tax.get_axes().axis('off')
+
+
+
+
+
+ax=fig.add_subplot(2, 4, 4)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
+tax.boundary()
+
+
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+tax.plot(tern_fe_oxide, **tern_min_kwargs)
+#for ii in range(len(param_t_diff)):
+for ii in [4]:
+    tax.plot(tern_list_b[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii]+'b', **tern_model_kwargs)
+tax.set_title("b")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+#tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+tax.clear_matplotlib_ticks()
+
+tax.get_axes().axis('off')
+
+
+
+
+
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 4, 6)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
+tax.boundary()
+
+
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+tax.plot(tern_fe_oxide, **tern_min_kwargs)
+#for ii in range(len(param_t_diff)):
+for ii in [0]:
+    tax.plot(tern_list_d[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii]+'d', **tern_model_kwargs)
+tax.set_title("dual")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+#tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+tax.clear_matplotlib_ticks()
+
+tax.get_axes().axis('off')
+
+
+
+ax=fig.add_subplot(2, 4, 7)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
+tax.boundary()
+
+
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+tax.plot(tern_fe_oxide, **tern_min_kwargs)
+#for ii in range(len(param_t_diff)):
+for ii in [0]:
+    tax.plot(tern_list_a[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii]+'a', **tern_model_kwargs)
+tax.set_title("a")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+#tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+tax.clear_matplotlib_ticks()
+
+tax.get_axes().axis('off')
+
+
+
+
+
+ax=fig.add_subplot(2, 4, 8)
+fig, tax = ternary.figure(ax=ax,scale=1.0)
+tax.boundary()
+
+
+tax.gridlines(multiple=0.2, color="black")
+tax.plot(tern_saponite_mg, **tern_min_kwargs)
+tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+tax.plot(tern_fe_oxide, **tern_min_kwargs)
+#for ii in range(len(param_t_diff)):
+for ii in [0]:
+    tax.plot(tern_list_b[:,max_step-1,:,ii], color=plot_col[ii], label=plot_strings[ii]+'b', **tern_model_kwargs)
+tax.set_title("b")
+tax.left_axis_label("Fe - Mg")
+tax.right_axis_label("Mg - K")
+tax.bottom_axis_label("Fe - K")
+#tax.legend(fontsize=8, loc=1, ncol=2,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+tax.clear_matplotlib_ticks()
+
+tax.get_axes().axis('off')
+
+plt.subplots_adjust(bottom=0.07, top=0.93, left=0.03, right=0.975)
+plt.savefig(batch_path+prefix_string+"the_ternary_"+str(max_step)+".png")
 
 
 
