@@ -124,8 +124,9 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-outpath = "../output/revival/summer_coarse_grid/v7_10e10_shift/"
 letter = "10e10"
+outpath = "../output/revival/summer_coarse_grid/v7_kin_"+letter+"/"
+
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
 path = outpath
@@ -177,8 +178,6 @@ perm = np.log10(perm)
 
 
 u_ts = np.zeros([steps])
-
-
 
 
 
@@ -244,7 +243,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
         if cb_min==-10.0 and cb_max==10.0:
             contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),3)
         if cb_max!=10.0:
-            contours = np.linspace(cb_min,cb_max,5)
+            contours = np.linspace(cb_min,cb_max,3)
 
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
         pGlass = plt.pcolor(xCell,yCell,np.zeros(varStep.shape),cmap=cm.rainbow,vmin=contours[0], vmax=contours[-1])
@@ -254,14 +253,14 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
         if xtix==0:
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
-        plt.title(cp_title,fontsize=8)
+        plt.title(cp_title,fontsize=7)
         plt.ylim([-510.0,-320.0])
         if cb==1:
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
-            cbar.ax.tick_params(labelsize=8)
-            plt.title(cb_title,fontsize=8)
+            cbar.ax.tick_params(labelsize=7)
+            plt.title(cb_title,fontsize=7)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
 
@@ -269,7 +268,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
         if cb_min==-10.0 and cb_max==10.0:
             contours = np.linspace(np.min(varMat[varMat>0.0]),np.max(varMat),3)
         if cb_max!=10.0:
-            contours = np.linspace(cb_min,cb_max,5)
+            contours = np.linspace(cb_min,cb_max,3)
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*4,frameon=False)
 
         xCell_t = []
@@ -286,7 +285,7 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
         if xtix==0:
             plt.xticks([])
         plt.ylim([np.min(yCell),0.])
-        plt.title(cp_title,fontsize=8)
+        plt.title(cp_title,fontsize=7)
         plt.ylim([-510.0,-320.0])
 
         pGlass.set_edgecolor("face")
@@ -294,8 +293,8 @@ def chemplot(varMat, varStep, sp1, sp2, sp3, contour_interval, cp_title, xtix=1,
             bbox = ax1.get_position()
             cax = fig.add_axes([bbox.xmin+bbox.width/10.0, bbox.ymin-0.28, bbox.width*0.8, bbox.height*0.13])
             cbar = plt.colorbar(pGlass, cax = cax,orientation='horizontal',ticks=contours[::contour_interval])
-            cbar.ax.tick_params(labelsize=8)
-            plt.title(cb_title,fontsize=8)
+            cbar.ax.tick_params(labelsize=7)
+            plt.title(cb_title,fontsize=7)
             cbar.solids.set_rasterized(True)
             cbar.solids.set_edgecolor("face")
     return chemplot
@@ -586,7 +585,7 @@ if chem == 1:
     alk0 = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-    glass0_p = glass0/(np.max(glass0))
+    #glass0_p = glass0/(np.max(glass0))
     togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     phiCalcIn0 = np.loadtxt(ch_path + 'z_phiCalc.txt')
     ph_fix0 = np.loadtxt(ch_path + 'z_ph_fix.txt')
@@ -594,12 +593,12 @@ if chem == 1:
     # speed2_0 = np.loadtxt(ch_path + 'z_speed_2.txt')
     # speed3_0 = np.loadtxt(ch_path + 'z_speed_3.txt')
 
-    if d_only == 1:
-        ch_path = path + 'ch_b/'
+    # if d_only == 1:
+    #     ch_path = path + 'ch_b/'
     ol0 = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0 = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-    pri_total0 = glass0 + ol0 + pyr0 + plag0
+    pri_total0 = glass0[:,:]# + ol0 + pyr0 + plag0
 
     #pri_total0 = pri_total0/np.max(pri_total0)
 
@@ -631,12 +630,12 @@ if chem == 1:
     alk0_a = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_a = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_a = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-    glass0_p_a = glass0_a/(np.max(glass0_a))
+    #glass0_p_a = glass0_a/(np.max(glass0_a))
     ol0_a = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0_a = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_a = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
     phiCalcIn0_a = np.loadtxt(ch_path + 'z_phiCalc.txt')
-    pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
+    pri_total0_a = glass0_a[:,:]# + ol0_a + pyr0_a + plag0_a
     ph_fix0_a = np.loadtxt(ch_path + 'z_ph_fix.txt')
     #pri_total0_a = pri_total0_a/np.max(pri_total0_a)
     # speed1_0_a = np.loadtxt(ch_path + 'z_speed_1.txt')
@@ -672,11 +671,11 @@ if chem == 1:
     alk0_b = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_b = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_b = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-    glass0_p_b = glass0_b#/(np.max(glass0_b))
+    #glass0_p_b = glass0_b#/(np.max(glass0_b))
     ol0_b = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_b = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-    pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
+    pri_total0_b = glass0_b[:,:]# + ol0_b + pyr0_b + plag0_b
     ph_fix0_b = np.loadtxt(ch_path + 'z_ph_fix.txt')
     #pri_total0_b = pri_total0_b/np.max(pri_total0_b)
     # speed1_0_b = np.loadtxt(ch_path + 'z_speed_1.txt')
@@ -712,11 +711,11 @@ if chem == 1:
     alk0_d = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_d = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_d = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-    glass0_p_d = glass0_d/(np.max(glass0_d))
+    #glass0_p_d = glass0_d/(np.max(glass0_d))
     ol0_d = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0_d = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
     plag0_d = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-    pri_total0_d = glass0_d + ol0_d + pyr0_d + plag0_d
+    pri_total0_d = glass0_d[:,:]# + ol0_d + pyr0_d + plag0_d
     #pri_total0_d = pri_total0_d/np.max(pri_total0_d)
 
     print " "
@@ -827,7 +826,7 @@ for i in range(0,steps,1):
         cl = cut_chem(cl0,i)
         al = cut_chem(al0,i)
         glass = cut_chem(glass0,i)
-        glass_p = cut_chem(glass0_p,i)
+        #glass_p = cut_chem(glass0_p,i)
         togg = cut_chem(togg0,i)
         alt_vol = cut_chem(alt_vol0,i)
         pri_total = cut_chem(pri_total0,i)
@@ -888,7 +887,7 @@ for i in range(0,steps,1):
         cl_a = cut_chem(cl0_a,i)
         al_a = cut_chem(al0_a,i)
         glass_a = cut_chem(glass0_a,i)
-        glass_p_a = cut_chem(glass0_p_a,i)
+        #glass_p_a = cut_chem(glass0_p_a,i)
         alt_vol_a = cut_chem(alt_vol0_a,i)
         pri_total_a = cut_chem(pri_total0_a,i)
         secVol_a = cut_chem(secVol0_a,i)
@@ -947,7 +946,7 @@ for i in range(0,steps,1):
         cl_b = cut_chem(cl0_b,i)
         al_b = cut_chem(al0_b,i)
         glass_b = cut_chem(glass0_b,i)
-        glass_p_b = cut_chem(glass0_p_b,i)
+        #glass_p_b = cut_chem(glass0_p_b,i)
         alt_vol_b = cut_chem(alt_vol0_b,i)
         pri_total_b = cut_chem(pri_total0_b,i)
         secVol_b = cut_chem(secVol0_b,i)
@@ -1006,7 +1005,7 @@ for i in range(0,steps,1):
         cl_d = cut_chem(cl0_d,i)
         al_d = cut_chem(al0_d,i)
         glass_d = cut_chem(glass0_d,i)
-        glass_p_d = cut_chem(glass0_p_d,i)
+        #glass_p_d = cut_chem(glass0_p_d,i)
         alt_vol_d = cut_chem(alt_vol0_d,i)
         pri_total_d = cut_chem(pri_total0_d,i)
         secVol_d = cut_chem(secVol0_d,i)
@@ -1068,8 +1067,8 @@ for i in range(0,steps,1):
 
             print "jdf_sol_block"
             #todo: FIGURE: jdf_sol_block
-            fig=plt.figure(figsize=(17.0,7.0))
-            plt.subplots_adjust( wspace=0.03, bottom=0.1, top=0.97, left=0.01, right=0.99)
+            fig=plt.figure(figsize=(13.0,4.75))
+            plt.subplots_adjust( wspace=0.1, bottom=0.125, top=0.97, left=0.01, right=0.99)
 
 
             # # col 1
@@ -1396,7 +1395,153 @@ for i in range(0,steps,1):
                 chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'chamber b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
-            plt.savefig(outpath+'jdf_block_sec/jdf_'+letter+'_block_sec_'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_block_sec/jdf_'+letter+'_block_sec_'+str(i+restart)+'.png',bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+            # if not os.path.exists(outpath+'jdf_block_roc/'):
+            #     os.makedirs(outpath+'jdf_block_roc/')
+            #
+            #
+            #
+            # #todo: FIGURE: jdf_roc_block
+            # print "jdf_roc_block"
+            #
+            # fig=plt.figure(figsize=(14.75,7.4))
+            # plt.subplots_adjust( wspace=0.05, bottom=0.05, top=0.97, left=0.01, right=0.99)
+            #
+            # the_list = len(any_min)
+            # if len(any_min) > 24:
+            #     the_list = 24
+            #
+            # for am in range(the_list):
+            #
+            #     if am < 8:
+            #         am_p = am
+            #         am_pp = 2*am+1
+            #         am_ppp = 2*(am-1)+1
+            #     if am >= 8:
+            #         am_p = 32+(am-8)
+            #         am_pp = 64 + 2*(am-8)+1
+            #         am_ppp = 80 + 2*(am-7)
+            #     if am >= 16:
+            #         am_p = 64+(am-16)
+            #         am_pp = 112 + 2*(am-8)+1
+            #         am_ppp = 80 + 2*(am-7)
+            #
+            #
+            #     # plt_s = secMat[:,:,any_min[am]]
+            #     # plt_a = secMat_a[:,:,any_min[am]]
+            #     # plt_b = secMat_b[:,:,any_min[am]]
+            #     # plt_d = secMat_d[:,:,any_min[am]]
+            #     plt_s = dsecMat[:,:,any_min[am]]
+            #     plt_a = dsecMat_a[:,:,any_min[am]]
+            #     plt_b = dsecMat_b[:,:,any_min[am]]
+            #     plt_d = dsecMat_d[:,:,any_min[am]]
+            #     plt_ss = dsecStep[:,:,any_min[am]]
+            #     plt_aa = dsecStep_a[:,:,any_min[am]]
+            #     plt_bb = dsecStep_b[:,:,any_min[am]]
+            #     plt_dd = dsecStep_d[:,:,any_min[am]]
+            #
+            #     c_min = 0.0
+            #     all_ch = [np.max(plt_s), np.max(plt_a), np.max(plt_b), np.max(plt_d)]
+            #     c_max = np.max(all_ch)
+            #
+            #     chemplot24(plt_s, plt_ss, 11, 8, 1+am_p, 1, 'solo roc', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
+            #     chemplot24(plt_d, plt_dd, 11, 8, 9+am_p, 1, 'dual roc', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot24(plt_a, plt_aa, 11, 16, 32+am_pp, 1, 'chamber a roc', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'chamber b roc', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #
+            #     # if np.any(plt_s > 0.0):
+            #     #     chemplot24(plt_s, plt_ss, 11, 8, 1+am_p, 1, 'solo roc', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
+            #     # if np.any(plt_d > 0.0):
+            #     #     chemplot24(plt_d, plt_dd, 11, 8, 9+am_p, 1, 'dual roc', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     # if np.any(plt_a > 0.0):
+            #     #     chemplot24(plt_a, plt_aa, 11, 16, 32+am_pp, 1, 'chamber a roc', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     # if np.any(plt_b > 0.0):
+            #     #     chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'chamber b roc', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #
+            #
+            # plt.savefig(outpath+'jdf_block_roc/jdf_'+letter+'_block_roc_'+str(i+restart)+'.png',bbox_inches='tight')
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            # if not os.path.exists(outpath+'jdf_block_roc_move/'):
+            #     os.makedirs(outpath+'jdf_block_roc_move/')
+            #
+            #
+            #
+            # #todo: FIGURE: jdf_block_roc_move
+            #
+            # if not np.any(moves == i+1):
+            #     print "jdf_block_roc_move"
+            #
+            #
+            #     fig=plt.figure(figsize=(14.75,7.4))
+            #     plt.subplots_adjust( wspace=0.05, bottom=0.05, top=0.97, left=0.01, right=0.99)
+            #
+            #     the_list = len(any_min)
+            #     if len(any_min) > 24:
+            #         the_list = 24
+            #
+            #     for am in range(the_list):
+            #
+            #         if am < 8:
+            #             am_p = am
+            #             am_pp = 2*am+1
+            #             am_ppp = 2*(am-1)+1
+            #         if am >= 8:
+            #             am_p = 32+(am-8)
+            #             am_pp = 64 + 2*(am-8)+1
+            #             am_ppp = 80 + 2*(am-7)
+            #         if am >= 16:
+            #             am_p = 64+(am-16)
+            #             am_pp = 112 + 2*(am-8)+1
+            #             am_ppp = 80 + 2*(am-7)
+            #
+            #
+            #         # plt_s = secMat[:,:,any_min[am]]
+            #         # plt_a = secMat_a[:,:,any_min[am]]
+            #         # plt_b = secMat_b[:,:,any_min[am]]
+            #         # plt_d = secMat_d[:,:,any_min[am]]
+            #         plt_s = dsecMat[:,:,any_min[am]]
+            #         plt_a = dsecMat_a[:,:,any_min[am]]
+            #         plt_b = dsecMat_b[:,:,any_min[am]]
+            #         plt_d = dsecMat_d[:,:,any_min[am]]
+            #         plt_ss = dsecStep[:,:,any_min[am]]
+            #         plt_aa = dsecStep_a[:,:,any_min[am]]
+            #         plt_bb = dsecStep_b[:,:,any_min[am]]
+            #         plt_dd = dsecStep_d[:,:,any_min[am]]
+            #
+            #         c_min = 0.0
+            #         all_ch = [np.max(plt_s), np.max(plt_a), np.max(plt_b), np.max(plt_d)]
+            #         c_max = np.max(all_ch)
+            #
+            #         chemplot24(plt_s, plt_ss, 11, 8, 1+am_p, 1, 'solo roc MOVE', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title=secondary[any_min[am]])
+            #         chemplot24(plt_d, plt_dd, 11, 8, 9+am_p, 1, 'dual roc MOVE', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #         chemplot24(plt_a, plt_aa, 11, 16, 32+am_pp, 1, 'a roc MOVE', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #         chemplot24(plt_bb, plt_bb, 11, 16, 33+am_pp, 1, 'b roc MOVE', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #
+            #
+            #     plt.savefig(outpath+'jdf_block_roc_move/'+letter+'_block_roc_move_'+str(i+restart)+'.png',bbox_inches='tight')
+            #
+            #
+
 
 
 
@@ -1425,13 +1570,15 @@ for i in range(0,steps,1):
             # plt_bb = pri_total_d
             # plt_dd = pri_total_d
             plt_s = pri_total0/np.max(pri_total0)
-            plt_a = pri_total0_d/np.max(pri_total0_d)
-            plt_b = pri_total0_d/np.max(pri_total0_d)
+            plt_a = pri_total0_a/np.max(pri_total0_a)
+            plt_b = pri_total0_b/np.max(pri_total0_b)
             plt_d = pri_total0_d/np.max(pri_total0_d)
             plt_ss = pri_total/np.max(pri_total)
-            plt_aa = pri_total_d/np.max(pri_total_d)
-            plt_bb = pri_total_d/np.max(pri_total_d)
+            plt_aa = pri_total_a/np.max(pri_total_a)
+            plt_bb = pri_total_b/np.max(pri_total_b)
             plt_dd = pri_total_d/np.max(pri_total_d)
+
+
             all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
             c_min = np.min(all_ch)
             all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
@@ -1445,201 +1592,204 @@ for i in range(0,steps,1):
 
 
 
-            if pri_5_toggle == 1:
+            #if pri_5_toggle == 1:
 
-                # # col 2
-                # plt_s = glass0
-                # plt_a = glass0_a
-                # plt_b = glass0_a
-                # plt_d = glass0_a
-                # plt_ss = glass
-                # plt_aa = glass_a
-                # plt_bb = glass_a
-                # plt_dd = glass_a
-                plt_s = glass0/np.max(glass0)
-                plt_a = glass0_a/np.max(glass0_a)
-                plt_b = glass0_b/np.max(glass0_b)
-                plt_d = glass0_d/np.max(glass0_d)
-
-
-                plt_ss = glass/np.max(glass)
-                plt_aa = glass_a/np.max(glass_a)
-                plt_bb = glass_b/np.max(glass_b)
-                plt_dd = glass_d/np.max(glass_d)
-
-                if pri_toggle[5] == 0:
-                    plt_s[1,1] = min_stand
-                    plt_ss[1,1] = min_stand
-                if pri_toggle_d[5] == 0:
-                    plt_d[1,1] = min_stand
-                    plt_dd[1,1] = min_stand
-                if pri_toggle_a[5] == 0:
-                    plt_a[1,1] = min_stand
-                    plt_aa[1,1] = min_stand
-                if pri_toggle_b[5] == 0:
-                    plt_b[1,1] = min_stand
-                    plt_bb[1,1] = min_stand
+            # # col 2
+            # plt_s = glass0
+            # plt_a = glass0_a
+            # plt_b = glass0_a
+            # plt_d = glass0_a
+            # plt_ss = glass
+            # plt_aa = glass_a
+            # plt_bb = glass_a
+            # plt_dd = glass_a
 
 
 
+            plt_s = glass0/np.max(glass0)
+            plt_a = glass0_a/np.max(glass0_a)
+            plt_b = glass0_b/np.max(glass0_b)
+            plt_d = glass0_d/np.max(glass0_d)
 
 
-                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.min(all_ch[all_ch>min_stand])
-                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-                c_max = np.max(all_ch)
+            plt_ss = glass/np.max(glass)
+            plt_aa = glass_a/np.max(glass_a)
+            plt_bb = glass_b/np.max(glass_b)
+            plt_dd = glass_d/np.max(glass_d)
 
-                # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_d[plt_d>0.0])]
-                # c_min = np.min(all_ch)
-                # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_d[plt_d>0.0])]
-                # c_max = np.max(all_ch)
-
-                chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
-                chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            # if pri_toggle[5] == 0:
+            #     plt_s[1,1] = min_stand
+            #     plt_ss[1,1] = min_stand
+            # if pri_toggle_d[5] == 0:
+            #     plt_d[1,1] = min_stand
+            #     plt_dd[1,1] = min_stand
+            # if pri_toggle_a[5] == 0:
+            #     plt_a[1,1] = min_stand
+            #     plt_aa[1,1] = min_stand
+            # if pri_toggle_b[5] == 0:
+            #     plt_b[1,1] = min_stand
+            #     plt_bb[1,1] = min_stand
 
 
 
 
-            if pri_4_toggle == 1:
 
-                # # col 3
-                # plt_s = ol0
-                # plt_a = ol0_b
-                # plt_b = ol0_b
-                # plt_d = ol0_b
-                # plt_ss = ol
-                # plt_aa = ol_b
-                # plt_bb = ol_b
-                # plt_dd = ol_b
-                plt_s = ol0/np.max(ol0)
-                plt_a = ol0_a/np.max(ol0_a)
-                plt_b = ol0_b/np.max(ol0_b)
-                plt_d = ol0_d/np.max(ol0_d)
-                plt_ss = ol/np.max(ol)
-                plt_aa = ol_a/np.max(ol_a)
-                plt_bb = ol_b/np.max(ol_b)
-                plt_dd = ol_d/np.max(ol_d)
+            all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+            c_min = np.min(all_ch)
+            all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+            c_max = np.max(all_ch)
 
-                if pri_toggle[4] == 0:
-                    plt_s[1,1] = min_stand
-                    plt_ss[1,1] = min_stand
-                if pri_toggle_d[4] == 0:
-                    plt_d[1,1] = min_stand
-                    plt_dd[1,1] = min_stand
-                if pri_toggle_a[4] == 0:
-                    plt_a[1,1] = min_stand
-                    plt_aa[1,1] = min_stand
-                if pri_toggle_b[4] == 0:
-                    plt_b[1,1] = min_stand
-                    plt_bb[1,1] = min_stand
+            # all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_d[plt_d>0.0])]
+            # c_min = np.min(all_ch)
+            # all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_d[plt_d>0.0])]
+            # c_max = np.max(all_ch)
 
-
-                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.min(all_ch[all_ch>min_stand])
-                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-                c_max = np.max(all_ch)
-
-                chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
-                chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_a, plt_aa, 7, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_b, plt_bb, 7, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_s, plt_ss, 7, 5, 2, 1, 'glass_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='glass')
+            chemplot(plt_d, plt_dd, 7, 5, 7, 1, 'glass_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_a, plt_aa, 7, 10, 23, 1, 'glass_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            chemplot(plt_bb, plt_bb, 7, 10, 24, 1, 'glass_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
 
 
-            if pri_3_toggle == 1:
 
-                # # col 4
-                # plt_s = pyr0
-                # plt_a = pyr0_b
-                # plt_b = pyr0_b
-                # plt_d = pyr0_b
-                # plt_ss = pyr
-                # plt_aa = pyr_b
-                # plt_bb = pyr_b
-                # plt_dd = pyr_b
-                plt_s = pyr0/np.max(pyr0)
-                plt_a = pyr0_a/np.max(pyr0_a)
-                plt_b = pyr0_b/np.max(pyr0_b)
-                plt_d = pyr0_d/np.max(pyr0_d)
-                plt_ss = pyr/np.max(pyr)
-                plt_aa = pyr_a/np.max(pyr_a)
-                plt_bb = pyr_b/np.max(pyr_b)
-                plt_dd = pyr_d/np.max(pyr_d)
-
-                if pri_toggle[3] == 0:
-                    plt_s[1,1] = min_stand
-                    plt_ss[1,1] = min_stand
-                if pri_toggle_d[3] == 0:
-                    plt_d[1,1] = min_stand
-                    plt_dd[1,1] = min_stand
-                if pri_toggle_a[3] == 0:
-                    plt_a[1,1] = min_stand
-                    plt_aa[1,1] = min_stand
-                if pri_toggle_b[3] == 0:
-                    plt_b[1,1] = min_stand
-                    plt_bb[1,1] = min_stand
-
-
-                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.amin(all_ch[all_ch>min_stand])
-                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-                c_max = np.amax(all_ch[all_ch>0.0])
-                chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
-                chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_b, plt_bb, 7, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-
-
-            if pri_2_toggle == 1:
-
-                # # col 5
-                # plt_s = plag0
-                # plt_a = plag0_b
-                # plt_b = plag0_b
-                # plt_d = plag0_b
-                # plt_ss = plag
-                # plt_aa = plag_b
-                # plt_bb = plag_b
-                # plt_dd = plag_b
-                plt_s = plag0/np.max(plag0)
-                plt_a = plag0_a/np.max(plag0_a)
-                plt_b = plag0_b/np.max(plag0_b)
-                plt_d = plag0_d/np.max(plag0_d)
-                plt_ss = plag/np.max(plag)
-                plt_aa = plag_a/np.max(plag_a)
-                plt_bb = plag_b/np.max(plag_b)
-                plt_dd = plag_d/np.max(plag_d)
-
-
-                if pri_toggle[2] == 0:
-                    plt_s[1,1] = min_stand
-                    plt_ss[1,1] = min_stand
-                if pri_toggle_d[2] == 0:
-                    plt_d[1,1] = min_stand
-                    plt_dd[1,1] = min_stand
-                if pri_toggle_a[2] == 0:
-                    plt_a[1,1] = min_stand
-                    plt_aa[1,1] = min_stand
-                if pri_toggle_b[2] == 0:
-                    plt_b[1,1] = min_stand
-                    plt_bb[1,1] = min_stand
-
-
-                all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
-                c_min = np.min(all_ch[all_ch>min_stand])
-                all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
-                c_max = np.max(all_ch)
-
-                chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
-                chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
-                chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            # if pri_4_toggle == 1:
+            #
+            #     # # col 3
+            #     # plt_s = ol0
+            #     # plt_a = ol0_b
+            #     # plt_b = ol0_b
+            #     # plt_d = ol0_b
+            #     # plt_ss = ol
+            #     # plt_aa = ol_b
+            #     # plt_bb = ol_b
+            #     # plt_dd = ol_b
+            #     plt_s = ol0/np.max(ol0)
+            #     plt_a = ol0_a/np.max(ol0_a)
+            #     plt_b = ol0_b/np.max(ol0_b)
+            #     plt_d = ol0_d/np.max(ol0_d)
+            #     plt_ss = ol/np.max(ol)
+            #     plt_aa = ol_a/np.max(ol_a)
+            #     plt_bb = ol_b/np.max(ol_b)
+            #     plt_dd = ol_d/np.max(ol_d)
+            #
+            #     if pri_toggle[4] == 0:
+            #         plt_s[1,1] = min_stand
+            #         plt_ss[1,1] = min_stand
+            #     if pri_toggle_d[4] == 0:
+            #         plt_d[1,1] = min_stand
+            #         plt_dd[1,1] = min_stand
+            #     if pri_toggle_a[4] == 0:
+            #         plt_a[1,1] = min_stand
+            #         plt_aa[1,1] = min_stand
+            #     if pri_toggle_b[4] == 0:
+            #         plt_b[1,1] = min_stand
+            #         plt_bb[1,1] = min_stand
+            #
+            #
+            #     all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+            #     c_min = np.min(all_ch[all_ch>min_stand])
+            #     all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+            #     c_max = np.max(all_ch)
+            #
+            #     chemplot(plt_s, plt_ss, 7, 5, 3, 1, 'ol_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='olivine')
+            #     chemplot(plt_d, plt_dd, 7, 5, 8, 1, 'ol_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot(plt_a, plt_aa, 7, 10, 25, 1, 'ol_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot(plt_b, plt_bb, 7, 10, 26, 1, 'ol_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #
+            #
+            #
+            # if pri_3_toggle == 1:
+            #
+            #     # # col 4
+            #     # plt_s = pyr0
+            #     # plt_a = pyr0_b
+            #     # plt_b = pyr0_b
+            #     # plt_d = pyr0_b
+            #     # plt_ss = pyr
+            #     # plt_aa = pyr_b
+            #     # plt_bb = pyr_b
+            #     # plt_dd = pyr_b
+            #     plt_s = pyr0/np.max(pyr0)
+            #     plt_a = pyr0_a/np.max(pyr0_a)
+            #     plt_b = pyr0_b/np.max(pyr0_b)
+            #     plt_d = pyr0_d/np.max(pyr0_d)
+            #     plt_ss = pyr/np.max(pyr)
+            #     plt_aa = pyr_a/np.max(pyr_a)
+            #     plt_bb = pyr_b/np.max(pyr_b)
+            #     plt_dd = pyr_d/np.max(pyr_d)
+            #
+            #     if pri_toggle[3] == 0:
+            #         plt_s[1,1] = min_stand
+            #         plt_ss[1,1] = min_stand
+            #     if pri_toggle_d[3] == 0:
+            #         plt_d[1,1] = min_stand
+            #         plt_dd[1,1] = min_stand
+            #     if pri_toggle_a[3] == 0:
+            #         plt_a[1,1] = min_stand
+            #         plt_aa[1,1] = min_stand
+            #     if pri_toggle_b[3] == 0:
+            #         plt_b[1,1] = min_stand
+            #         plt_bb[1,1] = min_stand
+            #
+            #
+            #     all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+            #     c_min = np.amin(all_ch[all_ch>min_stand])
+            #     all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+            #     c_max = np.amax(all_ch[all_ch>0.0])
+            #     chemplot(plt_s, plt_ss, 7, 5, 4, 1, 'pyr_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='pyroxene')
+            #     chemplot(plt_d, plt_dd, 7, 5, 9, 1, 'pyr_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot(plt_a, plt_aa, 7, 10, 27, 1, 'pyr_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot(plt_b, plt_bb, 7, 10, 28, 1, 'pyr_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #
+            #
+            # if pri_2_toggle == 1:
+            #
+            #     # # col 5
+            #     # plt_s = plag0
+            #     # plt_a = plag0_b
+            #     # plt_b = plag0_b
+            #     # plt_d = plag0_b
+            #     # plt_ss = plag
+            #     # plt_aa = plag_b
+            #     # plt_bb = plag_b
+            #     # plt_dd = plag_b
+            #     plt_s = plag0/np.max(plag0)
+            #     plt_a = plag0_a/np.max(plag0_a)
+            #     plt_b = plag0_b/np.max(plag0_b)
+            #     plt_d = plag0_d/np.max(plag0_d)
+            #     plt_ss = plag/np.max(plag)
+            #     plt_aa = plag_a/np.max(plag_a)
+            #     plt_bb = plag_b/np.max(plag_b)
+            #     plt_dd = plag_d/np.max(plag_d)
+            #
+            #
+            #     if pri_toggle[2] == 0:
+            #         plt_s[1,1] = min_stand
+            #         plt_ss[1,1] = min_stand
+            #     if pri_toggle_d[2] == 0:
+            #         plt_d[1,1] = min_stand
+            #         plt_dd[1,1] = min_stand
+            #     if pri_toggle_a[2] == 0:
+            #         plt_a[1,1] = min_stand
+            #         plt_aa[1,1] = min_stand
+            #     if pri_toggle_b[2] == 0:
+            #         plt_b[1,1] = min_stand
+            #         plt_bb[1,1] = min_stand
+            #
+            #
+            #     all_ch = [np.min(plt_s[plt_s>0.0]), np.min(plt_a[plt_a>0.0]), np.min(plt_b[plt_b>0.0]), np.min(plt_d[plt_d>0.0])]
+            #     c_min = np.min(all_ch[all_ch>min_stand])
+            #     all_ch = [np.max(plt_s[plt_s>0.0]), np.max(plt_a[plt_a>0.0]), np.max(plt_b[plt_b>0.0]), np.max(plt_d[plt_d>0.0])]
+            #     c_max = np.max(all_ch)
+            #
+            #     chemplot(plt_s, plt_ss, 7, 5, 5, 1, 'plag_s', xtix=0, ytix=0, cb=1, cb_min=c_min, cb_max=c_max, cb_title='plagioclase')
+            #     chemplot(plt_d, plt_dd, 7, 5, 10, 1, 'plag_d', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot(plt_a, plt_aa, 7, 10, 29, 1, 'plag_a', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
+            #     chemplot(plt_b, plt_bb, 7, 10, 30, 1, 'plag_b', xtix=0, ytix=0, cb=0, cb_min=c_min, cb_max=c_max)
 
             #fig.set_tight_layout(True)
             # plt.subplots_adjust( wspace=0.05 , bottom=0.04, top=0.97, left=0.03, right=0.975)
-            plt.savefig(outpath+'jdf_block_pri/jdf_'+letter+'_block_pri_'+str(i+restart)+'.png')
+            plt.savefig(outpath+'jdf_block_pri/jdf_'+letter+'_block_pri_'+str(i+restart)+'.png',bbox_inches='tight')
 
 
 
@@ -2361,43 +2511,43 @@ for i in range(0,steps,1):
         if alt_plots == 1:
 
 
-            if not os.path.exists(outpath+'jdf_ternary/'):
-                os.makedirs(outpath+'jdf_ternary/')
-
-            #todo: FIG: jdf_ternary
-            #fig=plt.figure(figsize=(9.0,9.0))
-            print "jdf_ternary"
-
-            # ternary values for explicit phases
-            # K, Mg, Fe
-            tern_size = 10
-            tern_saponite_mg = [[0.0, 1.0, 0.0]]
-            tern_fe_celadonite = [[0.5, 0.5, 0.0]]
-            tern_fe_oxide = [[0.0, 0.0, 1.0]]
-
-
-            fig, tax = ternary.figure(scale=1.0)
-            tax.boundary()
-
-            #points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
-            tax.gridlines(multiple=0.2, color="black")
-            tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
-            tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
-            tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
-            tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
-            tax.set_title("Fe/Mg/K ternary plot")
-            tax.left_axis_label("Fe - Mg")
-            tax.right_axis_label("Mg - K")
-            tax.bottom_axis_label("Fe - K")
-            tax.legend(fontsize=9)
-            tax.clear_matplotlib_ticks()
-            #tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
-
-            tax.get_axes().axis('off')
-
-
-            #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
-            plt.savefig(outpath+"jdf_ternary/jdf_ternary_"+letter+"_"+str(i+restart)+".png")
+            # if not os.path.exists(outpath+'jdf_ternary/'):
+            #     os.makedirs(outpath+'jdf_ternary/')
+            #
+            # #todo: FIG: jdf_ternary
+            # #fig=plt.figure(figsize=(9.0,9.0))
+            # print "jdf_ternary"
+            #
+            # # ternary values for explicit phases
+            # # K, Mg, Fe
+            # tern_size = 10
+            # tern_saponite_mg = [[0.0, 1.0, 0.0]]
+            # tern_fe_celadonite = [[0.5, 0.5, 0.0]]
+            # tern_fe_oxide = [[0.0, 0.0, 1.0]]
+            #
+            #
+            # fig, tax = ternary.figure(scale=1.0)
+            # tax.boundary()
+            #
+            # #points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
+            # tax.gridlines(multiple=0.2, color="black")
+            # tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
+            # tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
+            # tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
+            # tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
+            # tax.set_title("Fe/Mg/K ternary plot")
+            # tax.left_axis_label("Fe - Mg")
+            # tax.right_axis_label("Mg - K")
+            # tax.bottom_axis_label("Fe - K")
+            # tax.legend(fontsize=9)
+            # tax.clear_matplotlib_ticks()
+            # #tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
+            #
+            # tax.get_axes().axis('off')
+            #
+            #
+            # #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
+            # plt.savefig(outpath+"jdf_ternary/jdf_ternary_"+letter+"_"+str(i+restart)+".png")
 
 
 
@@ -2678,7 +2828,7 @@ for i in range(0,steps,1):
 
 
 
-            #tod0: FIG: speed
+            # #tod0: FIG: speed
             # print "jdf_Speed"
             # fig=plt.figure(figsize=(10.0,14.0))
             #
