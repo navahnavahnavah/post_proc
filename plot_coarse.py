@@ -21,7 +21,7 @@ plt.rcParams['axes.titlesize'] = 10
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 
-col = ['#880000', '#ff0000', '#ff7411', '#bddb00', '#159600', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#00530d', '#d9d9d9', '#e9acff']
+col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
 
 col_sel = ['#880000' , '#159600', '#609ff2']
 
@@ -124,8 +124,8 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-letter = "10e10"
-outpath = "../output/revival/summer_coarse_grid/v7_keq_5_"+letter+"/"
+letter = "8e10"
+outpath = "../output/revival/summer_coarse_grid/v7_016_"+letter+"/"
 
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -460,6 +460,7 @@ def fmt(x, pos):
     #pGlass.set_edgecolor("face")
     return chemcont_l
 
+#hack: init big arrays
 
 #secMat = np.zeros([len(yCell),len(xCell)*steps+1,minNum+1])
 secMat = np.zeros([len(yCell),len(xCell)*steps+corr,minNum+1])
@@ -569,6 +570,50 @@ tern_list = np.zeros([len(yCell)*len(xCell),steps,3])
 tern_list_a = np.zeros([len(yCell)*len(xCell),steps,3])
 tern_list_b = np.zeros([len(yCell)*len(xCell),steps,3])
 tern_list_d = np.zeros([len(yCell)*len(xCell),steps,3])
+
+
+
+
+
+
+tern_rb_K = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_K_a = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_K_b = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_K_d = np.zeros([len(yCell),len(xCell),steps])
+
+tern_rb_Mg = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_Mg_a = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_Mg_b = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_Mg_d = np.zeros([len(yCell),len(xCell),steps])
+
+tern_rb_Fe = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_Fe_a = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_Fe_b = np.zeros([len(yCell),len(xCell),steps])
+tern_rb_Fe_d = np.zeros([len(yCell),len(xCell),steps])
+
+tern_rb_list = np.zeros([len(yCell)*len(xCell),steps,3])
+tern_rb_list_a = np.zeros([len(yCell)*len(xCell),steps,3])
+tern_rb_list_b = np.zeros([len(yCell)*len(xCell),steps,3])
+tern_rb_list_d = np.zeros([len(yCell)*len(xCell),steps,3])
+
+tern_rb_point_K = np.zeros([steps])
+tern_rb_point_Mg = np.zeros([steps])
+tern_rb_point_Fe = np.zeros([steps])
+
+
+tern_rb_point_K_d = np.zeros([steps])
+tern_rb_point_Mg_d = np.zeros([steps])
+tern_rb_point_Fe_d = np.zeros([steps])
+
+
+tern_rb_point_K_a = np.zeros([steps])
+tern_rb_point_Mg_a = np.zeros([steps])
+tern_rb_point_Fe_a = np.zeros([steps])
+
+
+tern_rb_point_K_b = np.zeros([steps])
+tern_rb_point_Mg_b = np.zeros([steps])
+tern_rb_point_Fe_b = np.zeros([steps])
 
 
 any_min = []
@@ -742,6 +787,11 @@ if chem == 1:
     print " "
     print " "
     print "any_min" , any_min
+    # any_min = sorted(any_min,key=int)
+    # for j in range(len(any_min)):
+    #     any_min[j] = int(any_min[j])
+    # any_min = np.sort(any_min)
+    # print "any_min sorted" , any_min
 
 
     ca0[np.isinf(ca0)] = 1.0
@@ -1071,7 +1121,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 6
+    chem6 = 5
 
     if chem6 == 6:
 
@@ -2536,24 +2586,31 @@ for i in range(0,steps,1):
                 os.makedirs(outpath+'jdf_ternary/')
 
 
+
+            #todo: FIG: jdf_ternary
+            #fig=plt.figure(figsize=(9.0,9.0))
+            print "jdf_ternary"
+            fig=plt.figure(figsize=(11.0,2.25))
+
+
             for k in range(len(yCell)):
                 for j in range(len(xCell)):
 
                     ternK[k,j,i] = 1.0*secStep[k,j,14]
-                    ternFe[k,j,i] = 1.0*secStep[k,j,14] + 2.0*secStep[k,j,22] + 2.0*secStep[k,j,17] + 1.0*secStep[k,j,5]
-                    ternMg[k,j,i] = 0.165*secStep[k,j,22] + 5.0*secStep[k,j,31] + 3.0*secStep[k,j,11] + 3.165*secStep[k,j,2]
+                    ternMg[k,j,i] = 0.165*secStep[k,j,22] + 5.0*secStep[k,j,31] + 3.0*secStep[k,j,11] + 3.165*secStep[k,j,2] + 3.0*secStep[k,j,33]
+                    ternFe[k,j,i] = 1.0*secStep[k,j,14] + 2.0*secStep[k,j,22] + 2.0*secStep[k,j,17] + 1.0*secStep[k,j,5] + 2.0*secStep[k,j,15]
 
                     ternK_d[k,j,i] = 1.0*secStep_d[k,j,14]
-                    ternFe_d[k,j,i] = 1.0*secStep_d[k,j,14] + 2.0*secStep_d[k,j,22] + 2.0*secStep_d[k,j,17] + 1.0*secStep_d[k,j,5]
-                    ternMg_d[k,j,i] = 0.165*secStep_d[k,j,22] + 5.0*secStep_d[k,j,31] + 3.0*secStep_d[k,j,11] + 3.165*secStep_d[k,j,2]
+                    ternMg_d[k,j,i] = 0.165*secStep_d[k,j,22] + 5.0*secStep_d[k,j,31] + 3.0*secStep_d[k,j,11] + 3.165*secStep_d[k,j,2] + 3.0*secStep_d[k,j,33]
+                    ternFe_d[k,j,i] = 1.0*secStep_d[k,j,14] + 2.0*secStep_d[k,j,22] + 2.0*secStep_d[k,j,17] + 1.0*secStep_d[k,j,5] + 2.0*secStep_d[k,j,15]
 
                     ternK_a[k,j,i] = 1.0*secStep_a[k,j,14]
-                    ternFe_a[k,j,i] = 1.0*secStep_a[k,j,14] + 2.0*secStep_a[k,j,22] + 2.0*secStep_a[k,j,17] + 1.0*secStep_a[k,j,5]
-                    ternMg_a[k,j,i] = 0.165*secStep_a[k,j,22] + 5.0*secStep_a[k,j,31] + 3.0*secStep_a[k,j,11] + 3.165*secStep_a[k,j,2]
+                    ternMg_a[k,j,i] = 0.165*secStep_a[k,j,22] + 5.0*secStep_a[k,j,31] + 3.0*secStep_a[k,j,11] + 3.165*secStep_a[k,j,2] + 3.0*secStep_a[k,j,33]
+                    ternFe_a[k,j,i] = 1.0*secStep_a[k,j,14] + 2.0*secStep_a[k,j,22] + 2.0*secStep_a[k,j,17] + 1.0*secStep_a[k,j,5] + 2.0*secStep_a[k,j,15]
 
                     ternK_b[k,j,i] = 1.0*secStep_b[k,j,14]
-                    ternFe_b[k,j,i] = 1.0*secStep_b[k,j,14] + 2.0*secStep_b[k,j,22] + 2.0*secStep_b[k,j,17] + 1.0*secStep_b[k,j,5]
-                    ternMg_b[k,j,i] = 0.165*secStep_b[k,j,22] + 5.0*secStep_b[k,j,31] + 3.0*secStep_b[k,j,11] + 3.165*secStep_b[k,j,2]
+                    ternMg_b[k,j,i] = 0.165*secStep_b[k,j,22] + 5.0*secStep_b[k,j,31] + 3.0*secStep_b[k,j,11] + 3.165*secStep_b[k,j,2] + 3.0*secStep_b[k,j,33]
+                    ternFe_b[k,j,i] = 1.0*secStep_b[k,j,14] + 2.0*secStep_b[k,j,22] + 2.0*secStep_b[k,j,17] + 1.0*secStep_b[k,j,5] + 2.0*secStep_b[k,j,15]
 
 
 
@@ -2600,11 +2657,6 @@ for i in range(0,steps,1):
                     tern_count = tern_count + 1
 
 
-
-            #todo: FIG: jdf_ternary
-            #fig=plt.figure(figsize=(9.0,9.0))
-            print "jdf_ternary"
-            fig=plt.figure(figsize=(11.0,2.25))
 
             # ternary values for explicit phases
             # K, Mg, Fe
@@ -2722,6 +2774,271 @@ for i in range(0,steps,1):
             #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
             plt.subplots_adjust(bottom=0.07, top=0.90, left=0.03, right=0.975)
             plt.savefig(outpath+"jdf_ternary/jdf_ternary_"+letter+"_"+str(i+restart)+".png")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if not os.path.exists(outpath+'jdf_tern_rainbow/'):
+                os.makedirs(outpath+'jdf_tern_rainbow/')
+
+
+
+            #todo: FIG: jdf_tern_rainbow
+            #fig=plt.figure(figsize=(9.0,9.0))
+            print "jdf_tern_rainbow"
+            fig=plt.figure(figsize=(11.0,2.25))
+
+
+            norm_tern_rb = np.zeros([len(yCell),len(xCell),minNum+1])
+            norm_tern_rb_d = np.zeros([len(yCell),len(xCell),minNum+1])
+
+
+            for j in range(len(any_min)):
+
+                 if np.max(dsecStep[:,:,any_min[j]]) > 0.0:
+                     norm_tern_rb[:,:,any_min[j]] = dsecStep[:,:,any_min[j]]/np.max(dsecStep[:,:,any_min[j]])
+
+                 if np.max(dsecStep_d[:,:,any_min[j]]) > 0.0:
+                     norm_tern_rb_d[:,:,any_min[j]] = dsecStep_d[:,:,any_min[j]]/np.max(dsecStep_d[:,:,any_min[j]])
+
+
+
+            for k in range(len(yCell)):
+                for j in range(len(xCell)):
+
+                    tern_rb_K[k,j,i] = 1.0*norm_tern_rb[k,j,14]
+                    tern_rb_Mg[k,j,i] = 0.165*norm_tern_rb[k,j,22] + 5.0*norm_tern_rb[k,j,31] + 3.0*norm_tern_rb[k,j,11] + 3.165*norm_tern_rb[k,j,2] + 3.0*norm_tern_rb[k,j,33]
+                    tern_rb_Fe[k,j,i] = 1.0*norm_tern_rb[k,j,14] + 2.0*norm_tern_rb[k,j,22] + 2.0*norm_tern_rb[k,j,17] + 1.0*norm_tern_rb[k,j,5] + 2.0*norm_tern_rb[k,j,15]
+
+
+
+
+                    tern_rb_K_d[k,j,i] = 1.0*norm_tern_rb_d[k,j,14]
+                    tern_rb_Mg_d[k,j,i] = 0.165*norm_tern_rb_d[k,j,22] + 5.0*norm_tern_rb_d[k,j,31] + 3.0*norm_tern_rb_d[k,j,11] + 3.165*norm_tern_rb_d[k,j,2] + 3.0*norm_tern_rb_d[k,j,33]
+                    tern_rb_Fe_d[k,j,i] = 1.0*norm_tern_rb_d[k,j,14] + 2.0*norm_tern_rb_d[k,j,22] + 2.0*norm_tern_rb_d[k,j,17] + 1.0*norm_tern_rb_d[k,j,5] + 2.0*norm_tern_rb_d[k,j,15]
+
+                    # ternK_d[k,j,i] = 1.0*secStep_d[k,j,14]
+                    # ternMg_d[k,j,i] = 0.165*secStep_d[k,j,22] + 5.0*secStep_d[k,j,31] + 3.0*secStep_d[k,j,11] + 3.165*secStep_d[k,j,2] + 3.0*secStep_d[k,j,33]
+                    # ternFe_d[k,j,i] = 1.0*secStep_d[k,j,14] + 2.0*secStep_d[k,j,22] + 2.0*secStep_d[k,j,17] + 1.0*secStep_d[k,j,5] + 2.0*secStep_d[k,j,15]
+                    #
+                    # ternK_a[k,j,i] = 1.0*secStep_a[k,j,14]
+                    # ternMg_a[k,j,i] = 0.165*secStep_a[k,j,22] + 5.0*secStep_a[k,j,31] + 3.0*secStep_a[k,j,11] + 3.165*secStep_a[k,j,2] + 3.0*secStep_a[k,j,33]
+                    # ternFe_a[k,j,i] = 1.0*secStep_a[k,j,14] + 2.0*secStep_a[k,j,22] + 2.0*secStep_a[k,j,17] + 1.0*secStep_a[k,j,5] + 2.0*secStep_a[k,j,15]
+                    #
+                    # ternK_b[k,j,i] = 1.0*secStep_b[k,j,14]
+                    # ternMg_b[k,j,i] = 0.165*secStep_b[k,j,22] + 5.0*secStep_b[k,j,31] + 3.0*secStep_b[k,j,11] + 3.165*secStep_b[k,j,2] + 3.0*secStep_b[k,j,33]
+                    # ternFe_b[k,j,i] = 1.0*secStep_b[k,j,14] + 2.0*secStep_b[k,j,22] + 2.0*secStep_b[k,j,17] + 1.0*secStep_b[k,j,5] + 2.0*secStep_b[k,j,15]
+
+
+
+            tern_count = 0
+
+            for k in range(len(yCell)):
+                for j in range(len(xCell)):
+                    tern_rb_list[tern_count,i,0] = 39.0*tern_rb_K[k,j,i]
+                    tern_rb_list[tern_count,i,1] = 23.0*tern_rb_Mg[k,j,i]
+                    tern_rb_list[tern_count,i,2] = 56.0*tern_rb_Fe[k,j,i]
+                    if np.max(tern_rb_list[tern_count,i,:]) > 0.0:
+                        tern_rb_list[tern_count,i,:] = tern_rb_list[tern_count,i,:]/(1.0*tern_rb_list[tern_count,i,0] + 1.0*tern_rb_list[tern_count,i,1] + 1.0*tern_rb_list[tern_count,i,2])
+
+                    tern_rb_list_d[tern_count,i,0] = 39.0*tern_rb_K_d[k,j,i]
+                    tern_rb_list_d[tern_count,i,1] = 23.0*tern_rb_Mg_d[k,j,i]
+                    tern_rb_list_d[tern_count,i,2] = 56.0*tern_rb_Fe_d[k,j,i]
+                    if np.max(tern_rb_list_d[tern_count,i,:]) > 0.0:
+                        tern_rb_list_d[tern_count,i,:] = tern_rb_list_d[tern_count,i,:]/(1.0*tern_rb_list_d[tern_count,i,0] + 1.0*tern_rb_list_d[tern_count,i,1] + 1.0*tern_rb_list_d[tern_count,i,2])
+
+
+                    # tern_list_d[tern_count,i,0] = 39.0*ternK_d[k,j,i]
+                    # tern_list_d[tern_count,i,1] = 23.0*ternMg_d[k,j,i]
+                    # tern_list_d[tern_count,i,2] = 56.0*ternFe_d[k,j,i]
+                    # #tern_list_d[tern_count,i,:] = tern_list_d[tern_count,i,:]/np.sum(tern_list_d[tern_count,i,:])
+                    # if np.max(tern_list_d[tern_count,i,:]) > 0.0:
+                    #     tern_list_d[tern_count,i,:] = tern_list_d[tern_count,i,:]/(1.0*tern_list_d[tern_count,i,0] + 1.0*tern_list_d[tern_count,i,1] + 1.0*tern_list_d[tern_count,i,2])
+                    #     # if i == 20:
+                    #     #     print "D" , tern_list_d[tern_count,i,:]
+                    #
+                    # tern_list_a[tern_count,i,0] = 39.0*ternK_a[k,j,i]
+                    # tern_list_a[tern_count,i,1] = 23.0*ternMg_a[k,j,i]
+                    # tern_list_a[tern_count,i,2] = 56.0*ternFe_a[k,j,i]
+                    # #tern_list_a[tern_count,i,:] = tern_list_a[tern_count,i,:]/np.sum(tern_list_a[tern_count,i,:])
+                    # if np.max(tern_list_a[tern_count,i,:]) > 0.0:
+                    #     tern_list_a[tern_count,i,:] = tern_list_a[tern_count,i,:]/(1.0*tern_list_a[tern_count,i,0] + 1.0*tern_list_a[tern_count,i,1] + 1.0*tern_list_a[tern_count,i,2])
+                    #     # if i == 20:
+                    #     #     print "A" , tern_list_a[tern_count,i,:]
+                    #
+                    # tern_list_b[tern_count,i,0] = 39.0*ternK_b[k,j,i]
+                    # tern_list_b[tern_count,i,1] = 23.0*ternMg_b[k,j,i]
+                    # tern_list_b[tern_count,i,2] = 56.0*ternFe_b[k,j,i]
+                    # #tern_list_b[tern_count,i,:] = tern_list_b[tern_count,i,:]/np.sum(tern_list_b[tern_count,i,:])
+                    # if np.max(tern_list_b[tern_count,i,:]) > 0.0:
+                    #     tern_list_b[tern_count,i,:] = tern_list_b[tern_count,i,:]/(1.0*tern_list_b[tern_count,i,0] + 1.0*tern_list_b[tern_count,i,1] + 1.0*tern_list_b[tern_count,i,2])
+                    #     # if i == 20:
+                    #     #     print "B" , tern_list_b[tern_count,i,:]
+
+                    tern_count = tern_count + 1
+
+            tern_rb_point_K[i] = np.sum(tern_rb_list[:,i,0])
+            tern_rb_point_Mg[i] = np.sum(tern_rb_list[:,i,1])
+            tern_rb_point_Fe[i] = np.sum(tern_rb_list[:,i,2])
+            print " "
+            print "point K" , tern_rb_point_K[i]
+            print "point Mg" , tern_rb_point_Mg[i]
+            print "point Fe" , tern_rb_point_Fe[i]
+
+
+
+            tern_rb_point_K_d[i] = np.sum(tern_rb_list_d[:,i,0])
+            tern_rb_point_Mg_d[i] = np.sum(tern_rb_list_d[:,i,1])
+            tern_rb_point_Fe_d[i] = np.sum(tern_rb_list_d[:,i,2])
+            print " "
+            print "point K_d" , tern_rb_point_K_d[i]
+            print "point Mg_d" , tern_rb_point_Mg_d[i]
+            print "point Fe_d" , tern_rb_point_Fe_d[i]
+
+
+
+
+
+            print " "
+
+
+
+
+
+            # ternary values for explicit phases
+            # K, Mg, Fe
+            # tern_size = 10
+            # tern_saponite_mg = [[0.0, 1.0, 0.0]]
+            # tern_fe_celadonite = [[0.5, 0.5, 0.0]]
+            # tern_fe_oxide = [[0.0, 0.0, 1.0]]
+
+
+            # fig, tax = ternary.figure(scale=1.0)
+            # tax.boundary()
+
+            # #points = np.array([1.0, 1.0, 1.0], [0.6, 0.5, 0.4] [0.1, 0.2, 0.3])
+            # tax.gridlines(multiple=0.2, color="black")
+            # tax.plot(tern_saponite_mg, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="sap-mg, sap-na, clin14a, ")
+            # tax.plot(tern_fe_celadonite, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-celadonite")
+            # tax.plot(tern_fe_oxide, marker='o', markersize=tern_size, markeredgecolor='none', linewidth=0.0, label="fe-oxides, pyrite")
+            # tax.plot([[0.4, 0.4, 0.2],[0.1, 0.5, 0.4],[0.8, 0.02, 0.08]], marker='o', linewidth=2.0, label="Curve")
+            # tax.set_title("Fe/Mg/K ternary plot")
+            # tax.left_axis_label("Fe - Mg")
+            # tax.right_axis_label("Mg - K")
+            # tax.bottom_axis_label("Fe - K")
+            # tax.legend(fontsize=9)
+            # tax.clear_matplotlib_ticks()
+            # #tax.ticks([0.0, 0.5, 1.0], axis='lbr', linewidth=1, fontsize=7, offset=0.02)
+            #
+
+            # tax.get_axes().axis('off')
+
+
+            tern_size = 8
+            tern_size_small = 10
+            tern_saponite_mg = [[0.0, 1.0, 0.0]]
+            tern_fe_celadonite = [[0.5, 0.0, 0.5]]
+            tern_fe_oxide = [[0.0, 0.0, 1.0]]
+            tern_min_col = '#524aaf'
+
+
+            # tern_min_kwargs = {'marker': 's', 'color': tern_min_col}
+            tern_min_kwargs = dict(color=tern_min_col, marker='s', markersize=tern_size, markeredgecolor='k', linewidth=0.0, zorder=10)
+            tern_model_kwargs = dict(marker='.', markersize=tern_size_small, markeredgecolor='none', linewidth=0.0)
+            tern_model_kwargs_big = dict(marker='.', markersize=tern_size_small*2.0, markeredgecolor='none', linewidth=0.0)
+
+            ax=fig.add_subplot(1, 4, 1)
+            fig, tax = ternary.figure(ax=ax,scale=1.0)
+            tax.boundary()
+
+            tax.gridlines(multiple=0.2, color="black")
+            tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            tax.plot(tern_rb_list[:,i-1,:], color='r', **tern_model_kwargs)
+            tax.set_title("solo")
+            tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+            tax.clear_matplotlib_ticks()
+
+            tax.get_axes().axis('off')
+
+
+
+
+            # ax=fig.add_subplot(1, 4, 2)
+            # fig, tax = ternary.figure(ax=ax,scale=1.0)
+            # tax.boundary()
+            #
+            # tax.gridlines(multiple=0.2, color="black")
+            # tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            # tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            # tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            # tax.plot(tern_list_d[:,i-1,:], color='r', **tern_model_kwargs)
+            # tax.set_title("dual")
+            # #tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+            # tax.clear_matplotlib_ticks()
+            #
+            # tax.get_axes().axis('off')
+            #
+            #
+            #
+            # ax=fig.add_subplot(1, 4, 3)
+            # fig, tax = ternary.figure(ax=ax,scale=1.0)
+            # tax.boundary()
+            #
+            # tax.gridlines(multiple=0.2, color="black")
+            # tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            # tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            # tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            # tax.plot(tern_list_a[:,i-1,:], color='r', **tern_model_kwargs)
+            # tax.set_title("ch a")
+            # #tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+            # tax.clear_matplotlib_ticks()
+            #
+            # tax.get_axes().axis('off')
+            #
+            #
+            #
+            #
+            # ax=fig.add_subplot(1, 4, 4)
+            # fig, tax = ternary.figure(ax=ax,scale=1.0)
+            # tax.boundary()
+            #
+            # tax.gridlines(multiple=0.2, color="black")
+            # tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            # tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            # tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            # tax.plot(tern_list_b[:,i-1,:], color='r', **tern_model_kwargs)
+            # tax.set_title("ch b")
+            # #tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+            # tax.clear_matplotlib_ticks()
+            #
+            # tax.get_axes().axis('off')
+
+
+
+
+            #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
+            plt.subplots_adjust(bottom=0.07, top=0.90, left=0.03, right=0.975)
+            plt.savefig(outpath+"jdf_tern_rainbow/jdf_tern_rainbow_"+letter+"_"+str(i+restart)+".png")
+
 
 
 
@@ -3186,7 +3503,7 @@ for i in range(0,steps,1):
             #todo: NON-FINAL FIG: sec_amount_x
             fig=plt.figure(figsize=(12.0,3.5))
 
-            amt_lw = 2
+            amt_lw = 1.25
 
             norm_amount = np.zeros([steps,minNum+1])
             norm_amount_d = np.zeros([steps,minNum+1])
@@ -3278,7 +3595,7 @@ for i in range(0,steps,1):
 
 
             #plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-            plt.subplots_adjust(top=0.8, bottom=0.1,left=0.05,right=0.95)
+            plt.subplots_adjust(top=0.78, bottom=0.12,left=0.05,right=0.95)
             plt.savefig(outpath+'jdf_amount_sec_x/jdf_'+letter+'_amount_sec_X_'+str(i+restart)+'.png')
 
             if i == 50 or i == 49:
@@ -3296,7 +3613,7 @@ for i in range(0,steps,1):
                 os.makedirs(outpath+'jdf_amount_pri_x/')
 
             #todo: NON-FINAL FIG: pri_amount_x
-            fig=plt.figure(figsize=(9.5,9.5))
+            fig=plt.figure(figsize=(12.0,3.5))
 
 
             norm_loss_rate = np.zeros([steps,6])
@@ -3308,7 +3625,7 @@ for i in range(0,steps,1):
 
             # # COLUMN 1
 
-            ax1=fig.add_subplot(4,2,1, frameon=True)
+            ax1=fig.add_subplot(1,4,1, frameon=True)
             ax1.grid(True)
 
             for j in [2, 3, 4, 5]:
@@ -3316,14 +3633,14 @@ for i in range(0,steps,1):
                     plt.plot(np.arange(1,steps+1),x_priStep_ts[:,j]/np.max(x_priStep_ts[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
             plt.xlim([1,steps])
             plt.ylim([0.0,1.05])
-            plt.xticks(np.linspace(0,50,11))
+            plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
             #plt.yticks(np.linspace(0,1.0,11))
             plt.title('primary amount, solo',fontsize=10)
 
-            plt.legend(fontsize=10,ncol=2,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.45))
+            #plt.legend(fontsize=10,ncol=2,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.45))
 
 
-            ax1=fig.add_subplot(4,2,3, frameon=True)
+            ax1=fig.add_subplot(1,4,2, frameon=True)
             ax1.grid(True)
 
             for j in [2, 3, 4, 5]:
@@ -3331,11 +3648,11 @@ for i in range(0,steps,1):
                     plt.plot(np.arange(1,steps+1),x_priStep_ts_d[:,j]/np.max(x_priStep_ts_d[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
             plt.xlim([1,steps])
             plt.ylim([0.0,1.05])
-            plt.xticks(np.linspace(0,50,11))
+            plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
             plt.title('primary amount, dual',fontsize=10)
 
 
-            ax1=fig.add_subplot(4,2,5, frameon=True)
+            ax1=fig.add_subplot(1,4,3, frameon=True)
             ax1.grid(True)
 
             for j in [2, 3, 4, 5]:
@@ -3343,11 +3660,11 @@ for i in range(0,steps,1):
                     plt.plot(np.arange(1,steps+1),x_priStep_ts_a[:,j]/np.max(x_priStep_ts_a[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
             plt.xlim([1,steps])
             plt.ylim([0.0,1.05])
-            plt.xticks(np.linspace(0,50,11))
+            plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
             plt.title('primary amount, a',fontsize=10)
 
 
-            ax1=fig.add_subplot(4,2,7, frameon=True)
+            ax1=fig.add_subplot(1,4,4, frameon=True)
             ax1.grid(True)
 
             for j in [2, 3, 4, 5]:
@@ -3355,46 +3672,16 @@ for i in range(0,steps,1):
                     plt.plot(np.arange(1,steps+1),x_priStep_ts_b[:,j]/np.max(x_priStep_ts_b[:,j]),label=primary[j],c=pri_col[j],lw=1.5)
             plt.xlim([1,steps])
             plt.ylim([0.0,1.05])
-            plt.xticks(np.linspace(0,50,11))
+            plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
             plt.title('primary amount, b',fontsize=10)
 
 
-            plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
+            plt.subplots_adjust(top=0.8, bottom=0.1,left=0.05,right=0.95)
             plt.savefig(outpath+'jdf_amount_pri_x/jdf_'+letter+'_amount_pri_X_'+str(i+restart)+'.png')
 
-            # print "x_priStep_ts[:,5]"
-            # print x_priStep_ts[:,5]
-            # print " "
-            #
-            # print "x_priStep_ts_d[:,5]"
-            # print x_priStep_ts_d[:,5]
-            # print " "
-            #
-            # print "x_priStep_ts_a[:,5]"
-            # print x_priStep_ts_a[:,5]
-            # print " "
-            #
-            # print "x_priStep_ts_b[:,5]"
-            # print x_priStep_ts_b[:,5]
-            # print " "
 
-            # if i > 0:
-            #
-            #     print "x_priStep_ts[:,5]"
-            #     print x_priStep_ts[i,4]-x_priStep_ts[i-1,4]
-            #     print " "
-            #
-            #     print "x_priStep_ts_d[:,5]"
-            #     print x_priStep_ts_d[i,4]-x_priStep_ts_d[i-1,4]
-            #     print " "
-            #
-            #     print "x_priStep_ts_a[:,5]"
-            #     print x_priStep_ts_a[i,4]-x_priStep_ts_a[i-1,4]
-            #     print " "
-            #
-            #     print "x_priStep_ts_b[:,5]"
-            #     print x_priStep_ts_b[i,4]-x_priStep_ts_b[i-1,4]
-            #     print " "
+
+
 
 
 
@@ -3662,7 +3949,7 @@ for i in range(0,steps,1):
                 os.makedirs(outpath+'jdf_deriv2_sim/')
 
             #todo: FIG: jdf_deriv2_sim
-            fig=plt.figure(figsize=(9.0,9.0))
+            fig=plt.figure(figsize=(6.0,6.0))
             print "jdf_deriv2_sim"
 
 
@@ -3697,7 +3984,7 @@ for i in range(0,steps,1):
                     plt.scatter(j,np.mean(deriv2_a[2:i-2,any_min[j]]), marker='^', s=20, edgecolor='k', facecolor='none', lw=1)
                 if np.abs(np.mean(deriv2_b[2:i-2,any_min[j]])) > 0.0:
                     plt.scatter(j,np.mean(deriv2_b[2:i-2,any_min[j]]), marker='v', s=20, edgecolor='k', facecolor='none', lw=1)
-            plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=9)
+            plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=7)
             plt.xlim([-0.5,len(any_min)-0.5])
 
             #if np.max(np.abs(deriv2)) > 0.0:
@@ -3740,7 +4027,7 @@ for i in range(0,steps,1):
                     plt.scatter(j,-1.0, marker='v', s=20, edgecolor='k', facecolor='none', lw=1)
 
 
-            plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=9)
+            plt.xticks(np.arange(len(any_min)),secondary[any_min.astype(int)],fontsize=7)
             plt.xlim([-0.5,len(any_min)-0.5])
 
 
@@ -3924,8 +4211,31 @@ plt.savefig(outpath+'jdf_secondary_rate_'+letter+'.png')
 
 
 
+#todo: FINAL FIG: ternary_rainbow_x
+fig=plt.figure(figsize=(12.0,3.5))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #todo: FINAL FIG: secondary_rate_x
-fig=plt.figure(figsize=(9.5,9.5))
+fig=plt.figure(figsize=(12.0,3.5))
 
 norm_amount = np.zeros([steps,minNum+1])
 norm_amount_d = np.zeros([steps,minNum+1])
@@ -3935,10 +4245,9 @@ norm_amount_b = np.zeros([steps,minNum+1])
 # # COLUMN 1
 ng0 = 2
 
-ax1=fig.add_subplot(2,2,1, frameon=True)
+ax1=fig.add_subplot(1,4,1, frameon=True)
 
 for j in range(len(any_min)):
-
     #norm_growth_rate[:,any_min[j]] = 1.0
     if np.max(x_dsecStep_ts[ng0:,any_min[j]]) > 0.0:
         norm_amount[:,any_min[j]] = x_dsecStep_ts[:,any_min[j]]/np.max(x_dsecStep_ts[:,any_min[j]])
@@ -3946,12 +4255,13 @@ for j in range(len(any_min)):
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min growth rate, solo',fontsize=10)
 
-plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
+#plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
+plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.3))
 
-ax1=fig.add_subplot(2,2,2, frameon=True)
+ax1=fig.add_subplot(1,4,2, frameon=True)
 
 for j in range(len(any_min)):
     #norm_growth_rate_d[:,any_min[j]] = 1.0
@@ -3961,10 +4271,10 @@ for j in range(len(any_min)):
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min growth rate, dual',fontsize=10)
 
-ax1=fig.add_subplot(2,2,3, frameon=True)
+ax1=fig.add_subplot(1,4,3, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_dsecStep_ts_a[ng0:,any_min[j]]) > 0.0:
@@ -3973,10 +4283,10 @@ for j in range(len(any_min)):
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min growth rate, a',fontsize=10)
 
-ax1=fig.add_subplot(2,2,4, frameon=True)
+ax1=fig.add_subplot(1,4,4, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_dsecStep_ts_b[ng0:,any_min[j]]) > 0.0:
@@ -3985,15 +4295,15 @@ for j in range(len(any_min)):
     plt.xlim([5,steps])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.xlabel('time',fontsize=8)
     plt.title('min growth rate, b',fontsize=10)
 
 
-
-plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
+plt.subplots_adjust(top=0.78, bottom=0.12,left=0.05,right=0.95)
+#plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
 plt.savefig(outpath+'jdf_secondary_rate_X_'+letter+'.png')
 
-# plt.savefig(outpath+'all_secondary_x.eps')
 
 
 
@@ -4005,9 +4315,9 @@ plt.savefig(outpath+'jdf_secondary_rate_X_'+letter+'.png')
 
 
 #todo: FINAL FIG: secondary_amount_x
-fig=plt.figure(figsize=(9.5,9.5))
+fig=plt.figure(figsize=(12.0,3.5))
 
-amt_lw = 2
+amt_lw = 1.25
 
 norm_amount = np.zeros([steps,minNum+1])
 norm_amount_d = np.zeros([steps,minNum+1])
@@ -4034,7 +4344,7 @@ secStep_ts_d[co:] = 0.0
 # # COLUMN 1
 ng0 = 2
 
-ax1=fig.add_subplot(2,2,1, frameon=True)
+ax1=fig.add_subplot(1,4,1, frameon=True)
 
 for j in range(len(any_min)):
 
@@ -4045,12 +4355,12 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min amounts, solo',fontsize=10)
 
-plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
+plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.3))
 
-ax1=fig.add_subplot(2,2,2, frameon=True)
+ax1=fig.add_subplot(1,4,2, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_secStep_ts_d[ng0:,any_min[j]]) > 0.0:
@@ -4060,10 +4370,10 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min amounts, dual',fontsize=10)
 
-ax1=fig.add_subplot(2,2,3, frameon=True)
+ax1=fig.add_subplot(1,4,3, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_secStep_ts_a[ng0:,any_min[j]]) > 0.0:
@@ -4075,10 +4385,10 @@ for j in range(len(any_min)):
 
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min amounts, a',fontsize=10)
 
-ax1=fig.add_subplot(2,2,4, frameon=True)
+ax1=fig.add_subplot(1,4,4, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(x_secStep_ts_b[ng0:,any_min[j]]) > 0.0:
@@ -4088,16 +4398,15 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.xlabel('time',fontsize=8)
     plt.title('min amounts, b',fontsize=10)
 
 
 
-plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
+plt.subplots_adjust(top=0.78, bottom=0.12,left=0.05,right=0.95)
 plt.savefig(outpath+'jdf_secondary_amount_X_'+letter+'.png')
 
-# plt.savefig(outpath+'amount_secondary_x.eps')
 
 
 
@@ -4107,7 +4416,7 @@ plt.savefig(outpath+'jdf_secondary_amount_X_'+letter+'.png')
 
 
 #todo: FINAL FIG: secondary_amount
-fig=plt.figure(figsize=(9.5,9.5))
+fig=plt.figure(figsize=(12.0,3.5))
 
 norm_amount = np.zeros([steps,minNum+1])
 norm_amount_d = np.zeros([steps,minNum+1])
@@ -4122,7 +4431,7 @@ norm_amount2_b = np.zeros([steps,minNum+1])
 # # COLUMN 1
 ng0 = 2
 
-ax1=fig.add_subplot(2,2,1, frameon=True)
+ax1=fig.add_subplot(1,4,1, frameon=True)
 
 for j in range(len(any_min)):
 
@@ -4133,12 +4442,12 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min amounts, solo',fontsize=10)
 
-plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
+plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(3.1, 1.3))
 
-ax1=fig.add_subplot(2,2,2, frameon=True)
+ax1=fig.add_subplot(1,4,2, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(secStep_ts_d[ng0:,any_min[j]]) > 0.0:
@@ -4148,10 +4457,10 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min amounts, dual',fontsize=10)
 
-ax1=fig.add_subplot(2,2,3, frameon=True)
+ax1=fig.add_subplot(1,4,3, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(secStep_ts_a[ng0:,any_min[j]]) > 0.0:
@@ -4162,10 +4471,10 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('min amounts, a',fontsize=10)
 
-ax1=fig.add_subplot(2,2,4, frameon=True)
+ax1=fig.add_subplot(1,4,4, frameon=True)
 
 for j in range(len(any_min)):
     if np.max(secStep_ts_b[ng0:,any_min[j]]) > 0.0:
@@ -4175,113 +4484,15 @@ for j in range(len(any_min)):
     plt.xlim([0,steps+co])
     plt.ylim([-.05,1.05])
     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.xlabel('time',fontsize=8)
     plt.title('min amounts, b',fontsize=10)
 
 
 
-plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
+plt.subplots_adjust(top=0.8, bottom=0.1,left=0.05,right=0.95)
 plt.savefig(outpath+'jdf_secondary_amount_'+letter+'.png')
 
-# plt.savefig(outpath+'amount_secondary_all.eps')
-
-
-
-
-
-
-
-
-
-
-
-
-
-# #todo: FINAL FIG: amount_sec_follow
-# fig=plt.figure(figsize=(9.5,9.5))
-#
-# moves = [2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42]
-#
-# norm_amount = np.zeros([steps,minNum+1])
-# norm_amount_d = np.zeros([steps,minNum+1])
-# norm_amount_a = np.zeros([steps,minNum+1])
-# norm_amount_b = np.zeros([steps,minNum+1])
-#
-# norm_amount2 = np.zeros([steps,minNum+1])
-# norm_amount2_d = np.zeros([steps,minNum+1])
-# norm_amount2_a = np.zeros([steps,minNum+1])
-# norm_amount2_b = np.zeros([steps,minNum+1])
-#
-# # # COLUMN 1
-# ng0 = 2
-#
-# print "s "
-# ax1=fig.add_subplot(2,2,1, frameon=True)
-#
-# for j in range(len(any_min)):
-#
-#     if np.max(secStep_ts[ng0:,any_min[j]]) > 0.0:
-#         norm_growth_rate[ng0:,any_min[j]] = secStep_ts[ng0:,any_min[j]]
-#         norm_growth_rate2[ng0:,any_min[j]] = secStep_ts[ng0:,any_min[j]]/np.max(secStep_ts[ng0:,any_min[j]])
-#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-#     plt.xlim([0,steps+co])
-#     plt.ylim([-.05,1.05])
-#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-#     plt.xticks([])
-#     plt.title('min amounts, solo',fontsize=10)
-#
-# plt.legend(fontsize=12,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.35))
-#
-# print "d "
-# ax1=fig.add_subplot(2,2,2, frameon=True)
-#
-# for j in range(len(any_min)):
-#     if np.max(secStep_ts_d[ng0:,any_min[j]]) > 0.0:
-#         norm_growth_rate_d[ng0:,any_min[j]] = secStep_ts_d[ng0:,any_min[j]]
-#         norm_growth_rate2_d[ng0:,any_min[j]] = secStep_ts_d[ng0:,any_min[j]]/np.max(secStep_ts_d[ng0:,any_min[j]])
-#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_d[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-#     plt.xlim([0,steps+co])
-#     plt.ylim([-.05,1.05])
-#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-#     plt.xticks([])
-#     plt.title('min amounts, dual',fontsize=10)
-#
-# print "a "
-# ax1=fig.add_subplot(2,2,3, frameon=True)
-#
-# for j in range(len(any_min)):
-#     if np.max(secStep_ts_a[ng0:,any_min[j]]) > 0.0:
-#
-#         norm_growth_rate_a[ng0:,any_min[j]] = secStep_ts_a[ng0:,any_min[j]]
-#         norm_growth_rate2_a[ng0:,any_min[j]] = secStep_ts_a[ng0:,any_min[j]]/np.max(secStep_ts_a[ng0:,any_min[j]])
-#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_a[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-#     plt.xlim([0,steps+co])
-#     plt.ylim([-.05,1.05])
-#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-#     plt.xticks([])
-#     plt.title('min amounts, a',fontsize=10)
-#
-# print "b "
-# ax1=fig.add_subplot(2,2,4, frameon=True)
-#
-# for j in range(len(any_min)):
-#     if np.max(secStep_ts_b[ng0:,any_min[j]]) > 0.0:
-#         norm_growth_rate_b[ng0:,any_min[j]] = secStep_ts_b[ng0:,any_min[j]]
-#         norm_growth_rate2_b[ng0:,any_min[j]] = secStep_ts_b[ng0:,any_min[j]]/np.max(secStep_ts_b[ng0:,any_min[j]])
-#     plt.plot(np.arange(1+ng0,steps+1),norm_growth_rate2_b[ng0:,any_min[j]],label=secondary[any_min[j]],c=col[j],lw=amt_lw)
-#     plt.xlim([0,steps+co])
-#     plt.ylim([-.05,1.05])
-#     plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-#     plt.xlabel('time',fontsize=8)
-#     plt.title('min amounts, b',fontsize=10)
-#
-#
-#
-# plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
-# plt.savefig(outpath+'amount_'+letter+'_sec_follow.png')
-#
-#
-# # plt.savefig(outpath+'amount_sec_follow.eps')
 
 
 
@@ -4293,7 +4504,7 @@ plt.savefig(outpath+'jdf_secondary_amount_'+letter+'.png')
 
 
 #todo: FINAL FIG: primary_amount
-fig=plt.figure(figsize=(9.5,9.5))
+fig=plt.figure(figsize=(12.0,3.5))
 
 
 norm_loss_rate = np.zeros([steps,6])
@@ -4305,7 +4516,7 @@ pri_col = ['', '', 'darkorange', 'grey', 'g', 'k']
 
 # # COLUMN 1
 
-ax1=fig.add_subplot(4,2,1, frameon=True)
+ax1=fig.add_subplot(1,4,1, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts[:,j])) > 0.0:
@@ -4314,13 +4525,13 @@ for j in [2, 3, 4, 5]:
     plt.plot(np.arange(1,steps+1),priStep_ts[:,5],label=primary[j],c=pri_col[j])
     plt.xlim([1,steps])
     #plt.ylim([0.75,1.05])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('primary amount, solo',fontsize=10)
 
-plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.65))
+#plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.65))
 
 
-ax1=fig.add_subplot(4,2,3, frameon=True)
+ax1=fig.add_subplot(1,4,2, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts_d[:,j])) > 0.0:
@@ -4329,11 +4540,11 @@ for j in [2, 3, 4, 5]:
     plt.plot(np.arange(1,steps+1),priStep_ts_d[:,5],label=primary[j],c=pri_col[j])
     plt.xlim([1,steps])
     #plt.ylim([0.75,1.05])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('primary amount, dual',fontsize=10)
 
 
-ax1=fig.add_subplot(4,2,5, frameon=True)
+ax1=fig.add_subplot(1,4,3, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts_a[:,j])) > 0.0:
@@ -4342,11 +4553,11 @@ for j in [2, 3, 4, 5]:
     plt.plot(np.arange(1,steps+1),priStep_ts_a[:,5],label=primary[j],c=pri_col[j])
     plt.xlim([1,steps])
     #plt.ylim([0.75,1.05])
-    plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('primary amount, a',fontsize=10)
 
 
-ax1=fig.add_subplot(4,2,7, frameon=True)
+ax1=fig.add_subplot(1,4,4, frameon=True)
 
 for j in [2, 3, 4, 5]:
     if np.max(np.abs(dpriStep_ts_b[:,j])) > 0.0:
@@ -4355,11 +4566,11 @@ for j in [2, 3, 4, 5]:
     plt.plot(np.arange(1,steps+1),priStep_ts_b[:,5],label=primary[j],c=pri_col[j])
     plt.xlim([1,steps])
     #plt.ylim([0.75,1.05])
-    #plt.xticks([])
+    plt.xticks([5, 10, 15, 20, 25, 30, 35, 40, 45, 50],fontsize=8)
     plt.title('primary amount, b',fontsize=10)
 
 
-plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
+plt.subplots_adjust(top=0.8, bottom=0.1,left=0.05,right=0.95)
 plt.savefig(outpath+'jdf_primary_amount_'+letter+'.png')
 
 
@@ -4371,7 +4582,7 @@ plt.savefig(outpath+'jdf_primary_amount_'+letter+'.png')
 
 
 #todo: FINAL FIG: primary_amount_x
-fig=plt.figure(figsize=(9.5,9.5))
+fig=plt.figure(figsize=(12.0,3.5))
 
 
 norm_loss_rate = np.zeros([steps,6])
@@ -4383,7 +4594,7 @@ pri_col = ['', '', '#855d05', '#224e8f', '#156b2d', '#797979']
 
 # # COLUMN 1
 
-ax1=fig.add_subplot(4,2,1, frameon=True)
+ax1=fig.add_subplot(1,4,1, frameon=True)
 ax1.grid(True)
 
 for j in [2, 3, 4, 5]:
@@ -4395,10 +4606,10 @@ plt.xticks(np.linspace(0,50,11))
 #plt.yticks(np.linspace(0,1.0,11))
 plt.title('primary amount, solo',fontsize=10)
 
-plt.legend(fontsize=10,ncol=2,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.65))
+#plt.legend(fontsize=10,ncol=2,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.0, 1.65))
 
 
-ax1=fig.add_subplot(4,2,3, frameon=True)
+ax1=fig.add_subplot(1,4,2, frameon=True)
 ax1.grid(True)
 
 for j in [2, 3, 4, 5]:
@@ -4410,7 +4621,7 @@ plt.xticks(np.linspace(0,50,11))
 plt.title('primary amount, dual',fontsize=10)
 
 
-ax1=fig.add_subplot(4,2,5, frameon=True)
+ax1=fig.add_subplot(1,4,3, frameon=True)
 ax1.grid(True)
 
 for j in [2, 3, 4, 5]:
@@ -4422,7 +4633,7 @@ plt.xticks(np.linspace(0,50,11))
 plt.title('primary amount, a',fontsize=10)
 
 
-ax1=fig.add_subplot(4,2,7, frameon=True)
+ax1=fig.add_subplot(1,4,4, frameon=True)
 ax1.grid(True)
 
 for j in [2, 3, 4, 5]:
@@ -4434,99 +4645,5 @@ plt.xticks(np.linspace(0,50,11))
 plt.title('primary amount, b',fontsize=10)
 
 
-plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
+plt.subplots_adjust(top=0.8, bottom=0.1,left=0.05,right=0.95)
 plt.savefig(outpath+'jdf_primary_amount_X_'+letter+'.png')
-
-# print "x_priStep_ts[:,5]"
-# print x_priStep_ts[:,5]
-# print " "
-#
-# print "x_priStep_ts_d[:,5]"
-# print x_priStep_ts_d[:,5]
-# print " "
-#
-# print "x_priStep_ts_a[:,5]"
-# print x_priStep_ts_a[:,5]
-# print " "
-#
-# print "x_priStep_ts_b[:,5]"
-# print x_priStep_ts_b[:,5]
-# print " "
-
-
-
-
-
-
-
-
-
-#todo: FINAL FIG: primary_rate
-fig=plt.figure(figsize=(9.5,9.5))
-
-
-norm_loss_rate = np.zeros([steps,6])
-norm_loss_rate_d = np.zeros([steps,6])
-norm_loss_rate_a = np.zeros([steps,6])
-norm_loss_rate_b = np.zeros([steps,6])
-
-pri_col = ['', '', 'darkorange', 'grey', 'g', 'k']
-
-# # COLUMN 1
-
-ax1=fig.add_subplot(4,2,1, frameon=True)
-
-for j in [2, 3, 4, 5]:
-    if np.max(np.abs(dpriStep_ts[:,j])) > 0.0:
-        # norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[:,j]))
-        norm_loss_rate[:,j] = np.abs(dpriStep_ts[:,j])/np.max(np.abs(dpriStep_ts[-1,j]))
-    plt.plot(np.arange(1,steps+1),norm_loss_rate[:,j],label=primary[j],c=pri_col[j])
-    plt.xlim([10,steps])
-    #plt.ylim([0.75,1.05])
-    plt.xticks([])
-    plt.title('primary loss rate, solo',fontsize=10)
-
-plt.legend(fontsize=8,ncol=4,labelspacing=0.0,columnspacing=0.0,bbox_to_anchor=(1.8, 1.65))
-
-
-ax1=fig.add_subplot(4,2,3, frameon=True)
-
-for j in [2, 3, 4, 5]:
-    if np.max(np.abs(dpriStep_ts_d[:,j])) > 0.0:
-        # norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[:,j]))
-        norm_loss_rate_d[:,j] = np.abs(dpriStep_ts_d[:,j])/np.max(np.abs(dpriStep_ts_d[-1,j]))
-    plt.plot(np.arange(1,steps+1),norm_loss_rate_d[:,j],label=primary[j],c=pri_col[j])
-    plt.xlim([10,steps])
-    #plt.ylim([0.75,1.05])
-    plt.xticks([])
-    plt.title('primary loss rate, dual',fontsize=10)
-
-
-ax1=fig.add_subplot(4,2,5, frameon=True)
-
-for j in [2, 3, 4, 5]:
-    if np.max(np.abs(dpriStep_ts_a[:,j])) > 0.0:
-        # norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[:,j]))
-        norm_loss_rate_a[:,j] = np.abs(dpriStep_ts_a[:,j])/np.max(np.abs(dpriStep_ts_a[-1,j]))
-    plt.plot(np.arange(1,steps+1),norm_loss_rate_a[:,j],label=primary[j],c=pri_col[j])
-    plt.xlim([10,steps])
-    #plt.ylim([0.75,1.05])
-    plt.xticks([])
-    plt.title('primary loss rate, a',fontsize=10)
-
-
-ax1=fig.add_subplot(4,2,7, frameon=True)
-
-for j in [2, 3, 4, 5]:
-    if np.max(np.abs(dpriStep_ts_b[:,j])) > 0.0:
-        # norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[:,j]))
-        norm_loss_rate_b[:,j] = np.abs(dpriStep_ts_b[:,j])/np.max(np.abs(dpriStep_ts_b[-1,j]))
-    plt.plot(np.arange(1,steps+1),norm_loss_rate_b[:,j],label=primary[j],c=pri_col[j])
-    plt.xlim([10,steps])
-    #plt.ylim([0.75,1.05])
-    #plt.xticks([])
-    plt.title('primary loss rate, b',fontsize=10)
-
-
-plt.subplots_adjust(top=0.88, bottom=0.06,hspace=0.25,left=0.05,right=0.95)
-plt.savefig(outpath+'jdf_primary_rate_'+letter+'.png')
