@@ -622,6 +622,57 @@ tern_rb_point_list_a = np.zeros([steps,3])
 tern_rb_point_list_b = np.zeros([steps,3])
 
 
+
+
+
+
+
+tern_x_rb_K = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_K_a = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_K_b = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_K_d = np.zeros([len(yCell),len(xCell),steps])
+
+tern_x_rb_Mg = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_Mg_a = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_Mg_b = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_Mg_d = np.zeros([len(yCell),len(xCell),steps])
+
+tern_x_rb_Fe = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_Fe_a = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_Fe_b = np.zeros([len(yCell),len(xCell),steps])
+tern_x_rb_Fe_d = np.zeros([len(yCell),len(xCell),steps])
+
+tern_x_rb_list = np.zeros([len(yCell)*len(xCell),steps,3])
+tern_x_rb_list_a = np.zeros([len(yCell)*len(xCell),steps,3])
+tern_x_rb_list_b = np.zeros([len(yCell)*len(xCell),steps,3])
+tern_x_rb_list_d = np.zeros([len(yCell)*len(xCell),steps,3])
+
+tern_x_rb_point_K = np.zeros([steps])
+tern_x_rb_point_Mg = np.zeros([steps])
+tern_x_rb_point_Fe = np.zeros([steps])
+
+
+tern_x_rb_point_K_d = np.zeros([steps])
+tern_x_rb_point_Mg_d = np.zeros([steps])
+tern_x_rb_point_Fe_d = np.zeros([steps])
+
+
+tern_x_rb_point_K_a = np.zeros([steps])
+tern_x_rb_point_Mg_a = np.zeros([steps])
+tern_x_rb_point_Fe_a = np.zeros([steps])
+
+
+tern_x_rb_point_K_b = np.zeros([steps])
+tern_x_rb_point_Mg_b = np.zeros([steps])
+tern_x_rb_point_Fe_b = np.zeros([steps])
+
+
+tern_x_rb_point_list = np.zeros([steps,3])
+tern_x_rb_point_list_d = np.zeros([steps,3])
+tern_x_rb_point_list_a = np.zeros([steps,3])
+tern_x_rb_point_list_b = np.zeros([steps,3])
+
+
 any_min = []
 
 #hack: load in chem data
@@ -2907,30 +2958,15 @@ for i in range(0,steps,1):
                 tern_rb_point_Mg[i] = tern_rb_point_Mg[i]/(1.0*np.sum(tern_rb_list[:,i,0]) + 1.0*np.sum(tern_rb_list[:,i,1]) + 1.0*np.sum(tern_rb_list[:,i,2]))
                 tern_rb_point_Fe[i] = tern_rb_point_Fe[i]/(1.0*np.sum(tern_rb_list[:,i,0]) + 1.0*np.sum(tern_rb_list[:,i,1]) + 1.0*np.sum(tern_rb_list[:,i,2]))
 
-            print " "
-            print "point K" , tern_rb_point_K[i]
-            print "point Mg" , tern_rb_point_Mg[i]
-            print "point Fe" , tern_rb_point_Fe[i]
-
-
 
             tern_rb_point_K_d[i] = np.sum(tern_rb_list_d[:,i,0])
             tern_rb_point_Mg_d[i] = np.sum(tern_rb_list_d[:,i,1])
             tern_rb_point_Fe_d[i] = np.sum(tern_rb_list_d[:,i,2])
 
-
             if np.max(np.sum(tern_rb_point_K_d[i]+tern_rb_point_Mg_d[i]+tern_rb_point_Fe_d[i])) > 0.0:
                 tern_rb_point_K_d[i] = tern_rb_point_K_d[i]/(1.0*np.sum(tern_rb_list_d[:,i,0]) + 1.0*np.sum(tern_rb_list_d[:,i,1]) + 1.0*np.sum(tern_rb_list_d[:,i,2]))
                 tern_rb_point_Mg_d[i] = tern_rb_point_Mg_d[i]/(1.0*np.sum(tern_rb_list_d[:,i,0]) + 1.0*np.sum(tern_rb_list_d[:,i,1]) + 1.0*np.sum(tern_rb_list_d[:,i,2]))
                 tern_rb_point_Fe_d[i] = tern_rb_point_Fe_d[i]/(1.0*np.sum(tern_rb_list_d[:,i,0]) + 1.0*np.sum(tern_rb_list_d[:,i,1]) + 1.0*np.sum(tern_rb_list_d[:,i,2]))
-
-
-            print " "
-            print "point K_d" , tern_rb_point_K_d[i]
-            print "point Mg_d" , tern_rb_point_Mg_d[i]
-            print "point Fe_d" , tern_rb_point_Fe_d[i]
-
-
 
 
             tern_rb_point_K_a[i] = np.sum(tern_rb_list_a[:,i,0])
@@ -2942,28 +2978,15 @@ for i in range(0,steps,1):
                 tern_rb_point_Mg_a[i] = tern_rb_point_Mg_a[i]/(1.0*np.sum(tern_rb_list_a[:,i,0]) + 1.0*np.sum(tern_rb_list_a[:,i,1]) + 1.0*np.sum(tern_rb_list_a[:,i,2]))
                 tern_rb_point_Fe_a[i] = tern_rb_point_Fe_a[i]/(1.0*np.sum(tern_rb_list_a[:,i,0]) + 1.0*np.sum(tern_rb_list_a[:,i,1]) + 1.0*np.sum(tern_rb_list_a[:,i,2]))
 
-            print " "
-            print "point K_a" , tern_rb_point_K_a[i]
-            print "point Mg_a" , tern_rb_point_Mg_a[i]
-            print "point Fe_a" , tern_rb_point_Fe_a[i]
-
-
-
 
             tern_rb_point_K_b[i] = np.sum(tern_rb_list_b[:,i,0])
             tern_rb_point_Mg_b[i] = np.sum(tern_rb_list_b[:,i,1])
             tern_rb_point_Fe_b[i] = np.sum(tern_rb_list_b[:,i,2])
 
-
             if np.max(np.sum(tern_rb_point_K_b[i]+tern_rb_point_Mg_b[i]+tern_rb_point_Fe_b[i])) > 0.0:
                 tern_rb_point_K_b[i] = tern_rb_point_K_b[i]/(1.0*np.sum(tern_rb_list_b[:,i,0]) + 1.0*np.sum(tern_rb_list_b[:,i,1]) + 1.0*np.sum(tern_rb_list_b[:,i,2]))
                 tern_rb_point_Mg_b[i] = tern_rb_point_Mg_b[i]/(1.0*np.sum(tern_rb_list_b[:,i,0]) + 1.0*np.sum(tern_rb_list_b[:,i,1]) + 1.0*np.sum(tern_rb_list_b[:,i,2]))
                 tern_rb_point_Fe_b[i] = tern_rb_point_Fe_b[i]/(1.0*np.sum(tern_rb_list_b[:,i,0]) + 1.0*np.sum(tern_rb_list_b[:,i,1]) + 1.0*np.sum(tern_rb_list_b[:,i,2]))
-
-            print " "
-            print "point K_b" , tern_rb_point_K_b[i]
-            print "point Mg_b" , tern_rb_point_Mg_b[i]
-            print "point Fe_b" , tern_rb_point_Fe_b[i]
 
 
 
@@ -3036,7 +3059,6 @@ for i in range(0,steps,1):
             tax.plot(tern_fe_oxide, **tern_min_kwargs)
             tax.plot(tern_rb_point_list_d, color='r', **tern_model_kwargs)
             tax.set_title("dual")
-            tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
             tax.clear_matplotlib_ticks()
 
             tax.get_axes().axis('off')
@@ -3054,7 +3076,6 @@ for i in range(0,steps,1):
             tax.plot(tern_fe_oxide, **tern_min_kwargs)
             tax.plot(tern_rb_point_list_a, color='r', **tern_model_kwargs)
             tax.set_title("a")
-            tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
             tax.clear_matplotlib_ticks()
 
             tax.get_axes().axis('off')
@@ -3071,7 +3092,6 @@ for i in range(0,steps,1):
             tax.plot(tern_fe_oxide, **tern_min_kwargs)
             tax.plot(tern_rb_point_list_b, color='r', **tern_model_kwargs)
             tax.set_title("b")
-            tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
             tax.clear_matplotlib_ticks()
 
             tax.get_axes().axis('off')
@@ -3083,6 +3103,324 @@ for i in range(0,steps,1):
             plt.subplots_adjust(bottom=0.07, top=0.90, left=0.03, right=0.975)
             plt.savefig(outpath+"jdf_tern_rainbow/jdf_tern_rainbow_"+letter+"_"+str(i+restart)+".png")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if not os.path.exists(outpath+'jdf_tern_rainbow_X/'):
+                os.makedirs(outpath+'jdf_tern_rainbow_X/')
+
+
+
+            #todo: FIG: jdf_tern_rainbow_X
+            #fig=plt.figure(figsize=(9.0,9.0))
+            print "jdf_tern_rainbow_X"
+            fig=plt.figure(figsize=(11.0,2.25))
+
+
+            norm_tern_rb = np.zeros([len(yCell),len(xCell),minNum+1])
+            norm_tern_rb_d = np.zeros([len(yCell),len(xCell),minNum+1])
+            norm_tern_rb_a = np.zeros([len(yCell),len(xCell),minNum+1])
+            norm_tern_rb_b = np.zeros([len(yCell),len(xCell),minNum+1])
+
+
+            for j in range(len(any_min)):
+
+                # possibly normalize these to a dsecMat instead of a dsecStep
+                 if np.max(dsecStep[:,xd_move,any_min[j]]) > 0.0:
+                     norm_tern_rb[:,xd_move,any_min[j]] = dsecStep[:,xd_move,any_min[j]]/np.max(dsecStep[:,xd_move,any_min[j]])
+
+                 if np.max(dsecStep_d[:,xd_move,any_min[j]]) > 0.0:
+                     norm_tern_rb_d[:,:,any_min[j]] = dsecStep_d[:,:,any_min[j]]/np.max(dsecStep_d[:,xd_move,any_min[j]])
+
+
+                 if np.max(dsecStep_a[:,:,any_min[j]]) > 0.0:
+                     norm_tern_rb_a[:,xd_move,any_min[j]] = dsecStep_a[:,xd_move,any_min[j]]/np.max(dsecStep_a[:,xd_move,any_min[j]])
+
+                 if np.max(dsecStep_b[:,xd_move,any_min[j]]) > 0.0:
+                     norm_tern_rb_b[:,xd_move,any_min[j]] = dsecStep_b[:,xd_move,any_min[j]]/np.max(dsecStep_b[:,xd_move,any_min[j]])
+
+
+
+            for k in range(len(yCell)):
+                for j in [xd_move]:
+
+                    tern_x_rb_K[k,j,i] = 1.0*norm_tern_rb[k,j,14]
+                    tern_x_rb_Mg[k,j,i] = 0.165*norm_tern_rb[k,j,22] + 5.0*norm_tern_rb[k,j,31] + 3.0*norm_tern_rb[k,j,11] + 3.165*norm_tern_rb[k,j,2] + 3.0*norm_tern_rb[k,j,33]
+                    tern_x_rb_Fe[k,j,i] = 1.0*norm_tern_rb[k,j,14] + 2.0*norm_tern_rb[k,j,22] + 2.0*norm_tern_rb[k,j,17] + 1.0*norm_tern_rb[k,j,5] + 2.0*norm_tern_rb[k,j,15]
+
+
+
+
+                    tern_x_rb_K_d[k,j,i] = 1.0*norm_tern_rb_d[k,j,14]
+                    tern_x_rb_Mg_d[k,j,i] = 0.165*norm_tern_rb_d[k,j,22] + 5.0*norm_tern_rb_d[k,j,31] + 3.0*norm_tern_rb_d[k,j,11] + 3.165*norm_tern_rb_d[k,j,2] + 3.0*norm_tern_rb_d[k,j,33]
+                    tern_x_rb_Fe_d[k,j,i] = 1.0*norm_tern_rb_d[k,j,14] + 2.0*norm_tern_rb_d[k,j,22] + 2.0*norm_tern_rb_d[k,j,17] + 1.0*norm_tern_rb_d[k,j,5] + 2.0*norm_tern_rb_d[k,j,15]
+
+
+                    tern_x_rb_K_a[k,j,i] = 1.0*norm_tern_rb_a[k,j,14]
+                    tern_x_rb_Mg_a[k,j,i] = 0.165*norm_tern_rb_a[k,j,22] + 5.0*norm_tern_rb_a[k,j,31] + 3.0*norm_tern_rb_a[k,j,11] + 3.165*norm_tern_rb_a[k,j,2] + 3.0*norm_tern_rb_a[k,j,33]
+                    tern_x_rb_Fe_a[k,j,i] = 1.0*norm_tern_rb_a[k,j,14] + 2.0*norm_tern_rb_a[k,j,22] + 2.0*norm_tern_rb_a[k,j,17] + 1.0*norm_tern_rb_a[k,j,5] + 2.0*norm_tern_rb_a[k,j,15]
+
+
+
+                    tern_x_rb_K_b[k,j,i] = 1.0*norm_tern_rb_b[k,j,14]
+                    tern_x_rb_Mg_b[k,j,i] = 0.165*norm_tern_rb_b[k,j,22] + 5.0*norm_tern_rb_b[k,j,31] + 3.0*norm_tern_rb_b[k,j,11] + 3.165*norm_tern_rb_b[k,j,2] + 3.0*norm_tern_rb_b[k,j,33]
+                    tern_x_rb_Fe_b[k,j,i] = 1.0*norm_tern_rb_b[k,j,14] + 2.0*norm_tern_rb_b[k,j,22] + 2.0*norm_tern_rb_b[k,j,17] + 1.0*norm_tern_rb_b[k,j,5] + 2.0*norm_tern_rb_b[k,j,15]
+
+
+
+            tern_count = 0
+
+            for k in range(len(yCell)):
+                for j in [xd_move]:
+                    tern_x_rb_list[tern_count,i,0] = 39.0*tern_x_rb_K[k,j,i]
+                    tern_x_rb_list[tern_count,i,1] = 23.0*tern_x_rb_Mg[k,j,i]
+                    tern_x_rb_list[tern_count,i,2] = 56.0*tern_x_rb_Fe[k,j,i]
+                    if np.max(tern_x_rb_list[tern_count,i,:]) > 0.0:
+                        tern_x_rb_list[tern_count,i,:] = tern_x_rb_list[tern_count,i,:]/(1.0*tern_x_rb_list[tern_count,i,0] + 1.0*tern_x_rb_list[tern_count,i,1] + 1.0*tern_x_rb_list[tern_count,i,2])
+
+                    tern_x_rb_list_d[tern_count,i,0] = 39.0*tern_x_rb_K_d[k,j,i]
+                    tern_x_rb_list_d[tern_count,i,1] = 23.0*tern_x_rb_Mg_d[k,j,i]
+                    tern_x_rb_list_d[tern_count,i,2] = 56.0*tern_x_rb_Fe_d[k,j,i]
+                    if np.max(tern_x_rb_list_d[tern_count,i,:]) > 0.0:
+                        tern_x_rb_list_d[tern_count,i,:] = tern_x_rb_list_d[tern_count,i,:]/(1.0*tern_x_rb_list_d[tern_count,i,0] + 1.0*tern_x_rb_list_d[tern_count,i,1] + 1.0*tern_x_rb_list_d[tern_count,i,2])
+
+
+                    tern_x_rb_list_a[tern_count,i,0] = 39.0*tern_x_rb_K_a[k,j,i]
+                    tern_x_rb_list_a[tern_count,i,1] = 23.0*tern_x_rb_Mg_a[k,j,i]
+                    tern_x_rb_list_a[tern_count,i,2] = 56.0*tern_x_rb_Fe_a[k,j,i]
+                    if np.max(tern_x_rb_list_a[tern_count,i,:]) > 0.0:
+                        tern_x_rb_list_a[tern_count,i,:] = tern_x_rb_list_a[tern_count,i,:]/(1.0*tern_x_rb_list_a[tern_count,i,0] + 1.0*tern_x_rb_list_a[tern_count,i,1] + 1.0*tern_x_rb_list_a[tern_count,i,2])
+
+
+                    tern_x_rb_list_b[tern_count,i,0] = 39.0*tern_x_rb_K_b[k,j,i]
+                    tern_x_rb_list_b[tern_count,i,1] = 23.0*tern_x_rb_Mg_b[k,j,i]
+                    tern_x_rb_list_b[tern_count,i,2] = 56.0*tern_x_rb_Fe_b[k,j,i]
+                    if np.max(tern_x_rb_list_b[tern_count,i,:]) > 0.0:
+                        tern_x_rb_list_b[tern_count,i,:] = tern_x_rb_list_b[tern_count,i,:]/(1.0*tern_x_rb_list_b[tern_count,i,0] + 1.0*tern_x_rb_list_b[tern_count,i,1] + 1.0*tern_x_rb_list_b[tern_count,i,2])
+
+
+
+
+                    tern_count = tern_count + 1
+
+            tern_x_rb_point_K[i] = np.sum(tern_x_rb_list[:,i,0])
+            tern_x_rb_point_Mg[i] = np.sum(tern_x_rb_list[:,i,1])
+            tern_x_rb_point_Fe[i] = np.sum(tern_x_rb_list[:,i,2])
+
+            if np.max(np.sum(tern_x_rb_point_K[i]+tern_x_rb_point_Mg[i]+tern_x_rb_point_Fe[i])) > 0.0:
+                tern_x_rb_point_K[i] = tern_x_rb_point_K[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
+                tern_x_rb_point_Mg[i] = tern_x_rb_point_Mg[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
+                tern_x_rb_point_Fe[i] = tern_x_rb_point_Fe[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
+
+            # print " "
+            # print "point K" , tern_x_rb_point_K[i]
+            # print "point Mg" , tern_x_rb_point_Mg[i]
+            # print "point Fe" , tern_x_rb_point_Fe[i]
+
+
+
+            tern_x_rb_point_K_d[i] = np.sum(tern_x_rb_list_d[:,i,0])
+            tern_x_rb_point_Mg_d[i] = np.sum(tern_x_rb_list_d[:,i,1])
+            tern_x_rb_point_Fe_d[i] = np.sum(tern_x_rb_list_d[:,i,2])
+
+            if np.max(np.sum(tern_x_rb_point_K_d[i]+tern_x_rb_point_Mg_d[i]+tern_x_rb_point_Fe_d[i])) > 0.0:
+                tern_x_rb_point_K_d[i] = tern_x_rb_point_K_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
+                tern_x_rb_point_Mg_d[i] = tern_x_rb_point_Mg_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
+                tern_x_rb_point_Fe_d[i] = tern_x_rb_point_Fe_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
+
+            # print " "
+            # print "point K_d" , tern_x_rb_point_K_d[i]
+            # print "point Mg_d" , tern_x_rb_point_Mg_d[i]
+            # print "point Fe_d" , tern_x_rb_point_Fe_d[i]
+
+
+
+
+            tern_x_rb_point_K_a[i] = np.sum(tern_x_rb_list_a[:,i,0])
+            tern_x_rb_point_Mg_a[i] = np.sum(tern_x_rb_list_a[:,i,1])
+            tern_x_rb_point_Fe_a[i] = np.sum(tern_x_rb_list_a[:,i,2])
+
+            if np.max(np.sum(tern_x_rb_point_K_a[i]+tern_x_rb_point_Mg_a[i]+tern_x_rb_point_Fe_a[i])) > 0.0:
+                tern_x_rb_point_K_a[i] = tern_x_rb_point_K_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
+                tern_x_rb_point_Mg_a[i] = tern_x_rb_point_Mg_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
+                tern_x_rb_point_Fe_a[i] = tern_x_rb_point_Fe_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
+
+            # print " "
+            # print "point K_a" , tern_x_rb_point_K_a[i]
+            # print "point Mg_a" , tern_x_rb_point_Mg_a[i]
+            # print "point Fe_a" , tern_x_rb_point_Fe_a[i]
+
+
+
+
+            tern_x_rb_point_K_b[i] = np.sum(tern_x_rb_list_b[:,i,0])
+            tern_x_rb_point_Mg_b[i] = np.sum(tern_x_rb_list_b[:,i,1])
+            tern_x_rb_point_Fe_b[i] = np.sum(tern_x_rb_list_b[:,i,2])
+
+
+            if np.max(np.sum(tern_x_rb_point_K_b[i]+tern_x_rb_point_Mg_b[i]+tern_x_rb_point_Fe_b[i])) > 0.0:
+                tern_x_rb_point_K_b[i] = tern_x_rb_point_K_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
+                tern_x_rb_point_Mg_b[i] = tern_x_rb_point_Mg_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
+                tern_x_rb_point_Fe_b[i] = tern_x_rb_point_Fe_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
+
+            # print " "
+            # print "point K_b" , tern_x_rb_point_K_b[i]
+            # print "point Mg_b" , tern_x_rb_point_Mg_b[i]
+            # print "point Fe_b" , tern_x_rb_point_Fe_b[i]
+
+
+
+
+            for j in range(steps):
+
+                tern_x_rb_point_list[i,0] = tern_x_rb_point_K[i]
+                tern_x_rb_point_list[i,1] = tern_x_rb_point_Mg[i]
+                tern_x_rb_point_list[i,2] = tern_x_rb_point_Fe[i]
+
+                tern_x_rb_point_list_d[i,0] = tern_x_rb_point_K_d[i]
+                tern_x_rb_point_list_d[i,1] = tern_x_rb_point_Mg_d[i]
+                tern_x_rb_point_list_d[i,2] = tern_x_rb_point_Fe_d[i]
+
+                tern_x_rb_point_list_a[i,0] = tern_x_rb_point_K_a[i]
+                tern_x_rb_point_list_a[i,1] = tern_x_rb_point_Mg_a[i]
+                tern_x_rb_point_list_a[i,2] = tern_x_rb_point_Fe_a[i]
+
+                tern_x_rb_point_list_b[i,0] = tern_x_rb_point_K_b[i]
+                tern_x_rb_point_list_b[i,1] = tern_x_rb_point_Mg_b[i]
+                tern_x_rb_point_list_b[i,2] = tern_x_rb_point_Fe_b[i]
+
+
+
+
+
+            print " "
+
+
+
+
+
+            tern_size = 8
+            tern_size_small = 10
+            tern_saponite_mg = [[0.0, 1.0, 0.0]]
+            tern_fe_celadonite = [[0.5, 0.0, 0.5]]
+            tern_fe_oxide = [[0.0, 0.0, 1.0]]
+            tern_min_col = '#524aaf'
+
+
+            # tern_min_kwargs = {'marker': 's', 'color': tern_min_col}
+            tern_min_kwargs = dict(color=tern_min_col, marker='s', markersize=tern_size, markeredgecolor='k', linewidth=0.0, zorder=10)
+            tern_model_kwargs = dict(marker='.', markersize=tern_size_small, markeredgecolor='none', linewidth=0.0)
+            tern_model_kwargs_big = dict(marker='.', markersize=tern_size_small*2.0, markeredgecolor='none', linewidth=0.0)
+
+            tern_model_kwargs_scatter = dict(marker='o', s=tern_size_small, edgecolor='none')
+            colors=steps
+
+            # colors = cm.rainbow(np.linspace(0, 1, len(Ys)))
+            # cs = [colors[i//len(X)] for i in range(len(Ys)*len(X))]
+
+            cmm = plt.get_cmap('jet')
+
+
+
+            ax=fig.add_subplot(1, 4, 1)
+            fig, tax = ternary.figure(ax=ax,scale=1.0)
+            tax.boundary()
+
+            tax.gridlines(multiple=0.2, color="black")
+            tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            if i > 5:
+                for iii in range(1,i):
+                    colorz = cmm(1.*iii/steps)
+                    tax.scatter(tern_x_rb_point_list[iii-1:iii,:], c=colorz, edgecolor='none')
+            tax.set_title("solo")
+            tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
+            tax.clear_matplotlib_ticks()
+
+            tax.get_axes().axis('off')
+
+
+
+            ax=fig.add_subplot(1, 4, 2)
+            fig, tax = ternary.figure(ax=ax,scale=1.0)
+            tax.boundary()
+
+            tax.gridlines(multiple=0.2, color="black")
+            tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            if i > 5:
+                for iii in range(1,i):
+                    colorz = cmm(1.*iii/steps)
+                    tax.scatter(tern_x_rb_point_list_d[iii-1:iii,:], c=colorz, edgecolor='none')
+            tax.set_title("dual")
+            tax.clear_matplotlib_ticks()
+
+            tax.get_axes().axis('off')
+
+
+
+
+            ax=fig.add_subplot(1, 4, 3)
+            fig, tax = ternary.figure(ax=ax,scale=1.0)
+            tax.boundary()
+
+            tax.gridlines(multiple=0.2, color="black")
+            tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            if i > 5:
+                for iii in range(1,i):
+                    colorz = cmm(1.*iii/steps)
+                    tax.scatter(tern_x_rb_point_list_a[iii-1:iii,:], c=colorz, edgecolor='none')
+            tax.set_title("a")
+            tax.clear_matplotlib_ticks()
+
+            tax.get_axes().axis('off')
+
+
+
+            ax=fig.add_subplot(1, 4, 4)
+            fig, tax = ternary.figure(ax=ax,scale=1.0)
+            tax.boundary()
+
+            tax.gridlines(multiple=0.2, color="black")
+            tax.plot(tern_saponite_mg, label='model phases', **tern_min_kwargs)
+            tax.plot(tern_fe_celadonite, **tern_min_kwargs)
+            tax.plot(tern_fe_oxide, **tern_min_kwargs)
+            if i > 5:
+                for iii in range(1,i):
+                    colorz = cmm(1.*iii/steps)
+                    tax.scatter(tern_x_rb_point_list_b[iii-1:iii,:], c=colorz, edgecolor='none')
+            tax.set_title("b")
+            tax.clear_matplotlib_ticks()
+
+            tax.get_axes().axis('off')
+
+
+
+
+            #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
+            plt.subplots_adjust(bottom=0.07, top=0.90, left=0.03, right=0.975)
+            plt.savefig(outpath+"jdf_tern_rainbow_X/jdf_tern_rainbow_X_"+letter+"_"+str(i+restart)+".png")
 
 
 
