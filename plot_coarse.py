@@ -1178,7 +1178,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 5
+    chem6 = 6
 
     if chem6 == 6:
 
@@ -1921,6 +1921,10 @@ for i in range(0,steps,1):
 
 
 
+            #todo:  FIGURE jdf_cont_sec
+            print "jdf_cont_sec"
+            if not os.path.exists(outpath+'jdf_cont_sec/'):
+                os.makedirs(outpath+'jdf_cont_sec/')
 
 
             d_alpha = 0.5
@@ -1984,7 +1988,7 @@ for i in range(0,steps,1):
                             bg_alpha=1.0,
                             ed_col='#5c9400')
 
-            c_goet = dict(name='goethite', ind=[7],
+            c_goet = dict(name='goethite+hem', ind=[7,17],
                             min_color='#888888',
                             hatching='',
                             bg_alpha=0.4,
@@ -2040,10 +2044,12 @@ for i in range(0,steps,1):
 
 
 
-            # tod0: FIGURE: jdf_Sec_Cont (binary contour plot)
-            # print "jdf_Sec_Cont plot"
-            # fig=plt.figure(figsize=(11.0,4.6))
-            #
+            #todo: FIGURE: jdf_Sec_Cont (binary contour plot)
+            print "jdf_Sec_Cont plot"
+            fig=plt.figure(figsize=(11.0,4.6))
+
+            # # # commented out 11/30/17 by NAVAH X
+
             # chemcont_vol(alt_vol0, alt_vol, 3, 2, 2, 10, 'solo chamber', xtix=1, ytix=0,frame_lines=1, cb=1, cb_title='alteration vol')
             #
             # chemcont_vol(alt_vol0_d, alt_vol_d, 3, 2, 4, 10, 'dual chamber', xtix=0, ytix=0,frame_lines=1)
@@ -2051,288 +2057,301 @@ for i in range(0,steps,1):
             # chemcont_vol(alt_vol0_a, alt_vol_a, 3, 4, 11, 10, 'chamber a only', xtix=0, ytix=0,frame_lines=1)
             #
             # chemcont_vol(alt_vol0_b, alt_vol_b, 3, 4, 12, 10, 'chamber b only', xtix=0, ytix=0,frame_lines=1)
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            # bind = c_u_smec
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, 'solo chamber', xtix=1, ytix=1, frame_lines=1,
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg1 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_sap
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg2 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_phil
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg3 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_pyrite
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg4 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_talc
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg5 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_nont
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg6 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_celad
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg7 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_goet
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg8 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # bind = c_u_zeo
-            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg9 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
+
+
+
+
+
+
+
+            bind = c_u_smec
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, 'solo chamber', xtix=1, ytix=1, frame_lines=1,
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg1 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_sap
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg2 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_phil
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg3 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_pyrite
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg4 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_talc
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg5 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_nont
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg6 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_celad
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg7 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_goet
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg8 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_u_zeo
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg9 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_chlor
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg10 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+            bind = c_verm
+            if np.any(secStep[:,:,bind['ind']] > 0.0):
+                chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            lg11 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
+
+
+
+
+
+
+
             # bind = c_chlor
             # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+            # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
             #
             # lg10 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
+
             #
+            # bind = c_fe_sap
+            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
             #
             # bind = c_verm
             # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # lg11 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            #
-            # # bind = c_chlor
-            # # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
-            # #
-            # # lg10 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
-            #
-            # #
-            # # bind = c_fe_sap
-            # # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
-            # #
-            # # bind = c_verm
-            # # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
-            # #
-            # # bind = c_hem
-            # # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
-            # #
-            # # bind = c_pyrr
-            # # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
-            # # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
-            #
-            #
-            #
-            # #
-            # # lg1 = Patch(facecolor=c_u_smec['min_color'], label='u smectites', alpha=c_u_smec['bg_alpha'], hatch=c_u_smec['hatching'])
-            # # lg2 = Patch(facecolor=c_phil['min_color'], label='phillipsite', alpha=c_phil['bg_alpha'], hatch=c_phil['hatching'])
-            # # lg2 = Patch(facecolor='g', label='zeolites', alpha=0.5)
-            # # lg3 = Patch(facecolor='gold', label='talc', alpha=0.5)
-            # # lg4 = Patch(facecolor='w', label='chlorites', hatch ='////')
-            # # lg5 = Patch(facecolor='w', label='goethite', hatch ='\\')
-            # # lg6 = Patch(facecolor='w', label='pyrite', hatch ='O')
-            # # lg7 = Patch(facecolor='b', label='celadonite', alpha=0.5)
-            # # lg8 = Patch(facecolor='grey', label='caco3', alpha=0.5)
-            #
-            # # plt.legend([lg1, lg2, lg3, lg4],[lg1.get_label(), lg2.get_label(), lg3.get_label(), lg4.get_label()],fontsize=8,ncol=3,bbox_to_anchor=(1.0, -1.45),loc=8)
-            #
-            # b_legend = plt.legend([lg1, lg2, lg3, lg4, lg5, lg6, lg7, lg8, lg9, lg10, lg11],[lg1.get_label(), lg2.get_label(), lg3.get_label(), lg4.get_label(), lg5.get_label(), lg6.get_label(), lg7.get_label(), lg8.get_label(), lg9.get_label(), lg10.get_label(), lg11.get_label()],fontsize=10,ncol=3,bbox_to_anchor=(0.5, -3.2),loc=8)
-            # b_legend.get_frame().set_linewidth(0.0)
-            #
-            #
-            #
-            # bind = c_u_smec
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, 'dual chamber', xtix=0, ytix=1, frame_lines=1,
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_sap
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_phil
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_pyrite
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_talc
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_nont
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_celad
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_goet
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_u_zeo
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_chlor
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_verm
-            # chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            # bind = c_u_smec
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, 'chamber a only', xtix=0, ytix=0, frame_lines=1,
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_sap
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_phil
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_pyrite
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_talc
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_nont
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_celad
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_goet
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_u_zeo
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_chlor
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_verm
-            # chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            # bind = c_u_smec
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, 'chamber b only', xtix=0, ytix=0, frame_lines=1,
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_sap
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_phil
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_pyrite
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_talc
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_nont
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_celad
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_goet
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_u_zeo
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_chlor
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            # bind = c_verm
-            # chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
-            # min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
-            #
-            #
-            #
-            #
-            # plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
-            # plt.savefig(outpath+'jdf_'+letter+'_Sec_Cont_'+str(i+restart)+'.png')
+            # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+            #
+            # bind = c_hem
+            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+            #
+            # bind = c_pyrr
+            # chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
+            # min_color=bind['min_color'], to_hatch=bind['to_hatch'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], to_fill=bind['to_fill'])
+
+
+
+
+
+
+
+            # # commented out 11/30/17 by NAVAH X
+
+
+
+            b_legend = plt.legend([lg1, lg2, lg3, lg4, lg5, lg6, lg7, lg8, lg9, lg10, lg11],[lg1.get_label(), lg2.get_label(), lg3.get_label(), lg4.get_label(), lg5.get_label(), lg6.get_label(), lg7.get_label(), lg8.get_label(), lg9.get_label(), lg10.get_label(), lg11.get_label()],fontsize=10,ncol=3,bbox_to_anchor=(0.5, -3.2),loc=8)
+            # b_legend = plt.legend([lg1, lg2, lg4, lg8, lg10],[lg1.get_label(), lg2.get_label(),  lg4.get_label(),  lg8.get_label(),  lg10.get_label()],fontsize=10,ncol=3,bbox_to_anchor=(0.5, -3.2),loc=8)
+            b_legend.get_frame().set_linewidth(0.0)
+
+
+
+            bind = c_u_smec
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, 'dual chamber', xtix=0, ytix=1, frame_lines=1,
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_sap
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_phil
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_pyrite
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_talc
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_nont
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_celad
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_goet
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_u_zeo
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_chlor
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_verm
+            chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+
+
+
+
+
+
+            # # commented out 11/30/17 by NAVAH X
+
+
+            bind = c_u_smec
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, 'chamber a only', xtix=0, ytix=0, frame_lines=1,
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_sap
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_phil
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_pyrite
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_talc
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_nont
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_celad
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_goet
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_u_zeo
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_chlor
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_verm
+            chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 4, 9, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            bind = c_u_smec
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, 'chamber b only', xtix=0, ytix=0, frame_lines=1,
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_sap
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_phil
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_pyrite
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_talc
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_nont
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_celad
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_goet
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_u_zeo
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_chlor
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+            bind = c_verm
+            chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 4, 10, 1, '',
+            min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
+
+
+
+
+            plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
+            plt.savefig(outpath+'/jdf_cont_sec/jdf_'+letter+'_cont_sec_'+str(i+restart)+'.png',bbox_inches='tight')
 
 
             bar_bins = 5
@@ -3013,10 +3032,6 @@ for i in range(0,steps,1):
 
 
 
-            print " "
-
-
-
 
 
             tern_size = 8
@@ -3131,7 +3146,7 @@ for i in range(0,steps,1):
             #todo: FIG: jdf_tern_rainbow_X
             #fig=plt.figure(figsize=(9.0,9.0))
             print "jdf_tern_rainbow_X"
-            fig=plt.figure(figsize=(11.0,2.25))
+            fig=plt.figure(figsize=(16.5,3.375))
 
 
             norm_tern_rb = np.zeros([len(yCell),len(xCell),minNum+1])
@@ -3143,18 +3158,50 @@ for i in range(0,steps,1):
             for j in range(len(any_min)):
 
                 # possibly normalize these to a dsecMat instead of a dsecStep
-                 if np.max(dsecStep[:,xd_move,any_min[j]]) > 0.0:
-                     norm_tern_rb[:,xd_move,any_min[j]] = dsecStep[:,xd_move,any_min[j]]/np.max(dsecStep[:,xd_move,any_min[j]])
+                #  if np.max(dsecStep[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb[:,xd_move,any_min[j]] = dsecStep[:,xd_move,any_min[j]]/np.max(dsecStep[:,xd_move,any_min[j]])
+                 #
+                #  if np.max(dsecStep_d[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb_d[:,xd_move,any_min[j]] = dsecStep_d[:,xd_move,any_min[j]]/np.max(dsecStep_d[:,xd_move,any_min[j]])
+                 #
+                 #
+                #  if np.max(dsecStep_a[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb_a[:,xd_move,any_min[j]] = dsecStep_a[:,xd_move,any_min[j]]/np.max(dsecStep_a[:,xd_move,any_min[j]])
+                 #
+                #  if np.max(dsecStep_b[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb_b[:,xd_move,any_min[j]] = dsecStep_b[:,xd_move,any_min[j]]/np.max(dsecStep_b[:,xd_move,any_min[j]])
 
-                 if np.max(dsecStep_d[:,xd_move,any_min[j]]) > 0.0:
-                     norm_tern_rb_d[:,:,any_min[j]] = dsecStep_d[:,:,any_min[j]]/np.max(dsecStep_d[:,xd_move,any_min[j]])
 
 
-                 if np.max(dsecStep_a[:,:,any_min[j]]) > 0.0:
-                     norm_tern_rb_a[:,xd_move,any_min[j]] = dsecStep_a[:,xd_move,any_min[j]]/np.max(dsecStep_a[:,xd_move,any_min[j]])
 
-                 if np.max(dsecStep_b[:,xd_move,any_min[j]]) > 0.0:
-                     norm_tern_rb_b[:,xd_move,any_min[j]] = dsecStep_b[:,xd_move,any_min[j]]/np.max(dsecStep_b[:,xd_move,any_min[j]])
+                if np.max(dsecStep[:,xd_move,any_min[j]]) > 0.0:
+                    norm_tern_rb[:,xd_move,any_min[j]] = dsecStep[:,xd_move,any_min[j]]*density[any_min[j]]/molar[any_min[j]]#/np.max(dsecStep[:,xd_move,any_min[j]])
+
+                if np.max(dsecStep_d[:,xd_move,any_min[j]]) > 0.0:
+                    norm_tern_rb_d[:,xd_move,any_min[j]] = dsecStep_d[:,xd_move,any_min[j]]*density[any_min[j]]/molar[any_min[j]]#/np.max(dsecStep_d[:,xd_move,any_min[j]])
+
+
+                if np.max(dsecStep_a[:,xd_move,any_min[j]]) > 0.0:
+                    norm_tern_rb_a[:,xd_move,any_min[j]] = dsecStep_a[:,xd_move,any_min[j]]*density[any_min[j]]/molar[any_min[j]]#/np.max(dsecStep_a[:,xd_move,any_min[j]])
+
+                if np.max(dsecStep_b[:,xd_move,any_min[j]]) > 0.0:
+                    norm_tern_rb_b[:,xd_move,any_min[j]] = dsecStep_b[:,xd_move,any_min[j]]*density[any_min[j]]/molar[any_min[j]]#/np.max(dsecStep_b[:,xd_move,any_min[j]])
+
+
+
+
+                #  if np.max(dsecStep[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb[:,xd_move,any_min[j]] = dsecStep[:,xd_move,any_min[j]]/np.max(dsecMat[:,:,any_min[j]])
+                 #
+                #  if np.max(dsecStep_d[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb_d[:,xd_move,any_min[j]] = dsecStep_d[:,xd_move,any_min[j]]/np.max(dsecMat_d[:,:,any_min[j]])
+                 #
+                 #
+                #  if np.max(dsecStep_a[:,:,any_min[j]]) > 0.0:
+                #      norm_tern_rb_a[:,xd_move,any_min[j]] = dsecStep_a[:,xd_move,any_min[j]]/np.max(dsecMat_a[:,:,any_min[j]])
+                 #
+                #  if np.max(dsecStep_b[:,xd_move,any_min[j]]) > 0.0:
+                #      norm_tern_rb_b[:,xd_move,any_min[j]] = dsecStep_b[:,xd_move,any_min[j]]/np.max(dsecMat_b[:,:,any_min[j]])
 
 
 
@@ -3165,24 +3212,19 @@ for i in range(0,steps,1):
                     tern_x_rb_Mg[k,j,i] = 0.165*norm_tern_rb[k,j,22] + 5.0*norm_tern_rb[k,j,31] + 3.0*norm_tern_rb[k,j,11] + 3.165*norm_tern_rb[k,j,2] + 3.0*norm_tern_rb[k,j,33]
                     tern_x_rb_Fe[k,j,i] = 1.0*norm_tern_rb[k,j,14] + 2.0*norm_tern_rb[k,j,22] + 2.0*norm_tern_rb[k,j,17] + 1.0*norm_tern_rb[k,j,5] + 2.0*norm_tern_rb[k,j,15]
 
-
-
-
                     tern_x_rb_K_d[k,j,i] = 1.0*norm_tern_rb_d[k,j,14]
                     tern_x_rb_Mg_d[k,j,i] = 0.165*norm_tern_rb_d[k,j,22] + 5.0*norm_tern_rb_d[k,j,31] + 3.0*norm_tern_rb_d[k,j,11] + 3.165*norm_tern_rb_d[k,j,2] + 3.0*norm_tern_rb_d[k,j,33]
                     tern_x_rb_Fe_d[k,j,i] = 1.0*norm_tern_rb_d[k,j,14] + 2.0*norm_tern_rb_d[k,j,22] + 2.0*norm_tern_rb_d[k,j,17] + 1.0*norm_tern_rb_d[k,j,5] + 2.0*norm_tern_rb_d[k,j,15]
-
 
                     tern_x_rb_K_a[k,j,i] = 1.0*norm_tern_rb_a[k,j,14]
                     tern_x_rb_Mg_a[k,j,i] = 0.165*norm_tern_rb_a[k,j,22] + 5.0*norm_tern_rb_a[k,j,31] + 3.0*norm_tern_rb_a[k,j,11] + 3.165*norm_tern_rb_a[k,j,2] + 3.0*norm_tern_rb_a[k,j,33]
                     tern_x_rb_Fe_a[k,j,i] = 1.0*norm_tern_rb_a[k,j,14] + 2.0*norm_tern_rb_a[k,j,22] + 2.0*norm_tern_rb_a[k,j,17] + 1.0*norm_tern_rb_a[k,j,5] + 2.0*norm_tern_rb_a[k,j,15]
 
-
-
                     tern_x_rb_K_b[k,j,i] = 1.0*norm_tern_rb_b[k,j,14]
                     tern_x_rb_Mg_b[k,j,i] = 0.165*norm_tern_rb_b[k,j,22] + 5.0*norm_tern_rb_b[k,j,31] + 3.0*norm_tern_rb_b[k,j,11] + 3.165*norm_tern_rb_b[k,j,2] + 3.0*norm_tern_rb_b[k,j,33]
                     tern_x_rb_Fe_b[k,j,i] = 1.0*norm_tern_rb_b[k,j,14] + 2.0*norm_tern_rb_b[k,j,22] + 2.0*norm_tern_rb_b[k,j,17] + 1.0*norm_tern_rb_b[k,j,5] + 2.0*norm_tern_rb_b[k,j,15]
 
+            # print tern_x_rb_Mg_a[:,xd_move,i]
 
 
             tern_count = 0
@@ -3216,6 +3258,33 @@ for i in range(0,steps,1):
                         tern_x_rb_list_b[tern_count,i,:] = tern_x_rb_list_b[tern_count,i,:]/(1.0*tern_x_rb_list_b[tern_count,i,0] + 1.0*tern_x_rb_list_b[tern_count,i,1] + 1.0*tern_x_rb_list_b[tern_count,i,2])
 
 
+                    # tern_x_rb_list[tern_count,i,0] = 39.0*tern_x_rb_K[k,j,i]
+                    # tern_x_rb_list[tern_count,i,1] = 39.0*tern_x_rb_Mg[k,j,i]
+                    # tern_x_rb_list[tern_count,i,2] = 39.0*tern_x_rb_Fe[k,j,i]
+                    # if np.max(tern_x_rb_list[tern_count,i,:]) > 0.0:
+                    #     tern_x_rb_list[tern_count,i,:] = tern_x_rb_list[tern_count,i,:]/(1.0*tern_x_rb_list[tern_count,i,0] + 1.0*tern_x_rb_list[tern_count,i,1] + 1.0*tern_x_rb_list[tern_count,i,2])
+                    #
+                    # tern_x_rb_list_d[tern_count,i,0] = 39.0*tern_x_rb_K_d[k,j,i]
+                    # tern_x_rb_list_d[tern_count,i,1] = 39.0*tern_x_rb_Mg_d[k,j,i]
+                    # tern_x_rb_list_d[tern_count,i,2] = 39.0*tern_x_rb_Fe_d[k,j,i]
+                    # if np.max(tern_x_rb_list_d[tern_count,i,:]) > 0.0:
+                    #     tern_x_rb_list_d[tern_count,i,:] = tern_x_rb_list_d[tern_count,i,:]/(1.0*tern_x_rb_list_d[tern_count,i,0] + 1.0*tern_x_rb_list_d[tern_count,i,1] + 1.0*tern_x_rb_list_d[tern_count,i,2])
+                    #
+                    #
+                    # tern_x_rb_list_a[tern_count,i,0] = 39.0*tern_x_rb_K_a[k,j,i]
+                    # tern_x_rb_list_a[tern_count,i,1] = 39.0*tern_x_rb_Mg_a[k,j,i]
+                    # tern_x_rb_list_a[tern_count,i,2] = 39.0*tern_x_rb_Fe_a[k,j,i]
+                    # if np.max(tern_x_rb_list_a[tern_count,i,:]) > 0.0:
+                    #     tern_x_rb_list_a[tern_count,i,:] = tern_x_rb_list_a[tern_count,i,:]/(1.0*tern_x_rb_list_a[tern_count,i,0] + 1.0*tern_x_rb_list_a[tern_count,i,1] + 1.0*tern_x_rb_list_a[tern_count,i,2])
+                    #
+                    #
+                    # tern_x_rb_list_b[tern_count,i,0] = 39.0*tern_x_rb_K_b[k,j,i]
+                    # tern_x_rb_list_b[tern_count,i,1] = 39.0*tern_x_rb_Mg_b[k,j,i]
+                    # tern_x_rb_list_b[tern_count,i,2] = 39.0*tern_x_rb_Fe_b[k,j,i]
+                    # if np.max(tern_x_rb_list_b[tern_count,i,:]) > 0.0:
+                    #     tern_x_rb_list_b[tern_count,i,:] = tern_x_rb_list_b[tern_count,i,:]/(1.0*tern_x_rb_list_b[tern_count,i,0] + 1.0*tern_x_rb_list_b[tern_count,i,1] + 1.0*tern_x_rb_list_b[tern_count,i,2])
+
+
 
 
                     tern_count = tern_count + 1
@@ -3229,10 +3298,10 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg[i] = tern_x_rb_point_Mg[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
                 tern_x_rb_point_Fe[i] = tern_x_rb_point_Fe[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
 
-            # print " "
-            # print "point K" , tern_x_rb_point_K[i]
-            # print "point Mg" , tern_x_rb_point_Mg[i]
-            # print "point Fe" , tern_x_rb_point_Fe[i]
+            print " "
+            print "point K" , tern_x_rb_point_K[i]
+            print "point Mg" , tern_x_rb_point_Mg[i]
+            print "point Fe" , tern_x_rb_point_Fe[i]
 
 
 
@@ -3245,10 +3314,10 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg_d[i] = tern_x_rb_point_Mg_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
                 tern_x_rb_point_Fe_d[i] = tern_x_rb_point_Fe_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
 
-            # print " "
-            # print "point K_d" , tern_x_rb_point_K_d[i]
-            # print "point Mg_d" , tern_x_rb_point_Mg_d[i]
-            # print "point Fe_d" , tern_x_rb_point_Fe_d[i]
+            print " "
+            print "point K_d" , tern_x_rb_point_K_d[i]
+            print "point Mg_d" , tern_x_rb_point_Mg_d[i]
+            print "point Fe_d" , tern_x_rb_point_Fe_d[i]
 
 
 
@@ -3262,10 +3331,10 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg_a[i] = tern_x_rb_point_Mg_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
                 tern_x_rb_point_Fe_a[i] = tern_x_rb_point_Fe_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
 
-            # print " "
-            # print "point K_a" , tern_x_rb_point_K_a[i]
-            # print "point Mg_a" , tern_x_rb_point_Mg_a[i]
-            # print "point Fe_a" , tern_x_rb_point_Fe_a[i]
+            print " "
+            print "point K_a" , tern_x_rb_point_K_a[i]
+            print "point Mg_a" , tern_x_rb_point_Mg_a[i]
+            print "point Fe_a" , tern_x_rb_point_Fe_a[i]
 
 
 
@@ -3280,12 +3349,12 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg_b[i] = tern_x_rb_point_Mg_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
                 tern_x_rb_point_Fe_b[i] = tern_x_rb_point_Fe_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
 
-            # print " "
-            # print "point K_b" , tern_x_rb_point_K_b[i]
-            # print "point Mg_b" , tern_x_rb_point_Mg_b[i]
-            # print "point Fe_b" , tern_x_rb_point_Fe_b[i]
+            print " "
+            print "point K_b" , tern_x_rb_point_K_b[i]
+            print "point Mg_b" , tern_x_rb_point_Mg_b[i]
+            print "point Fe_b" , tern_x_rb_point_Fe_b[i]
 
-
+            print " "
 
 
             for j in range(steps):
@@ -3310,14 +3379,10 @@ for i in range(0,steps,1):
 
 
 
-            print " "
-
-
-
 
 
             tern_size = 8
-            tern_size_small = 10
+            tern_size_small = 25
             tern_saponite_mg = [[0.0, 1.0, 0.0]]
             tern_fe_celadonite = [[0.5, 0.0, 0.5]]
             tern_fe_oxide = [[0.0, 0.0, 1.0]]
@@ -3329,7 +3394,7 @@ for i in range(0,steps,1):
             tern_model_kwargs = dict(marker='.', markersize=tern_size_small, markeredgecolor='none', linewidth=0.0)
             tern_model_kwargs_big = dict(marker='.', markersize=tern_size_small*2.0, markeredgecolor='none', linewidth=0.0)
 
-            tern_model_kwargs_scatter = dict(marker='o', s=tern_size_small, edgecolor='none')
+            tern_model_kwargs_scatter = dict(s=tern_size_small, edgecolor='none', zorder=10)
             colors=steps
 
             # colors = cm.rainbow(np.linspace(0, 1, len(Ys)))
@@ -3350,7 +3415,7 @@ for i in range(0,steps,1):
             if i > 5:
                 for iii in range(1,i):
                     colorz = cmm(1.*iii/steps)
-                    tax.scatter(tern_x_rb_point_list[iii-1:iii,:], c=colorz, edgecolor='none')
+                    tax.scatter(tern_x_rb_point_list[iii-1:iii,:], c=colorz, **tern_model_kwargs_scatter)
             tax.set_title("solo")
             tax.legend(fontsize=9, bbox_to_anchor=(1.48, 1.1), ncol=1,labelspacing=0.0,columnspacing=0.0,numpoints=1)
             tax.clear_matplotlib_ticks()
@@ -3370,7 +3435,7 @@ for i in range(0,steps,1):
             if i > 5:
                 for iii in range(1,i):
                     colorz = cmm(1.*iii/steps)
-                    tax.scatter(tern_x_rb_point_list_d[iii-1:iii,:], c=colorz, edgecolor='none')
+                    tax.scatter(tern_x_rb_point_list_d[iii-1:iii,:], c=colorz, **tern_model_kwargs_scatter)
             tax.set_title("dual")
             tax.clear_matplotlib_ticks()
 
@@ -3390,7 +3455,7 @@ for i in range(0,steps,1):
             if i > 5:
                 for iii in range(1,i):
                     colorz = cmm(1.*iii/steps)
-                    tax.scatter(tern_x_rb_point_list_a[iii-1:iii,:], c=colorz, edgecolor='none')
+                    tax.scatter(tern_x_rb_point_list_a[iii-1:iii,:], c=colorz, **tern_model_kwargs_scatter)
             tax.set_title("a")
             tax.clear_matplotlib_ticks()
 
@@ -3409,7 +3474,7 @@ for i in range(0,steps,1):
             if i > 5:
                 for iii in range(1,i):
                     colorz = cmm(1.*iii/steps)
-                    tax.scatter(tern_x_rb_point_list_b[iii-1:iii,:], c=colorz, edgecolor='none')
+                    tax.scatter(tern_x_rb_point_list_b[iii-1:iii,:], c=colorz, **tern_model_kwargs_scatter)
             tax.set_title("b")
             tax.clear_matplotlib_ticks()
 
