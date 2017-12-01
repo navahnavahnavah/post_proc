@@ -124,8 +124,8 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-letter = "8e10"
-outpath = "../output/revival/summer_coarse_grid/v7_016_"+letter+"/"
+letter = "6e10"
+outpath = "../output/revival/summer_coarse_grid/v7_0155_"+letter+"/"
 
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -364,19 +364,21 @@ def chemplot24(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=1
 
 def chemcont(varMat, varStep, sp1, sp2, sp3, contour_interval,cp_title, xtix=0, ytix=0, frame_lines=0, min_color='r', hatching='', bg_alpha=0.5, ed_col='k'):
     # varStep[varStep>0.0] = 1.0
+    varStep[varStep>0.1*np.max(varStep)] = 1.0
+    varStep[varStep!=1.0] = 0.0
     if frame_lines==1:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*2.75,frameon=True)
     if frame_lines==0:
         ax1=fig.add_subplot(sp1,sp2,sp3, aspect=asp*2.75,frameon=False)
     if hatching!='':
-        varStep[varStep>0.0] = 1.0
+        # varStep[varStep>0.0] = 1.0
         pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=0.0, edgecolors=[min_color],hatches=[hatching])
         #pGlass.set_linewidth(0.25)
     if hatching=='':
         if ed_col=='w':
-            pGlass = plt.contourf(xCell,yCell,varStep,contour_interval,colors=[min_color], alpha=bg_alpha, zorder=-10)
+            pGlass = plt.contourf(xCell,yCell,varStep,[0.5,1.0],colors=[min_color], alpha=bg_alpha, zorder=-10)
         if ed_col!='w':
-            pGlass = plt.contour(xCell,yCell,varStep,contour_interval,colors=[ed_col], linewidths=2, zorder=3)
+            pGlass = plt.contour(xCell,yCell,varStep,[0.5,1.0],colors=[ed_col], linewidths=2, zorder=3)
     plt.yticks([])
     if ytix==1:
         plt.yticks([-500, -450, -400, -350, -300],fontsize=8)
@@ -1180,7 +1182,7 @@ for i in range(0,steps,1):
 
 
     #hack: chem6 switch
-    chem6 = 6
+    chem6 = 5
 
     if chem6 == 6:
 
@@ -1932,9 +1934,9 @@ for i in range(0,steps,1):
             d_alpha = 0.5
             f_colors=['#eb4dcd', 'rgb(73, 106, 163)', 'rgb(204, 120, 32)', 'rgb(243, 255, 20)', 'rgb(0, 54, 147)']
 
-            bin_u_smec = [11, 12, 6, 18, 22]
+            bin_u_smec = [1] #[11, 12, 6, 18, 22]
             bin_phil = [21]
-            bin_sap = [2, 33, 36, 37]
+            bin_sap = [2, 11, 33, 36, 37]
             bin_fe_sap = [36, 37]
             bin_verm = [19, 24, 34]
             bin_talc = [26]
@@ -1948,23 +1950,24 @@ for i in range(0,steps,1):
             bin_u_zeo = [20, 25]
 
 
-            c_u_smec = dict(name='u smectites', ind=[11, 12, 6, 18, 22],
+            c_u_smec = dict(name='u smectites', ind=[1],
+                            min_color='#FFFFFF',
+                            hatching='',
+                            bg_alpha=1.0,
+                            ed_col='#650300')
+
+            c_phil = dict(name='phillipsite', ind=[21],
+                            min_color='#888888',
+                            hatching='',
+                            bg_alpha=0.4,
+                            ed_col='w')
+
+            c_sap = dict(name='mg-ca-saponites', ind=[2, 11, 33, 36, 37],
                             min_color='#eb4dcd',
                             hatching='',
                             bg_alpha=d_alpha,
                             ed_col='w')
 
-            c_phil = dict(name='phillipsite', ind=[21],
-                            min_color='#FFFFFF',
-                            hatching='////',
-                            bg_alpha=d_alpha,
-                            ed_col='k')
-
-            c_sap = dict(name='mg-ca-saponites', ind=[2, 33, 36, 37],
-                            min_color='#FFFFFF',
-                            hatching='.',
-                            bg_alpha=1.0,
-                            ed_col='k')
 
             c_pyrite = dict(name='pyrite', ind=[5],
                             min_color='#ffffff',
@@ -1991,10 +1994,11 @@ for i in range(0,steps,1):
                             ed_col='#5c9400')
 
             c_goet = dict(name='goethite+hem', ind=[7,17],
-                            min_color='#888888',
-                            hatching='',
-                            bg_alpha=0.4,
-                            ed_col='w')
+
+                            min_color='#FFFFFF',
+                            hatching='////',
+                            bg_alpha=d_alpha,
+                            ed_col='k')
 
             c_u_zeo = dict(name='u zeolites', ind=[20, 25],
                             min_color='#FFFFFF',
@@ -2004,9 +2008,10 @@ for i in range(0,steps,1):
 
             c_chlor = dict(name='chlorite', ind=[31, 32],
                             min_color='#FFFFFF',
-                            hatching='',
+                            hatching='.',
                             bg_alpha=1.0,
-                            ed_col='#650300')
+                            ed_col='k')
+
 
 
             c_fe_sap = dict(name='fe-saponites', ind=[36, 37],
@@ -2066,7 +2071,7 @@ for i in range(0,steps,1):
 
 
 
-            bind = c_u_smec
+            bind = c_sap
             if np.any(secStep[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, 'solo chamber', xtix=0, ytix=1, frame_lines=1,
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
@@ -2074,7 +2079,7 @@ for i in range(0,steps,1):
             lg1 = Patch(facecolor=bind['min_color'], label=bind['name'], alpha=bind['bg_alpha'], hatch=bind['hatching'], edgecolor=bind['ed_col'])
 
 
-            bind = c_sap
+            bind = c_u_smec
             if np.any(secStep[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat[:,:,bind['ind']],axis=2), np.sum(secStep[:,:,bind['ind']],axis=2), 3, 2, 1, 1, '',
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
@@ -2197,16 +2202,16 @@ for i in range(0,steps,1):
             # b_legend = plt.legend([lg1, lg2, lg4, lg8, lg10],[lg1.get_label(), lg2.get_label(),  lg4.get_label(),  lg8.get_label(),  lg10.get_label()],fontsize=10,ncol=3,bbox_to_anchor=(0.5, -3.2),loc=8)
             b_legend.get_frame().set_linewidth(0.0)
 
-            cont_inter = 3
+            cont_inter = 1
 
 
 
-            bind = c_u_smec
+            bind = c_sap
             if np.any(secStep_d[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, cont_inter, 'dual chamber', xtix=1, ytix=1, frame_lines=1,
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
 
-            bind = c_sap
+            bind = c_u_smec
             if np.any(secStep_d[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat_d[:,:,bind['ind']],axis=2), np.sum(secStep_d[:,:,bind['ind']],axis=2), 3, 2, 3, cont_inter, '',
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
@@ -2265,12 +2270,12 @@ for i in range(0,steps,1):
             # # commented out 11/30/17 by NAVAH X
 
 
-            bind = c_u_smec
+            bind = c_sap
             if np.any(secStep_a[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 2, 2, 1, 'chamber a only', xtix=0, ytix=0, frame_lines=1,
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
 
-            bind = c_sap
+            bind = c_u_smec
             if np.any(secStep_a[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat_a[:,:,bind['ind']],axis=2), np.sum(secStep_a[:,:,bind['ind']],axis=2), 3, 2, 2, 1, '',
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
@@ -2328,12 +2333,12 @@ for i in range(0,steps,1):
             #
             #
             #
-            bind = c_u_smec
+            bind = c_sap
             if np.any(secStep_b[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 2, 4, 1, 'chamber b only', xtix=1, ytix=0, frame_lines=1,
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
 
-            bind = c_sap
+            bind = c_u_smec
             if np.any(secStep_b[:,:,bind['ind']] > 0.0):
                 chemcont(np.sum(secMat_b[:,:,bind['ind']],axis=2), np.sum(secStep_b[:,:,bind['ind']],axis=2), 3, 2, 4, 1, '',
             min_color=bind['min_color'], hatching=bind['hatching'], bg_alpha=bind['bg_alpha'], ed_col=bind['ed_col'])
@@ -2388,6 +2393,9 @@ for i in range(0,steps,1):
 
             plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
             plt.savefig(outpath+'/jdf_cont_sec/jdf_'+letter+'_cont_sec_'+str(i+restart)+'.png',bbox_inches='tight')
+
+            if i == 50 or i == 49:
+                plt.savefig(outpath+'/jdf_cont_sec/jdf_'+letter+'_cont_sec_'+str(i+restart+1)+'.eps',bbox_inches='tight')
 
 
             bar_bins = 5
@@ -3334,10 +3342,10 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg[i] = tern_x_rb_point_Mg[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
                 tern_x_rb_point_Fe[i] = tern_x_rb_point_Fe[i]/(1.0*np.sum(tern_x_rb_list[:,i,0]) + 1.0*np.sum(tern_x_rb_list[:,i,1]) + 1.0*np.sum(tern_x_rb_list[:,i,2]))
 
-            print " "
-            print "point K" , tern_x_rb_point_K[i]
-            print "point Mg" , tern_x_rb_point_Mg[i]
-            print "point Fe" , tern_x_rb_point_Fe[i]
+            # print " "
+            # print "point K" , tern_x_rb_point_K[i]
+            # print "point Mg" , tern_x_rb_point_Mg[i]
+            # print "point Fe" , tern_x_rb_point_Fe[i]
 
 
 
@@ -3350,10 +3358,10 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg_d[i] = tern_x_rb_point_Mg_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
                 tern_x_rb_point_Fe_d[i] = tern_x_rb_point_Fe_d[i]/(1.0*np.sum(tern_x_rb_list_d[:,i,0]) + 1.0*np.sum(tern_x_rb_list_d[:,i,1]) + 1.0*np.sum(tern_x_rb_list_d[:,i,2]))
 
-            print " "
-            print "point K_d" , tern_x_rb_point_K_d[i]
-            print "point Mg_d" , tern_x_rb_point_Mg_d[i]
-            print "point Fe_d" , tern_x_rb_point_Fe_d[i]
+            # print " "
+            # print "point K_d" , tern_x_rb_point_K_d[i]
+            # print "point Mg_d" , tern_x_rb_point_Mg_d[i]
+            # print "point Fe_d" , tern_x_rb_point_Fe_d[i]
 
 
 
@@ -3367,10 +3375,10 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg_a[i] = tern_x_rb_point_Mg_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
                 tern_x_rb_point_Fe_a[i] = tern_x_rb_point_Fe_a[i]/(1.0*np.sum(tern_x_rb_list_a[:,i,0]) + 1.0*np.sum(tern_x_rb_list_a[:,i,1]) + 1.0*np.sum(tern_x_rb_list_a[:,i,2]))
 
-            print " "
-            print "point K_a" , tern_x_rb_point_K_a[i]
-            print "point Mg_a" , tern_x_rb_point_Mg_a[i]
-            print "point Fe_a" , tern_x_rb_point_Fe_a[i]
+            # print " "
+            # print "point K_a" , tern_x_rb_point_K_a[i]
+            # print "point Mg_a" , tern_x_rb_point_Mg_a[i]
+            # print "point Fe_a" , tern_x_rb_point_Fe_a[i]
 
 
 
@@ -3385,12 +3393,12 @@ for i in range(0,steps,1):
                 tern_x_rb_point_Mg_b[i] = tern_x_rb_point_Mg_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
                 tern_x_rb_point_Fe_b[i] = tern_x_rb_point_Fe_b[i]/(1.0*np.sum(tern_x_rb_list_b[:,i,0]) + 1.0*np.sum(tern_x_rb_list_b[:,i,1]) + 1.0*np.sum(tern_x_rb_list_b[:,i,2]))
 
-            print " "
-            print "point K_b" , tern_x_rb_point_K_b[i]
-            print "point Mg_b" , tern_x_rb_point_Mg_b[i]
-            print "point Fe_b" , tern_x_rb_point_Fe_b[i]
-
-            print " "
+            # print " "
+            # print "point K_b" , tern_x_rb_point_K_b[i]
+            # print "point Mg_b" , tern_x_rb_point_Mg_b[i]
+            # print "point Fe_b" , tern_x_rb_point_Fe_b[i]
+            #
+            # print " "
 
 
             for j in range(steps):
@@ -3522,6 +3530,9 @@ for i in range(0,steps,1):
             #plt.subplots_adjust(hspace=0.15, bottom=0.05, top=0.9, left=0.1, right=0.95)
             plt.subplots_adjust(bottom=0.07, top=0.90, left=0.03, right=0.975)
             plt.savefig(outpath+"jdf_tern_rainbow_X/jdf_tern_rainbow_X_"+letter+"_"+str(i+restart)+".png")
+
+            if i == 50 or i == 49:
+                plt.savefig(outpath+"jdf_tern_rainbow_X/jdf_tern_rainbow_X_"+letter+"_"+str(i+restart+1)+".eps")
 
 
 
@@ -4082,7 +4093,7 @@ for i in range(0,steps,1):
             plt.savefig(outpath+'jdf_amount_sec_x/jdf_'+letter+'_amount_sec_X_'+str(i+restart)+'.png')
 
             if i == 50 or i == 49:
-                plt.savefig(outpath+'jdf_amount_sec_x/jdf_'+letter+'_amount_sec_X_'+str(i+restart)+'.eps')
+                plt.savefig(outpath+'jdf_amount_sec_x/jdf_'+letter+'_amount_sec_X_'+str(i+restart+1)+'.eps')
 
 
 
@@ -4587,7 +4598,7 @@ for j in range(len(any_min)):
 ax1=fig.add_subplot(2,2,3, frameon=True)
 
 for j in range(len(any_min)):
-    if np.max(secStep_ts_a[ng0:,any_min[j]]) > 0.0:
+    if np.max(dsecStep_ts_a[ng0:,any_min[j]]) > 0.0:
         norm_growth_rate_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]
         norm_growth_rate2_a[ng0:,any_min[j]] = dsecStep_ts_a[ng0:,any_min[j]]/np.max(dsecStep_ts_a[ng0:,any_min[j]])
 
@@ -4604,7 +4615,7 @@ for j in range(len(any_min)):
 ax1=fig.add_subplot(2,2,4, frameon=True)
 
 for j in range(len(any_min)):
-    if np.max(secStep_ts_b[ng0:,any_min[j]]) > 0.0:
+    if np.max(dsecStep_ts_b[ng0:,any_min[j]]) > 0.0:
         norm_growth_rate_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]
         norm_growth_rate2_b[ng0:,any_min[j]] = dsecStep_ts_b[ng0:,any_min[j]]/np.max(dsecStep_ts_b[ng0:,any_min[j]])
         if any_min[j] == 3:
@@ -4786,7 +4797,7 @@ for j in range(len(any_min)):
 plt.subplots_adjust(top=0.78, bottom=0.12,left=0.05,right=0.95)
 #plt.subplots_adjust(top=0.84, bottom=0.06,hspace=0.15,left=0.05,right=0.95)
 plt.savefig(outpath+'jdf_secondary_rate_X_'+letter+'.png')
-
+plt.savefig(outpath+'jdf_secondary_rate_X_'+letter+'.eps')
 
 
 
