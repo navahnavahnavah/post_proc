@@ -3967,181 +3967,9 @@ for i in range(0,steps,1):
 
 
 
-            # #tod0: FIG: speed
-            # print "jdf_Speed"
-            # fig=plt.figure(figsize=(10.0,14.0))
-            #
-            #
-            # if i == 0:
-            #     vvmin = np.min([speed3_0[speed3_0>0.0], speed3_0_a[speed3_0_a>0.0], speed3_0_b[speed3_0_b>0.0]])
-            #     vvmax = np.max([speed3_0, speed3_0_a, speed3_0_b])
-            # print "vvmax" , vvmax , "vvmin" , vvmin
-            #
-            # ax=fig.add_subplot(5, 3, 1, frameon=True, aspect=asp*4.0)
-            #
-            #
-            # xCell_t = []
-            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            # varStep_t[:,:len(xCell)] = speed3
-            #
-            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
-            # plt.ylim([-510.0,-320.0])
-            # plt.xlim([0,90000])
-            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
-            #
-            #
-            #
-            #
-            # ax=fig.add_subplot(5, 3, 2, frameon=True, aspect=asp*4.0)
-            #
-            # xCell_t = []
-            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            # varStep_t[:,:len(xCell)] = speed3_a
-            #
-            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
-            # plt.ylim([-510.0,-320.0])
-            # plt.xlim([0,90000])
-            # plt.yticks([])
-            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
-            #
-            #
-            #
-            #
-            # ax=fig.add_subplot(5, 3, 3, frameon=True, aspect=asp*4.0)
-            #
-            # xCell_t = []
-            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            # varStep_t[:,:len(xCell)] = speed3_b
-            #
-            #
-            # pSpeed = plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
-            # plt.ylim([-510.0,-320.0])
-            # plt.xlim([0,90000])
-            # plt.yticks([])
-            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
-            #
-            # bbox = ax.get_position()
-            # cax = fig.add_axes([bbox.xmin+bbox.width-0.6, bbox.ymin+0.08, bbox.width*2.0, bbox.height*0.08])
-            # cbar = plt.colorbar(pSpeed, cax = cax,orientation='horizontal')
-            # #plt.title("ms",fontsize=10)
-            # cbar.solids.set_rasterized(True)
-            # cbar.solids.set_edgecolor("face")
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            #
-            # ax=fig.add_subplot(5, 3, 4, frameon=True, aspect=asp*4.0)
-            #
-            # varSpeed = speed3#np.zeros(speed3.shape)
-            # varSpeed[speed1!=3.0] = 0.0
-            # xCell_t = []
-            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            # varStep_t[:,:len(xCell)] = varSpeed
-            #
-            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
-            # plt.ylim([-510.0,-320.0])
-            # plt.xlim([0,90000])
-            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
-            #
-            #
-            #
-            #
-            # ax=fig.add_subplot(5, 3, 5, frameon=True, aspect=asp*4.0)
-            #
-            # xCell_t = []
-            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            # varStep_t[:,:len(xCell)] = speed3_a
-            #
-            # plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
-            # plt.ylim([-510.0,-320.0])
-            # plt.xlim([0,90000])
-            # plt.yticks([])
-            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
-            #
-            #
-            #
-            #
-            # ax=fig.add_subplot(5, 3, 6, frameon=True, aspect=asp*4.0)
-            #
-            # xCell_t = []
-            # xCell_t = np.append(xCell, [xCell[-1]+xCell[-1]-xCell[-2]],axis=0)
-            # varStep_t = np.zeros([len(yCell),len(xCell)+1])
-            # varStep_t[:,:len(xCell)] = speed3_b
-            #
-            #
-            # pSpeed = plt.pcolor(xCell_t,yCell,varStep_t,vmin=vvmin, vmax=vvmax)
-            # plt.ylim([-510.0,-320.0])
-            # plt.xlim([0,90000])
-            # plt.yticks([])
-            # plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=8)
-            #
-            # # bbox = ax.get_position()
-            # # cax = fig.add_axes([bbox.xmin+bbox.width-0.6, bbox.ymin+0.08, bbox.width*2.0, bbox.height*0.08])
-            # # cbar = plt.colorbar(pSpeed, cax = cax,orientation='horizontal')
-            # # plt.title("ms",fontsize=10)
-            # # cbar.solids.set_rasterized(True)
-            # # cbar.solids.set_edgecolor("face")
-            #
-            #
-            #
-            #
-            #
-            #
-            # plt.subplots_adjust( wspace=0.1 , bottom=0.05, top=0.99, left=0.03, right=0.975)
-            # plt.savefig(outpath+"jdf_Speed_"+str(i+restart)+".png")
 
 
 
-
-
-
-            # #todoo: FIGURE: jdf_alt_plot, DSA
-            # fig=plt.figure(figsize=(4.5,9.0))
-            #
-            # ax=fig.add_subplot(2, 1, 1, frameon=True,aspect='equal')
-            #
-            # xCell_90 = np.linspace(0.0, 90000.0, xli)
-            # alt_values_interp = np.interp(xCell_90,site_locations,alt_values)
-            #
-            # # column mean
-            # alt_model_interp_s = np.ones(xli)
-            # alt_model_interp_s[:xli] = alt_col_mean_s
-            # alt_model_interp_s[alt_model_interp_s==1.0] = None
-            #
-            # # sites interpolated
-            # # alt_values_individual = np.ones(len(site_locations))
-            # alt_model_individual = np.interp(site_locations,xCell_90,alt_model_interp_s)
-            #
-            #
-            # plt.plot(alt_values_interp,alt_model_interp_s,c=dark_red)
-            # plt.plot([0.0, 30.0],[0.0,30.0],c='k',linestyle='--')
-            # plt.scatter(alt_values,alt_model_individual,s=40,c=dark_red,edgecolor=dark_red)
-            #
-            #
-            # # sites error bars
-            # ebw = 0.5
-            # for j in range(nsites):
-            #     # error bar height
-            #     plt.plot([lower_eb[j],upper_eb[j]],[alt_model_individual[j],alt_model_individual[j]],c=dark_red)
-            #     # lower error bar
-            #     plt.plot([lower_eb[j],lower_eb[j]],[alt_model_individual[j]-ebw,alt_model_individual[j]+ebw],c=dark_red)
-            #     # upper error bar
-            #     plt.plot([upper_eb[j],upper_eb[j]],[alt_model_individual[j]-ebw,alt_model_individual[j]+ebw],c=dark_red)
-            #
-            #
-            # plt.xlabel('Observed alteration fraction')
-            # plt.ylabel('Model-predicted alteration fraction')
-            #
-            # plt.savefig(outpath+"jdf_alt_plot_dsa_"+str(i+restart)+".png")
 
 
 
@@ -4150,6 +3978,7 @@ for i in range(0,steps,1):
 
             #todo: NON-FINAL FIG: sec_amount_x
             fig=plt.figure(figsize=(12.0,3.5))
+            print "sec_amount_x"
 
             amt_lw = 1.25
 
@@ -4271,8 +4100,8 @@ for i in range(0,steps,1):
             if not os.path.exists(outpath+'jdf_net_uptake_x/'):
                 os.makedirs(outpath+'jdf_net_uptake_x/')
 
-            #todo: NON-FINAL FIG: sec_amount_x
-            fig=plt.figure(figsize=(14.0,7.0))
+            fig=plt.figure(figsize=(15.0,8.0))
+            print "net_uptake_x"
 
             for j in range(len(any_min)):
                 for jj in range(15):
@@ -4313,45 +4142,51 @@ for i in range(0,steps,1):
 
 
 
-            net_uptake_kwargs = dict(lw=1.8)
+            net_uptake_kwargs = dict(lw=1.9)
+            net_uptake_kwargs_a = dict(lw=1.5, linestyle='-')
+            net_uptake_kwargs_b = dict(lw=1.5, linestyle='-')
+            uptake_color_s = '#bd3706'
+            uptake_color_d = '#073dc7'
+            uptake_color_a = '#0793c7'
+            uptake_color_b = '#0fe7e0'
             xt_fs = 8
 
-            ax=fig.add_subplot(2, 4, 1, frameon=True)
-            plt.plot(np.arange(steps),x_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_d[:,6],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_a[:,6],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_b[:,6],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 1, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,6],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('Mg uptake in column')
 
 
-            ax=fig.add_subplot(2, 4, 2, frameon=True)
-            plt.plot(np.arange(steps),x_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_d[:,5],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_a[:,5],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_b[:,5],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 2, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,5],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('Ca uptake in column')
 
 
-            ax=fig.add_subplot(2, 4, 3, frameon=True)
-            plt.plot(np.arange(steps),x_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_d[:,8],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_a[:,8],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_b[:,8],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 3, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,8],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('K uptake in column')
 
 
-            ax=fig.add_subplot(2, 4, 4, frameon=True)
-            plt.plot(np.arange(steps),x_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_d[:,9],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_a[:,9],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_elements_b[:,9],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 4, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,9],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('Fe uptake in column')
@@ -4359,39 +4194,39 @@ for i in range(0,steps,1):
 
 
 
-            ax=fig.add_subplot(2, 4, 5, frameon=True)
-            plt.plot(np.arange(steps),x_pri_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_d[:,6],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_a[:,6],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_b[:,6],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 5, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,6],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('Mg loss pri')
 
-            ax=fig.add_subplot(2, 4, 6, frameon=True)
-            plt.plot(np.arange(steps),x_pri_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_d[:,5],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_a[:,5],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_b[:,5],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 6, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,5],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('Ca loss pri')
 
-            ax=fig.add_subplot(2, 4, 7, frameon=True)
-            plt.plot(np.arange(steps),x_pri_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_d[:,8],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_a[:,8],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_b[:,8],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 7, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,8],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('K loss pri')
 
-            ax=fig.add_subplot(2, 4, 8, frameon=True)
-            plt.plot(np.arange(steps),x_pri_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_d[:,9],color='#88cf23',label='dual', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_a[:,9],color='#23bacf',label='a only', **net_uptake_kwargs)
-            plt.plot(np.arange(steps),x_pri_elements_b[:,9],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            ax=fig.add_subplot(3, 4, 8, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,9],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
             plt.xticks(fontsize=xt_fs)
             plt.yticks(fontsize=xt_fs)
             plt.title('Fe loss pri')
@@ -4399,7 +4234,47 @@ for i in range(0,steps,1):
 
 
 
+            ax=fig.add_subplot(3, 4, 9, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,6]+x_pri_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,6]+x_pri_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,6]+x_pri_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,6]+x_pri_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+            plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Mg net')
 
+            ax=fig.add_subplot(3, 4, 10, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,5]+x_pri_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,5]+x_pri_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,5]+x_pri_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,5]+x_pri_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Ca net')
+
+            ax=fig.add_subplot(3, 4, 11, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,8]+x_pri_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,8]+x_pri_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,8]+x_pri_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,8]+x_pri_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('K net')
+
+            ax=fig.add_subplot(3, 4, 12, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,9]+x_pri_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,9]+x_pri_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,9]+x_pri_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+            plt.plot(np.arange(steps),x_elements_b[:,9]+x_pri_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Fe net')
+
+
+
+
+            plt.subplots_adjust( wspace=0.3 , hspace=0.3)
             plt.savefig(outpath+'jdf_net_uptake_x/jdf_'+letter+'_net_uptake_X_'+str(i+restart)+'.png',bbox_inches='tight')
 
 
