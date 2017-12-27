@@ -124,8 +124,8 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-letter = "8e10"
-outpath = "../output/revival/summer_coarse_grid/t_25A_75B_"+letter+"/"
+letter = "10e10"
+outpath = "../output/revival/summer_coarse_grid/v_50A_50B_"+letter+"/"
 
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -506,6 +506,16 @@ dsecStep_b = np.zeros([len(yCell),len(xCell),minNum+1])
 dsecStep_d = np.zeros([len(yCell),len(xCell),minNum+1])
 #satStep = np.zeros([bitsCy,bitsCx,minNum+1])
 
+dpriMat = np.zeros([len(yCell),len(xCell)*steps+corr,1])
+dpriMat_a = np.zeros([len(yCell),len(xCell)*steps+corr,1])
+dpriMat_b = np.zeros([len(yCell),len(xCell)*steps+corr,1])
+dpriMat_d = np.zeros([len(yCell),len(xCell)*steps+corr,1])
+
+dpriStep = np.zeros([len(yCell),len(xCell),1])
+dpriStep_a = np.zeros([len(yCell),len(xCell),1])
+dpriStep_b = np.zeros([len(yCell),len(xCell),1])
+dpriStep_d = np.zeros([len(yCell),len(xCell),1])
+
 secStep_ts = np.zeros([steps,minNum+1])
 secStep_ts_a = np.zeros([steps,minNum+1])
 secStep_ts_b = np.zeros([steps,minNum+1])
@@ -683,10 +693,24 @@ x_elements_d = np.zeros([steps,15])
 x_elements_a = np.zeros([steps,15])
 x_elements_b = np.zeros([steps,15])
 
-
+x_pri_elements = np.zeros([steps,15])
+x_pri_elements_d = np.zeros([steps,15])
+x_pri_elements_a = np.zeros([steps,15])
+x_pri_elements_b = np.zeros([steps,15])
 
 
 elements_sec = np.zeros([minNum+1,15])
+elements_pri = np.zeros([1,15])
+
+elements_pri[0,5] = 0.1178 # Ca
+elements_pri[0,6] = 0.097 # Mg
+elements_pri[0,7] = 0.047 # Na
+elements_pri[0,8] = 0.00219 # K
+elements_pri[0,9] = 0.1165 # Fe
+elements_pri[0,10] = 0.0 # S
+elements_pri[0,11] =  0.4655 # Si
+elements_pri[0,12] = 0.0 # Cl
+elements_pri[0,13] =  0.153 # Al
 
 # 2 saponite_mg
 elements_sec[2,5] = 0.0 # Ca
@@ -834,6 +858,7 @@ if chem == 1:
     alk0 = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
+    dpriMat[:,2*len(xCell):,0] = glass0[:,len(xCell):-len(xCell)] - glass0[:,2*len(xCell):]
     #glass0_p = glass0/(np.max(glass0))
     togg0 = np.loadtxt(ch_path + 'z_med_cell_toggle.txt')
     phiCalcIn0 = np.loadtxt(ch_path + 'z_phiCalc.txt')
@@ -879,6 +904,7 @@ if chem == 1:
     alk0_a = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_a = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_a = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
+    dpriMat_a[:,2*len(xCell):,0] = glass0_a[:,len(xCell):-len(xCell)] - glass0_a[:,2*len(xCell):]
     #glass0_p_a = glass0_a/(np.max(glass0_a))
     ol0_a = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0_a = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
@@ -920,6 +946,7 @@ if chem == 1:
     alk0_b = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_b = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_b = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
+    dpriMat_b[:,2*len(xCell):,0] = glass0_b[:,len(xCell):-len(xCell)] - glass0_b[:,2*len(xCell):]
     #glass0_p_b = glass0_b#/(np.max(glass0_b))
     ol0_b = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
@@ -960,6 +987,7 @@ if chem == 1:
     alk0_d = np.loadtxt(ch_path + 'z_sol_alk.txt')
     solw0_d = np.loadtxt(ch_path + 'z_sol_w.txt')
     glass0_d = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
+    dpriMat_d[:,2*len(xCell):,0] = glass0_d[:,len(xCell):-len(xCell)] - glass0_d[:,2*len(xCell):]
     #glass0_p_d = glass0_d/(np.max(glass0_d))
     ol0_d = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
     pyr0_d = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
@@ -1080,6 +1108,7 @@ for i in range(0,steps,1):
         cl = cut_chem(cl0,i)
         al = cut_chem(al0,i)
         glass = cut_chem(glass0,i)
+        dpriStep[:,:,0] = cut_chem(dpriMat[:,:,0],i)
         #glass_p = cut_chem(glass0_p,i)
         togg = cut_chem(togg0,i)
         alt_vol = cut_chem(alt_vol0,i)
@@ -1141,6 +1170,7 @@ for i in range(0,steps,1):
         cl_a = cut_chem(cl0_a,i)
         al_a = cut_chem(al0_a,i)
         glass_a = cut_chem(glass0_a,i)
+        dpriStep_a[:,:,0] = cut_chem(dpriMat_a[:,:,0],i)
         #glass_p_a = cut_chem(glass0_p_a,i)
         alt_vol_a = cut_chem(alt_vol0_a,i)
         pri_total_a = cut_chem(pri_total0_a,i)
@@ -1200,6 +1230,7 @@ for i in range(0,steps,1):
         cl_b = cut_chem(cl0_b,i)
         al_b = cut_chem(al0_b,i)
         glass_b = cut_chem(glass0_b,i)
+        dpriStep_b[:,:,0] = cut_chem(dpriMat_b[:,:,0],i)
         #glass_p_b = cut_chem(glass0_p_b,i)
         alt_vol_b = cut_chem(alt_vol0_b,i)
         pri_total_b = cut_chem(pri_total0_b,i)
@@ -1259,6 +1290,7 @@ for i in range(0,steps,1):
         cl_d = cut_chem(cl0_d,i)
         al_d = cut_chem(al0_d,i)
         glass_d = cut_chem(glass0_d,i)
+        dpriStep_d[:,:,0] = cut_chem(dpriMat_d[:,:,0],i)
         #glass_p_d = cut_chem(glass0_p_d,i)
         alt_vol_d = cut_chem(alt_vol0_d,i)
         pri_total_d = cut_chem(pri_total0_d,i)
@@ -4240,21 +4272,135 @@ for i in range(0,steps,1):
                 os.makedirs(outpath+'jdf_net_uptake_x/')
 
             #todo: NON-FINAL FIG: sec_amount_x
-            fig=plt.figure(figsize=(10.0,10.0))
+            fig=plt.figure(figsize=(14.0,7.0))
 
-            #x_elements = np.zeros([steps,15])
             for j in range(len(any_min)):
                 for jj in range(15):
-                    x_elements[i,jj] = x_elements[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
 
-            # print np.arange(steps).shape
-            # print x_elements[:,6].shape
-            ax=fig.add_subplot(2, 2, 1, frameon=True)
-            plt.plot(np.arange(steps),x_elements[:,6],marker='o',markersize=3,markeredgecolor='none')
+                    # x_elements[i,jj] = x_elements[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements[i,jj] = x_elements[i,jj] - elements_pri[0,jj]*np.sum(dpriStep[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+                    #
+                    # x_elements_d[i,jj] = x_elements_d[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep_d[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements_d[i,jj] = x_elements_d[i,jj] - elements_pri[0,jj]*np.sum(dpriStep_d[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+                    #
+                    # x_elements_a[i,jj] = x_elements_a[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep_a[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements_a[i,jj] = x_elements_a[i,jj] - elements_pri[0,jj]*np.sum(dpriStep_a[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+                    #
+                    # x_elements_b[i,jj] = x_elements_b[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep_b[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements_b[i,jj] = x_elements_b[i,jj] - elements_pri[0,jj]*np.sum(dpriStep_b[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+
+                    x_elements[i,jj] = x_elements[i,jj] + elements_sec[any_min[j],jj]*x_dsecStep_ts[i,any_min[j]]*(density[any_min[j]]/molar[any_min[j]])
+                    x_elements_d[i,jj] = x_elements_d[i,jj] + elements_sec[any_min[j],jj]*x_dsecStep_ts_d[i,any_min[j]]*(density[any_min[j]]/molar[any_min[j]])
+                    x_elements_a[i,jj] = x_elements_a[i,jj] + elements_sec[any_min[j],jj]*x_dsecStep_ts_a[i,any_min[j]]*(density[any_min[j]]/molar[any_min[j]])
+                    x_elements_b[i,jj] = x_elements_b[i,jj] + elements_sec[any_min[j],jj]*x_dsecStep_ts_b[i,any_min[j]]*(density[any_min[j]]/molar[any_min[j]])
+
+                    # if j == 0:
+                    #     x_elements[i,jj] = x_elements[i,jj] + elements_pri[0,jj]*x_dpriStep_ts[i,5]#*(density_pri[3]/molar_pri[3])
+                    #     x_elements_d[i,jj] = x_elements_d[i,jj] + elements_pri[0,jj]*x_dpriStep_ts_d[i,5]#*(density_pri[3]/molar_pri[3])
+                    #     x_elements_a[i,jj] = x_elements_a[i,jj] + elements_pri[0,jj]*x_dpriStep_ts_a[i,5]#*(density_pri[3]/molar_pri[3])
+                    #     x_elements_b[i,jj] = x_elements_b[i,jj] + elements_pri[0,jj]*x_dpriStep_ts_b[i,5]#*(density_pri[3]/molar_pri[3])
+
+                    if j == 0:
+                        x_pri_elements[i,jj] = elements_pri[0,jj]*x_dpriStep_ts[i,5]*(density_pri[3]/molar_pri[3])
+                        x_pri_elements_d[i,jj] = elements_pri[0,jj]*x_dpriStep_ts_d[i,5]*(density_pri[3]/molar_pri[3])
+                        x_pri_elements_a[i,jj] = elements_pri[0,jj]*x_dpriStep_ts_a[i,5]*(density_pri[3]/molar_pri[3])
+                        x_pri_elements_b[i,jj] = elements_pri[0,jj]*x_dpriStep_ts_b[i,5]*(density_pri[3]/molar_pri[3])
+
+
+
+
+            net_uptake_kwargs = dict(lw=1.8)
+            xt_fs = 8
+
+            ax=fig.add_subplot(2, 4, 1, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,6],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,6],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_b[:,6],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
             plt.title('Mg uptake in column')
 
 
-            plt.savefig(outpath+'jdf_net_uptake_x/jdf_'+letter+'_net_uptake_X_'+str(i+restart)+'.png')
+            ax=fig.add_subplot(2, 4, 2, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,5],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,5],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_b[:,5],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Ca uptake in column')
+
+
+            ax=fig.add_subplot(2, 4, 3, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,8],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,8],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_b[:,8],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('K uptake in column')
+
+
+            ax=fig.add_subplot(2, 4, 4, frameon=True)
+            plt.plot(np.arange(steps),x_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_d[:,9],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_a[:,9],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_elements_b[:,9],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Fe uptake in column')
+
+
+
+
+            ax=fig.add_subplot(2, 4, 5, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,6],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,6],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,6],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Mg loss pri')
+
+            ax=fig.add_subplot(2, 4, 6, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,5],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,5],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,5],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Ca loss pri')
+
+            ax=fig.add_subplot(2, 4, 7, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,8],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,8],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,8],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('K loss pri')
+
+            ax=fig.add_subplot(2, 4, 8, frameon=True)
+            plt.plot(np.arange(steps),x_pri_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_d[:,9],color='#88cf23',label='dual', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_a[:,9],color='#23bacf',label='a only', **net_uptake_kwargs)
+            plt.plot(np.arange(steps),x_pri_elements_b[:,9],color='#6a37e6',label='b only', **net_uptake_kwargs)
+            plt.xticks(fontsize=xt_fs)
+            plt.yticks(fontsize=xt_fs)
+            plt.title('Fe loss pri')
+
+
+
+
+
+            plt.savefig(outpath+'jdf_net_uptake_x/jdf_'+letter+'_net_uptake_X_'+str(i+restart)+'.png',bbox_inches='tight')
 
 
 
