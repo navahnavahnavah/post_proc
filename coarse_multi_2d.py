@@ -50,7 +50,7 @@ molar_pri = np.array([277.0, 153.0, 158.81, 110.0])
 density_pri = np.array([2.7, 3.0, 3.0, 3.0])
 
 #hack: path stuff
-prefix_string = "s_"
+prefix_string = "t_"
 suffix_string = "/"
 batch_path = "../output/revival/summer_coarse_grid/"
 batch_path_ex = "../output/revival/summer_coarse_grid/"+prefix_string+"50A_50B_2e10/"
@@ -60,7 +60,7 @@ batch_path_ex = "../output/revival/summer_coarse_grid/"+prefix_string+"50A_50B_2
 
 param_t_diff = np.array([8e10, 6e10, 4e10, 2e10])
 param_t_diff_string = ['8e10' , '6e10' , '4e10', '2e10']
-plot_t_diff_strings = ['8e10 (least mix)', '6e10', '4e10', '2e10 (most mixing)', 'solo']
+plot_t_diff_strings = ['8e10 (least mix)', '6e10', '4e10', '2e10 (most mix)', 'solo']
 
 param_sim = np.array([25, 50, 75])
 param_sim_string = ['25A_75B', '50A_50B' , '75A_25B']
@@ -76,7 +76,7 @@ celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 9
+max_step = 8
 final_index = 4
 
 xCell = x0[1::cellx]
@@ -220,16 +220,64 @@ sec_binary_d = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string),len(
 sec_binary_any = np.zeros([len(xCell),steps,minNum+1,len(param_t_diff_string),len(param_sim_string)])
 
 x_d = -5
+xd_move = 0
+moves = np.array([5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42])
 
-priStep_ts = np.zeros([steps,6])
-priStep_ts_a = np.zeros([steps,6])
-priStep_ts_b = np.zeros([steps,6])
-priStep_ts_d = np.zeros([steps,6])
 
-dpriStep_ts = np.zeros([steps,6])
-dpriStep_ts_a = np.zeros([steps,6])
-dpriStep_ts_b = np.zeros([steps,6])
-dpriStep_ts_d = np.zeros([steps,6])
+
+# new 12/29/17
+
+priMat = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+priMat_a = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+priMat_b = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+priMat_d = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+
+priStep = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+priStep_a = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+priStep_b = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+priStep_d = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+
+dpriMat = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+dpriMat_a = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+dpriMat_b = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+dpriMat_d = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
+
+dpriStep = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+dpriStep_a = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+dpriStep_b = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+dpriStep_d = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
+
+x_priStep_ts = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+x_priStep_ts_a = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+x_priStep_ts_b = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+x_priStep_ts_d = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+
+x_dpriStep_ts = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+x_dpriStep_ts_a = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+x_dpriStep_ts_b = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+x_dpriStep_ts_d = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+
+#end new
+
+
+
+
+# changed last argument from 6
+
+priStep_ts = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+priStep_ts_a = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+priStep_ts_b = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+priStep_ts_d = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+
+dpriStep_ts = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+dpriStep_ts_a = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+dpriStep_ts_b = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+dpriStep_ts_d = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+
+# end changed
+
+
+
 
 alt_vol0 = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
 alt_vol0_a = np.zeros([len(yCell),len(xCell)*steps,len(param_t_diff_string),len(param_sim_string)])
@@ -297,38 +345,39 @@ for ii in range(len(param_t_diff)):
         any_min = []
 
         #hack: load in chem data
-        if ii == 0:
+        # if ii == 0:
 
-            ch_path = ii_path + 'ch_s/'
-            for j in range(1,minNum):
-                if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
-                    if not np.any(any_min == j):
-                        any_min = np.append(any_min,j)
-                    print j , secondary[j] ,
-                    secMat[:,:,j,ii,iii] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
-                    secMat[:,:,j,ii,iii] = secMat[:,:,j,ii,iii]*molar[j]/density[j]
-                    dsecMat[:,2*len(xCell):,j,ii,iii] = secMat[:,len(xCell):-len(xCell),j,ii,iii] - secMat[:,2*len(xCell):,j,ii,iii]
-            dic0 = np.loadtxt(ch_path + 'z_sol_c.txt')
-            ca0 = np.loadtxt(ch_path + 'z_sol_ca.txt')
-            mg0 = np.loadtxt(ch_path + 'z_sol_mg.txt')
-            na0 = np.loadtxt(ch_path + 'z_sol_na.txt')
-            cl0 = np.loadtxt(ch_path + 'z_sol_cl.txt')
-            k0 = np.loadtxt(ch_path + 'z_sol_k.txt')
-            fe0 = np.loadtxt(ch_path + 'z_sol_fe.txt')
-            si0 = np.loadtxt(ch_path + 'z_sol_si.txt')
-            al0 = np.loadtxt(ch_path + 'z_sol_al.txt')
-            ph0 = np.loadtxt(ch_path + 'z_sol_ph.txt')
-            alk0 = np.loadtxt(ch_path + 'z_sol_alk.txt')
-            solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
-            glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-            ol0 = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
-            pyr0 = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
-            plag0 = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-            pri_total0 = glass0 + ol0 + pyr0 + plag0
-            print " "
+        ch_path = ii_path + 'ch_s/'
+        for j in range(1,minNum):
+            if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
+                if not np.any(any_min == j):
+                    any_min = np.append(any_min,j)
+                print j , secondary[j] ,
+                secMat[:,:,j,ii,iii] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
+                secMat[:,:,j,ii,iii] = secMat[:,:,j,ii,iii]*molar[j]/density[j]
+                dsecMat[:,2*len(xCell):,j,ii,iii] = secMat[:,len(xCell):-len(xCell),j,ii,iii] - secMat[:,2*len(xCell):,j,ii,iii]
+        dic0 = np.loadtxt(ch_path + 'z_sol_c.txt')
+        ca0 = np.loadtxt(ch_path + 'z_sol_ca.txt')
+        mg0 = np.loadtxt(ch_path + 'z_sol_mg.txt')
+        na0 = np.loadtxt(ch_path + 'z_sol_na.txt')
+        cl0 = np.loadtxt(ch_path + 'z_sol_cl.txt')
+        k0 = np.loadtxt(ch_path + 'z_sol_k.txt')
+        fe0 = np.loadtxt(ch_path + 'z_sol_fe.txt')
+        si0 = np.loadtxt(ch_path + 'z_sol_si.txt')
+        al0 = np.loadtxt(ch_path + 'z_sol_al.txt')
+        ph0 = np.loadtxt(ch_path + 'z_sol_ph.txt')
+        alk0 = np.loadtxt(ch_path + 'z_sol_alk.txt')
+        solw0 = np.loadtxt(ch_path + 'z_sol_w.txt')
+        glass0 = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
+        priMat[:,:,ii,iii] = glass0
+        dpriMat[:,2*len(xCell):,ii,iii] = priMat[:,len(xCell):-len(xCell),ii,iii] - priMat[:,2*len(xCell):,ii,iii]
 
-        if ii > 0:
-            secMat[:,:,:,ii] = secMat[:,:,:,ii-1]
+        pri_total0 = glass0
+        print " "
+
+        # if ii > 0:
+        #
+        #     secMat[:,:,:,ii,iii] = secMat[:,:,:,ii-1,iii-1]
 
 
         ch_path = ii_path + 'ch_a/'
@@ -353,10 +402,10 @@ for ii in range(len(param_t_diff)):
         alk0_a = np.loadtxt(ch_path + 'z_sol_alk.txt')
         solw0_a = np.loadtxt(ch_path + 'z_sol_w.txt')
         glass0_a = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-        ol0_a = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
-        pyr0_a = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
-        plag0_a = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-        pri_total0_a = glass0_a + ol0_a + pyr0_a + plag0_a
+        priMat_a[:,:,ii,iii] = glass0_a
+        dpriMat_a[:,2*len(xCell):,ii,iii] = priMat_a[:,len(xCell):-len(xCell),ii,iii] - priMat_a[:,2*len(xCell):,ii,iii]
+
+        pri_total0_a = glass0_a
         print " "
 
 
@@ -382,10 +431,10 @@ for ii in range(len(param_t_diff)):
         alk0_b = np.loadtxt(ch_path + 'z_sol_alk.txt')
         solw0_b = np.loadtxt(ch_path + 'z_sol_w.txt')
         glass0_b = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-        ol0_b = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
-        pyr0_b = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
-        plag0_b = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-        pri_total0_b = glass0_b + ol0_b + pyr0_b + plag0_b
+        priMat_b[:,:,ii,iii] = glass0_b
+        dpriMat_b[:,2*len(xCell):,ii,iii] = priMat_b[:,len(xCell):-len(xCell),ii,iii] - priMat_b[:,2*len(xCell):,ii,iii]
+
+        pri_total0_b = glass0_b
         print " "
 
 
@@ -412,10 +461,10 @@ for ii in range(len(param_t_diff)):
         alk0_d = np.loadtxt(ch_path + 'z_sol_alk.txt')
         solw0_d = np.loadtxt(ch_path + 'z_sol_w.txt')
         glass0_d = np.loadtxt(ch_path + 'z_pri_glass.txt')*molar_pri[3]/density_pri[3]
-        ol0_d = np.loadtxt(ch_path + 'z_pri_ol.txt')*molar_pri[2]/density_pri[2]
-        pyr0_d = np.loadtxt(ch_path + 'z_pri_pyr.txt')*molar_pri[1]/density_pri[1]
-        plag0_d = np.loadtxt(ch_path + 'z_pri_plag.txt')*molar_pri[0]/density_pri[0]
-        pri_total0_d = glass0_d + ol0_d + pyr0_d + plag0_d
+        priMat_d[:,:,ii,iii] = glass0_d
+        dpriMat_d[:,2*len(xCell):,ii,iii] = priMat_d[:,len(xCell):-len(xCell),ii,iii] - priMat_d[:,2*len(xCell):,ii,iii]
+
+        pri_total0_d = glass0_d
         print " "
 
 
@@ -453,11 +502,11 @@ for ii in range(len(param_t_diff)):
             for j in range(len(any_min)):
                 secStep[:,:,any_min[j],i,ii,iii] = cut_chem(secMat[:,:,any_min[j],ii,iii],i)
                 dsecStep[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat[:,:,any_min[j],ii,iii],i)
-                secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,:,any_min[j],ii,iii])
-                x_secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,x_d,any_min[j],ii,iii])
+                secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,:,any_min[j],i,ii,iii])
+                x_secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,x_d,any_min[j],i,ii,iii])
                 if i > 0:
-                    dsecStep_ts[i,any_min[j]] = secStep_ts[i,any_min[j]] - secStep_ts[i-1,any_min[j]]
-                    x_dsecStep_ts[i,any_min[j]] = x_secStep_ts[i,any_min[j]] - x_secStep_ts[i-1,any_min[j]]
+                    dsecStep_ts[i,any_min[j],ii,iii] = secStep_ts[i,any_min[j],ii,iii] - secStep_ts[i-1,any_min[j],ii,iii]
+                    x_dsecStep_ts[i,any_min[j],ii,iii] = x_secStep_ts[i,any_min[j],ii,iii] - x_secStep_ts[i-1,any_min[j],ii,iii]
             dic = cut_chem(dic0,i)
             ca = cut_chem(ca0,i)
             ph = cut_chem(ph0,i)
@@ -473,19 +522,28 @@ for ii in range(len(param_t_diff)):
             glass = cut_chem(glass0,i)
             alt_vol[:,:,i,ii,iii] = cut_chem(alt_vol0[:,:,ii,iii],i)
             pri_total = cut_chem(pri_total0,i)
-            ol = cut_chem(ol0,i)
-            pyr = cut_chem(pyr0,i)
-            plag = cut_chem(plag0,i)
+
+            priStep[:,:,i,ii,iii] = cut_chem(priMat[:,:,ii,iii],i)
+            dpriStep[:,:,i,ii,iii] = cut_chem(dpriMat[:,:,ii,iii],i)
+            priStep_ts[i,ii,iii] = np.sum(priStep[:,:,i,ii,iii])
+            x_priStep_ts[i,ii,iii] = np.sum(priStep[:,xd_move,i,ii,iii])
+
+            if i > 0:
+                dpriStep_ts[i,ii,iii] = priStep_ts[i,ii,iii] - priStep_ts[i-1,ii,iii]
+                x_dpriStep_ts[i,ii,iii] = x_priStep_ts[i,ii,iii] - x_priStep_ts[i-1,ii,iii]
+
+
+
 
 
             for j in range(len(any_min)):
                 secStep_a[:,:,any_min[j],i,ii,iii] = cut_chem(secMat_a[:,:,any_min[j],ii,iii],i)
                 dsecStep_a[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat_a[:,:,any_min[j],ii,iii],i)
-                secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,:,any_min[j],ii,iii])
-                x_secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,x_d,any_min[j],ii,iii])
+                secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,:,any_min[j],i,ii,iii])
+                x_secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,x_d,any_min[j],i,ii,iii])
                 if i > 0:
-                    dsecStep_ts_a[i,any_min[j]] = secStep_ts_a[i,any_min[j]] - secStep_ts_a[i-1,any_min[j]]
-                    x_dsecStep_ts_a[i,any_min[j]] = x_secStep_ts_a[i,any_min[j]] - x_secStep_ts_a[i-1,any_min[j]]
+                    dsecStep_ts_a[i,any_min[j],ii,iii] = secStep_ts_a[i,any_min[j],ii,iii] - secStep_ts_a[i-1,any_min[j],ii,iii]
+                    x_dsecStep_ts_a[i,any_min[j],ii,iii] = x_secStep_ts_a[i,any_min[j],ii,iii] - x_secStep_ts_a[i-1,any_min[j],ii,iii]
             dic_a = cut_chem(dic0,i)
             ca_a = cut_chem(ca0,i)
             ph_a = cut_chem(ph0,i)
@@ -501,18 +559,28 @@ for ii in range(len(param_t_diff)):
             glass_a = cut_chem(glass0,i)
             alt_vol_a[:,:,i,ii,iii] = cut_chem(alt_vol0_a[:,:,ii,iii],i)
             pri_total_a = cut_chem(pri_total0,i)
-            ol_a = cut_chem(ol0,i)
-            pyr_a = cut_chem(pyr0,i)
-            plag_a = cut_chem(plag0,i)
+
+            priStep_a[:,:,i,ii,iii] = cut_chem(priMat_a[:,:,ii,iii],i)
+            dpriStep_a[:,:,i,ii,iii] = cut_chem(dpriMat_a[:,:,ii,iii],i)
+            priStep_ts_a[i,ii,iii] = np.sum(priStep_a[:,:,i,ii,iii])
+            x_priStep_ts_a[i,ii,iii] = np.sum(priStep_a[:,xd_move,i,ii,iii])
+
+            if i > 0:
+                dpriStep_ts_a[i,ii,iii] = priStep_ts_a[i,ii,iii] - priStep_ts_a[i-1,ii,iii]
+                x_dpriStep_ts_a[i,ii,iii] = x_priStep_ts_a[i,ii,iii] - x_priStep_ts_a[i-1,ii,iii]
+
+
+
+
 
             for j in range(len(any_min)):
                 secStep_b[:,:,any_min[j],i,ii,iii] = cut_chem(secMat_b[:,:,any_min[j],ii,iii],i)
                 dsecStep_b[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat_b[:,:,any_min[j],ii,iii],i)
-                secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,:,any_min[j],ii,iii])
-                x_secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,x_d,any_min[j],ii,iii])
+                secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,:,any_min[j],i,ii,iii])
+                x_secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,x_d,any_min[j],i,ii,iii])
                 if i > 0:
-                    dsecStep_ts_b[i,any_min[j]] = secStep_ts_b[i,any_min[j]] - secStep_ts_b[i-1,any_min[j]]
-                    x_dsecStep_ts_b[i,any_min[j]] = x_secStep_ts_b[i,any_min[j]] - x_secStep_ts_b[i-1,any_min[j]]
+                    dsecStep_ts_b[i,any_min[j],ii,iii] = secStep_ts_b[i,any_min[j],ii,iii] - secStep_ts_b[i-1,any_min[j],ii,iii]
+                    x_dsecStep_ts_b[i,any_min[j],ii,iii] = x_secStep_ts_b[i,any_min[j],ii,iii] - x_secStep_ts_b[i-1,any_min[j],ii,iii]
             dic_b = cut_chem(dic0,i)
             ca_b = cut_chem(ca0,i)
             ph_b = cut_chem(ph0,i)
@@ -528,18 +596,28 @@ for ii in range(len(param_t_diff)):
             glass_b = cut_chem(glass0,i)
             alt_vol_b[:,:,i,ii,iii] = cut_chem(alt_vol0_b[:,:,ii,iii],i)
             pri_total_b = cut_chem(pri_total0,i)
-            ol_b = cut_chem(ol0,i)
-            pyr_b = cut_chem(pyr0,i)
-            plag_b = cut_chem(plag0,i)
+
+            priStep_b[:,:,i,ii,iii] = cut_chem(priMat_b[:,:,ii,iii],i)
+            dpriStep_b[:,:,i,ii,iii] = cut_chem(dpriMat_b[:,:,ii,iii],i)
+            priStep_ts_b[i,ii,iii] = np.sum(priStep_b[:,:,i,ii,iii])
+            x_priStep_ts_b[i,ii,iii] = np.sum(priStep_b[:,xd_move,i,ii,iii])
+
+            if i > 0:
+                dpriStep_ts_b[i,ii,iii] = priStep_ts_b[i,ii,iii] - priStep_ts_b[i-1,ii,iii]
+                x_dpriStep_ts_b[i,ii,iii] = x_priStep_ts_b[i,ii,iii] - x_priStep_ts_b[i-1,ii,iii]
+
+
+
+
 
             for j in range(len(any_min)):
                 secStep_d[:,:,any_min[j],i,ii,iii] = cut_chem(secMat_d[:,:,any_min[j],ii,iii],i)
                 dsecStep_d[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat_d[:,:,any_min[j],ii,iii],i)
-                secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,:,any_min[j],ii,iii])
-                x_secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,x_d,any_min[j],ii,iii])
+                secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,:,any_min[j],i,ii,iii])
+                x_secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,x_d,any_min[j],i,ii,iii])
                 if i > 0:
-                    dsecStep_ts_d[i,any_min[j]] = secStep_ts_d[i,any_min[j]] - secStep_ts_d[i-1,any_min[j]]
-                    x_dsecStep_ts_d[i,any_min[j]] = x_secStep_ts_d[i,any_min[j]] - x_secStep_ts_d[i-1,any_min[j]]
+                    dsecStep_ts_d[i,any_min[j],ii,iii] = secStep_ts_d[i,any_min[j],ii,iii] - secStep_ts_d[i-1,any_min[j],ii,iii]
+                    x_dsecStep_ts_d[i,any_min[j],ii,iii] = x_secStep_ts_d[i,any_min[j],ii,iii] - x_secStep_ts_d[i-1,any_min[j],ii,iii]
             dic_d = cut_chem(dic0,i)
             ca_d = cut_chem(ca0,i)
             ph_d = cut_chem(ph0,i)
@@ -555,9 +633,16 @@ for ii in range(len(param_t_diff)):
             glass_d = cut_chem(glass0,i)
             alt_vol_d[:,:,i,ii,iii] = cut_chem(alt_vol0_d[:,:,ii,iii],i)
             pri_total_d = cut_chem(pri_total0,i)
-            ol_d = cut_chem(ol0,i)
-            pyr_d = cut_chem(pyr0,i)
-            plag_d = cut_chem(plag0,i)
+
+            priStep_d[:,:,i,ii,iii] = cut_chem(priMat_d[:,:,ii,iii],i)
+            dpriStep_d[:,:,i,ii,iii] = cut_chem(dpriMat_d[:,:,ii,iii],i)
+            priStep_ts_d[i,ii,iii] = np.sum(priStep_d[:,:,i,ii,iii])
+            x_priStep_ts_d[i,ii,iii] = np.sum(priStep_d[:,xd_move,i,ii,iii])
+
+            if i > 0:
+                dpriStep_ts_d[i,ii,iii] = priStep_ts_d[i,ii,iii] - priStep_ts_d[i-1,ii,iii]
+                x_dpriStep_ts_d[i,ii,iii] = x_priStep_ts_d[i,ii,iii] - x_priStep_ts_d[i-1,ii,iii]
+
 
 
 
@@ -569,10 +654,10 @@ for ii in range(len(param_t_diff)):
             for j in range(len(xCell)):
                 # full column average
 
-                # if ii == 0:
-                #     above_zero = alt_vol[:,j,i,ii,iii]*100.0
-                #     above_zero = above_zero[above_zero>0.0]
-                #     alt_col_mean[j,i,len(param_t_diff_string)] = np.mean(above_zero)
+                if ii == 0:
+                    above_zero = alt_vol[:,j,i,ii,iii]*100.0
+                    above_zero = above_zero[above_zero>0.0]
+                    alt_col_mean[j,i,len(param_t_diff_string)] = np.mean(above_zero)
 
                 above_zero = alt_vol_d[:,j,i,ii,iii]*100.0
                 above_zero = above_zero[above_zero>0.0]
@@ -586,7 +671,7 @@ for ii in range(len(param_t_diff)):
 
             alt_col_mean_slope[alt_col_mean_slope==0.0] = None
             value_2d_alt_vol_mean_slope[i,ii,iii] = np.nanmean(alt_col_mean_slope[:,i,ii,iii])
-            print "time" , i , "2d_value" , value_2d_alt_vol_mean_slope[i,ii,iii]
+            # print "time" , i , "2d_value" , value_2d_alt_vol_mean_slope[i,ii,iii]
             # print "slope array" , alt_col_mean_slope[:,i,ii,iii]
             # print "value array" , alt_col_mean[:,i,ii,iii]
             # print " "
@@ -606,7 +691,6 @@ for ii in range(len(param_t_diff)):
 
                     secStep_temp = secStep[:,:,:,i,ii,iii]
                     alt_vol_temp = pri_total
-                    ol_temp = ol
                     glass_temp = glass
 
                     above_zero = alt_vol_temp[:,j]*100.0
@@ -647,7 +731,6 @@ for ii in range(len(param_t_diff)):
 
                 secStep_temp = secStep_d[:,:,:,i,ii,iii]
                 alt_vol_temp = pri_total_d
-                ol_temp = ol_d
                 glass_temp = glass_d
 
                 above_zero = alt_vol_temp[:,j]*100.0
@@ -689,11 +772,157 @@ for ii in range(len(param_t_diff)):
 
             fe_col_mean_slope[alt_col_mean_slope==0.0] = None
             value_2d_fe_mean_slope[i,ii,iii] = np.nanmean(fe_col_mean_slope[:,i,ii,iii])
-            print "time" , i , "2d_value fe" , value_2d_fe_mean_slope[i,ii,iii]
+            # print "time" , i , "2d_value fe" , value_2d_fe_mean_slope[i,ii,iii]
 
 
 
 
+
+
+
+
+
+for iii in range(len(param_sim)):
+
+    #todo: FIGURE: batch_alt, one per sim
+    fig=plt.figure(figsize=(7.0,9.0))
+
+
+    nsites = 9
+    ebw = 800.0
+    dark_red = '#65091f'
+    plot_purple = '#b678f5'
+    plot_blue = '#4e94c1'
+    site_locations = np.array([22.742, 25.883, 33.872, 40.706, 45.633, 55.765, 75.368, 99.006, 102.491])
+    site_locations = (site_locations - 20.00)*1000.0
+    site_names = ["1023", "1024", "1025", "1031", "1028", "1029", "1032", "1026", "1027"]
+    alt_values = np.array([0.3219, 2.1072, 2.3626, 2.9470, 10.0476, 4.2820, 8.9219, 11.8331, 13.2392])
+    lower_eb = np.array([0.3219, 0.04506, 0.8783, 1.7094, 5.0974, 0.8994, 5.3745, 2.5097, 3.0084])
+    upper_eb = np.array([1.7081, 2.9330, 3.7662, 4.9273, 11.5331, 5.0247, 10.7375, 17.8566, 27.4308])
+
+
+    # alteration data
+
+
+    ax=fig.add_subplot(2, 1, 1, frameon=True)
+    ax.grid(True)
+    plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+    plt.plot(site_locations,alt_values,color=dark_red,linestyle='-')
+
+    for j in range(nsites):
+        # error bar height
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red)
+        # lower error bar
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red)
+        # upper error bar
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red)
+
+    # plot model column mean
+    for ii in range(len(param_t_diff)+1):
+
+        plt.plot(xCell,alt_col_mean[:,max_step-1,ii,iii],color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
+
+
+    plt.legend(fontsize=10,loc=2,labelspacing=-0.1)
+    plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
+    plt.xlim([0.0, 90000.0])
+    plt.xlabel('Distance along transect [km]')
+
+    plt.yticks([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0],fontsize=12)
+    plt.ylim([0.0, 30.0])
+    plt.ylabel('Alteration volume $\%$')
+    plt.title('sim:' + param_sim_string[iii])
+
+
+
+
+    #todo: FIGURE: FeO / FeOt plot
+
+    fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
+    lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
+    upper_eb_fe = np.array([0.7753, 0.7442, 0.7519, 0.7812, 0.7110, 0.7610, 0.7396, 0.7104, 0.7026])
+
+    ax=fig.add_subplot(2, 1, 2, frameon=True)
+    ax.grid(True)
+    plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+    plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+
+
+    for j in range(nsites):
+        # error bar height
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+        # lower error bar
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+        # upper error bar
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+
+    # plot model column mean
+    for ii in range(len(param_t_diff)+1):
+
+        plt.plot(xCell,fe_col_mean[:,max_step-1,ii,iii],color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
+
+    #plt.legend(fontsize=10)
+    plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
+    plt.xlim([0.0, 90000.0])
+    plt.xlabel('Distance along transect [km]', fontsize=9)
+
+    #plt.yticks([0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80])
+    plt.yticks([0.6, 0.65, 0.7, 0.75, 0.80])
+    #plt.ylim([0.6, 0.8])
+    plt.ylim([0.6, 0.8])
+    plt.ylabel('FeO / FeOt')
+
+
+    plt.savefig(batch_path+prefix_string+"sim_"+param_sim_string[iii]+"_alt.png",bbox_inches='tight')
+
+
+
+
+
+
+
+    #todo: FIGURE: x_pri figure
+    fig=plt.figure(figsize=(10.0,3.0))
+
+    ax=fig.add_subplot(1, 3, 1, frameon=True)
+    for ii in range(len(param_t_diff)):
+        plt.plot(range(steps),x_priStep_ts_d[:,ii,iii]/np.max(x_priStep_ts_d[:,ii,iii]),color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
+    plt.plot(range(steps),x_priStep_ts[:,0,0]/np.max(x_priStep_ts[:,0,0]),color=plot_col[len(param_t_diff)],lw=1.5, label=plot_t_diff_strings[len(param_t_diff)])
+
+    temp_pri_min_mat = x_priStep_ts_d/np.max(x_priStep_ts_d)
+    temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
+    plt.ylim([temp_pri_min,1.01])
+    plt.legend(fontsize=8,labelspacing=-0.1,columnspacing=0.0)
+    plt.title('dual')
+
+
+
+    ax=fig.add_subplot(1, 3, 2, frameon=True)
+    for ii in range(len(param_t_diff)):
+        plt.plot(range(steps),x_priStep_ts_a[:,ii,iii]/np.max(x_priStep_ts_a[:,ii,iii]),color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
+
+    temp_pri_min_mat = x_priStep_ts_a/np.max(x_priStep_ts_a)
+    temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
+    plt.ylim([temp_pri_min,1.01])
+    plt.title('a only')
+
+
+
+    ax=fig.add_subplot(1, 3, 3, frameon=True)
+    for ii in range(len(param_t_diff)):
+        plt.plot(range(steps),x_priStep_ts_b[:,ii,iii]/np.max(x_priStep_ts_b[:,ii,iii]),color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
+
+    temp_pri_min_mat = x_priStep_ts_b/np.max(x_priStep_ts_b)
+    temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
+    plt.ylim([temp_pri_min,1.01])
+    plt.title('b only')
+
+
+    # for ii in range(len(param_t_diff)):
+    #     print x_priStep_ts[:,ii]
+    #     print " "
+
+    plt.savefig(batch_path+prefix_string+"sim_"+param_sim_string[iii]+"_pri.png",bbox_inches='tight')
 
 
 
@@ -743,110 +972,4 @@ plt.ylabel('t_diff mixing time [s]')
 plt.colorbar(orientation='horizontal')
 plt.title('feo/feot column mean slope')
 
-plt.savefig(batch_path+prefix_string+"sum_test.png",bbox_inches='tight')
-
-
-# #todo: FIGURE: jdf_alt_plot, NXF
-# fig=plt.figure(figsize=(10.0,10.0))
-#
-#
-#
-#
-# nsites = 9
-# ebw = 800.0
-# dark_red = '#65091f'
-# plot_purple = '#b678f5'
-# plot_blue = '#4e94c1'
-# site_locations = np.array([22.742, 25.883, 33.872, 40.706, 45.633, 55.765, 75.368, 99.006, 102.491])
-# site_locations = (site_locations - 20.00)*1000.0
-# site_names = ["1023", "1024", "1025", "1031", "1028", "1029", "1032", "1026", "1027"]
-# alt_values = np.array([0.3219, 2.1072, 2.3626, 2.9470, 10.0476, 4.2820, 8.9219, 11.8331, 13.2392])
-# lower_eb = np.array([0.3219, 0.04506, 0.8783, 1.7094, 5.0974, 0.8994, 5.3745, 2.5097, 3.0084])
-# upper_eb = np.array([1.7081, 2.9330, 3.7662, 4.9273, 11.5331, 5.0247, 10.7375, 17.8566, 27.4308])
-#
-#
-# # alteration data
-# ax=fig.add_subplot(2, 1, 1, frameon=True)
-# ax.grid(True)
-# plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
-# plt.plot(site_locations,alt_values,color=dark_red,linestyle='-')
-#
-# for j in range(nsites):
-#     # error bar height
-#     plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red)
-#     # lower error bar
-#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red)
-#     # upper error bar
-#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red)
-#
-# # plot model column mean
-# for ii in range(len(param_t_diff)+1):
-#
-#     plt.plot(xCell,alt_col_mean[:,max_step-1,ii],color=plot_col[ii],lw=1.5, label=plot_strings[ii])
-#     # print " "
-#     # print " "
-#     # print ii
-#     # print alt_col_mean[:,max_step-1,ii]
-#
-#
-# plt.legend(fontsize=10,loc=2)
-# plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
-# plt.xlim([0.0, 90000.0])
-# plt.xlabel('Distance along transect [km]')
-#
-# plt.yticks([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0],fontsize=12)
-# plt.ylim([0.0, 30.0])
-# plt.ylabel('Alteration volume $\%$')
-#
-#
-#
-#
-# #todo: FIGURE: FeO / FeOt plot
-# # FeO / FeOt data
-# fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
-# lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
-# upper_eb_fe = np.array([0.7753, 0.7442, 0.7519, 0.7812, 0.7110, 0.7610, 0.7396, 0.7104, 0.7026])
-#
-#
-# ax=fig.add_subplot(2, 1, 2, frameon=True)
-# ax.grid(True)
-# plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
-# plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
-#
-#
-# for j in range(nsites):
-#     # error bar height
-#     plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red)
-#     # lower error bar
-#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
-#     # upper error bar
-#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
-#
-# # plot model column mean
-# for ii in range(len(param_t_diff)+1):
-#
-#     plt.plot(xCell,fe_col_mean[:,max_step-1,ii],color=plot_col[ii],lw=1.5, label=plot_strings[ii])
-#     # print " "
-#     # print " "
-#     # print ii
-#     # print fe_col_mean[:,max_step-1,ii]
-#
-#
-#
-#
-#
-# #plt.legend(fontsize=10)
-# plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
-# plt.xlim([0.0, 90000.0])
-# plt.xlabel('Distance along transect [km]', fontsize=9)
-#
-# #plt.yticks([0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.80])
-# plt.yticks([0.6, 0.65, 0.7, 0.75, 0.80])
-# #plt.ylim([0.6, 0.8])
-# plt.ylim([0.6, 0.8])
-# plt.ylabel('FeO / FeOt')
-#
-#
-# #plt.subplots_adjust( wspace=0.05 , bottom=0.2, top=0.95, left=0.03, right=0.975)
-# plt.savefig(batch_path+prefix_string+"batch_alt.png")
-# plt.savefig(batch_path+prefix_string+"batch_alt.eps")
+plt.savefig(batch_path+prefix_string+"sum_test_"+prefix_string+".png",bbox_inches='tight')
