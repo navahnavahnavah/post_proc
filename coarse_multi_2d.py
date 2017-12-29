@@ -76,8 +76,9 @@ celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 8
+max_step = 38
 final_index = 4
+restart = 1
 
 xCell = x0[1::cellx]
 yCell = y0[0::celly]
@@ -322,6 +323,133 @@ tern_list_b = np.zeros([len(yCell)*len(xCell),steps,3,len(param_t_diff_string),l
 tern_list_d = np.zeros([len(yCell)*len(xCell),steps,3,len(param_t_diff_string),len(param_sim_string)])
 
 
+
+#hack: net uptake arrays
+
+x_elements = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+x_elements_d = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+x_elements_a = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+x_elements_b = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+
+x_pri_elements = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+x_pri_elements_d = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+x_pri_elements_a = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+x_pri_elements_b = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+
+
+elements_sec = np.zeros([minNum+1,15])
+elements_pri = np.zeros([1,15])
+
+elements_pri[0,5] = 0.1178 # Ca
+elements_pri[0,6] = 0.097 # Mg
+elements_pri[0,7] = 0.047 # Na
+elements_pri[0,8] = 0.00219 # K
+elements_pri[0,9] = 0.1165 # Fe
+elements_pri[0,10] = 0.0 # S
+elements_pri[0,11] =  0.4655 # Si
+elements_pri[0,12] = 0.0 # Cl
+elements_pri[0,13] =  0.153 # Al
+
+# 2 saponite_mg
+elements_sec[2,5] = 0.0 # Ca
+elements_sec[2,6] = 3.165 # Mg
+elements_sec[2,7] = 0.0 # Na
+elements_sec[2,8] = 0.0 # K
+elements_sec[2,9] = 0.0 # Fe
+elements_sec[2,10] = 0.0 # S
+elements_sec[2,11] = 3.67 # Si
+elements_sec[2,12] = 0.0 # Cl
+elements_sec[2,13] = 0.33 # Al
+
+# 5 pyrite
+elements_sec[5,5] = 0.0 # Ca
+elements_sec[5,6] = 0.0 # Mg
+elements_sec[5,7] = 0.0 # Na
+elements_sec[5,8] = 0.0 # K
+elements_sec[5,9] = 1.0 # Fe
+elements_sec[5,10] = 2.0 # S
+elements_sec[5,11] = 0.0 # Si
+elements_sec[5,12] = 0.0 # Cl
+elements_sec[5,13] = 0.0 # Al
+
+# saponite_na
+elements_sec[11,5] = 0.0 # Ca
+elements_sec[11,6] = 3.0 # Mg
+elements_sec[11,7] = 0.33 # Na
+elements_sec[11,8] = 0.0 # K
+elements_sec[11,9] = 0.0 # Fe
+elements_sec[11,10] = 0.0 # S
+elements_sec[11,11] = 3.67 # Si
+elements_sec[11,12] = 0.0 # Cl
+elements_sec[11,13] = 0.33 # Al
+
+# 13 nont_mg
+elements_sec[13,5] = 0.0 # Ca
+elements_sec[13,6] = 0.165 # Mg
+elements_sec[13,7] = 0.0 # Na
+elements_sec[13,8] = 0.0 # K
+elements_sec[13,9] = 2.0 # Fe
+elements_sec[13,10] = 0.0 # S
+elements_sec[13,11] = 3.67 # Si
+elements_sec[13,12] = 0.0 # Cl
+elements_sec[13,13] = 0.33 # Al
+
+# 14 fe_celad
+elements_sec[14,5] = 0.0 # Ca
+elements_sec[14,6] = 0.0 # Mg
+elements_sec[14,7] = 0.0 # Na
+elements_sec[14,8] = 1.0 # K
+elements_sec[14,9] = 1.0 # Fe
+elements_sec[14,10] = 0.0 # S
+elements_sec[14,11] = 4.0 # Si
+elements_sec[14,12] = 0.0 # Cl
+elements_sec[14,13] = 1.0 # Al
+
+# 16 mesolite
+elements_sec[16,5] = 0.657 # Ca
+elements_sec[16,6] = 0.0 # Mg
+elements_sec[16,7] = 0.676 # Na
+elements_sec[16,8] = 0.0 # K
+elements_sec[16,9] = 0.0 # Fe
+elements_sec[16,10] = 0.0 # S
+elements_sec[16,11] = 3.01 # Si
+elements_sec[16,12] = 0.0 # Cl
+elements_sec[16,13] = 1.99 # Al
+
+# 17 hematite
+elements_sec[17,5] = 0.0 # Ca
+elements_sec[17,6] = 0.0 # Mg
+elements_sec[17,7] = 0.0 # Na
+elements_sec[17,8] = 0.0 # K
+elements_sec[17,9] = 2.0 # Fe
+elements_sec[17,10] = 0.0 # S
+elements_sec[17,11] = 0.0 # Si
+elements_sec[17,12] = 0.0 # Cl
+elements_sec[17,13] = 0.0 # Al
+
+# clinochlore14a
+elements_sec[31,5] = 0.0 # Ca
+elements_sec[31,6] = 5.0 # Mg
+elements_sec[31,7] = 0.0 # Na
+elements_sec[31,8] = 0.0 # K
+elements_sec[31,9] = 0.0 # Fe
+elements_sec[31,10] = 0.0 # S
+elements_sec[31,11] = 3.0 # Si
+elements_sec[31,12] = 0.0 # Cl
+elements_sec[31,13] = 2.0 # Al
+
+# saponite_ca
+elements_sec[33,5] = 0.165 # Ca
+elements_sec[33,6] = 3.0 # Mg
+elements_sec[33,7] = 0.0 # Na
+elements_sec[33,8] = 0.0 # K
+elements_sec[33,9] = 0.0 # Fe
+elements_sec[33,10] = 0.0 # S
+elements_sec[33,11] = 3.67 # Si
+elements_sec[33,12] = 0.0 # Cl
+elements_sec[33,13] = 0.33 # Al
+
+
 #hack: 2D arrays go here
 value_2d_alt_vol_sum = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
 value_2d_alt_vol_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
@@ -494,9 +622,12 @@ for ii in range(len(param_t_diff)):
                         alt_vol0_d[k,j,ii,iii] = np.sum(secMat_d[k,j,:,ii,iii])/(pri_total0_d[k,j]+np.sum(secMat_d[k,j,:,ii,iii]))
 
 
-
+        xd_move = 0
         #todo: loop through steps
         for i in range(0,max_step,1):
+
+            if np.any(moves== i + restart):
+                xd_move = xd_move + 1
 
             #hack: cut up chem data
             for j in range(len(any_min)):
@@ -826,7 +957,7 @@ for iii in range(len(param_sim)):
     plt.legend(fontsize=10,loc=2,labelspacing=-0.1)
     plt.xticks([0.0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000],['0', '10', '20', '30', '40','50','60','70','80','90'],fontsize=12)
     plt.xlim([0.0, 90000.0])
-    plt.xlabel('Distance along transect [km]')
+    plt.xlabel('Distance along transect [km]', fontsize=9)
 
     plt.yticks([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0],fontsize=12)
     plt.ylim([0.0, 30.0])
@@ -889,7 +1020,7 @@ for iii in range(len(param_sim)):
         plt.plot(range(steps),x_priStep_ts_d[:,ii,iii]/np.max(x_priStep_ts_d[:,ii,iii]),color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
     plt.plot(range(steps),x_priStep_ts[:,0,0]/np.max(x_priStep_ts[:,0,0]),color=plot_col[len(param_t_diff)],lw=1.5, label=plot_t_diff_strings[len(param_t_diff)])
 
-    temp_pri_min_mat = x_priStep_ts_d/np.max(x_priStep_ts_d)
+    temp_pri_min_mat = x_priStep_ts_d[:,:,iii]/np.max(x_priStep_ts_d[:,:,iii])
     temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
     plt.ylim([temp_pri_min,1.01])
     plt.legend(fontsize=8,labelspacing=-0.1,columnspacing=0.0)
@@ -901,7 +1032,7 @@ for iii in range(len(param_sim)):
     for ii in range(len(param_t_diff)):
         plt.plot(range(steps),x_priStep_ts_a[:,ii,iii]/np.max(x_priStep_ts_a[:,ii,iii]),color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
 
-    temp_pri_min_mat = x_priStep_ts_a/np.max(x_priStep_ts_a)
+    temp_pri_min_mat = x_priStep_ts_a[:,:,iii]/np.max(x_priStep_ts_a[:,:,iii])
     temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
     plt.ylim([temp_pri_min,1.01])
     plt.title('a only')
@@ -912,7 +1043,7 @@ for iii in range(len(param_sim)):
     for ii in range(len(param_t_diff)):
         plt.plot(range(steps),x_priStep_ts_b[:,ii,iii]/np.max(x_priStep_ts_b[:,ii,iii]),color=plot_col[ii],lw=1.5, label=plot_t_diff_strings[ii])
 
-    temp_pri_min_mat = x_priStep_ts_b/np.max(x_priStep_ts_b)
+    temp_pri_min_mat = x_priStep_ts_b[:,:,iii]/np.max(x_priStep_ts_b[:,:,iii])
     temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
     plt.ylim([temp_pri_min,1.01])
     plt.title('b only')
