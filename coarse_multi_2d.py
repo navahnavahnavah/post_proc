@@ -23,7 +23,7 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 #hack: colors
 col = ['#880000', '#ff0000', '#ff7411', '#bddb00', '#159600', '#00ffc2', '#0000ff', '#2f3699','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#00530d', '#d9d9d9', '#e9acff']
 
-plot_col = ['#940000', '#cf5448', '#fc8800', '#2ab407', '#6aabf7', '#bb43e6']
+plot_col = ['#940000', '#cf6948', '#fc9700', '#2ab407', '#6aabf7', '#bb43e6']
 
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
@@ -47,10 +47,10 @@ molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 
 molar_pri = np.array([277.0, 153.0, 158.81, 110.0])
 
-density_pri = np.array([2.7, 3.0, 3.0, 3.0])
+density_pri = np.array([2.7, 3.0, 3.0, 2.7])
 
 #hack: path stuff
-prefix_string = "t_"
+prefix_string = "su_80_75_05_"
 suffix_string = "/"
 batch_path = "../output/revival/summer_coarse_grid/"
 batch_path_ex = "../output/revival/summer_coarse_grid/"+prefix_string+"50A_50B_2e10/"
@@ -58,13 +58,21 @@ batch_path_ex = "../output/revival/summer_coarse_grid/"+prefix_string+"50A_50B_2
 
 #hack: param_t_diff listed here
 
-param_t_diff = np.array([8e10, 6e10, 4e10, 2e10])
-param_t_diff_string = ['8e10' , '6e10' , '4e10', '2e10']
-plot_t_diff_strings = ['8e10 (least mix)', '6e10', '4e10', '2e10 (most mix)', 'solo']
+# param_t_diff = np.array([8e10, 6e10, 4e10, 2e10])
+# param_t_diff_string = ['8e10' , '6e10' , '4e10', '2e10']
+# plot_t_diff_strings = ['8e10 (least mix)', '6e10', '4e10', '2e10 (most mix)', 'solo']
 
-param_sim = np.array([25, 50, 75])
-param_sim_string = ['25A_75B', '50A_50B' , '75A_25B']
-plot_sim_strings = ['25A_75B', '50A_50B' , '75A_25B']
+param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
+param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
+plot_t_diff_strings = ['10e10 (least mix)', '8e10', '6e10', '4e10', '2e10 (most mix)', 'solo']
+
+# param_sim = np.array([25, 50, 75])
+# param_sim_string = ['25A_75B', '50A_50B' , '75A_25B']
+# plot_sim_strings = ['25A_75B', '50A_50B' , '75A_25B']
+
+param_sim = np.array([20, 30, 40, 50, 60, 70, 80])
+param_sim_string = ['20A_80B', '30A_70B', '40A_60B', '50A_50B', '60A_40B', '70A_30B', '80A_20B']
+plot_sim_strings = ['20A_80B', '30A_70B', '40A_60B', '50A_50B', '60A_40B', '70A_30B', '80A_20B']
 
 
 x0 = np.loadtxt(batch_path_ex + 'x.txt',delimiter='\n')
@@ -76,7 +84,7 @@ celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 38
+max_step = 46
 final_index = 4
 restart = 1
 
@@ -340,15 +348,25 @@ x_pri_elements_b = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_str
 elements_sec = np.zeros([minNum+1,15])
 elements_pri = np.zeros([1,15])
 
-elements_pri[0,5] = 0.1178 # Ca
-elements_pri[0,6] = 0.097 # Mg
-elements_pri[0,7] = 0.047 # Na
-elements_pri[0,8] = 0.00219 # K
-elements_pri[0,9] = 0.1165 # Fe
+# elements_pri[0,5] = 0.1178 # Ca
+# elements_pri[0,6] = 0.097 # Mg
+# elements_pri[0,7] = 0.047 # Na
+# elements_pri[0,8] = 0.00219 # K
+# elements_pri[0,9] = 0.1165 # Fe
+# elements_pri[0,10] = 0.0 # S
+# elements_pri[0,11] =  0.4655 # Si
+# elements_pri[0,12] = 0.0 # Cl
+# elements_pri[0,13] =  0.153 # Al
+
+elements_pri[0,5] = 0.2151 # Ca
+elements_pri[0,6] = 0.178 # Mg
+elements_pri[0,7] = 0.086 # Na
+elements_pri[0,8] = 0.004 # K
+elements_pri[0,9] = 0.2128 # Fe
 elements_pri[0,10] = 0.0 # S
-elements_pri[0,11] =  0.4655 # Si
+elements_pri[0,11] =  0.85 # Si
 elements_pri[0,12] = 0.0 # Cl
-elements_pri[0,13] =  0.153 # Al
+elements_pri[0,13] =  0.28 # Al
 
 # 2 saponite_mg
 elements_sec[2,5] = 0.0 # Ca
@@ -480,7 +498,7 @@ for ii in range(len(param_t_diff)):
             if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
                 if not np.any(any_min == j):
                     any_min = np.append(any_min,j)
-                print j , secondary[j] ,
+                #print j , secondary[j] ,
                 secMat[:,:,j,ii,iii] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
                 secMat[:,:,j,ii,iii] = secMat[:,:,j,ii,iii]*molar[j]/density[j]
                 dsecMat[:,2*len(xCell):,j,ii,iii] = secMat[:,len(xCell):-len(xCell),j,ii,iii] - secMat[:,2*len(xCell):,j,ii,iii]
@@ -513,7 +531,7 @@ for ii in range(len(param_t_diff)):
             if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
                 if not np.any(any_min == j):
                     any_min = np.append(any_min,j)
-                print j , secondary[j] ,
+                #print j , secondary[j] ,
                 secMat_a[:,:,j,ii,iii] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
                 secMat_a[:,:,j,ii,iii] = secMat_a[:,:,j,ii,iii]*molar[j]/density[j]
                 dsecMat_a[:,2*len(xCell):,j,ii,iii] = secMat_a[:,len(xCell):-len(xCell),j,ii,iii] - secMat_a[:,2*len(xCell):,j,ii,iii]
@@ -542,7 +560,7 @@ for ii in range(len(param_t_diff)):
             if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
                 if not np.any(any_min == j):
                     any_min = np.append(any_min,j)
-                print j , secondary[j] ,
+                #print j , secondary[j] ,
                 secMat_b[:,:,j,ii,iii] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
                 secMat_b[:,:,j,ii,iii] = secMat_b[:,:,j,ii,iii]*molar[j]/density[j]
                 dsecMat_a[:,2*len(xCell):,j,ii,iii] = secMat_b[:,len(xCell):-len(xCell),j,ii,iii] - secMat_b[:,2*len(xCell):,j,ii,iii]
@@ -572,7 +590,7 @@ for ii in range(len(param_t_diff)):
             if os.path.isfile(ch_path + 'z_sec' + str(j) + '.txt'):
                 if not np.any(any_min == j):
                     any_min = np.append(any_min,j)
-                print j , secondary[j] ,
+                #print j , secondary[j] ,
                 secMat_d[:,:,j,ii,iii] = np.loadtxt(ch_path + 'z_sec' + str(j) + '.txt')
                 secMat_d[:,:,j,ii,iii] = secMat_d[:,:,j,ii,iii]*molar[j]/density[j]
                 dsecMat_d[:,2*len(xCell):,j,ii,iii] = secMat_d[:,len(xCell):-len(xCell),j,ii,iii] - secMat_d[:,2*len(xCell):,j,ii,iii]
@@ -594,6 +612,9 @@ for ii in range(len(param_t_diff)):
 
         pri_total0_d = glass0_d
         print " "
+        print "any_min"
+        for j in range(len(any_min)):
+            print any_min[j], secondary[any_min[j]]
 
 
 
@@ -634,7 +655,7 @@ for ii in range(len(param_t_diff)):
                 secStep[:,:,any_min[j],i,ii,iii] = cut_chem(secMat[:,:,any_min[j],ii,iii],i)
                 dsecStep[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat[:,:,any_min[j],ii,iii],i)
                 secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,:,any_min[j],i,ii,iii])
-                x_secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,x_d,any_min[j],i,ii,iii])
+                x_secStep_ts[i,any_min[j],ii,iii] = np.sum(secStep[:,xd_move,any_min[j],i,ii,iii])
                 if i > 0:
                     dsecStep_ts[i,any_min[j],ii,iii] = secStep_ts[i,any_min[j],ii,iii] - secStep_ts[i-1,any_min[j],ii,iii]
                     x_dsecStep_ts[i,any_min[j],ii,iii] = x_secStep_ts[i,any_min[j],ii,iii] - x_secStep_ts[i-1,any_min[j],ii,iii]
@@ -671,7 +692,7 @@ for ii in range(len(param_t_diff)):
                 secStep_a[:,:,any_min[j],i,ii,iii] = cut_chem(secMat_a[:,:,any_min[j],ii,iii],i)
                 dsecStep_a[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat_a[:,:,any_min[j],ii,iii],i)
                 secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,:,any_min[j],i,ii,iii])
-                x_secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,x_d,any_min[j],i,ii,iii])
+                x_secStep_ts_a[i,any_min[j],ii,iii] = np.sum(secStep_a[:,xd_move,any_min[j],i,ii,iii])
                 if i > 0:
                     dsecStep_ts_a[i,any_min[j],ii,iii] = secStep_ts_a[i,any_min[j],ii,iii] - secStep_ts_a[i-1,any_min[j],ii,iii]
                     x_dsecStep_ts_a[i,any_min[j],ii,iii] = x_secStep_ts_a[i,any_min[j],ii,iii] - x_secStep_ts_a[i-1,any_min[j],ii,iii]
@@ -708,7 +729,7 @@ for ii in range(len(param_t_diff)):
                 secStep_b[:,:,any_min[j],i,ii,iii] = cut_chem(secMat_b[:,:,any_min[j],ii,iii],i)
                 dsecStep_b[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat_b[:,:,any_min[j],ii,iii],i)
                 secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,:,any_min[j],i,ii,iii])
-                x_secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,x_d,any_min[j],i,ii,iii])
+                x_secStep_ts_b[i,any_min[j],ii,iii] = np.sum(secStep_b[:,xd_move,any_min[j],i,ii,iii])
                 if i > 0:
                     dsecStep_ts_b[i,any_min[j],ii,iii] = secStep_ts_b[i,any_min[j],ii,iii] - secStep_ts_b[i-1,any_min[j],ii,iii]
                     x_dsecStep_ts_b[i,any_min[j],ii,iii] = x_secStep_ts_b[i,any_min[j],ii,iii] - x_secStep_ts_b[i-1,any_min[j],ii,iii]
@@ -745,7 +766,7 @@ for ii in range(len(param_t_diff)):
                 secStep_d[:,:,any_min[j],i,ii,iii] = cut_chem(secMat_d[:,:,any_min[j],ii,iii],i)
                 dsecStep_d[:,:,any_min[j],i,ii,iii] = cut_chem(dsecMat_d[:,:,any_min[j],ii,iii],i)
                 secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,:,any_min[j],i,ii,iii])
-                x_secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,x_d,any_min[j],i,ii,iii])
+                x_secStep_ts_d[i,any_min[j],ii,iii] = np.sum(secStep_d[:,xd_move,any_min[j],i,ii,iii])
                 if i > 0:
                     dsecStep_ts_d[i,any_min[j],ii,iii] = secStep_ts_d[i,any_min[j],ii,iii] - secStep_ts_d[i-1,any_min[j],ii,iii]
                     x_dsecStep_ts_d[i,any_min[j],ii,iii] = x_secStep_ts_d[i,any_min[j],ii,iii] - x_secStep_ts_d[i-1,any_min[j],ii,iii]
@@ -780,8 +801,7 @@ for ii in range(len(param_t_diff)):
 
 
 
-            #hack: alt data
-
+            #hack: alt_vol data
             for j in range(len(xCell)):
                 # full column average
 
@@ -811,7 +831,7 @@ for ii in range(len(param_t_diff)):
 
 
 
-
+            #hack: FeO / FeOt data
             for j in range(len(xCell)):
 
                 feo_col_mean_temp = np.zeros(len(xCell))
@@ -843,7 +863,7 @@ for ii in range(len(param_t_diff)):
 
                         feot_col_mean_temp[j] = 0.0
                         # feot goethite
-                        feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                        feot_col_mean_temp[j] = 0.8998*.026*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
                         # feo goethite
                         feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
                         # # feot pyrite
@@ -882,7 +902,7 @@ for ii in range(len(param_t_diff)):
 
                     feot_col_mean_temp[j] = 0.0
                     # feot goethite
-                    feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                    feot_col_mean_temp[j] = 0.8998*.026*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
                     # feo goethite
                     feot_col_mean_temp[j] = feot_col_mean_temp[j] + 0.8998*np.mean(secStep_temp[above_zero_ind,j,7])*(density[7]/molar[7])
                     # # feot pyrite
@@ -904,6 +924,47 @@ for ii in range(len(param_t_diff)):
             fe_col_mean_slope[alt_col_mean_slope==0.0] = None
             value_2d_fe_mean_slope[i,ii,iii] = np.nanmean(fe_col_mean_slope[:,i,ii,iii])
             # print "time" , i , "2d_value fe" , value_2d_fe_mean_slope[i,ii,iii]
+
+
+
+
+
+            #hack: net uptake data
+            for j in range(len(any_min)):
+                for jj in range(15):
+
+                    # x_elements[i,jj] = x_elements[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements[i,jj] = x_elements[i,jj] - elements_pri[0,jj]*np.sum(dpriStep[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+                    #
+                    # x_elements_d[i,jj] = x_elements_d[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep_d[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements_d[i,jj] = x_elements_d[i,jj] - elements_pri[0,jj]*np.sum(dpriStep_d[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+                    #
+                    # x_elements_a[i,jj] = x_elements_a[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep_a[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements_a[i,jj] = x_elements_a[i,jj] - elements_pri[0,jj]*np.sum(dpriStep_a[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+                    #
+                    # x_elements_b[i,jj] = x_elements_b[i,jj] + elements_sec[any_min[j],jj]*np.sum(dsecStep_b[:,xd_move,any_min[j]])*(density[any_min[j]]/molar[any_min[j]])
+                    # # if j == 0:
+                    # #     x_elements_b[i,jj] = x_elements_b[i,jj] - elements_pri[0,jj]*np.sum(dpriStep_b[:,xd_move,0])*(density_pri[3]/molar_pri[3])
+
+                    x_elements[i,jj,ii,iii] = x_elements[i,jj,ii,iii] + elements_sec[any_min[j],jj]*x_dsecStep_ts[i,any_min[j],ii,iii]*(density[any_min[j]]/molar[any_min[j]])
+                    x_elements_d[i,jj,ii,iii] = x_elements_d[i,jj,ii,iii] + elements_sec[any_min[j],jj]*x_dsecStep_ts_d[i,any_min[j],ii,iii]*(density[any_min[j]]/molar[any_min[j]])
+                    x_elements_a[i,jj,ii,iii] = x_elements_a[i,jj,ii,iii] + elements_sec[any_min[j],jj]*x_dsecStep_ts_a[i,any_min[j],ii,iii]*(density[any_min[j]]/molar[any_min[j]])
+                    x_elements_b[i,jj,ii,iii] = x_elements_b[i,jj,ii,iii] + elements_sec[any_min[j],jj]*x_dsecStep_ts_b[i,any_min[j],ii,iii]*(density[any_min[j]]/molar[any_min[j]])
+
+                    # if j == 0:
+                    #     x_elements[i,jj] = x_elements[i,jj] + elements_pri[0,jj]*x_dpriStep_ts[i,5]#*(density_pri[3]/molar_pri[3])
+                    #     x_elements_d[i,jj] = x_elements_d[i,jj] + elements_pri[0,jj]*x_dpriStep_ts_d[i,5]#*(density_pri[3]/molar_pri[3])
+                    #     x_elements_a[i,jj] = x_elements_a[i,jj] + elements_pri[0,jj]*x_dpriStep_ts_a[i,5]#*(density_pri[3]/molar_pri[3])
+                    #     x_elements_b[i,jj] = x_elements_b[i,jj] + elements_pri[0,jj]*x_dpriStep_ts_b[i,5]#*(density_pri[3]/molar_pri[3])
+
+                    if j == 0:
+                        x_pri_elements[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts[i,ii,iii]*(density_pri[3]/molar_pri[3])
+                        x_pri_elements_d[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts_d[i,ii,iii]*(density_pri[3]/molar_pri[3])
+                        x_pri_elements_a[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts_a[i,ii,iii]*(density_pri[3]/molar_pri[3])
+                        x_pri_elements_b[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts_b[i,ii,iii]*(density_pri[3]/molar_pri[3])
 
 
 
@@ -1024,7 +1085,7 @@ for iii in range(len(param_sim)):
     temp_pri_min = np.min(temp_pri_min_mat[temp_pri_min_mat>0.0])
     plt.ylim([temp_pri_min,1.01])
     plt.legend(fontsize=8,labelspacing=-0.1,columnspacing=0.0)
-    plt.title('dual')
+    plt.title('dual vs solo')
 
 
 
@@ -1060,8 +1121,208 @@ for iii in range(len(param_sim)):
 
 
 
+    # elements_sec[,5] = 0.0 # Ca
+    # elements_sec[,6] = 0.0 # Mg
+    # elements_sec[,7] = 0.0 # Na
+    # elements_sec[,8] = 0.0 # K
+    # elements_sec[,9] = 0.0 # Fe
+    # elements_sec[,10] = 0.0 # S
+    # elements_sec[,11] = 0.0 # Si
+    # elements_sec[,12] = 0.0 # Cl
+    # elements_sec[,13] = 0.0 # Al
+
+
+
+    #todo: FIGURE: net_uptake_x
+    fig=plt.figure(figsize=(15.0,8.0))
+    print "net_uptake_x"
+
+    net_uptake_kwargs = dict(lw=1.1)
+    net_uptake_kwargs_a = dict(lw=1.1, linestyle='-')
+    net_uptake_kwargs_b = dict(lw=1.1, linestyle='-')
+    uptake_color_s = '#bd3706'
+    uptake_color_d = '#073dc7'
+    uptake_color_a = '#0793c7'
+    uptake_color_b = '#0fe7e0'
+    xt_fs = 8
+
+
+    ax=fig.add_subplot(3, 4, 1, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,6,ii,iii]+x_pri_elements_d[:,6,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,6,0,0]+x_pri_elements[:,6,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.legend(fontsize=8,loc='best',labelspacing=-0.1,columnspacing=0.0)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo Mg total uptake',fontsize=10)
+
+
+
+    ax=fig.add_subplot(3, 4, 2, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,5,ii,iii]+x_pri_elements_d[:,5,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,5,0,0]+x_pri_elements[:,5,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo Ca total uptake',fontsize=10)
+
+
+
+    ax=fig.add_subplot(3, 4, 3, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,8,ii,iii]+x_pri_elements_d[:,8,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,8,0,0]+x_pri_elements[:,8,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo K total uptake',fontsize=10)
+
+
+
+    ax=fig.add_subplot(3, 4, 4, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,9,ii,iii]+x_pri_elements_d[:,9,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,9,0,0]+x_pri_elements[:,9,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo Fe total uptake',fontsize=10)
+
+
+        # plt.plot(np.arange(steps),x_elements[:,6],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+        # plt.plot(np.arange(steps),x_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+        # plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
+        # plt.xticks(fontsize=xt_fs)
+        # plt.yticks(fontsize=xt_fs)
+        # plt.title('Mg uptake in column')
+        #
+        #
+        # ax=fig.add_subplot(3, 4, 2, frameon=True)
+        # plt.plot(np.arange(steps),x_elements[:,5],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+        # plt.plot(np.arange(steps),x_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+        # plt.xticks(fontsize=xt_fs)
+        # plt.yticks(fontsize=xt_fs)
+        # plt.title('Ca uptake in column')
+        #
+        #
+        # ax=fig.add_subplot(3, 4, 3, frameon=True)
+        # plt.plot(np.arange(steps),x_elements[:,8],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+        # plt.plot(np.arange(steps),x_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+        # plt.xticks(fontsize=xt_fs)
+        # plt.yticks(fontsize=xt_fs)
+        # plt.title('K uptake in column')
+        #
+        #
+        # ax=fig.add_subplot(3, 4, 4, frameon=True)
+        # plt.plot(np.arange(steps),x_elements[:,9],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+        # plt.plot(np.arange(steps),x_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+        # plt.plot(np.arange(steps),x_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+        # plt.xticks(fontsize=xt_fs)
+        # plt.yticks(fontsize=xt_fs)
+        # plt.title('Fe uptake in column')
+
+
+
+
+    # ax=fig.add_subplot(3, 4, 5, frameon=True)
+    # plt.plot(np.arange(steps),x_pri_elements[:,6],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_pri_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('Mg loss pri')
+    #
+    # ax=fig.add_subplot(3, 4, 6, frameon=True)
+    # plt.plot(np.arange(steps),x_pri_elements[:,5],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_pri_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('Ca loss pri')
+    #
+    # ax=fig.add_subplot(3, 4, 7, frameon=True)
+    # plt.plot(np.arange(steps),x_pri_elements[:,8],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_pri_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('K loss pri')
+    #
+    # ax=fig.add_subplot(3, 4, 8, frameon=True)
+    # plt.plot(np.arange(steps),x_pri_elements[:,9],color=uptake_color_s,label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_pri_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_pri_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('Fe loss pri')
+    #
+    #
+    #
+    #
+    # ax=fig.add_subplot(3, 4, 9, frameon=True)
+    # plt.plot(np.arange(steps),x_elements[:,6]+x_pri_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_d[:,6]+x_pri_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_a[:,6]+x_pri_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_elements_b[:,6]+x_pri_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('Mg net')
+    #
+    # ax=fig.add_subplot(3, 4, 10, frameon=True)
+    # plt.plot(np.arange(steps),x_elements[:,5]+x_pri_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_d[:,5]+x_pri_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_a[:,5]+x_pri_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_elements_b[:,5]+x_pri_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('Ca net')
+    #
+    # ax=fig.add_subplot(3, 4, 11, frameon=True)
+    # plt.plot(np.arange(steps),x_elements[:,8]+x_pri_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_d[:,8]+x_pri_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_a[:,8]+x_pri_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_elements_b[:,8]+x_pri_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('K net')
+    #
+    # ax=fig.add_subplot(3, 4, 12, frameon=True)
+    # plt.plot(np.arange(steps),x_elements[:,9]+x_pri_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_d[:,9]+x_pri_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
+    # plt.plot(np.arange(steps),x_elements_a[:,9]+x_pri_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
+    # plt.plot(np.arange(steps),x_elements_b[:,9]+x_pri_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
+    # plt.xticks(fontsize=xt_fs)
+    # plt.yticks(fontsize=xt_fs)
+    # plt.title('Fe net')
+
+
+
+
+    plt.subplots_adjust( wspace=0.3 , hspace=0.3)
+    plt.savefig(batch_path+prefix_string+"sim_"+param_sim_string[iii]+"_net.png",bbox_inches='tight')
+
+
+
+
+
+
 #todo: 2D pcolor plot
-fig=plt.figure(figsize=(16.0,8.0))
+fig=plt.figure(figsize=(12.0,6.0))
 
 ax=fig.add_subplot(1, 2, 1, frameon=True)
 plt.pcolor(value_2d_alt_vol_mean_slope[max_step-2,:,:])
@@ -1070,12 +1331,12 @@ the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string)
+plt.xticks(the_xticks,param_sim_string, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-plt.yticks(the_yticks,param_t_diff_string)
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
 plt.xlabel('primary basalt distribution')
 plt.ylabel('t_diff mixing time [s]')
 
@@ -1091,16 +1352,18 @@ the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string)
+plt.xticks(the_xticks,param_sim_string, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-plt.yticks(the_yticks,param_t_diff_string)
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+#plt.yticks([])
 plt.xlabel('primary basalt distribution')
 plt.ylabel('t_diff mixing time [s]')
 
-plt.colorbar(orientation='horizontal')
+cbar = plt.colorbar(orientation='horizontal')
+cbar.ax.tick_params(labelsize=9)
 plt.title('feo/feot column mean slope')
 
 plt.savefig(batch_path+prefix_string+"sum_test_"+prefix_string+".png",bbox_inches='tight')

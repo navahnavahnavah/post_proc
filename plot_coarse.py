@@ -124,8 +124,8 @@ pri_toggle_b = [0, 0, 0, 0, 0, 1]
 
 
 #hack: input path
-letter = "10e10"
-outpath = "../output/revival/summer_coarse_grid/v_50A_50B_"+letter+"/"
+letter = "6e10"
+outpath = "../output/revival/summer_coarse_grid/su_80_75_05_50A_50B_"+letter+"/"
 
 print "LETTER" , letter
 #outpath = "../output/revival/summer_coarse_grid/med_b/"
@@ -3844,7 +3844,7 @@ for i in range(0,steps,1):
 
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
-                feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                feot_col_mean_temp[j] = 0.8998*.026*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
                 # # feot pyrite
                 # feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot hematite
@@ -3894,7 +3894,7 @@ for i in range(0,steps,1):
 
                 feot_col_mean_temp[j] = 0.0
                 # feot goethite
-                feot_col_mean_temp[j] = 0.8998*.0234*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
+                feot_col_mean_temp[j] = 0.8998*.026*2.0*np.mean(glass_temp[above_zero_ind,j])*(density_pri[3]/molar_pri[3])
                 # # feot pyrite
                 # feot_col_mean_temp[j] = feot_col_mean_temp[j] + 1.0*0.8998*np.mean(secStep_temp[above_zero_ind,j,5])*(density[5]/molar[5])
                 # feot hematite
