@@ -45,6 +45,7 @@ molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 504.19, 380.22, 379.259, 549.07, 395.38, 64.448, 392.34, 64.448,
 64.448, 480.19, 504.19, 85.12, 480.19, 480.19, 664.0, 664.0, 519.0])
 
+# molar_pri = np.array([277.0, 153.0, 158.81, 110.0])
 molar_pri = np.array([277.0, 153.0, 158.81, 110.0])
 
 density_pri = np.array([2.7, 3.0, 3.0, 2.7])
@@ -56,19 +57,18 @@ batch_path = "../output/revival/summer_coarse_grid/"
 batch_path_ex = "../output/revival/summer_coarse_grid/"+prefix_string+"50A_50B_2e10/"
 
 
-#hack: param_t_diff listed here
 
 # param_t_diff = np.array([8e10, 6e10, 4e10, 2e10])
-# param_t_diff_string = ['8e10' , '6e10' , '4e10', '2e10']
+# param_t_diff_string = ['8e10', '6e10' , '4e10', '2e10']
 # plot_t_diff_strings = ['8e10 (least mix)', '6e10', '4e10', '2e10 (most mix)', 'solo']
 
 param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
 param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
 plot_t_diff_strings = ['10e10 (least mix)', '8e10', '6e10', '4e10', '2e10 (most mix)', 'solo']
 
-# param_sim = np.array([25, 50, 75])
-# param_sim_string = ['25A_75B', '50A_50B' , '75A_25B']
-# plot_sim_strings = ['25A_75B', '50A_50B' , '75A_25B']
+# param_sim = np.array([20, 40, 60, 80])
+# param_sim_string = ['20A_80B', '40A_60B', '60A_40B' , '80A_20B']
+# plot_sim_strings = ['20A_80B', '40A_60B', '60A_40B' , '80A_20B']
 
 param_sim = np.array([20, 30, 40, 50, 60, 70, 80])
 param_sim_string = ['20A_80B', '30A_70B', '40A_60B', '50A_50B', '60A_40B', '70A_30B', '80A_20B']
@@ -84,7 +84,7 @@ celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 46
+max_step = 20
 final_index = 4
 restart = 1
 
@@ -306,9 +306,18 @@ fe_col_mean = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_si
 fe_col_mean_top_half = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 fe_col_mean_top_cell = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 
+
+pri_mean = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
+pri_mean_d = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
+
+sec_mean = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
+sec_mean_d = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
+
+#hack: slope arrays here
 alt_col_mean_slope = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 fe_col_mean_slope = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
-
+pri_mean_slope = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
+sec_mean_slope = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 
 ternK = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
 ternK_a = np.zeros([len(yCell),len(xCell),steps,len(param_t_diff_string),len(param_sim_string)])
@@ -472,6 +481,11 @@ elements_sec[33,13] = 0.33 # Al
 value_2d_alt_vol_sum = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
 value_2d_alt_vol_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
 value_2d_fe_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+
+value_2d_pri_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+value_2d_sec_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
+
+value_2d_net_uptake_x = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
 
 #todo: loop through param_t_diff
 for ii in range(len(param_t_diff)):
@@ -810,18 +824,34 @@ for ii in range(len(param_t_diff)):
                     above_zero = above_zero[above_zero>0.0]
                     alt_col_mean[j,i,len(param_t_diff_string)] = np.mean(above_zero)
 
+                    # pri_mean[j,i,ii,iii] = np.sum(pri_total[:,j])/7.0
+
                 above_zero = alt_vol_d[:,j,i,ii,iii]*100.0
                 above_zero = above_zero[above_zero>0.0]
                 #print above_zero
                 alt_col_mean[j,i,ii,iii] = np.mean(above_zero)
 
-                if j > 0 and alt_col_mean[j-1,i,ii,iii] > 0.0:
+                pri_mean_d[j,i,ii,iii] = np.sum(priStep_d[j,:,i,ii,iii])/7.0
+                sec_mean_d[j,i,ii,iii] = np.sum(secStep_d[j,:,:,i,ii,iii])/7.0
+
+                if j > 0 and alt_col_mean[j-1,i,ii,iii] > 0.0 and alt_col_mean[j,i,ii,iii] > 0.0:
                     alt_col_mean_slope[j,i,ii,iii] = alt_col_mean[j,i,ii,iii] - alt_col_mean[j-1,i,ii,iii]
+
+                if j > 0 and np.abs(pri_mean_d[j-1,i,ii,iii]) > 0.0 and np.abs(pri_mean_d[j,i,ii,iii]) > 0.0:
+                    pri_mean_slope[j,i,ii,iii] = np.abs(pri_mean_d[j,i,ii,iii]) - np.abs(pri_mean_d[j-1,i,ii,iii])
+
+                if j > 0 and np.abs(sec_mean_d[j-1,i,ii,iii]) > 0.0 and np.abs(sec_mean_d[j,i,ii,iii]):
+                    sec_mean_slope[j,i,ii,iii] = sec_mean_d[j,i,ii,iii] - sec_mean_d[j-1,i,ii,iii]
 
 
 
             alt_col_mean_slope[alt_col_mean_slope==0.0] = None
             value_2d_alt_vol_mean_slope[i,ii,iii] = np.nanmean(alt_col_mean_slope[:,i,ii,iii])
+
+            #pri_mean_slope[pri_mean_slope==0.0] = None
+            value_2d_pri_mean_slope[i,ii,iii] = np.sum(pri_mean_slope[:,i,ii,iii])/float(max_step)
+            print value_2d_pri_mean_slope[i,ii,iii]
+            value_2d_sec_mean_slope[i,ii,iii] = np.sum(sec_mean_slope[:,i,ii,iii])/float(max_step)
             # print "time" , i , "2d_value" , value_2d_alt_vol_mean_slope[i,ii,iii]
             # print "slope array" , alt_col_mean_slope[:,i,ii,iii]
             # print "value array" , alt_col_mean[:,i,ii,iii]
@@ -1322,9 +1352,9 @@ for iii in range(len(param_sim)):
 
 
 #todo: 2D pcolor plot
-fig=plt.figure(figsize=(12.0,6.0))
+fig=plt.figure(figsize=(16.0,7.0))
 
-ax=fig.add_subplot(1, 2, 1, frameon=True)
+ax=fig.add_subplot(2, 4, 1, frameon=True)
 plt.pcolor(value_2d_alt_vol_mean_slope[max_step-2,:,:])
 
 the_xticks = range(len(param_sim))
@@ -1337,15 +1367,16 @@ for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
 plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
-plt.xlabel('primary basalt distribution')
-plt.ylabel('t_diff mixing time [s]')
+plt.xlabel('primary basalt distribution',fontsize=8)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
-plt.colorbar(orientation='horizontal')
+cbar = plt.colorbar(orientation='horizontal')
+cbar.ax.tick_params(labelsize=8)
 plt.title('alt_vol column mean slope')
 
 
 
-ax=fig.add_subplot(1,2, 2, frameon=True)
+ax=fig.add_subplot(2,4, 2, frameon=True)
 plt.pcolor(np.abs(value_2d_fe_mean_slope[max_step-2,:,:]))
 
 the_xticks = range(len(param_sim))
@@ -1359,11 +1390,86 @@ for i in the_yticks:
 print "the_yticks" , the_yticks
 plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
 #plt.yticks([])
-plt.xlabel('primary basalt distribution')
-plt.ylabel('t_diff mixing time [s]')
+plt.xlabel('primary basalt distribution',fontsize=8)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
 cbar = plt.colorbar(orientation='horizontal')
-cbar.ax.tick_params(labelsize=9)
+cbar.ax.tick_params(labelsize=8)
 plt.title('feo/feot column mean slope')
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 4, 3, frameon=True)
+plt.pcolor(np.abs(value_2d_pri_mean_slope[max_step-2,:,:]))
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+#plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal')
+cbar.ax.tick_params(labelsize=8)
+plt.title('value pri slope')
+
+
+
+ax=fig.add_subplot(2, 4, 4, frameon=True)
+plt.pcolor(np.abs(value_2d_sec_mean_slope[max_step-2,:,:]))
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+#plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal')
+cbar.ax.tick_params(labelsize=8)
+plt.title('value sec slope')
+
+
+
+ax=fig.add_subplot(2, 4, 5, frameon=True)
+plt.pcolor(np.abs(value_2d_sec_mean_slope[max_step-2,:,:])/np.abs(value_2d_pri_mean_slope[max_step-2,:,:]))
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+#plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal')
+cbar.ax.tick_params(labelsize=8)
+plt.title('value sec slope')
+
+
 
 plt.savefig(batch_path+prefix_string+"sum_test_"+prefix_string+".png",bbox_inches='tight')
