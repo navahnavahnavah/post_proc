@@ -23,7 +23,7 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #31aa22, #04776b"
 #hack: colors
 col = ['#880000', '#ff0000', '#ff7411', '#bddb00', '#159600', '#00ffc2', '#0000ff', '#2f3699','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#00530d', '#d9d9d9', '#e9acff']
 
-plot_col = ['#940000', '#cf6948', '#fc9700', '#2ab407', '#6aabf7', '#bb43e6']
+plot_col = ['#940000', '#d26618', '#fcae00', '#acde03', '#36aa00', '#35b5aa', '#0662ad', '#0e00ad', '#6605d4', '#b100de']
 
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
@@ -62,9 +62,13 @@ batch_path_ex = "../output/revival/summer_coarse_grid/"+prefix_string+"50A_50B_2
 # param_t_diff_string = ['8e10', '6e10' , '4e10', '2e10']
 # plot_t_diff_strings = ['8e10 (least mix)', '6e10', '4e10', '2e10 (most mix)', 'solo']
 
-param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
-param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
-plot_t_diff_strings = ['10e10 (least mix)', '8e10', '6e10', '4e10', '2e10 (most mix)', 'solo']
+# param_t_diff = np.array([10e10, 8e10, 6e10, 4e10, 2e10])
+# param_t_diff_string = ['10e10', '8e10' , '6e10' , '4e10', '2e10']
+# plot_t_diff_strings = ['10e10 (least mix)', '8e10', '6e10', '4e10', '2e10 (most mix)', 'solo']
+
+param_t_diff = np.array([10e10, 9e10, 8e10, 7e10, 6e10, 5e10, 4e10, 3e10, 2e10])
+param_t_diff_string = ['10e10', '9e10', '8e10', '7e10', '6e10' , '5e10', '4e10', '3e10', '2e10']
+plot_t_diff_strings = ['10e10 (least mix)', '9e10', '8e10', '7e10', '6e10' , '5e10', '4e10', '3e10', '2e10 (most mix)', 'solo']
 
 # param_sim = np.array([20, 40, 60, 80])
 # param_sim_string = ['20A_80B', '40A_60B', '60A_40B' , '80A_20B']
@@ -72,6 +76,7 @@ plot_t_diff_strings = ['10e10 (least mix)', '8e10', '6e10', '4e10', '2e10 (most 
 
 param_sim = np.array([20, 30, 40, 50, 60, 70, 80])
 param_sim_string = ['20A_80B', '30A_70B', '40A_60B', '50A_50B', '60A_40B', '70A_30B', '80A_20B']
+param_sim_string_tick = ['20A', '30A', '40A', '50A', '60A', '70A', '80A']
 plot_sim_strings = ['20A_80B', '30A_70B', '40A_60B', '50A_50B', '60A_40B', '70A_30B', '80A_20B']
 
 
@@ -84,7 +89,7 @@ celly = 1
 steps = 50
 minNum = 41
 # even number
-max_step = 20
+max_step = 8
 final_index = 4
 restart = 1
 
@@ -313,6 +318,8 @@ pri_mean_d = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim
 sec_mean = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 sec_mean_d = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 
+
+
 #hack: slope arrays here
 alt_col_mean_slope = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
 fe_col_mean_slope = np.zeros([len(xCell),steps,len(param_t_diff_string)+1,len(param_sim_string)+1])
@@ -486,12 +493,12 @@ value_2d_pri_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim
 value_2d_sec_mean_slope = np.zeros([steps,len(param_t_diff_string),len(param_sim_string)])
 
 value_2d_net_uptake_x = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
+value_2d_net_uptake_x_scaled = np.zeros([steps,15,len(param_t_diff_string),len(param_sim_string)])
 
 #todo: loop through param_t_diff
 for ii in range(len(param_t_diff)):
     for iii in range(len(param_sim)):
 
-        print " "
         print " "
         print "param_t_diff:" , param_t_diff_string[ii]
         print "param_sim:" , param_sim_string[iii]
@@ -533,7 +540,7 @@ for ii in range(len(param_t_diff)):
         dpriMat[:,2*len(xCell):,ii,iii] = priMat[:,len(xCell):-len(xCell),ii,iii] - priMat[:,2*len(xCell):,ii,iii]
 
         pri_total0 = glass0
-        print " "
+        # print " "
 
         # if ii > 0:
         #
@@ -566,7 +573,7 @@ for ii in range(len(param_t_diff)):
         dpriMat_a[:,2*len(xCell):,ii,iii] = priMat_a[:,len(xCell):-len(xCell),ii,iii] - priMat_a[:,2*len(xCell):,ii,iii]
 
         pri_total0_a = glass0_a
-        print " "
+        # print " "
 
 
         ch_path = ii_path + 'ch_b/'
@@ -595,7 +602,7 @@ for ii in range(len(param_t_diff)):
         dpriMat_b[:,2*len(xCell):,ii,iii] = priMat_b[:,len(xCell):-len(xCell),ii,iii] - priMat_b[:,2*len(xCell):,ii,iii]
 
         pri_total0_b = glass0_b
-        print " "
+        # print " "
 
 
 
@@ -849,13 +856,24 @@ for ii in range(len(param_t_diff)):
             value_2d_alt_vol_mean_slope[i,ii,iii] = np.nanmean(alt_col_mean_slope[:,i,ii,iii])
 
             #pri_mean_slope[pri_mean_slope==0.0] = None
-            value_2d_pri_mean_slope[i,ii,iii] = np.sum(pri_mean_slope[:,i,ii,iii])/float(max_step)
-            print value_2d_pri_mean_slope[i,ii,iii]
-            value_2d_sec_mean_slope[i,ii,iii] = np.sum(sec_mean_slope[:,i,ii,iii])/float(max_step)
+            pri_mean_slope[pri_mean_slope==0.0] = None
+            value_2d_pri_mean_slope[i,ii,iii] = np.nanmean(pri_mean_slope[:,i,ii,iii])#/float(max_step)
+            #print value_2d_pri_mean_slope[i,ii,iii]
+            sec_mean_slope[sec_mean_slope==0.0] = None
+            value_2d_sec_mean_slope[i,ii,iii] = np.nanmean(sec_mean_slope[:,i,ii,iii])#/float(max_step)
             # print "time" , i , "2d_value" , value_2d_alt_vol_mean_slope[i,ii,iii]
             # print "slope array" , alt_col_mean_slope[:,i,ii,iii]
             # print "value array" , alt_col_mean[:,i,ii,iii]
+
             # print " "
+
+            # if i == max_step-2:
+            #     print "pri mean slope"
+            #     print pri_mean_slope[:,i,ii,iii]
+            #
+            #     print " "
+            #     print "sec mean slope"
+            #     print sec_mean_slope[:,i,ii,iii]
 
 
 
@@ -995,6 +1013,23 @@ for ii in range(len(param_t_diff)):
                         x_pri_elements_d[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts_d[i,ii,iii]*(density_pri[3]/molar_pri[3])
                         x_pri_elements_a[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts_a[i,ii,iii]*(density_pri[3]/molar_pri[3])
                         x_pri_elements_b[i,jj,ii,iii] = elements_pri[0,jj]*x_dpriStep_ts_b[i,ii,iii]*(density_pri[3]/molar_pri[3])
+
+
+
+
+            for jj in range(15):
+                temp_x_elements_d = x_elements_d[:,jj,ii,iii]#+x_pri_elements[:,jj,ii,iii]
+                #temp_x_elements_d[temp_x_elements_d==0.0] = None
+                value_2d_net_uptake_x[i,jj,ii,iii] = np.sum(temp_x_elements_d)
+                # print "element" , jj
+                # print value_2d_net_uptake_x[i,jj,ii,iii]
+                # print " "
+
+
+                # value_2d_net_uptake_x_scaled[i,jj,ii,iii] = np.sum(x_elements_d[:,jj,ii,iii]+x_pri_elements_d[:,jj,ii,iii])
+                temp_x_pri_elements_d = x_pri_elements_d[:,jj,ii,iii]
+                if np.max(np.abs(temp_x_pri_elements_d)>0.0):
+                    value_2d_net_uptake_x_scaled[i,jj,ii,iii] = np.sum(temp_x_elements_d[temp_x_pri_elements_d!=0.0]/np.abs(temp_x_pri_elements_d[temp_x_pri_elements_d!=0.0]))
 
 
 
@@ -1177,6 +1212,7 @@ for iii in range(len(param_sim)):
     xt_fs = 8
 
 
+
     ax=fig.add_subplot(3, 4, 1, frameon=True)
 
     for ii in range(len(param_t_diff)):
@@ -1221,127 +1257,6 @@ for iii in range(len(param_sim)):
     plt.title('dual vs solo Fe total uptake',fontsize=10)
 
 
-        # plt.plot(np.arange(steps),x_elements[:,6],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-        # plt.plot(np.arange(steps),x_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-        # plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
-        # plt.xticks(fontsize=xt_fs)
-        # plt.yticks(fontsize=xt_fs)
-        # plt.title('Mg uptake in column')
-        #
-        #
-        # ax=fig.add_subplot(3, 4, 2, frameon=True)
-        # plt.plot(np.arange(steps),x_elements[:,5],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-        # plt.plot(np.arange(steps),x_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-        # plt.xticks(fontsize=xt_fs)
-        # plt.yticks(fontsize=xt_fs)
-        # plt.title('Ca uptake in column')
-        #
-        #
-        # ax=fig.add_subplot(3, 4, 3, frameon=True)
-        # plt.plot(np.arange(steps),x_elements[:,8],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-        # plt.plot(np.arange(steps),x_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-        # plt.xticks(fontsize=xt_fs)
-        # plt.yticks(fontsize=xt_fs)
-        # plt.title('K uptake in column')
-        #
-        #
-        # ax=fig.add_subplot(3, 4, 4, frameon=True)
-        # plt.plot(np.arange(steps),x_elements[:,9],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-        # plt.plot(np.arange(steps),x_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-        # plt.plot(np.arange(steps),x_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-        # plt.xticks(fontsize=xt_fs)
-        # plt.yticks(fontsize=xt_fs)
-        # plt.title('Fe uptake in column')
-
-
-
-
-    # ax=fig.add_subplot(3, 4, 5, frameon=True)
-    # plt.plot(np.arange(steps),x_pri_elements[:,6],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_pri_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('Mg loss pri')
-    #
-    # ax=fig.add_subplot(3, 4, 6, frameon=True)
-    # plt.plot(np.arange(steps),x_pri_elements[:,5],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_pri_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('Ca loss pri')
-    #
-    # ax=fig.add_subplot(3, 4, 7, frameon=True)
-    # plt.plot(np.arange(steps),x_pri_elements[:,8],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_pri_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('K loss pri')
-    #
-    # ax=fig.add_subplot(3, 4, 8, frameon=True)
-    # plt.plot(np.arange(steps),x_pri_elements[:,9],color=uptake_color_s,label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_pri_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_pri_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('Fe loss pri')
-    #
-    #
-    #
-    #
-    # ax=fig.add_subplot(3, 4, 9, frameon=True)
-    # plt.plot(np.arange(steps),x_elements[:,6]+x_pri_elements[:,6],color='#bd3706',label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_d[:,6]+x_pri_elements_d[:,6],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_a[:,6]+x_pri_elements_a[:,6],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_elements_b[:,6]+x_pri_elements_b[:,6],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.legend(fontsize=9,loc='best',ncol=2,labelspacing=0.0,columnspacing=0.0)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('Mg net')
-    #
-    # ax=fig.add_subplot(3, 4, 10, frameon=True)
-    # plt.plot(np.arange(steps),x_elements[:,5]+x_pri_elements[:,5],color='#bd3706',label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_d[:,5]+x_pri_elements_d[:,5],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_a[:,5]+x_pri_elements_a[:,5],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_elements_b[:,5]+x_pri_elements_b[:,5],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('Ca net')
-    #
-    # ax=fig.add_subplot(3, 4, 11, frameon=True)
-    # plt.plot(np.arange(steps),x_elements[:,8]+x_pri_elements[:,8],color='#bd3706',label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_d[:,8]+x_pri_elements_d[:,8],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_a[:,8]+x_pri_elements_a[:,8],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_elements_b[:,8]+x_pri_elements_b[:,8],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('K net')
-    #
-    # ax=fig.add_subplot(3, 4, 12, frameon=True)
-    # plt.plot(np.arange(steps),x_elements[:,9]+x_pri_elements[:,9],color='#bd3706',label='solo', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_d[:,9]+x_pri_elements_d[:,9],color=uptake_color_d,label='dual', **net_uptake_kwargs)
-    # plt.plot(np.arange(steps),x_elements_a[:,9]+x_pri_elements_a[:,9],color=uptake_color_a,label='a only', **net_uptake_kwargs_a)
-    # plt.plot(np.arange(steps),x_elements_b[:,9]+x_pri_elements_b[:,9],color=uptake_color_b,label='b only', **net_uptake_kwargs_b)
-    # plt.xticks(fontsize=xt_fs)
-    # plt.yticks(fontsize=xt_fs)
-    # plt.title('Fe net')
-
-
-
 
     plt.subplots_adjust( wspace=0.3 , hspace=0.3)
     plt.savefig(batch_path+prefix_string+"sim_"+param_sim_string[iii]+"_net.png",bbox_inches='tight')
@@ -1351,125 +1266,451 @@ for iii in range(len(param_sim)):
 
 
 
+    #todo: FIGURE: net_uptake_x_scaled
+    fig=plt.figure(figsize=(15.0,8.0))
+    print "net_uptake_x_scaled"
+
+    net_uptake_kwargs = dict(lw=1.1)
+    net_uptake_kwargs_a = dict(lw=1.1, linestyle='-')
+    net_uptake_kwargs_b = dict(lw=1.1, linestyle='-')
+    uptake_color_s = '#bd3706'
+    uptake_color_d = '#073dc7'
+    uptake_color_a = '#0793c7'
+    uptake_color_b = '#0fe7e0'
+    xt_fs = 8
+
+    x_pri_elements_d_scaled = np.abs(x_pri_elements_d)
+    x_pri_elements_scaled = np.abs(x_pri_elements)
+
+    ax=fig.add_subplot(3, 4, 1, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,6,ii,iii]/x_pri_elements_d_scaled[:,6,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,6,0,0]/x_pri_elements_scaled[:,6,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.legend(fontsize=8,loc='best',labelspacing=-0.1,columnspacing=0.0)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo Mg total uptake scaled',fontsize=10)
+
+
+
+    ax=fig.add_subplot(3, 4, 2, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,5,ii,iii]/x_pri_elements_d_scaled[:,5,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,5,0,0]/x_pri_elements_scaled[:,5,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo Ca total uptake scaled',fontsize=10)
+
+
+
+    ax=fig.add_subplot(3, 4, 3, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,8,ii,iii]/x_pri_elements_d_scaled[:,8,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,8,0,0]/x_pri_elements_scaled[:,8,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo K total uptake scaled',fontsize=10)
+
+
+
+    ax=fig.add_subplot(3, 4, 4, frameon=True)
+
+    for ii in range(len(param_t_diff)):
+        plt.plot(np.arange(steps),x_elements_d[:,9,ii,iii]/x_pri_elements_d_scaled[:,9,ii,iii],color=plot_col[ii], label=plot_t_diff_strings[ii], **net_uptake_kwargs)
+    plt.plot(range(steps),x_elements[:,9,0,0]/x_pri_elements_scaled[:,9,0,0],color=plot_col[len(param_t_diff)],label=plot_t_diff_strings[len(param_t_diff)], **net_uptake_kwargs)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title('dual vs solo Fe total uptake scaled',fontsize=10)
+
+
+
+
+
+
+
+    plt.subplots_adjust( wspace=0.3 , hspace=0.3)
+    plt.savefig(batch_path+prefix_string+"sim_"+param_sim_string[iii]+"_net_scaled.png",bbox_inches='tight')
+
+
+
+
+bar_bins = 4
+bar_shrink = 0.9
+xlabelpad = -2
+clabelpad = -31
+
+
 #todo: 2D pcolor plot
-fig=plt.figure(figsize=(16.0,7.0))
+fig=plt.figure(figsize=(14.0,7.0))
 
 ax=fig.add_subplot(2, 4, 1, frameon=True)
-plt.pcolor(value_2d_alt_vol_mean_slope[max_step-2,:,:])
+this_plot = value_2d_alt_vol_mean_slope[max_step-2,:,:]
+plt.pcolor(this_plot)
 
 the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string, fontsize=8)
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
 plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
-plt.xlabel('primary basalt distribution',fontsize=8)
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
 plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
-cbar = plt.colorbar(orientation='horizontal')
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
-plt.title('alt_vol column mean slope')
+# tick_locator = ticker.MaxNLocator(nbins=bar_bins)
+# cbar.locator = tick_locator
+# cbar.update_ticks()
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('alt_vol column mean slope',fontsize=10,labelpad=clabelpad)
+#cbar.set_ticklabels([mn,md,mx])
+#plt.title('alt_vol column mean slope')
 
 
 
-ax=fig.add_subplot(2,4, 2, frameon=True)
-plt.pcolor(np.abs(value_2d_fe_mean_slope[max_step-2,:,:]))
+ax=fig.add_subplot(2, 4, 2, frameon=True)
+this_plot = np.abs(value_2d_fe_mean_slope[max_step-2,:,:])
+plt.pcolor(this_plot)
 
 the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string, fontsize=8)
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
-#plt.yticks([])
-plt.xlabel('primary basalt distribution',fontsize=8)
-plt.ylabel('t_diff mixing time [s]',fontsize=8)
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
-cbar = plt.colorbar(orientation='horizontal')
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
-plt.title('feo/feot column mean slope')
-
-
-
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('feo/feot column mean slope',fontsize=10,labelpad=clabelpad)
+#plt.title('feo/feot column mean slope')
 
 
 
 
 ax=fig.add_subplot(2, 4, 3, frameon=True)
-plt.pcolor(np.abs(value_2d_pri_mean_slope[max_step-2,:,:]))
+this_plot = np.abs(value_2d_pri_mean_slope[max_step-2,:,:])
+plt.pcolor(this_plot)
 
 the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string, fontsize=8)
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
-#plt.yticks([])
-plt.xlabel('primary basalt distribution',fontsize=8)
-plt.ylabel('t_diff mixing time [s]',fontsize=8)
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
-cbar = plt.colorbar(orientation='horizontal')
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
-plt.title('value pri slope')
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('value pri slope',fontsize=10,labelpad=clabelpad)
+#plt.title('value pri slope')
 
 
 
 ax=fig.add_subplot(2, 4, 4, frameon=True)
-plt.pcolor(np.abs(value_2d_sec_mean_slope[max_step-2,:,:]))
+this_plot = np.abs(value_2d_sec_mean_slope[max_step-2,:,:])
+plt.pcolor(this_plot)
 
 the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string, fontsize=8)
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
-#plt.yticks([])
-plt.xlabel('primary basalt distribution',fontsize=8)
-plt.ylabel('t_diff mixing time [s]',fontsize=8)
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
-cbar = plt.colorbar(orientation='horizontal')
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
-plt.title('value sec slope')
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('value sec slope',fontsize=10,labelpad=clabelpad)
+#plt.title('value sec slope')
 
 
 
 ax=fig.add_subplot(2, 4, 5, frameon=True)
-plt.pcolor(np.abs(value_2d_sec_mean_slope[max_step-2,:,:])/np.abs(value_2d_pri_mean_slope[max_step-2,:,:]))
+this_plot = np.abs(value_2d_sec_mean_slope[max_step-2,:,:])/np.abs(value_2d_pri_mean_slope[max_step-2,:,:])
+plt.pcolor(this_plot)
 
 the_xticks = range(len(param_sim))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,param_sim_string, fontsize=8)
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
 the_yticks = range(len(param_t_diff))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
 plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
 #plt.yticks([])
-plt.xlabel('primary basalt distribution',fontsize=8)
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
 plt.ylabel('t_diff mixing time [s]',fontsize=8)
 
-cbar = plt.colorbar(orientation='horizontal')
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
-plt.title('value sec slope')
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('value sec:pri slope',fontsize=10,labelpad=clabelpad)
+#plt.title('value sec slope')
 
 
-
+plt.subplots_adjust(wspace=0.1, hspace=0.05)
 plt.savefig(batch_path+prefix_string+"sum_test_"+prefix_string+".png",bbox_inches='tight')
+
+
+
+
+#todo: 2d element plotz
+fig=plt.figure(figsize=(14.0,7.0))
+
+# elements_pri[0,5] = 0.1178 # Ca
+# elements_pri[0,6] = 0.097 # Mg
+# elements_pri[0,7] = 0.047 # Na
+# elements_pri[0,8] = 0.00219 # K
+# elements_pri[0,9] = 0.1165 # Fe
+# elements_pri[0,10] = 0.0 # S
+# elements_pri[0,11] =  0.4655 # Si
+# elements_pri[0,12] = 0.0 # Cl
+# elements_pri[0,13] =  0.153 # Al
+
+ax=fig.add_subplot(2, 4, 1, frameon=True)
+this_plot = value_2d_net_uptake_x[max_step-2,5,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('Ca column uptake mean',fontsize=10,labelpad=clabelpad)
+
+#plt.title('Ca column uptake mean')
+
+
+
+ax=fig.add_subplot(2, 4, 2, frameon=True)
+this_plot = value_2d_net_uptake_x[max_step-2,6,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('Mg column uptake mean',fontsize=10,labelpad=clabelpad)
+#plt.title('Mg column uptake mean')
+
+
+
+ax=fig.add_subplot(2, 4, 3, frameon=True)
+this_plot = value_2d_net_uptake_x[max_step-2,8,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('K column uptake mean',fontsize=10,labelpad=clabelpad)
+#plt.title('K column uptake mean')
+
+
+
+
+ax=fig.add_subplot(2, 4, 4, frameon=True)
+this_plot = value_2d_net_uptake_x[max_step-2,9,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('Fe column uptake mean',fontsize=10,labelpad=clabelpad)
+#plt.title('Fe column uptake mean')
+
+
+
+
+
+
+ax=fig.add_subplot(2, 4, 5, frameon=True)
+this_plot = value_2d_net_uptake_x_scaled[max_step-2,5,:,:]
+plt.pcolor(this_plot)
+
+print "2, 4, 5 Ca this_plot"
+print this_plot
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[np.abs(this_plot)>0.0]),np.max(this_plot[np.abs(this_plot)>0.0]),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('Ca net net',fontsize=10,labelpad=clabelpad)
+#plt.title('Fe column uptake mean?')
+
+
+ax=fig.add_subplot(2, 4, 6, frameon=True)
+this_plot = value_2d_net_uptake_x_scaled[max_step-2,6,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[np.abs(this_plot)>0.0]),np.max(this_plot[np.abs(this_plot)>0.0]),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('Mg net net',fontsize=10,labelpad=clabelpad)
+#plt.title('Mg column uptake mean')
+
+
+
+ax=fig.add_subplot(2, 4, 7, frameon=True)
+this_plot = value_2d_net_uptake_x_scaled[max_step-2,8,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[np.abs(this_plot)>0.0]),np.max(this_plot[np.abs(this_plot)>0.0]),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('K net net',fontsize=10,labelpad=clabelpad)
+#plt.title('Mg column uptake mean')
+
+
+
+
+ax=fig.add_subplot(2, 4, 8, frameon=True)
+this_plot = value_2d_net_uptake_x_scaled[max_step-2,9,:,:]
+plt.pcolor(this_plot)
+
+the_xticks = range(len(param_sim))
+for i in the_xticks:
+    the_xticks[i] = the_xticks[i] + 0.5
+print "the_xticks" , the_xticks
+plt.xticks(the_xticks,param_sim_string_tick, fontsize=8)
+the_yticks = range(len(param_t_diff))
+for i in the_yticks:
+    the_yticks[i] = the_yticks[i] + 0.5
+print "the_yticks" , the_yticks
+#plt.yticks(the_yticks,param_t_diff_string, fontsize=8)
+plt.yticks([])
+plt.xlabel('primary basalt distribution',fontsize=8,labelpad=xlabelpad)
+#plt.ylabel('t_diff mixing time [s]',fontsize=8)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[np.abs(this_plot)>0.0]),np.max(this_plot[np.abs(this_plot)>0.0]),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('Fe net net',fontsize=10,labelpad=clabelpad)
+#plt.title('Mg column uptake mean')
+
+
+plt.subplots_adjust(wspace=0.15, hspace=0.05)
+plt.savefig(batch_path+prefix_string+"x_elements_2d_"+prefix_string+".png",bbox_inches='tight')
