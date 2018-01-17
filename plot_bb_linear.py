@@ -8,9 +8,9 @@ import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
-plt.rc('xtick', labelsize=8)
-plt.rc('ytick', labelsize=8)
-plt.rcParams['axes.titlesize'] = 10
+plt.rc('xtick', labelsize=7)
+plt.rc('ytick', labelsize=7)
+plt.rcParams['axes.titlesize'] = 8
 plt.rcParams['axes.labelsize'] = 10
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
@@ -19,7 +19,7 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 
 col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
 
-plot_col = ['#940000', '#d26618', '#fcae00', '#acde03', '#36aa00', '#35b5aa', '#0662ad', '#0e00ad', '#6605d4', '#b100de']
+plot_col = ['#940000', '#d26618', '#fcae00', '#acde03', '#36aa00', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
 
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
@@ -44,7 +44,9 @@ n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "swi_i88/mix_"
+prefix = "swi_k88/mix_"
+path_label = prefix[3:7]
+print path_label
 
 sample_outpath = "../output/revival/winter_basalt_box/"+prefix+"1e1100/"
 outpath = "../output/revival/winter_basalt_box/"
@@ -52,11 +54,11 @@ outpath = "../output/revival/winter_basalt_box/"
 # param_strings = ['1e11', '1e12', '1e13', '1e14']
 # param_nums = [11, 12, 13, 14]
 
-param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1200', '1e1250', '1e1300', '1e1350', '1e1400']
-param_nums = [11.0, 11.25, 11.50, 11.75, 12.0, 12.5, 13.0, 13.5, 14.0]
+# param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1250', '1e1250', '1e1300', '1e1350', '1e1400']
+# param_nums = [11.0, 11.25, 11.50, 11.75, 12.5, 12.5, 13.0, 13.5, 14.0]
 
-# param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1200', '1e1250', '1e1300']
-# param_nums = [11.0, 11.25, 11.50, 11.75, 12.0, 12.5, 13.0]
+param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1200']
+param_nums = [11.0, 11.25, 11.50, 11.75, 12.0]
 
 # fast_swi_strings = param_strings[0:4]
 # print "fast_swi_strings: " , fast_swi_strings
@@ -70,7 +72,7 @@ param_nums = [11.0, 11.25, 11.50, 11.75, 12.0, 12.5, 13.0, 13.5, 14.0]
 #
 # print " "
 
-fast_slow = 5
+fast_slow = 3
 
 fast_swi_strings = param_strings[0:fast_slow]
 print "fast_swi_strings: " , fast_swi_strings
@@ -126,7 +128,7 @@ for ii in range(len(param_strings)):
     print ii_path
 
 
-
+    #todo: load in data
     for j in range(1,minNum):
         if os.path.isfile(ii_path + 'z_secondary_mat' + str(j) + '.txt'):
             if not np.any(any_min == j):
@@ -207,8 +209,8 @@ for ii in range(len(param_strings)):
 
 
 
-#hack: plot 1 SP per phase
-fig=plt.figure(figsize=(18.0,4.5))
+#hack: plot sec
+fig=plt.figure(figsize=(18.0,6))
 
 # ax=fig.add_subplot(2, 7, 1, frameon=True)
 # this_min = 2
@@ -218,18 +220,19 @@ fig=plt.figure(figsize=(18.0,4.5))
 # plt.title(secondary[this_min])
 
 for j in range(len(any_min)):
-    ax=fig.add_subplot(2, 7, j+1, frameon=True)
+    ax=fig.add_subplot(3, 7, j+1, frameon=True)
     this_min = any_min[j]
     for ii in range(len(param_strings)):
         plt.plot(sec[this_min,:,ii], label=param_strings[ii], c=plot_col[ii])
-    if j == 0:
-        plt.legend(fontsize=8,bbox_to_anchor=(1.1, 1.48),ncol=2,labelspacing=-0.1,columnspacing=-0.1)
+    if j == len(any_min)-1:
+        plt.legend(fontsize=8,bbox_to_anchor=(2.0, 1.0),ncol=2,labelspacing=-0.1,columnspacing=-0.1)
     plt.title(secondary[this_min])
 
 
 
 plt.subplots_adjust(wspace=0.3, hspace=0.2)
-plt.savefig(outpath+prefix+"sec_test.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"sec"+path_label+"_.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_sec"+path_label+"_.eps",bbox_inches='tight')
 
 
 
@@ -252,8 +255,8 @@ for ii in range(len(param_strings)):
 plt.title('sol_w')
 
 plt.subplots_adjust(wspace=0.4, hspace=0.3)
-plt.savefig(outpath+prefix+"pri_test.png",bbox_inches='tight')
-
+plt.savefig(outpath+prefix+"pri"+path_label+"_.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_pri"+path_label+"_.eps",bbox_inches='tight')
 
 
 
@@ -362,33 +365,54 @@ plt.title('Ca slow')
 
 
 plt.subplots_adjust(wspace=0.3, hspace=0.3)
-plt.savefig(outpath+prefix+"sol_test.png",bbox_inches='tight')
-
+plt.savefig(outpath+prefix+"sol"+path_label+"_.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_sol"+path_label+"_.eps",bbox_inches='tight')
 
 
 
 #hack: plot alk
-fig=plt.figure(figsize=(11.0,3.0))
+fig=plt.figure(figsize=(10.0,9.0))
 
-ax=fig.add_subplot(1, 3, 1, frameon=True)
+ax=fig.add_subplot(3, 3, 1, frameon=True)
 for ii in range(len(param_strings)):
     plt.plot(alk_out[1:,ii] - alk_in[1:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.legend(fontsize=8,bbox_to_anchor=(1.0, 1.1),ncol=3,labelspacing=0.1,columnspacing=0.1)
-plt.title('alk_out - alk_in')
+plt.legend(fontsize=8,bbox_to_anchor=(1.0, 1.2),ncol=3,labelspacing=0.1,columnspacing=0.1)
+plt.title('alk_out - alk_in all')
 
 
-ax=fig.add_subplot(1, 3, 2, frameon=True)
+ax=fig.add_subplot(3, 3, 2, frameon=True)
 for ii in range(len(param_strings)):
     plt.plot(alk_in[1:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('alk_in')
+plt.title('alk_in all')
 
 
-ax=fig.add_subplot(1, 3, 3, frameon=True)
+ax=fig.add_subplot(3, 3, 3, frameon=True)
 for ii in range(len(param_strings)):
     plt.plot(alk_out[1:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('alk_out')
+plt.title('alk_out all')
 
 
 
-plt.subplots_adjust(wspace=0.4)
-plt.savefig(outpath+prefix+"x_alk_test.png",bbox_inches='tight')
+# SECOND ROW FAST
+ax=fig.add_subplot(3, 3, 4, frameon=True)
+for ii in range(len(fast_swi_strings)):
+    plt.plot(alk_out[1:,ii] - alk_in[1:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+#plt.legend(fontsize=8,bbox_to_anchor=(1.0, 1.1),ncol=3,labelspacing=0.1,columnspacing=0.1)
+plt.title('alk_out - alk_in fast')
+
+
+ax=fig.add_subplot(3, 3, 5, frameon=True)
+for ii in range(len(fast_swi_strings)):
+    plt.plot(alk_in[1:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('alk_in all fast')
+
+
+ax=fig.add_subplot(3, 3, 6, frameon=True)
+for ii in range(len(fast_swi_strings)):
+    plt.plot(alk_out[1:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('alk_out all fast')
+
+
+plt.subplots_adjust(wspace=0.3, hspace=0.3)
+plt.savefig(outpath+prefix+"x_alk"+path_label+"_.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_x_alk"+path_label+"_.eps",bbox_inches='tight')
