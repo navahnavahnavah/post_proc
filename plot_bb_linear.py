@@ -39,16 +39,19 @@ molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 504.19, 380.22, 379.259, 549.07, 395.38, 64.448, 392.34, 64.448,
 64.448, 480.19, 504.19, 85.12, 480.19, 480.19, 664.0, 664.0, 519.0])
 
-tp = 10000
+tp = 1000
 n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "swi_k88/mix_"
-path_label = prefix[3:7]
+prefix = "q_group_e/q_4.0_diff_"
+path_label = "_e"
 print path_label
 
-sample_outpath = "../output/revival/winter_basalt_box/"+prefix+"1e1100/"
+# sample_outpath = "../output/revival/winter_basalt_box/"+prefix+"1e1100/"
+# outpath = "../output/revival/winter_basalt_box/"
+
+sample_outpath = "../output/revival/winter_basalt_box/"+prefix+"10.00/"
 outpath = "../output/revival/winter_basalt_box/"
 
 # param_strings = ['1e11', '1e12', '1e13', '1e14']
@@ -57,8 +60,11 @@ outpath = "../output/revival/winter_basalt_box/"
 # param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1250', '1e1250', '1e1300', '1e1350', '1e1400']
 # param_nums = [11.0, 11.25, 11.50, 11.75, 12.5, 12.5, 13.0, 13.5, 14.0]
 
-param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1200']
-param_nums = [11.0, 11.25, 11.50, 11.75, 12.0]
+# param_strings = ['1e1100', '1e1125', '1e1150', '1e1175', '1e1200']
+# param_nums = [11.0, 11.25, 11.50, 11.75, 12.0]
+
+param_strings = ['10.00', '10.25', '10.50', '10.75', '11.00', '11.25', '11.50', '11.75']
+param_nums = [10.0, 10.25, 10.50, 10.75, 11.0, 11.25, 11.5, 11.75]
 
 # fast_swi_strings = param_strings[0:4]
 # print "fast_swi_strings: " , fast_swi_strings
@@ -72,7 +78,7 @@ param_nums = [11.0, 11.25, 11.50, 11.75, 12.0]
 #
 # print " "
 
-fast_slow = 3
+fast_slow = 8
 
 fast_swi_strings = param_strings[0:fast_slow]
 print "fast_swi_strings: " , fast_swi_strings
@@ -159,6 +165,7 @@ for ii in range(len(param_strings)):
     sol[this_sol,:,ii] = sol_full[0,this_sol,:,ii]
     sol_a[this_sol,:,ii] = sol_full[1,this_sol,:,ii]
     sol_b[this_sol,:,ii] = sol_full[2,this_sol,:,ii]
+    sol_d[this_sol,:,ii] = sol_full[1,this_sol,:,ii] + sol_full[2,this_sol,:,ii]
 
     # import sol_w
     this_sol = 3
@@ -166,6 +173,7 @@ for ii in range(len(param_strings)):
     sol[this_sol,:,ii] = sol_full[0,this_sol,:,ii]
     sol_a[this_sol,:,ii] = sol_full[1,this_sol,:,ii]
     sol_b[this_sol,:,ii] = sol_full[2,this_sol,:,ii]
+    sol_d[this_sol,:,ii] = sol_full[1,this_sol,:,ii] + sol_full[2,this_sol,:,ii]
 
     # import c
     this_sol = 4
@@ -173,6 +181,7 @@ for ii in range(len(param_strings)):
     sol[this_sol,:,ii] = sol_full[0,this_sol,:,ii]
     sol_a[this_sol,:,ii] = sol_full[1,this_sol,:,ii]
     sol_b[this_sol,:,ii] = sol_full[2,this_sol,:,ii]
+    sol_d[this_sol,:,ii] = sol_full[1,this_sol,:,ii] + sol_full[2,this_sol,:,ii]
 
     # import Ca
     this_sol = 5
@@ -180,6 +189,7 @@ for ii in range(len(param_strings)):
     sol[this_sol,:,ii] = sol_full[0,this_sol,:,ii]
     sol_a[this_sol,:,ii] = sol_full[1,this_sol,:,ii]
     sol_b[this_sol,:,ii] = sol_full[2,this_sol,:,ii]
+    sol_d[this_sol,:,ii] = sol_full[1,this_sol,:,ii] + sol_full[2,this_sol,:,ii]
 
     # import Ca
     this_sol = 6
@@ -187,6 +197,7 @@ for ii in range(len(param_strings)):
     sol[this_sol,:,ii] = sol_full[0,this_sol,:,ii]
     sol_a[this_sol,:,ii] = sol_full[1,this_sol,:,ii]
     sol_b[this_sol,:,ii] = sol_full[2,this_sol,:,ii]
+    sol_d[this_sol,:,ii] = sol_full[1,this_sol,:,ii] + sol_full[2,this_sol,:,ii]
 
 
     #todo: alk in/out
@@ -210,7 +221,7 @@ for ii in range(len(param_strings)):
 
 
 #hack: plot sec
-fig=plt.figure(figsize=(18.0,6))
+fig=plt.figure(figsize=(2*len(any_min)+2,2*(len(any_min)+2)/4.0))
 
 # ax=fig.add_subplot(2, 7, 1, frameon=True)
 # this_min = 2
@@ -220,19 +231,44 @@ fig=plt.figure(figsize=(18.0,6))
 # plt.title(secondary[this_min])
 
 for j in range(len(any_min)):
-    ax=fig.add_subplot(3, 7, j+1, frameon=True)
+    ax=fig.add_subplot(4, len(any_min), j+1, frameon=True)
     this_min = any_min[j]
     for ii in range(len(param_strings)):
         plt.plot(sec[this_min,:,ii], label=param_strings[ii], c=plot_col[ii])
     if j == len(any_min)-1:
-        plt.legend(fontsize=8,bbox_to_anchor=(2.0, 1.0),ncol=2,labelspacing=-0.1,columnspacing=-0.1)
-    plt.title(secondary[this_min])
+        plt.legend(fontsize=9,bbox_to_anchor=(2.0, 1.0),ncol=1,labelspacing=-0.1,columnspacing=-0.1)
+    plt.title("ch_s " + secondary[this_min])
+
+    ax=fig.add_subplot(4, len(any_min), len(any_min)+j+1, frameon=True)
+    this_min = any_min[j]
+    for ii in range(len(param_strings)):
+        plt.plot(sec_d[this_min,:,ii], label=param_strings[ii], c=plot_col[ii])
+    # if j == len(any_min)-1:
+    #     plt.legend(fontsize=8,bbox_to_anchor=(2.0, 1.0),ncol=2,labelspacing=-0.1,columnspacing=-0.1)
+    plt.title("ch_d " + secondary[this_min])
+
+    ax=fig.add_subplot(4, len(any_min), 2*len(any_min)+j+1, frameon=True)
+    this_min = any_min[j]
+    for ii in range(len(param_strings)):
+        plt.plot(sec_a[this_min,:,ii], label=param_strings[ii], c=plot_col[ii])
+    # if j == len(any_min)-1:
+    #     plt.legend(fontsize=8,bbox_to_anchor=(2.0, 1.0),ncol=2,labelspacing=-0.1,columnspacing=-0.1)
+    plt.title("ch_a " + secondary[this_min])
+
+    ax=fig.add_subplot(4, len(any_min), 3*len(any_min)+j+1, frameon=True)
+    this_min = any_min[j]
+    for ii in range(len(param_strings)):
+        plt.plot(sec_b[this_min,:,ii], label=param_strings[ii], c=plot_col[ii])
+    # if j == len(any_min)-1:
+    #     plt.legend(fontsize=8,bbox_to_anchor=(2.0, 1.0),ncol=2,labelspacing=-0.1,columnspacing=-0.1)
+    plt.title("ch_b " + secondary[this_min])
 
 
 
-plt.subplots_adjust(wspace=0.3, hspace=0.2)
+
+plt.subplots_adjust(wspace=0.3, hspace=0.4)
 plt.savefig(outpath+prefix+"sec"+path_label+"_.png",bbox_inches='tight')
-plt.savefig(outpath+prefix+"zps_sec"+path_label+"_.eps",bbox_inches='tight')
+#plt.savefig(outpath+prefix+"zps_sec"+path_label+"_.eps",bbox_inches='tight')
 
 
 
@@ -240,133 +276,344 @@ plt.savefig(outpath+prefix+"zps_sec"+path_label+"_.eps",bbox_inches='tight')
 
 
 #hack: plot pri/sol_w
-fig=plt.figure(figsize=(7.0,7.0))
+fig=plt.figure(figsize=(10.0,3.0))
 
-ax=fig.add_subplot(2, 2, 1, frameon=True)
+ax=fig.add_subplot(1, 4, 1, frameon=True)
 for ii in range(len(param_strings)):
     plt.plot(pri[:,ii], label=param_strings[ii], c=plot_col[ii])
     plt.legend(fontsize=8,loc='center right',ncol=2,labelspacing=-0.1,columnspacing=-0.1)
-plt.title('pri totals')
+plt.title('pri s totals')
 
-
-ax=fig.add_subplot(2, 2, 2, frameon=True)
+ax=fig.add_subplot(1, 4, 2, frameon=True)
 for ii in range(len(param_strings)):
-    plt.plot(sol[3,:,ii], label=param_strings[ii], c=plot_col[ii])
-plt.title('sol_w')
+    plt.plot(pri_d[:,ii], label=param_strings[ii], c=plot_col[ii])
+plt.title('pri d totals')
+
+ax=fig.add_subplot(1, 4, 3, frameon=True)
+for ii in range(len(param_strings)):
+    plt.plot(pri_a[:,ii], label=param_strings[ii], c=plot_col[ii])
+plt.title('pri a totals')
+
+ax=fig.add_subplot(1, 4, 4, frameon=True)
+for ii in range(len(param_strings)):
+    plt.plot(pri_b[:,ii], label=param_strings[ii], c=plot_col[ii])
+plt.title('pri b totals')
+
+
+# ax=fig.add_subplot(2, 2, 2, frameon=True)
+# for ii in range(len(param_strings)):
+#     plt.plot(sol[3,:,ii], label=param_strings[ii], c=plot_col[ii])
+# plt.title('sol_w')
 
 plt.subplots_adjust(wspace=0.4, hspace=0.3)
 plt.savefig(outpath+prefix+"pri"+path_label+"_.png",bbox_inches='tight')
-plt.savefig(outpath+prefix+"zps_pri"+path_label+"_.eps",bbox_inches='tight')
+#plt.savefig(outpath+prefix+"zps_pri"+path_label+"_.eps",bbox_inches='tight')
 
 
 
 #hack: plot sols
-fig=plt.figure(figsize=(14.0,7.0))
+fig=plt.figure(figsize=(17.0,9.0))
 
-the_lw = 1.5
+the_lw = 1.0
+start_point = 50
 
 # sol ALL plots FIRST ROW
-ax=fig.add_subplot(3, 6, 1, frameon=True)
+ax=fig.add_subplot(4, 7, 1, frameon=True)
 this_min = 1
 for ii in range(len(param_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
 plt.legend(fontsize=8,bbox_to_anchor=(2.0, 1.48),ncol=3,labelspacing=0.1,columnspacing=0.1)
-plt.title('pH all')
+plt.title('pH a')
 
 
-ax=fig.add_subplot(3, 6, 2, frameon=True)
-this_min = 2
-for ii in range(len(param_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('alk all')
-
-
-ax=fig.add_subplot(3, 6, 3, frameon=True)
-this_min = 4
-for ii in range(len(param_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('c all')
-
-
-ax=fig.add_subplot(3, 6, 4, frameon=True)
-this_min = 5
-for ii in range(len(param_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('Ca all')
-
-
-
-# sol FAST plots SECOND ROW
-ax=fig.add_subplot(3, 6, 7, frameon=True)
+# sol SLOW plots second row
+ax=fig.add_subplot(4, 7, 8, frameon=True)
 this_min = 1
 for ii in range(len(fast_swi_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+    ii = ii
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
 #plt.legend(fontsize=8,loc='best',ncol=2,labelspacing=-0.1,columnspacing=-0.1)
-plt.title('pH fast')
+plt.title('pH a fast')
 
 
-ax=fig.add_subplot(3, 6, 8, frameon=True)
+
+
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 2, frameon=True)
+this_min = 2
+for ii in range(len(param_strings)):
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('alk a')
+
+
+# sol SLOW
+ax=fig.add_subplot(4, 7, 9, frameon=True)
 this_min = 2
 for ii in range(len(fast_swi_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('alk fast')
+    ii = ii
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('alk a fast')
 
 
-ax=fig.add_subplot(3, 6, 9, frameon=True)
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 3, frameon=True)
+this_min = 4
+for ii in range(len(param_strings)):
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('[c] a')
+
+
+# sol SLOW
+ax=fig.add_subplot(4, 7, 10, frameon=True)
 this_min = 4
 for ii in range(len(fast_swi_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('c fast')
+    ii = ii
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('[c] a fast')
 
 
-ax=fig.add_subplot(3, 6, 10, frameon=True)
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 4, frameon=True)
+this_min = 5
+for ii in range(len(param_strings)):
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('[ca] a')
+
+
+# sol SLOW
+ax=fig.add_subplot(4, 7, 11, frameon=True)
 this_min = 5
 for ii in range(len(fast_swi_strings)):
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('Ca fast')
+    ii = ii
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('[ca] a fast')
+
+
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 5, frameon=True)
+this_min = 6
+for ii in range(len(param_strings)):
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('[mg] a')
+
+
+# sol SLOW
+ax=fig.add_subplot(4, 7, 12, frameon=True)
+this_min = 6
+for ii in range(len(fast_swi_strings)):
+    ii = ii
+    plt.plot(sol_a[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('[mg] a fast')
 
 
 
 
-# sol SLOW plots THIRD ROW
-ax=fig.add_subplot(3, 6, 13, frameon=True)
+
+
+# ch_b plots here
+
+# sol ALL plots FIRST ROW
+ax=fig.add_subplot(4, 7, 15, frameon=True)
 this_min = 1
-for ii in range(len(slow_swi_strings)):
-    ii = ii + len(fast_swi_strings)
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-#plt.legend(fontsize=8,loc='best',ncol=2,labelspacing=-0.1,columnspacing=-0.1)
-plt.title('pH slow')
+for ii in range(len(param_strings)):
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('pH b')
 
 
-ax=fig.add_subplot(3, 6, 14, frameon=True)
+# sol SLOW plots second row
+ax=fig.add_subplot(4, 7, 22, frameon=True)
+this_min = 1
+for ii in range(len(fast_swi_strings)):
+    ii = ii
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('pH b fast')
+
+
+
+
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 16, frameon=True)
 this_min = 2
-for ii in range(len(slow_swi_strings)):
-    ii = ii + len(fast_swi_strings) -0
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('alk slow')
+for ii in range(len(param_strings)):
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('alk b')
 
 
-ax=fig.add_subplot(3, 6, 15, frameon=True)
+# sol SLOW
+ax=fig.add_subplot(4, 7, 23, frameon=True)
+this_min = 2
+for ii in range(len(fast_swi_strings)):
+    ii = ii
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('alk b fast')
+
+
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 17, frameon=True)
 this_min = 4
-for ii in range(len(slow_swi_strings)):
-    ii = ii + len(fast_swi_strings) -0
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('c slow')
+for ii in range(len(param_strings)):
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('[c] b')
 
 
-ax=fig.add_subplot(3, 6, 16, frameon=True)
+# sol SLOW
+ax=fig.add_subplot(4, 7, 24, frameon=True)
+this_min = 4
+for ii in range(len(fast_swi_strings)):
+    ii = ii
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('[c] b fast')
+
+
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 18, frameon=True)
 this_min = 5
-for ii in range(len(slow_swi_strings)):
-    ii = ii + len(fast_swi_strings) -0
-    plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
-plt.title('Ca slow')
+for ii in range(len(param_strings)):
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('[ca] b')
+
+
+# sol SLOW
+ax=fig.add_subplot(4, 7, 25, frameon=True)
+this_min = 5
+for ii in range(len(fast_swi_strings)):
+    ii = ii
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('[ca] b fast')
+
+
+
+# sol ALL
+ax=fig.add_subplot(4, 7, 19, frameon=True)
+this_min = 6
+for ii in range(len(param_strings)):
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.plot(sol[this_min,start_point:,0], label='solo', c='k', lw=the_lw)
+plt.title('[mg] b')
+
+
+# sol SLOW
+ax=fig.add_subplot(4, 7, 26, frameon=True)
+this_min = 6
+for ii in range(len(fast_swi_strings)):
+    ii = ii
+    plt.plot(sol_b[this_min,start_point:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+plt.title('[mg] b fast')
 
 
 
 
-plt.subplots_adjust(wspace=0.3, hspace=0.3)
+
+
+# ax=fig.add_subplot(3, 6, 2, frameon=True)
+# this_min = 2
+# for ii in range(len(param_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('alk all')
+#
+#
+# ax=fig.add_subplot(3, 6, 3, frameon=True)
+# this_min = 4
+# for ii in range(len(param_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('c all')
+#
+#
+# ax=fig.add_subplot(3, 6, 4, frameon=True)
+# this_min = 5
+# for ii in range(len(param_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('Ca all')
+
+
+#
+# # sol FAST plots SECOND ROW
+# ax=fig.add_subplot(3, 6, 7, frameon=True)
+# this_min = 1
+# for ii in range(len(fast_swi_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# #plt.legend(fontsize=8,loc='best',ncol=2,labelspacing=-0.1,columnspacing=-0.1)
+# plt.title('pH fast')
+#
+#
+# ax=fig.add_subplot(3, 6, 8, frameon=True)
+# this_min = 2
+# for ii in range(len(fast_swi_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('alk fast')
+#
+#
+# ax=fig.add_subplot(3, 6, 9, frameon=True)
+# this_min = 4
+# for ii in range(len(fast_swi_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('c fast')
+#
+#
+# ax=fig.add_subplot(3, 6, 10, frameon=True)
+# this_min = 5
+# for ii in range(len(fast_swi_strings)):
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('Ca fast')
+
+
+#
+#
+# # sol SLOW plots THIRD ROW
+# ax=fig.add_subplot(3, 6, 13, frameon=True)
+# this_min = 1
+# for ii in range(len(slow_swi_strings)):
+#     ii = ii + len(fast_swi_strings)
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# #plt.legend(fontsize=8,loc='best',ncol=2,labelspacing=-0.1,columnspacing=-0.1)
+# plt.title('pH slow')
+#
+#
+# ax=fig.add_subplot(3, 6, 14, frameon=True)
+# this_min = 2
+# for ii in range(len(slow_swi_strings)):
+#     ii = ii + len(fast_swi_strings) -0
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('alk slow')
+#
+#
+# ax=fig.add_subplot(3, 6, 15, frameon=True)
+# this_min = 4
+# for ii in range(len(slow_swi_strings)):
+#     ii = ii + len(fast_swi_strings) -0
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('c slow')
+#
+#
+# ax=fig.add_subplot(3, 6, 16, frameon=True)
+# this_min = 5
+# for ii in range(len(slow_swi_strings)):
+#     ii = ii + len(fast_swi_strings) -0
+#     plt.plot(sol[this_min,:,ii], label=param_strings[ii], c=plot_col[ii], lw=the_lw)
+# plt.title('Ca slow')
+
+
+
+
+plt.subplots_adjust(wspace=0.4, hspace=0.3)
 plt.savefig(outpath+prefix+"sol"+path_label+"_.png",bbox_inches='tight')
-plt.savefig(outpath+prefix+"zps_sol"+path_label+"_.eps",bbox_inches='tight')
+#plt.savefig(outpath+prefix+"zps_sol"+path_label+"_.eps",bbox_inches='tight')
 
 
 
@@ -415,4 +662,4 @@ plt.title('alk_out all fast')
 
 plt.subplots_adjust(wspace=0.3, hspace=0.3)
 plt.savefig(outpath+prefix+"x_alk"+path_label+"_.png",bbox_inches='tight')
-plt.savefig(outpath+prefix+"zps_x_alk"+path_label+"_.eps",bbox_inches='tight')
+#plt.savefig(outpath+prefix+"zps_x_alk"+path_label+"_.eps",bbox_inches='tight')
