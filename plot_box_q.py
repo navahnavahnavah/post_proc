@@ -44,7 +44,7 @@ n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "q_group_j/"
+prefix = "y_group_a/"
 # path_label = prefix[3:7]
 # print path_label
 
@@ -70,8 +70,24 @@ for iii in range(len(param_nums)):
 # diff_strings = ['10.00', '10.25', '10.50', '10.75', '11.00', '11.25', '11.50', '11.75', '12.00']
 # diff_nums = [10.00, 10.25, 10.50, 10.75, 11.00, 11.25, 11.50, 11.75, 12.00]
 
-diff_strings = ['10.00', '10.25', '10.50', '10.75', '11.00', '11.25', '11.50']
-diff_nums = [10.00, 10.25, 10.50, 10.75, 11.00, 11.25, 11.50]
+
+
+
+
+
+
+
+
+
+
+# diff_strings = ['10.00', '10.25', '10.50', '10.75', '11.00', '11.25', '11.50']
+# diff_nums = [10.00, 10.25, 10.50, 10.75, 11.00, 11.25, 11.50]
+
+# diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50']
+# diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5]
+
+diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00']
+diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0]
 
 
 
@@ -599,7 +615,7 @@ plt.title('solo Mg uptake',fontsize=10)
 
 
 
-
+# Ca
 ax=fig.add_subplot(3, 4, 2, frameon=True)
 
 for ii in range(len(param_strings)):
@@ -607,6 +623,7 @@ for ii in range(len(param_strings)):
 plt.xticks(fontsize=8)
 plt.yticks(fontsize=8)
 plt.title('solo Ca total uptake',fontsize=10)
+
 
 ax=fig.add_subplot(3, 4, 6, frameon=True)
 
@@ -627,6 +644,8 @@ plt.title('solo Ca uptake',fontsize=10)
 
 
 
+
+# K
 ax=fig.add_subplot(3, 4, 3, frameon=True)
 
 for ii in range(len(param_strings)):
@@ -636,7 +655,27 @@ plt.yticks(fontsize=8)
 plt.title('solo K total uptake',fontsize=10)
 
 
+ax=fig.add_subplot(3, 4, 7, frameon=True)
 
+for ii in range(len(param_strings)):
+    plt.plot(x_pri_elements[:,8,ii,0],color=plot_col[ii], label=param_strings[ii], **net_uptake_kwargs)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+plt.title('solo K leached',fontsize=10)
+
+
+ax=fig.add_subplot(3, 4, 11, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(x_elements[:,8,ii,0],color=plot_col[ii], label=param_strings[ii], **net_uptake_kwargs)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+plt.title('solo K uptake',fontsize=10)
+
+
+
+
+# Fe
 ax=fig.add_subplot(3, 4, 4, frameon=True)
 
 for ii in range(len(param_strings)):
@@ -644,6 +683,24 @@ for ii in range(len(param_strings)):
 plt.xticks(fontsize=8)
 plt.yticks(fontsize=8)
 plt.title('solo Fe total uptake',fontsize=10)
+
+
+ax=fig.add_subplot(3, 4, 8, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(x_pri_elements[:,9,ii,0],color=plot_col[ii], label=param_strings[ii], **net_uptake_kwargs)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+plt.title('solo Fe leached',fontsize=10)
+
+
+ax=fig.add_subplot(3, 4, 12, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(x_elements[:,9,ii,0],color=plot_col[ii], label=param_strings[ii], **net_uptake_kwargs)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+plt.title('solo Fe uptake',fontsize=10)
 
 
 
@@ -785,6 +842,149 @@ cbar.ax.set_xlabel('dpri_b mean',fontsize=10,labelpad=clabelpad)
 
 
 plt.savefig(outpath+prefix+"x_2d_pri.png",bbox_inches='tight')
+
+
+
+
+
+
+x_cont = diff_nums#range(len(diff_strings))
+y_cont = param_nums#range(len(param_strings))
+x_grid, y_grid = np.meshgrid(x_cont,y_cont)
+cont_cmap = cm.rainbow
+n_cont = 15
+cont_skip = 4
+
+
+#hack: pri 2d contour
+# primary slope?
+print "2d_pri contour"
+## HALF LINE
+value_dpri_mean_d = value_dpri_mean_d/2.0
+fig=plt.figure(figsize=(8.0,8.0))
+
+the_s = np.abs(value_dpri_mean)
+the_d = np.abs(value_dpri_mean_d)
+the_a = np.abs(value_dpri_mean_a)
+the_b = np.abs(value_dpri_mean_b)
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+
+
+
+ax=fig.add_subplot(2, 2, 1, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = np.abs(value_dpri_mean)
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('dpri mean',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(2, 2, 2, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = np.abs(value_dpri_mean_d)
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('dpri mean d',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(2, 2, 3, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = np.abs(value_dpri_mean_a)
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('dpri mean a',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(2, 2, 4, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = np.abs(value_dpri_mean_b)
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('dpri mean b',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+
+plt.savefig(outpath+prefix+"y_pri_contour.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_pri_contour.eps",bbox_inches='tight')
 
 
 
@@ -1045,21 +1245,15 @@ for j in range(len(any_min)):
     # plt.ylabel('param_q')
 
     this_plot = value_sec[this_min,:,:]
-
+    plt.title(secondary[any_min[j]], fontsize=10)
     if np.max(this_plot) > 0.0:
         this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
         pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
-        plt.title(secondary[any_min[j]], fontsize=10)
 
 
-        bbox = ax.get_position()
-        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
-        cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
-        cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
-        cbar.ax.tick_params(labelsize=7)
-        #plt.title('CaCO3 at end',fontsize=9)
-        cbar.solids.set_rasterized(True)
-        cbar.solids.set_edgecolor("face")
+
+
+
 
 
     ax=fig.add_subplot(sp1, sp2, sp_factor+2, frameon=True)
@@ -1069,7 +1263,16 @@ for j in range(len(any_min)):
 
     this_plot = value_sec_d[this_min,:,:]
     this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
-    plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+    pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+    bbox = ax.get_position()
+    cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+    cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+    cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+    cbar.ax.tick_params(labelsize=7)
+    #plt.title('CaCO3 at end',fontsize=9)
+    cbar.solids.set_rasterized(True)
+    cbar.solids.set_edgecolor("face")
 
 
 
@@ -1108,6 +1311,151 @@ for j in range(len(any_min)):
 
 
 plt.savefig(outpath+prefix+"x_2d_sec.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+#hack: 2d sec CONTOUR
+print "2d sec contour"
+fig=plt.figure(figsize=(20.0,len(any_min)))
+sp1 = (len(any_min)+1)/2
+sp2 = 8
+plt.subplots_adjust(hspace=0.5)
+y_off = 0.03
+
+cont_x_skip = 2
+
+for j in range(len(any_min)):
+
+
+    ## 2d sec calcite
+    this_min = any_min[j]
+
+
+    the_s = value_sec[this_min,:,:]
+    the_d = value_sec_d[this_min,:,:]
+    the_a = value_sec_a[this_min,:,:]/2.0
+    the_b = value_sec_b[this_min,:,:]/2.0
+
+    min_all = np.min(the_s)
+    if np.min(the_d) < min_all:
+        min_all = np.min(the_d)
+    if np.min(the_a) < min_all:
+        min_all = np.min(the_a)
+    if np.min(the_b) < min_all:
+        min_all = np.min(the_b)
+
+    max_all = np.max(the_s)
+    if np.max(the_d) > max_all:
+        max_all = np.max(the_d)
+    if np.max(the_a) > max_all:
+        max_all = np.max(the_a)
+    if np.max(the_b) > max_all:
+        max_all = np.max(the_b)
+
+    cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+    sp_factor = (j*4)
+    if j == 0:
+        sp_factor = 0
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+1, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    # plt.xlabel('log10(mixing time [years])')
+    # plt.ylabel('discharge q [m/yr]')
+
+    this_plot = value_sec[this_min,:,:]
+    plt.title(secondary[any_min[j]], fontsize=10)
+    if np.max(this_plot) > 0.0:
+        this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+        pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+        for c in pCont.collections:
+            c.set_edgecolor("face")
+
+
+
+
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+2, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    this_plot = value_sec_d[this_min,:,:]
+    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+    pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+    bbox = ax.get_position()
+    cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+    cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+    cbar.set_ticks(cont_levels[::cont_skip])
+    cbar.ax.tick_params(labelsize=7)
+    #plt.title('CaCO3 at end',fontsize=9)
+    cbar.solids.set_rasterized(True)
+    cbar.solids.set_edgecolor("face")
+
+
+
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+3, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    this_plot = value_sec_a[this_min,:,:]/2.0
+    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+    pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+
+
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+4, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    this_plot = value_sec_b[this_min,:,:]/2.0
+    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+    pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+
+
+
+plt.savefig(outpath+prefix+"y_sec_contour.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_sec_contour.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1176,21 +1524,14 @@ for j in range(len(any_min)):
     # plt.ylabel('param_q')
 
     this_plot = value_dsec[this_min,:,:]
-
+    plt.title(secondary[any_min[j]]+" rate!", fontsize=10)
     if np.max(this_plot) > 0.0:
         this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
         pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
-        plt.title(secondary[any_min[j]]+" rate!", fontsize=10)
 
 
-        bbox = ax.get_position()
-        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
-        cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
-        cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
-        cbar.ax.tick_params(labelsize=7)
-        #plt.title('CaCO3 at end',fontsize=9)
-        cbar.solids.set_rasterized(True)
-        cbar.solids.set_edgecolor("face")
+
+
 
 
     ax=fig.add_subplot(sp1, sp2, sp_factor+2, frameon=True)
@@ -1200,7 +1541,16 @@ for j in range(len(any_min)):
 
     this_plot = value_dsec_d[this_min,:,:]
     this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
-    plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+    pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+    bbox = ax.get_position()
+    cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+    cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+    cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+    cbar.ax.tick_params(labelsize=7)
+    #plt.title('CaCO3 at end',fontsize=9)
+    cbar.solids.set_rasterized(True)
+    cbar.solids.set_edgecolor("face")
 
 
 
@@ -1233,14 +1583,138 @@ for j in range(len(any_min)):
 
 
 
-
-
-
-
-
 plt.savefig(outpath+prefix+"x_2d_sec_rate.png",bbox_inches='tight')
 
 
+
+
+
+
+
+
+
+
+
+#hack: 2d dsec CONTOUR
+print "2d dsec contour"
+fig=plt.figure(figsize=(20.0,len(any_min)))
+sp1 = (len(any_min)+1)/2
+sp2 = 8
+plt.subplots_adjust(hspace=0.5)
+y_off = 0.03
+
+cont_x_skip = 2
+
+for j in range(len(any_min)):
+
+
+    ## 2d sec calcite
+    this_min = any_min[j]
+
+
+    the_s = value_dsec[this_min,:,:]
+    the_d = value_dsec_d[this_min,:,:]
+    the_a = value_dsec_a[this_min,:,:]/2.0
+    the_b = value_dsec_b[this_min,:,:]/2.0
+
+    min_all = np.min(the_s)
+    if np.min(the_d) < min_all:
+        min_all = np.min(the_d)
+    if np.min(the_a) < min_all:
+        min_all = np.min(the_a)
+    if np.min(the_b) < min_all:
+        min_all = np.min(the_b)
+
+    max_all = np.max(the_s)
+    if np.max(the_d) > max_all:
+        max_all = np.max(the_d)
+    if np.max(the_a) > max_all:
+        max_all = np.max(the_a)
+    if np.max(the_b) > max_all:
+        max_all = np.max(the_b)
+
+    cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+    sp_factor = (j*4)
+    if j == 0:
+        sp_factor = 0
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+1, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    # plt.xlabel('log10(mixing time [years])')
+    # plt.ylabel('discharge q [m/yr]')
+
+    this_plot = value_dsec[this_min,:,:]
+    plt.title(secondary[any_min[j]], fontsize=10)
+    if np.max(this_plot) > 0.0:
+        this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+        pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+        for c in pCont.collections:
+            c.set_edgecolor("face")
+
+
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+2, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    this_plot = value_dsec_d[this_min,:,:]
+    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+    pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+    bbox = ax.get_position()
+    cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+    cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+    cbar.set_ticks(cont_levels[::cont_skip])
+    cbar.ax.tick_params(labelsize=7)
+    #plt.title('CaCO3 at end',fontsize=9)
+    cbar.solids.set_rasterized(True)
+    cbar.solids.set_edgecolor("face")
+
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+3, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    this_plot = value_dsec_a[this_min,:,:]/2.0
+    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+    pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+
+
+
+    ax=fig.add_subplot(sp1, sp2, sp_factor+4, frameon=True)
+
+    plt.xticks(diff_nums[::cont_x_skip],diff_strings[::cont_x_skip], fontsize=8)
+    plt.yticks(param_nums,param_strings, fontsize=8)
+
+    this_plot = value_dsec_b[this_min,:,:]/2.0
+    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+    pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+
+
+
+
+plt.savefig(outpath+prefix+"y_dsec_contour.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_dsec_contour.eps",bbox_inches='tight')
 
 
 
@@ -1750,6 +2224,103 @@ plt.savefig(outpath+prefix+"x_2d_alk.png",bbox_inches='tight')
 
 
 
+
+
+
+
+cont_cmap = cm.rainbow
+n_cont = 15
+cont_skip = 4
+
+
+#hack: alk 2d contour
+# primary slope?
+print "2d_alk contour"
+
+fig=plt.figure(figsize=(8.0,8.0))
+
+the_s = value_alk_mean
+the_d = value_alk_mean_d
+the_a = value_alk_mean_a
+the_b = value_alk_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+
+
+
+ax=fig.add_subplot(2, 2, 1, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alk_mean
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('dpri mean',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+pCont = plt.contour(x_grid,y_grid,this_plot, levels=[0.0,1.0], colors='w', linewidth=4.0)
+
+
+
+
+ax=fig.add_subplot(2, 2, 2, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alk_mean_d
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('dpri mean d',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+pCont = plt.contour(x_grid,y_grid,this_plot, levels=[0.0,1.0], colors='w', linewidth=4.0)
+
+
+
+
+
+
+plt.savefig(outpath+prefix+"y_alk_contour.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_alk_contour.eps",bbox_inches='tight')
 
 
 
