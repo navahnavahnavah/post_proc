@@ -44,7 +44,7 @@ n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "y_group_a/"
+prefix = "y_group_b/"
 # path_label = prefix[3:7]
 # print path_label
 
@@ -171,6 +171,34 @@ alk_vol_flux_a = np.zeros([tp,len(param_strings),len(diff_strings)])
 alk_vol_in_b = np.zeros([tp,len(param_strings),len(diff_strings)])
 alk_vol_out_b = np.zeros([tp,len(param_strings),len(diff_strings)])
 alk_vol_flux_b = np.zeros([tp,len(param_strings),len(diff_strings)])
+
+
+# alt_vol% and FeO/FeOt arrays here
+
+
+alt_vol = np.zeros([tp,len(param_strings),len(diff_strings)])
+alt_vol_a = np.zeros([tp,len(param_strings),len(diff_strings)])
+alt_vol_b = np.zeros([tp,len(param_strings),len(diff_strings)])
+alt_vol_d = np.zeros([tp,len(param_strings),len(diff_strings)])
+
+
+alt_fe = np.zeros([tp,len(param_strings),len(diff_strings)])
+alt_fe_a = np.zeros([tp,len(param_strings),len(diff_strings)])
+alt_fe_b = np.zeros([tp,len(param_strings),len(diff_strings)])
+alt_fe_d = np.zeros([tp,len(param_strings),len(diff_strings)])
+
+
+value_alt_vol_mean = np.zeros([len(param_strings),len(diff_strings)])
+value_alt_vol_mean_a = np.zeros([len(param_strings),len(diff_strings)])
+value_alt_vol_mean_b = np.zeros([len(param_strings),len(diff_strings)])
+value_alt_vol_mean_d = np.zeros([len(param_strings),len(diff_strings)])
+
+
+value_alt_fe_mean = np.zeros([len(param_strings),len(diff_strings)])
+value_alt_fe_mean_a = np.zeros([len(param_strings),len(diff_strings)])
+value_alt_fe_mean_b = np.zeros([len(param_strings),len(diff_strings)])
+value_alt_fe_mean_d = np.zeros([len(param_strings),len(diff_strings)])
+
 
 #todo: 2d arrays
 
@@ -521,6 +549,54 @@ for ii in range(len(param_strings)):
                         x_pri_elements[:,jj,ii,iii] = elements_pri[0,jj]*dpri[:,ii,iii]
 
 
+        #todo: alt_vol% data
+        for j in range(len(any_min)):
+            alt_vol[:,ii,iii] = alt_vol[:,ii,iii] + (sec[any_min[j],:,ii,iii]*molar[any_min[j]]/density[any_min[j]])
+            alt_vol_d[:,ii,iii] = alt_vol_d[:,ii,iii] + (sec_d[any_min[j],:,ii,iii]*molar[any_min[j]]/density[any_min[j]])
+            alt_vol_a[:,ii,iii] = alt_vol_a[:,ii,iii] + (sec_a[any_min[j],:,ii,iii]*molar[any_min[j]]/density[any_min[j]])
+            alt_vol_b[:,ii,iii] = alt_vol_b[:,ii,iii] + (sec_b[any_min[j],:,ii,iii]*molar[any_min[j]]/density[any_min[j]])
+
+            if j == len(any_min) - 1:
+                alt_vol[:,ii,iii] = alt_vol[:,ii,iii]/pri[:,ii,iii]
+                alt_vol_d[:,ii,iii] = alt_vol_d[:,ii,iii]/pri_d[:,ii,iii]
+                alt_vol_a[:,ii,iii] = alt_vol_a[:,ii,iii]/pri_a[:,ii,iii]
+                alt_vol_b[:,ii,iii] = alt_vol_b[:,ii,iii]/pri_b[:,ii,iii]
+
+        #todo: fe_vol data
+
+        feo_temp = np.zeros(tp)
+        feot_temp = np.zeros(tp)
+
+        feo_temp = 0.166*pri[:,ii,iii] + sec[14,:,ii,iii]
+        feot_temp = 0.8998*.026*2.0*pri[:,ii,iii] + 0.8998*sec[7,:,ii,iii] + 2.0*0.8998*sec[17,:,ii,iii] + 2.0*0.8998*sec[13,:,ii,iii] + 2.0*0.8998*sec[15,:,ii,iii] + 2.0*0.8998*sec[12,:,ii,iii]
+
+        alt_fe[:,ii,iii] = feo_temp / (feot_temp + feo_temp)
+
+
+        feo_temp = 0.166*pri_d[:,ii,iii] + sec_d[14,:,ii,iii]
+        feot_temp = 0.8998*.026*2.0*pri_d[:,ii,iii] + 0.8998*sec_d[7,:,ii,iii] + 2.0*0.8998*sec_d[17,:,ii,iii] + 2.0*0.8998*sec_d[13,:,ii,iii] + 2.0*0.8998*sec_d[15,:,ii,iii] + 2.0*0.8998*sec_d[12,:,ii,iii]
+
+        alt_fe_d[:,ii,iii] = feo_temp / (feot_temp + feo_temp)
+
+
+
+        feo_temp = 0.166*pri_a[:,ii,iii] + sec_a[14,:,ii,iii]
+        feot_temp = 0.8998*.026*2.0*pri_a[:,ii,iii] + 0.8998*sec_a[7,:,ii,iii] + 2.0*0.8998*sec_a[17,:,ii,iii] + 2.0*0.8998*sec_a[13,:,ii,iii] + 2.0*0.8998*sec_a[15,:,ii,iii] + 2.0*0.8998*sec_a[12,:,ii,iii]
+
+        alt_fe_a[:,ii,iii] = feo_temp / (feot_temp + feo_temp)
+
+
+        feo_temp = 0.166*pri_b[:,ii,iii] + sec_b[14,:,ii,iii]
+        feot_temp = 0.8998*.026*2.0*pri_b[:,ii,iii] + 0.8998*sec_b[7,:,ii,iii] + 2.0*0.8998*sec_b[17,:,ii,iii] + 2.0*0.8998*sec_b[13,:,ii,iii] + 2.0*0.8998*sec_b[15,:,ii,iii] + 2.0*0.8998*sec_b[12,:,ii,iii]
+
+        alt_fe_b[:,ii,iii] = feo_temp / (feot_temp + feo_temp)
+
+
+
+
+
+
+
 x_elements[-1,:,:,:] = x_elements[-2,:,:,:]
 x_pri_elements[-1,:,:,:] = x_pri_elements[-2,:,:,:]
 
@@ -557,6 +633,19 @@ for ii in range(len(param_strings)):
             value_dsec_d[any_min[j],ii,iii] = np.mean(dsec_d[any_min[j],2:,ii,iii])
             value_dsec_a[any_min[j],ii,iii] = np.mean(dsec_a[any_min[j],2:,ii,iii])
             value_dsec_b[any_min[j],ii,iii] = np.mean(dsec_b[any_min[j],2:,ii,iii])
+
+
+            #todo: fill value_alt_vol 2D
+            value_alt_vol_mean[ii,iii] = np.mean(alt_vol[1:,ii,iii]-alt_vol[:-1,ii,iii])
+            value_alt_vol_mean_d[ii,iii] = np.mean(alt_vol_d[1:,ii,iii]-alt_vol_d[:-1,ii,iii])
+            value_alt_vol_mean_a[ii,iii] = np.mean(alt_vol_a[1:,ii,iii]-alt_vol_a[:-1,ii,iii])
+            value_alt_vol_mean_b[ii,iii] = np.mean(alt_vol_b[1:,ii,iii]-alt_vol_b[:-1,ii,iii])
+
+            #todo: fill value_alt_fe 2D
+            value_alt_fe_mean[ii,iii] = np.mean(alt_fe[1:,ii,iii]-alt_fe[:-1,ii,iii])
+            value_alt_fe_mean_d[ii,iii] = np.mean(alt_fe_d[1:,ii,iii]-alt_fe_d[:-1,ii,iii])
+            value_alt_fe_mean_a[ii,iii] = np.mean(alt_fe_a[1:,ii,iii]-alt_fe_a[:-1,ii,iii])
+            value_alt_fe_mean_b[ii,iii] = np.mean(alt_fe_b[1:,ii,iii]-alt_fe_b[:-1,ii,iii])
 
 
 
@@ -747,7 +836,7 @@ plt.savefig(outpath+prefix+"x_s_net.png",bbox_inches='tight')
 
 
 
-#hack: pri 2d plot
+#hack: 2d pri
 # primary slope?
 print "2d_pri"
 fig=plt.figure(figsize=(8.0,8.0))
@@ -856,7 +945,7 @@ n_cont = 15
 cont_skip = 4
 
 
-#hack: pri 2d contour
+#hack: 2d pri CONTOUR
 # primary slope?
 print "2d_pri contour"
 ## HALF LINE
@@ -995,7 +1084,7 @@ plt.savefig(outpath+prefix+"zps_pri_contour.eps",bbox_inches='tight')
 
 title_fs = 10
 
-#hack: sec binary 2d plots
+#hack: 2d sec binary
 print "2d_sec_bin"
 fig=plt.figure(figsize=(19.0,8.0))
 
@@ -1077,7 +1166,7 @@ plt.savefig(outpath+prefix+"x_2d_sec_bin.png",bbox_inches='tight')
 
 
 
-#hack: calcite 2d plot
+#hack: 2d calcite
 print "2d_calcite"
 fig=plt.figure(figsize=(12.0,9.0))
 this_min = 9
@@ -1728,7 +1817,7 @@ plt.savefig(outpath+prefix+"zps_dsec_contour.eps",bbox_inches='tight')
 
 
 
-#hack: dsol 2d
+#hack: 2d dsol
 print "2d_dsol"
 fig=plt.figure(figsize=(12.0,9.0))
 
@@ -2071,6 +2160,490 @@ plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 plt.subplots_adjust(hspace=0.5)
 plt.savefig(outpath+prefix+"x_2d_dsol.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: 2d alt_vol
+print "2d_alt_vol"
+fig=plt.figure(figsize=(9.0,5))
+plt.subplots_adjust(hspace=0.5)
+
+sp1 = 2
+sp2 = 4
+
+
+the_s = value_alt_vol_mean
+the_d = value_alt_vol_mean_d
+the_a = value_alt_vol_mean_a
+the_b = value_alt_vol_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+"alt vol min + max"
+print min_all
+print max_all
+print " "
+
+
+ax=fig.add_subplot(sp1, sp2, 1, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+plt.xlabel('param_t_diff')
+plt.ylabel('param_q')
+
+this_plot = value_alt_vol_mean
+pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+bbox = ax.get_position()
+cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.1, bbox.width*1.5, bbox.height*0.06])
+cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+cbar.ax.tick_params(labelsize=7)
+plt.title('alt vol slope mean',fontsize=9)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+ax=fig.add_subplot(sp1, sp2, 2, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_vol_mean_d
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 3, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_vol_mean_a
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 4, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_vol_mean_b
+this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+
+
+
+
+
+
+
+
+
+the_s = value_alt_fe_mean
+the_d = value_alt_fe_mean_d
+the_a = value_alt_fe_mean_a
+the_b = value_alt_fe_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+print "alt_fe min + max"
+print min_all
+print max_all
+print " "
+
+
+ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+plt.xlabel('param_t_diff')
+plt.ylabel('param_q')
+
+this_plot = value_alt_fe_mean
+print "solo value_alt_fe_mean"
+print this_plot
+pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+bbox = ax.get_position()
+cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.1, bbox.width*1.5, bbox.height*0.06])
+cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+cbar.ax.tick_params(labelsize=7)
+plt.title('alt fe slope mean',fontsize=9)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+ax=fig.add_subplot(sp1, sp2, 6, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_fe_mean_d
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 7, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_fe_mean_a
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 8, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_fe_mean_b
+this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+
+
+
+#
+plt.savefig(outpath+prefix+"x_2d_alt_vol.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cont_cmap = cm.rainbow
+n_cont = 15
+cont_skip = 4
+
+sp1 = 2
+sp2 = 4
+
+
+#hack: 2d alt_vol CONTOUR
+# primary slope?
+print "2d_alt_vol contour"
+## HALF LINE
+#####value_dpri_mean_d = value_dpri_mean_d/2.0
+fig=plt.figure(figsize=(12.0,8.0))
+
+
+
+the_s = value_alt_vol_mean
+the_d = value_alt_vol_mean_d
+the_a = value_alt_vol_mean_a
+the_b = value_alt_vol_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 1, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_vol_mean
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('alt_vol slope mean',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 2, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_vol_mean_d
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('alt_vol slope mean d',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 3, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_vol_mean_a
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('alt_vol slope mean a',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 4, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_vol_mean_b
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('alt_vol slope mean b',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+the_s = value_alt_fe_mean
+the_d = value_alt_fe_mean_d
+the_a = value_alt_fe_mean_a
+the_b = value_alt_fe_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_fe_mean
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('FeO/FeOt slope mean',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 6, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_fe_mean_d
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('FeO/FeOt slope mean d',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 7, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_fe_mean_a
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('FeO/FeOt slope mean a',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 8, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_fe_mean_b
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('FeO/FeOt slope mean b',fontsize=10,labelpad=clabelpad)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+plt.savefig(outpath+prefix+"y_alt_vol_contour.png",bbox_inches='tight')
+plt.savefig(outpath+prefix+"zps_alt_vol_contour.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
 
 
 
