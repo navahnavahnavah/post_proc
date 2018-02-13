@@ -13,6 +13,7 @@ plt.rc('xtick', labelsize=8)
 plt.rc('ytick', labelsize=8)
 plt.rcParams['axes.titlesize'] = 9
 plt.rcParams['axes.labelsize'] = 11
+from matplotlib.colors import LinearSegmentedColormap
 
 plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
 
@@ -54,6 +55,40 @@ def square_contour(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, age_ti
 
     return square_contour
 
+def square_contour_min(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, age_ticks=[1.0, 2.0], age_tick_labels=[1.0, 2.0], the_cbar=0):
+    ax1=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    if xlab == 1:
+        plt.xlabel('log10(mixing time [years])', fontsize=8)
+    if ylab == 1:
+        plt.ylabel('discharge q [m/yr]', fontsize=8)
+
+    pCont = ax1.contourf(x_grid,y_grid,cont_block, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    for c in pCont.collections:
+        c.set_edgecolor("face")
+
+
+
+
+    plt.xticks(diff_nums[:cont_x_diff_max:xskip],diff_strings[::xskip], fontsize=8)
+    plt.yticks(param_nums[:cont_y_param_max:yskip],param_strings[::yskip], fontsize=8)
+
+    ax2 = ax1.twinx()
+    plt.yticks(age_tick_labels, age_ticks, fontsize=8)
+    plt.ylim([0.5,4.5])
+
+    plt.title(cb_title, fontsize=9)
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.05, bbox.width*2.0, bbox.height*0.04])
+        cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+        cbar.set_ticks(cont_levels[::cont_skip])
+        cbar.ax.tick_params(labelsize=7)
+        # cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
+        cbar.solids.set_edgecolor("face")
+
+    return square_contour_min
 
 
 
@@ -296,7 +331,12 @@ value_alt_fe_mean_d = np.zeros([len(param_strings),len(diff_strings),n_grids])
 value_alt_fe_mean_a = np.zeros([len(param_strings),len(diff_strings),n_grids])
 value_alt_fe_mean_b = np.zeros([len(param_strings),len(diff_strings),n_grids])
 
-
+#poop: make value_sec_x grids
+minNum = 41
+value_dsec = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
+value_dsec_d = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
+value_dsec_a = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
+value_dsec_b = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 
 #poop: make alt_ind age curves
 curve_nsteps = 1000
@@ -320,6 +360,11 @@ alt_fe_curve_a = np.zeros([curve_nsteps,n_curves])
 alt_fe_curve_b = np.zeros([curve_nsteps,n_curves])
 
 
+dsec_curve = np.zeros([curve_nsteps,n_curves,minNum+1])
+dsec_curve_d = np.zeros([curve_nsteps,n_curves,minNum+1])
+dsec_curve_a = np.zeros([curve_nsteps,n_curves,minNum+1])
+dsec_curve_b = np.zeros([curve_nsteps,n_curves,minNum+1])
+
 
 #todo: LOAD IN 2d alt index grids
 value_alt_vol_mean[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_vol_mean.txt')
@@ -333,12 +378,44 @@ value_alt_fe_mean_a[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_
 value_alt_fe_mean_b[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_b.txt')
 
 
+#todo: LOAD IN value_sec_x.txt
 
+secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
+'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
+'mesolite', 'hematite', 'mont_ca', 'verm_ca', 'analcime', 'philipsite', 'mont_mg', 'gismondine',
+'verm_mg', 'natrolite', 'talc', 'smectite_low', 'prehnite', 'chlorite', 'scolecite', 'clinochlorte14a',
+'clinochlore7a', 'saponite_ca', 'verm_na', 'pyrrhotite', 'fe_saponite_ca', 'fe_saponite_mg', 'daphnite7a', 'daphnite14a', 'epidote'])
+
+
+any_min = []
+for j in range(1,minNum):
+    if os.path.isfile(in_path + dir_path + 'value_dsec_'+str(int(j))+'.txt'):
+        if not np.any(any_min == j):
+            any_min = np.append(any_min,j)
+        value_dsec[:,:,j,0] = np.loadtxt(in_path + dir_path + 'value_dsec_'+str(int(j))+'.txt')
+
+    if os.path.isfile(in_path + dir_path + 'value_dsec_'+str(int(j))+'_d.txt'):
+        if not np.any(any_min == j):
+            any_min = np.append(any_min,j)
+        value_dsec_d[:,:,j,0] = np.loadtxt(in_path + dir_path + 'value_dsec_'+str(int(j))+'_d.txt')
+
+    if os.path.isfile(in_path + dir_path + 'value_dsec_'+str(int(j))+'_a.txt'):
+        if not np.any(any_min == j):
+            any_min = np.append(any_min,j)
+        value_dsec_a[:,:,j,0] = np.loadtxt(in_path + dir_path + 'value_dsec_'+str(int(j))+'_a.txt')
+
+    if os.path.isfile(in_path + dir_path + 'value_dsec_'+str(int(j))+'_b.txt'):
+        if not np.any(any_min == j):
+            any_min = np.append(any_min,j)
+        value_dsec_b[:,:,j,0] = np.loadtxt(in_path + dir_path + 'value_dsec_'+str(int(j))+'_b.txt')
+
+print "any_min: " , any_min
 
 
 #todo: make alt_ind curves
 curve_age_vec = np.linspace(0.0,5.0,curve_nsteps)
 curve_q_vec = np.zeros([curve_nsteps,n_curves])
+
 # for i in range(curve_nsteps):
 for j in range(n_curves):
     f_curve = interpolate.interp1d(curve_age_vec, (q_vec[:,j])*(3.14e7))
@@ -361,7 +438,37 @@ for j in range(n_curves):
         alt_vol_curve_diff_d[:,j,t] = f_alt_vol(curve_q_vec_temp)
 
 
-#hack: FIG: curves?
+#todo: make dsec_curves
+for jj in range(len(any_min)):
+
+    for j in range(n_curves):
+        f_curve = interpolate.interp1d(curve_age_vec, (q_vec[:,j])*(3.14e7))
+        curve_q_vec[:,j] = f_curve(curve_age_vec)
+
+        f_dsec = interpolate.interp1d(param_nums,value_dsec[:,0,any_min[jj],0])
+        curve_q_vec_temp = np.zeros(curve_nsteps)
+        curve_q_vec_temp[:] = curve_q_vec[:,j]
+        curve_q_vec_temp[curve_q_vec_temp > np.max(param_nums)] = np.max(param_nums)
+        curve_q_vec_temp[curve_q_vec_temp < np.min(param_nums)] = np.min(param_nums)
+        dsec_curve[:,j,any_min[jj]] = f_dsec(curve_q_vec_temp)
+        #for i in range(curve_nsteps):
+
+        # for t in range(len(diff_nums)):
+        #     f_alt_vol = interpolate.interp1d(param_nums,value_alt_vol_mean_d[:,t,0])
+        #     curve_q_vec_temp = np.zeros(curve_nsteps)
+        #     curve_q_vec_temp[:] = curve_q_vec[:,j]
+        #     curve_q_vec_temp[curve_q_vec_temp > np.max(param_nums)] = np.max(param_nums)
+        #     curve_q_vec_temp[curve_q_vec_temp < np.min(param_nums)] = np.min(param_nums)
+        #     alt_vol_curve_diff_d[:,j,t] = f_alt_vol(curve_q_vec_temp)
+
+# print "dsec_curve[:,6,1]"
+# print dsec_curve[:,6,1]
+# print " "
+
+
+
+
+#hack: FIG: curves
 
 m_skip = 50
 m_size = 30
@@ -423,13 +530,62 @@ plt.xticks(fontsize=10)
 plt.yticks(fontsize=10)
 plt.xlabel('age [Myr]')
 plt.ylabel('alt_vol slope')
-plt.legend(fontsize=9,bbox_to_anchor=(1.9, 1.0),ncol=1,columnspacing=0.1)
+plt.legend(fontsize=9,bbox_to_anchor=(2.0, 1.0),ncol=1,columnspacing=0.1)
 
 
 
 
 
-diff_colors = [ cm.jet(x) for x in np.linspace(0.0, 1.0, cont_x_diff_max) ]
+
+#poop: plot dsec curves
+ax=fig.add_subplot(2, 2, 4, frameon=True)
+plt.grid()
+# for j in range(n_curves):
+#     plt.plot(curve_age_vec[100:],alt_vol_curve[100:,j], color=plot_col[j], label=txt_labels[j], lw=2.0)
+
+this_min = any_min[0]
+print "this_min curve test" , this_min
+
+plt.plot(curve_age_vec[100:],dsec_curve[100:,0,this_min], color=plot_col[0], lw=the_lw)
+plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,0,this_min], marker='o', zorder=5, facecolor='k', s=m_size, label=txt_labels[0])
+
+plt.plot(curve_age_vec[100:],dsec_curve[100:,1,this_min], color=plot_col[0], lw=the_lw)
+plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,1,this_min], marker='s', zorder=5, facecolor='k', s=m_size, label=txt_labels[1])
+
+plt.plot(curve_age_vec[100:],dsec_curve[100:,2,this_min], color=plot_col[0], lw=the_lw)
+plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,2,this_min], marker='o', zorder=5, facecolor='none', s=m_size, label=txt_labels[2])
+
+plt.plot(curve_age_vec[100:],dsec_curve[100:,3,this_min], color=plot_col[0], lw=the_lw)
+plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,3,this_min], marker='s', zorder=5, facecolor='none', s=m_size, label=txt_labels[3])
+
+# print "dsec_curve[100:,6,this_min]"
+# print dsec_curve[100:,6,this_min]
+# print " "
+
+
+for j in range(4,10):
+#for j in [6]:
+    plt.plot(curve_age_vec[100:],dsec_curve[100:,j,this_min], color=plot_col[j], label=txt_labels[j], lw=2.0)
+
+plt.xlim([0.5,5.0])
+plt.xticks(fontsize=10)
+plt.yticks(fontsize=10)
+plt.xlabel('age [Myr]')
+plt.ylabel('test rate ' + secondary[this_min])
+# plt.legend(fontsize=9,bbox_to_anchor=(2.0, 1.0),ncol=1,columnspacing=0.1)
+
+
+
+
+
+
+
+
+
+#poop: colormap
+# cmap1 = LinearSegmentedColormap.from_list("my_colormap", ((28.0/255.0, 207.0/255.0, 94.0/255.0), (26.0/255.0, 179.0/255.0, 189.0/255.0), (63.0/255.0, 35.0/255.0, 108.0/255.0)), N=6, gamma=1.0)
+cmap1 = LinearSegmentedColormap.from_list("my_colormap", ((0.64, 0.1, 0.53), (0.78, 0.61, 0.02)), N=15, gamma=1.0)
+diff_colors = [ cmap1(x) for x in np.linspace(0.0, 1.0, cont_x_diff_max) ]
 
 ax=fig.add_subplot(2, 2, 3, frameon=True)
 plt.grid()
@@ -452,6 +608,75 @@ plt.savefig(outpath+"z_curves.eps",bbox_inches='tight')
 
 
 
+
+
+
+
+
+
+
+#hack: FIG: dsec_curves
+
+m_skip = 100
+m_size = 25
+the_lw = 1.2
+
+fig=plt.figure(figsize=(12.0,12.0))
+plt.subplots_adjust(wspace=0.3, hspace=0.3)
+
+sp_a = (len(any_min)+3.0)/4.0
+sp_b = 4
+
+for jj in range(len(any_min)):
+
+    ax=fig.add_subplot(sp_a, sp_b, jj+1, frameon=True)
+    plt.grid()
+
+    this_min = any_min[jj]
+    print "this_min curve real" , this_min
+
+    plt.plot(curve_age_vec[100:],dsec_curve[100:,0,this_min], color=plot_col[0], lw=the_lw)
+    plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,0,this_min], marker='o', zorder=5, facecolor='k', s=m_size, label=txt_labels[0])
+
+    plt.plot(curve_age_vec[100:],dsec_curve[100:,1,this_min], color=plot_col[0], lw=the_lw)
+    plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,1,this_min], marker='s', zorder=5, facecolor='k', s=m_size, label=txt_labels[1])
+
+    plt.plot(curve_age_vec[100:],dsec_curve[100:,2,this_min], color=plot_col[0], lw=the_lw)
+    plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,2,this_min], marker='o', zorder=5, facecolor='none', s=m_size, label=txt_labels[2])
+
+    plt.plot(curve_age_vec[100:],dsec_curve[100:,3,this_min], color=plot_col[0], lw=the_lw)
+    plt.scatter(curve_age_vec[100::m_skip],dsec_curve[100::m_skip,3,this_min], marker='s', zorder=5, facecolor='none', s=m_size, label=txt_labels[3])
+
+    for j in range(4,10):
+    #for j in [6]:
+        plt.plot(curve_age_vec[100:],dsec_curve[100:,j,this_min], color=plot_col[j], label=txt_labels[j], lw=2.0)
+
+    plt.xlim([0.5,5.0])
+    plt.xticks(fontsize=7)
+    plt.yticks(fontsize=7)
+    plt.xlabel('age [Myr]',fontsize=7)
+    # plt.ylabel('rate',fontsize=7)
+    plt.title(secondary[any_min[jj]])
+
+
+
+plt.savefig(outpath+"q_dsec_curves.png",bbox_inches='tight')
+plt.savefig(outpath+"z_dsec_curves.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 cont_cmap = cm.rainbow
 n_cont = 41
 cont_skip = 10
@@ -462,7 +687,6 @@ yskip = 1
 
 sp1 = 3
 sp2 = 4
-
 
 #hack: FIG: alt_ind CONTOURS
 print "2d_alt_vol contour"
@@ -682,3 +906,127 @@ square_contour(sp1, sp2, 6, the_d, cb_title="value_alt_fe_mean_d", xlab=1, age_t
 
 plt.savefig(in_path+dir_path[:-1]+"_alt_cont_lim.png",bbox_inches='tight')
 plt.savefig(in_path+"z_"+ dir_path[:-1]+"_alt_cont_lim.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+sp1 = 3
+sp2 = 4
+
+all_params = 1
+
+if all_params == 1:
+    cont_x_diff_max = len(diff_strings) - 0
+    cont_y_param_max = len(param_strings) - 0
+
+
+#hack: FIG: dsec CONTOURS
+print "2d_dsec contour"
+fig=plt.figure(figsize=(12.0,9.0))
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+
+#hack: interp param_nums
+q_interp = (q_vec[:,6])*(3.14e7)
+f = interpolate.interp1d(age_vec, (q_vec[:,6])*(3.14e7))
+# f = interpolate.interp1d((q_vec[:,6])*(3.14e7), age_vec)
+# print "q at 250kyr: ", f(0.25)
+print "q at 500kyr: ", f(0.5)
+print "q at 1000kyr: ", f(1.0)
+print "q at 1500kyr: ", f(1.5)
+print "q at 1500kyr: ", f(2.0)
+print "q at 1500kyr: ", f(2.5)
+print "q at 1500kyr: ", f(3.0)
+# print "age of at 4.0q" , f(4.0)
+age_cont_y_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+age_cont_y_labels = f(age_cont_y_nums)
+print age_cont_y_labels
+age_cont_y_strings = []
+for i in range(len(age_cont_y_nums)):
+    age_cont_y_strings.append(str(age_cont_y_nums[i]) + " Myr")
+
+
+### FIRST ROW, S D A B ALT_VOL MEAN SLOPES ###
+x_cont = diff_nums
+y_cont = param_nums
+x_grid, y_grid = np.meshgrid(x_cont,y_cont)
+x_grid = x_grid[:cont_y_param_max,:cont_x_diff_max]
+y_grid = y_grid[:cont_y_param_max,:cont_x_diff_max]
+
+
+the_min = any_min[0]
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+square_contour_min(sp1, sp2, 1, the_s, cb_title="s dsec rate "+secondary[the_min], xlab=1, ylab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels,the_cbar=1)
+
+square_contour_min(sp1, sp2, 2, the_d, cb_title="d dsec rate", xlab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+
+square_contour_min(sp1, sp2, 3, the_a, cb_title="a dsec rate", xlab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+
+square_contour_min(sp1, sp2, 4, the_b, cb_title="b dsec rate", xlab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+
+
+
+
+
+#
+# the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+#
+# square_contour(sp1, sp2, 5, the_s, cb_title="value_alt_fe_mean", xlab=1, ylab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+#
+# square_contour(sp1, sp2, 6, the_d, cb_title="value_alt_fe_mean_d", xlab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+#
+# square_contour(sp1, sp2, 7, the_a, cb_title="value_alt_fe_mean_a", xlab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+#
+# square_contour(sp1, sp2, 8, the_b, cb_title="value_alt_fe_mean_b", xlab=1, age_ticks=age_cont_y_strings, age_tick_labels=age_cont_y_labels)
+
+
+
+
+plt.savefig(in_path+dir_path[:-1]+"_dsec.png",bbox_inches='tight')
+plt.savefig(in_path+"z_"+ dir_path[:-1]+"_dsec.eps",bbox_inches='tight')
