@@ -17,6 +17,8 @@ from matplotlib.colors import LinearSegmentedColormap
 
 plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
 
+col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
+
 outpath = "../output/revival/winter_basalt_box/"
 
 
@@ -92,6 +94,12 @@ def square_contour_min(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, ag
 
 
 
+def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear'):
+
+    the_f = interpolate.interp2d(x_in, y_in, z_in, kind=kind_in)
+    any_2d_interp = the_f(x_diff_path, y_param_path)
+
+    return any_2d_interp
 
 
 
@@ -125,7 +133,17 @@ q_vec_log10 = np.zeros([len(steps),n_hist])
 q_vec_log10_myr = np.zeros([len(steps),n_hist])
 
 
-txt_labels = ['sed 5m/Myr, 500m basement', 'sed 50m/Myr, 500m basement', 'sed 5m/Myr, 100m basement', 'sed 50m/Myr, 100m basement', 'sed 100m fixed, 500m basement', 'sed 200m fixed, 500m basement', 'sed 50m/yr, 500m basement, dx fixed at 10km', 'sed 50m/yr, 500m basement, dx fixed at 20km', 'sed 50m/yr, 500m basement, dx fixed at 100km', 'sed 100m/yr, 500m basement, dx fixed at 100km']
+# txt_labels = ['sed 5m/Myr, 500m basement', 'sed 50m/Myr, 500m basement', 'sed 5m/Myr, 100m basement', 'sed 50m/Myr, 100m basement', 'sed 100m fixed, 500m basement', 'sed 200m fixed, 500m basement', 'sed 50m/Myr, 500m basement, dx fixed at 10km', 'sed 50m/Myr, 500m basement, dx fixed at 20km', 'sed 50m/Myr, 500m basement, dx fixed at 100km', 'sed 100m/Myr, 500m basement, dx fixed at 100km']
+
+
+txt_labels = ['sed 5m/Myr, 500m basement',
+'sed 50m/Myr, 500m basement', 'sed 5m/Myr, 100m basement',
+'sed 50m/Myr, 100m basement', 'sed 100m fixed, 500m basement',
+'sed 200m fixed, 500m basement',
+'sed 100m/Myr, 500m basement, dx fixed at 10km',
+'sed 100m/Myr, 500m basement, dx fixed at 25km',
+'sed 100m/Myr, 500m basement, dx fixed at 50km',
+'sed 100m/Myr, 500m basement, dx fixed at 100km']
 
 
 # generate qm/ql (hfs_vec)
@@ -167,22 +185,22 @@ for i in range(nsteps):
     dx_vec[i,5] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[5] = 500.0
 
-    # n_hist = 6 : sediment 50m/Myr, dx fixed at 10km
+    # n_hist = 6 : sediment 100m/Myr, dx fixed at 10km
     hfs_vec[i,6] = 0.43 + 0.0085*age_vec[i]
-    hs_vec[i,6] = 50.0 * age_vec[i]
+    hs_vec[i,6] = 100.0 * age_vec[i]
     dx_vec[i,6] = 10000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[6] = 500.0
 
-    # n_hist = 7 : sediment 50m/Myr, dx fixed at 20km
+    # n_hist = 7 : sediment 100m/Myr, dx fixed at 25km
     hfs_vec[i,7] = 0.43 + 0.0085*age_vec[i]
-    hs_vec[i,7] = 50.0 * age_vec[i]
-    dx_vec[i,7] = 20000.0 #(5000.0 + 500.0*age_vec[i])/2.0
+    hs_vec[i,7] = 100.0 * age_vec[i]
+    dx_vec[i,7] = 25000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[7] = 500.0
 
-    # n_hist = 8 : sediment 50m/Myr, dx fixed at 100km
+    # n_hist = 8 : sediment 100m/Myr, dx fixed at 50km
     hfs_vec[i,8] = 0.43 + 0.0085*age_vec[i]
-    hs_vec[i,8] = 50.0 * age_vec[i]
-    dx_vec[i,8] = 100000.0 #(5000.0 + 500.0*age_vec[i])/2.0
+    hs_vec[i,8] = 100.0 * age_vec[i]
+    dx_vec[i,8] = 50000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[8] = 500.0
 
     # n_hist = 9 : sediment 100m/Myr, dx fixed at 100km
@@ -342,7 +360,8 @@ value_dsec_b = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 curve_nsteps = 1000
 n_curves = 10
 
-cont_x_diff_max = len(diff_strings) - 2
+#poop: max lims go here
+cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
 alt_vol_curve = np.zeros([curve_nsteps,n_curves])
@@ -410,6 +429,8 @@ for j in range(1,minNum):
         value_dsec_b[:,:,j,0] = np.loadtxt(in_path + dir_path + 'value_dsec_'+str(int(j))+'_b.txt')
 
 print "any_min: " , any_min
+
+# print value_dsec[:,:,14,0] - value_dsec_d[:,:,14,0]
 
 
 #todo: make alt_ind curves
@@ -537,7 +558,7 @@ plt.legend(fontsize=9,bbox_to_anchor=(2.0, 1.0),ncol=1,columnspacing=0.1)
 
 
 
-#poop: plot dsec curves
+#poop: plot dsec curves TEST
 ax=fig.add_subplot(2, 2, 4, frameon=True)
 plt.grid()
 # for j in range(n_curves):
@@ -649,7 +670,7 @@ for jj in range(len(any_min)):
 
     for j in range(4,10):
     #for j in [6]:
-        plt.plot(curve_age_vec[100:],dsec_curve[100:,j,this_min], color=plot_col[j], label=txt_labels[j], lw=2.0)
+        plt.plot(curve_age_vec[100:],dsec_curve[100:,j,this_min], color=plot_col[j], label=txt_labels[j], lw=the_lw)
 
     plt.xlim([0.5,5.0])
     plt.xticks(fontsize=7)
@@ -669,6 +690,310 @@ plt.savefig(outpath+"z_dsec_curves.eps",bbox_inches='tight')
 
 
 
+
+
+
+#todo: make curve arrays etc.
+y_param_paths = np.zeros([curve_nsteps,n_curves])
+x_diff_paths = np.zeros([curve_nsteps,n_curves])
+
+y_param_paths[:,6] = curve_q_vec[:,6]
+y_param_paths[:,7] = curve_q_vec[:,7]
+y_param_paths[:,8] = curve_q_vec[:,8]
+y_param_paths[:,9] = curve_q_vec[:,9]
+
+curves_saved = np.zeros([curve_nsteps,n_curves])
+curves_saved_d = np.zeros([curve_nsteps,n_curves])
+curves_saved_a = np.zeros([curve_nsteps,n_curves])
+curves_saved_b = np.zeros([curve_nsteps,n_curves])
+
+curves_total_saved = np.zeros([curve_nsteps,n_curves])
+curves_total_saved_d = np.zeros([curve_nsteps,n_curves])
+curves_total_saved_a = np.zeros([curve_nsteps,n_curves])
+curves_total_saved_b = np.zeros([curve_nsteps,n_curves])
+
+curves_dsec_saved = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves])
+
+curves_dsec_n_saved = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_n_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_n_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_n_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves])
+
+curves_dsec_bin_saved = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_bin_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_bin_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves])
+curves_dsec_bin_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves])
+
+
+interp_start = 100
+
+#todo: fill curves_saved
+for c in [6, 7, 8, 9]:
+    y_param_path_temp = y_param_paths[:,c]
+
+    x_diff_path_temp = 1.0*np.ones(curve_nsteps)
+    curve1 = any_2d_interp(diff_nums, param_nums, value_alt_vol_mean[:,:,0], x_diff_path_temp[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
+    curve1_vector = curve1[::-1,0]
+    curves_saved[interp_start:,c] = curve1_vector
+
+
+    x_diff_path_temp_d = 3.5*np.ones(curve_nsteps)#np.linspace(3.5,5.0,num=curve_nsteps,endpoint=True)
+    curve2 = any_2d_interp(diff_nums, param_nums, value_alt_vol_mean_d[:,:,0], x_diff_path_temp_d[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
+    curve2_vector = curve2[::-1,0]
+    curves_saved_d[interp_start:,c] = curve2_vector
+
+
+    #todo: fill curves_dsec_saved
+
+    for j in range(len(any_min)):
+        curve1 = any_2d_interp(diff_nums, param_nums, value_dsec[:,:,any_min[j],0], x_diff_path_temp[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
+        curve1_vector = curve1[::-1,0]
+        curves_dsec_saved[interp_start:,any_min[j],c] = curve1_vector
+
+        curve2 = any_2d_interp(diff_nums, param_nums, value_dsec_d[:,:,any_min[j],0], x_diff_path_temp_d[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
+        curve2_vector = curve2[::-1,0]
+        curves_dsec_saved_d[interp_start:,any_min[j],c] = curve2_vector
+
+
+        max_temp = np.max(curves_dsec_saved[interp_start:,any_min[j],c])
+        if np.max(curves_dsec_saved_d[interp_start:,any_min[j],c]) > max_temp:
+            max_temp = np.max(curves_dsec_saved_d[interp_start:,any_min[j],c])
+        for ii in range(interp_start,curve_nsteps):
+            if curves_dsec_saved[ii,any_min[j],c] > 0.0:
+                curves_dsec_n_saved[ii,any_min[j],c] = curves_dsec_saved[ii,any_min[j],c]/max_temp
+
+        #max_temp = np.max(curves_dsec_saved_d[interp_start:,any_min[j],c])
+        for ii in range(interp_start,curve_nsteps):
+            if curves_dsec_saved_d[ii,any_min[j],c] > 0.0:
+                curves_dsec_n_saved_d[ii,any_min[j],c] = curves_dsec_saved_d[ii,any_min[j],c]/max_temp
+
+print curves_dsec_n_saved[:,14,c] - curves_dsec_n_saved_d[:,14,c]
+
+
+
+#hack: FIG: interp2d paths
+path_skip = 100
+
+fig=plt.figure(figsize=(16.0,16.0*2.0/3.0))
+#plt.subplots_adjust(wspace=0.3, hspace=0.3)
+
+
+ax=fig.add_subplot(2, 3, 1, frameon=True)
+plt.grid()
+
+for c in [6, 7, 8, 9]:
+# for c in [7]:
+    plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
+    plt.scatter(age_vec[interp_start::path_skip], curves_saved[interp_start::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Alteration Rate', fontsize=9)
+plt.title('interpolated alteration rate histories')
+plt.xlim([0.5,5.0])
+
+
+
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+plt.grid()
+
+for c in [6, 7, 8, 9]:
+    plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
+    plt.scatter(age_vec[interp_start::path_skip], curves_saved_d[interp_start::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Alteration Rate', fontsize=9)
+plt.title('interpolated alteration rate histories, dual')
+plt.xlim([0.5,5.0])
+
+
+# COMBINED COLUMN HERE?
+ax=fig.add_subplot(2, 3, 3, frameon=True)
+plt.grid()
+
+for c in [6, 7, 8, 9]:
+    plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
+    plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2, linestyle='--')
+
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Alteration Rate', fontsize=9)
+plt.title('interpolated alteration rate histories, dual')
+plt.xlim([0.5,5.0])
+# plt.legend(fontsize=9,bbox_to_anchor=(1.0, -0.1),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+
+
+
+
+
+
+
+
+
+# PLOT ALL REGULAR AGE PATHS IN THE VERTICAL WITH ANNOTATIONS
+ax=fig.add_subplot(2, 3, 4, frameon=True)
+
+# cmap2 = LinearSegmentedColormap.from_list("my_colormap", ((0.8, 0.0, 0.0), (0.88, 0.59, 0.15)), N=15, gamma=1.0)
+cmap2 = LinearSegmentedColormap.from_list("my_colormap", ((0.59, 0.02, 0.11), (1.0, 0.75, 0.0)), N=15, gamma=1.0)
+age_colors = [ cmap2(x) for x in np.linspace(0.0, 1.0, 10) ]
+
+c_count = 2.0
+for c in [6, 7, 8, 9]:
+    c_count = c_count + 0.5
+    plt.plot(c_count*x_diff_path_temp, y_param_paths[:,c], color=plot_col[c], label=txt_labels[c], lw=2)
+    # plt.scatter(scatter_x[::path_skip], y_param_paths[::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+    plt.scatter(c_count*x_diff_path_temp[::path_skip], y_param_paths[::path_skip,c], marker='o', s=50, facecolors=age_colors, edgecolor='none', zorder=5)
+
+
+    age_marker_labels = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+    for i, txt in enumerate(age_marker_labels):
+        ii = (i+1)*100 - 1
+        ax.annotate(txt, (c_count*x_diff_path_temp[ii],y_param_paths[ii,c]), xytext=(5, 0), textcoords='offset points',fontsize=8)
+
+plt.legend(fontsize=9,bbox_to_anchor=(1.0, -0.1),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+
+plt.xlim([np.min(diff_nums), np.max(diff_nums)])
+plt.ylim([np.min(param_nums), np.max(param_nums)])
+
+plt.xlabel('log10(mixing time [years])', fontsize=9)
+plt.ylabel('discharge q [m/yr]', fontsize=9)
+plt.title('paths through solo parameter space')
+
+
+
+
+
+
+
+
+
+
+
+
+
+# PLOT ALL REGULAR AGE PATHS IN THE VERTICAL WITH ANNOTATIONS
+ax=fig.add_subplot(2, 3, 5, frameon=True)
+
+c_count = 2.0
+for c in [6, 7, 8, 9]:
+    c_count = c_count + 0.5
+    plt.plot(x_diff_path_temp_d, y_param_paths[:,c], color=plot_col[c], label=txt_labels[c], lw=2)
+    plt.scatter(x_diff_path_temp_d[::path_skip], y_param_paths[::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+
+
+    age_marker_labels = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+    for i, txt in enumerate(age_marker_labels):
+        ii = (i+1)*100 - 1
+        ax.annotate(txt, (x_diff_path_temp_d[ii],y_param_paths[ii,c]), xytext=(5, 0), textcoords='offset points',fontsize=8)
+
+plt.legend(fontsize=9,bbox_to_anchor=(1.0, -0.1),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+
+plt.xlim([np.min(diff_nums), np.max(diff_nums)])
+plt.ylim([np.min(param_nums), np.max(param_nums)])
+
+plt.xlabel('log10(mixing time [years])', fontsize=9)
+plt.ylabel('discharge q [m/yr]', fontsize=9)
+plt.title('paths through dual parameter space')
+
+
+
+plt.savefig(outpath+"q_interp2d_curves.png",bbox_inches='tight')
+plt.savefig(outpath+"z_interp2d_curves.eps",bbox_inches='tight')
+
+
+
+
+
+
+#hack: 2D dsec curve figure!
+
+fig=plt.figure(figsize=(16.0,12.0*2.0/3.0))
+
+c_plot = 1
+for c in [6, 7, 8, 9]:
+    ax=fig.add_subplot(3, 4, c_plot, frameon=True)
+    c_plot = c_plot + 1
+    plt.grid()
+    for j in range(len(any_min)):
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+        #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+
+    # plt.xlabel('Age [Myr]', fontsize=9)
+    plt.ylabel('Secondary Growth Rate', fontsize=9)
+    plt.title('interpolated growth rate histories solo', color=plot_col[c])
+    plt.xlim([0.5,5.0])
+    if c == 6:
+        plt.legend(fontsize=8,bbox_to_anchor=(1.3, 1.4),ncol=4,columnspacing=0.0,labelspacing=0.0)
+
+
+c_plot = 1
+for c in [6, 7, 8, 9]:
+    ax=fig.add_subplot(3, 4, 4+c_plot, frameon=True)
+    c_plot = c_plot + 1
+    plt.grid()
+    for j in range(len(any_min)):
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+        #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+
+    # plt.xlabel('Age [Myr]', fontsize=9)
+    plt.ylabel('Secondary Growth Rate', fontsize=9)
+    plt.title('interpolated growth rate histories dual', color=plot_col[c])
+    plt.xlim([0.5,5.0])
+    # if c == 6:
+    #     plt.legend(fontsize=8,bbox_to_anchor=(1.0, 1.4),ncol=4,columnspacing=0.0,labelspacing=0.0)
+
+
+c_plot = 1
+for c in [6, 7, 8, 9]:
+    ax=fig.add_subplot(3, 4, 8+c_plot, frameon=True)
+    c_plot = c_plot + 1
+    #plt.grid()
+    for j in range(len(any_min)):
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5,linestyle='--')
+        #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+
+    plt.xlabel('Age [Myr]', fontsize=9)
+    plt.ylabel('Secondary Growth Rate', fontsize=9)
+    plt.title('interpolated growth rate histories dual', color=plot_col[c])
+    plt.xlim([0.5,5.0])
+
+
+
+
+# ax=fig.add_subplot(2, 4, 5, frameon=True)
+# plt.grid()
+#
+# for c in [6, 7, 8, 9]:
+#     plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
+#     plt.scatter(age_vec[interp_start::path_skip], curves_saved_d[interp_start::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+#
+# plt.xlabel('Age [Myr]', fontsize=9)
+# plt.ylabel('Alteration Rate', fontsize=9)
+# plt.title('interpolated alteration rate histories, dual')
+# plt.xlim([0.5,5.0])
+
+
+# COMBINED COLUMN HERE?
+# ax=fig.add_subplot(1, 3, 3, frameon=True)
+# plt.grid()
+#
+# for c in [6, 7, 8, 9]:
+#     plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
+#     plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2, linestyle='--')
+#
+# plt.xlabel('Age [Myr]', fontsize=9)
+# plt.ylabel('Alteration Rate', fontsize=9)
+# plt.title('interpolated alteration rate histories, dual')
+# plt.xlim([0.5,5.0])
+
+plt.savefig(outpath+"q_interp2d_dsec.png",bbox_inches='tight')
+plt.savefig(outpath+"z_interp2d_dsec.eps",bbox_inches='tight')
 
 
 
