@@ -39,17 +39,24 @@ molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 504.19, 380.22, 379.259, 549.07, 395.38, 64.448, 392.34, 64.448,
 64.448, 480.19, 504.19, 85.12, 480.19, 480.19, 664.0, 664.0, 519.0])
 
+
+molar_pri = 110.0
+
+density_pri = 2.7
+
 tp = 1000
 n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "y_group_b/"
+prefix = "y_group_i/"
 # path_label = prefix[3:7]
 # print path_label
 
 sample_outpath = "../output/revival/winter_basalt_box/"+prefix+"q_1.0_diff_10.00/"
 outpath = "../output/revival/winter_basalt_box/"
+
+write_txt = 1
 
 
 
@@ -86,8 +93,8 @@ for iii in range(len(param_nums)):
 # diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50']
 # diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5]
 
-diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00']
-diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0]
+diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75']
+diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75]
 
 
 
@@ -529,7 +536,7 @@ for ii in range(len(param_strings)):
         value_alk_mean_b[ii,iii] = np.mean(alk_flux_b[:,ii,iii])
 
 
-        print param_nums[ii]
+        # print param_nums[ii]
         #print (sec[9,1:,ii] - sec[9,:-1,ii])
         # print alk_out[:,ii]- alk_in[:,ii]
         #print 10**(param_nums[ii])
@@ -557,10 +564,10 @@ for ii in range(len(param_strings)):
             alt_vol_b[:,ii,iii] = alt_vol_b[:,ii,iii] + (sec_b[any_min[j],:,ii,iii]*molar[any_min[j]]/density[any_min[j]])
 
             if j == len(any_min) - 1:
-                alt_vol[:,ii,iii] = alt_vol[:,ii,iii]/pri[:,ii,iii]
-                alt_vol_d[:,ii,iii] = alt_vol_d[:,ii,iii]/pri_d[:,ii,iii]
-                alt_vol_a[:,ii,iii] = alt_vol_a[:,ii,iii]/pri_a[:,ii,iii]
-                alt_vol_b[:,ii,iii] = alt_vol_b[:,ii,iii]/pri_b[:,ii,iii]
+                alt_vol[:,ii,iii] = 100.0*alt_vol[:,ii,iii]/(pri[:,ii,iii]*molar_pri/density_pri)
+                alt_vol_d[:,ii,iii] = 100.0*alt_vol_d[:,ii,iii]/(pri_d[:,ii,iii]*molar_pri/density_pri)
+                alt_vol_a[:,ii,iii] = 100.0*alt_vol_a[:,ii,iii]/(pri_a[:,ii,iii]*molar_pri/density_pri)
+                alt_vol_b[:,ii,iii] = 100.0*alt_vol_b[:,ii,iii]/(pri_b[:,ii,iii]*molar_pri/density_pri)
 
         #todo: fe_vol data
 
@@ -636,16 +643,16 @@ for ii in range(len(param_strings)):
 
 
             #todo: fill value_alt_vol 2D
-            value_alt_vol_mean[ii,iii] = np.mean(alt_vol[1:,ii,iii]-alt_vol[:-1,ii,iii])
-            value_alt_vol_mean_d[ii,iii] = np.mean(alt_vol_d[1:,ii,iii]-alt_vol_d[:-1,ii,iii])
-            value_alt_vol_mean_a[ii,iii] = np.mean(alt_vol_a[1:,ii,iii]-alt_vol_a[:-1,ii,iii])
-            value_alt_vol_mean_b[ii,iii] = np.mean(alt_vol_b[1:,ii,iii]-alt_vol_b[:-1,ii,iii])
+            value_alt_vol_mean[ii,iii] = (np.mean(alt_vol[1:,ii,iii]-alt_vol[:-1,ii,iii])/(1.57e11))*(3.14e13)
+            value_alt_vol_mean_d[ii,iii] = (np.mean(alt_vol_d[1:,ii,iii]-alt_vol_d[:-1,ii,iii])/(1.57e11))*(3.14e13)
+            value_alt_vol_mean_a[ii,iii] = (np.mean(alt_vol_a[1:,ii,iii]-alt_vol_a[:-1,ii,iii])/(1.57e11))*(3.14e13)
+            value_alt_vol_mean_b[ii,iii] = (np.mean(alt_vol_b[1:,ii,iii]-alt_vol_b[:-1,ii,iii])/(1.57e11))*(3.14e13)
 
             #todo: fill value_alt_fe 2D
-            value_alt_fe_mean[ii,iii] = np.mean(alt_fe[1:,ii,iii]-alt_fe[:-1,ii,iii])
-            value_alt_fe_mean_d[ii,iii] = np.mean(alt_fe_d[1:,ii,iii]-alt_fe_d[:-1,ii,iii])
-            value_alt_fe_mean_a[ii,iii] = np.mean(alt_fe_a[1:,ii,iii]-alt_fe_a[:-1,ii,iii])
-            value_alt_fe_mean_b[ii,iii] = np.mean(alt_fe_b[1:,ii,iii]-alt_fe_b[:-1,ii,iii])
+            value_alt_fe_mean[ii,iii] = (3.14e13)*(-1.0*np.mean(alt_fe[1:,ii,iii]-alt_fe[:-1,ii,iii]))/(1.57e11)
+            value_alt_fe_mean_d[ii,iii] = (3.14e13)*(-1.0*np.mean(alt_fe_d[1:,ii,iii]-alt_fe_d[:-1,ii,iii]))/(1.57e11)
+            value_alt_fe_mean_a[ii,iii] = (3.14e13)*(-1.0*np.mean(alt_fe_a[1:,ii,iii]-alt_fe_a[:-1,ii,iii]))/(1.57e11)
+            value_alt_fe_mean_b[ii,iii] = (3.14e13)*(-1.0*np.mean(alt_fe_b[1:,ii,iii]-alt_fe_b[:-1,ii,iii]))/(1.57e11)
 
 
 
@@ -862,9 +869,7 @@ plt.ylabel('param_q')
 this_plot = np.abs(value_dpri_mean)
 plt.pcolor(this_plot)
 
-# print "this plot 1"
-# print this_plot
-# print " "
+
 
 cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
@@ -883,9 +888,6 @@ plt.yticks(the_yticks,param_strings, fontsize=8)
 this_plot = np.abs(value_dpri_mean_d)
 plt.pcolor(this_plot)
 
-# print "this plot 2"
-# print this_plot
-
 cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
@@ -902,9 +904,6 @@ plt.yticks(the_yticks,param_strings, fontsize=8)
 this_plot = np.abs(value_dpri_mean_a)
 plt.pcolor(this_plot)
 
-# print "this plot 3"
-# print this_plot
-
 cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
@@ -920,9 +919,6 @@ plt.yticks(the_yticks,param_strings, fontsize=8)
 
 this_plot = np.abs(value_dpri_mean_b)
 plt.pcolor(this_plot)
-#
-# print "this plot 4"
-# print this_plot
 
 cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
@@ -987,7 +983,6 @@ this_plot = np.abs(value_dpri_mean)
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
 for c in pCont.collections:
     c.set_edgecolor("face")
-
 
 plt.xticks(diff_nums,diff_strings, fontsize=8)
 plt.yticks(param_nums,param_strings, fontsize=8)
@@ -1097,10 +1092,6 @@ for j in range(len(any_min)):
 
     this_plot = np.abs(value_sec_bin[any_min[j],:,:])
     plt.pcolor(this_plot,vmin=0.0,vmax=1.0)
-
-    # print secondary[any_min[j]]
-    # print this_plot
-    # print " "
 
     plt.title(secondary[any_min[j]],fontsize=title_fs)
 
@@ -1289,8 +1280,6 @@ sp1 = (len(any_min)+1)/2
 sp2 = 8
 plt.subplots_adjust(hspace=0.5)
 y_off = 0.02
-print "len(any_min): " , len(any_min)
-print "len(any_min)/2: " , len(any_min)/2
 
 for j in range(len(any_min)):
 
@@ -1339,7 +1328,15 @@ for j in range(len(any_min)):
         this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
         pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
-
+        if np.max(value_sec_d[this_min,:,:]) == 0.0:
+            bbox = ax.get_position()
+            cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+            cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+            cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+            cbar.ax.tick_params(labelsize=7)
+            #plt.title('CaCO3 at end',fontsize=9)
+            # cbar.solids.set_rasterized(True)
+            cbar.solids.set_edgecolor("face")
 
 
 
@@ -1351,17 +1348,18 @@ for j in range(len(any_min)):
     plt.yticks(the_yticks,param_strings, fontsize=8)
 
     this_plot = value_sec_d[this_min,:,:]
-    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
-    pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+    if np.max(this_plot) > 0.0:
+        this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+        pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
-    bbox = ax.get_position()
-    cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
-    cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
-    cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
-    cbar.ax.tick_params(labelsize=7)
-    #plt.title('CaCO3 at end',fontsize=9)
-    cbar.solids.set_rasterized(True)
-    cbar.solids.set_edgecolor("face")
+        bbox = ax.get_position()
+        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+        cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+        cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+        cbar.ax.tick_params(labelsize=7)
+        #plt.title('CaCO3 at end',fontsize=9)
+        # cbar.solids.set_rasterized(True)
+        cbar.solids.set_edgecolor("face")
 
 
 
@@ -1374,8 +1372,9 @@ for j in range(len(any_min)):
     plt.yticks(the_yticks,param_strings, fontsize=8)
 
     this_plot = value_sec_a[this_min,:,:]
-    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
-    plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+    if np.max(this_plot) > 0.0:
+        this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+        plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 
 
@@ -1388,8 +1387,9 @@ for j in range(len(any_min)):
     plt.yticks(the_yticks,param_strings, fontsize=8)
 
     this_plot = value_sec_b[this_min,:,:]
-    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
-    plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+    if np.max(this_plot) > 0.0:
+        this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+        plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 
 
@@ -1568,8 +1568,7 @@ sp1 = (len(any_min)+1)/2
 sp2 = 8
 plt.subplots_adjust(hspace=0.5)
 y_off = 0.02
-print "len(any_min): " , len(any_min)
-print "len(any_min)/2: " , len(any_min)/2
+
 
 for j in range(len(any_min)):
 
@@ -1618,6 +1617,16 @@ for j in range(len(any_min)):
         this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
         pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
+        if np.max(value_dsec_d[this_min,:,:]) == 0.0:
+            bbox = ax.get_position()
+            cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+            cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+            cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+            cbar.ax.tick_params(labelsize=7)
+            #plt.title('CaCO3 at end',fontsize=9)
+            cbar.solids.set_rasterized(True)
+            cbar.solids.set_edgecolor("face")
+
 
 
 
@@ -1629,17 +1638,18 @@ for j in range(len(any_min)):
     plt.yticks(the_yticks,param_strings, fontsize=8)
 
     this_plot = value_dsec_d[this_min,:,:]
-    this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
-    pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+    if np.max(this_plot) > 0.0:
+        this_plot = np.ma.masked_where(this_plot == 0.0, this_plot)
+        pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
-    bbox = ax.get_position()
-    cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
-    cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
-    cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
-    cbar.ax.tick_params(labelsize=7)
-    #plt.title('CaCO3 at end',fontsize=9)
-    cbar.solids.set_rasterized(True)
-    cbar.solids.set_edgecolor("face")
+        bbox = ax.get_position()
+        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
+        cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+        cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+        cbar.ax.tick_params(labelsize=7)
+        #plt.title('CaCO3 at end',fontsize=9)
+        cbar.solids.set_rasterized(True)
+        cbar.solids.set_edgecolor("face")
 
 
 
@@ -1727,6 +1737,15 @@ for j in range(len(any_min)):
     sp_factor = (j*4)
     if j == 0:
         sp_factor = 0
+
+
+    #todo: save value_sec_x
+    if write_txt == 1:
+        np.savetxt(outpath+prefix+'value_dsec_'+str(int(any_min[j]))+'.txt', the_s)
+        np.savetxt(outpath+prefix+'value_dsec_'+str(int(any_min[j]))+'_d.txt', the_d)
+        np.savetxt(outpath+prefix+'value_dsec_'+str(int(any_min[j]))+'_a.txt', the_a)
+        np.savetxt(outpath+prefix+'value_dsec_'+str(int(any_min[j]))+'_b.txt', the_b)
+
 
 
 
@@ -1844,10 +1863,10 @@ if np.max(value_dsol_b[this_min,:,:]) > max_all:
     max_all = np.max(value_dsol_b[this_min,:,:])
 
 
-print "this_min " , this_min
-print min_all
-print max_all
-print " "
+# print "  this_min " , this_min
+# print "  " , min_all
+# print "  " , max_all
+# print " "
 
 
 ax=fig.add_subplot(sp1, sp2, 1, frameon=True)
@@ -1928,10 +1947,10 @@ if np.max(value_dsol_b[this_min,:,:]) > max_all:
     max_all = np.max(value_dsol_b[this_min,:,:])
 
 
-print "this_min " , this_min
-print min_all
-print max_all
-print " "
+# print "  this_min " , this_min
+# print "  " , min_all
+# print "  " , max_all
+# print " "
 
 ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
 
@@ -2012,10 +2031,10 @@ if np.max(value_dsol_b[this_min,:,:]) > max_all:
     max_all = np.max(value_dsol_b[this_min,:,:])
 
 
-print "this_min " , this_min
-print min_all
-print max_all
-print " "
+# print "this_min " , this_min
+# print "  " , min_all
+# print "  " , max_all
+# print " "
 
 
 ax=fig.add_subplot(sp1, sp2, 9, frameon=True)
@@ -2097,10 +2116,10 @@ if np.max(value_dsol_b[this_min,:,:]) > max_all:
     max_all = np.max(value_dsol_b[this_min,:,:])
 
 
-print "this_min " , this_min
-print min_all
-print max_all
-print " "
+# print "this_min " , this_min
+# print "  " , min_all
+# print "  " , max_all
+# print " "
 
 
 ax=fig.add_subplot(sp1, sp2, 13, frameon=True)
@@ -2175,13 +2194,13 @@ plt.savefig(outpath+prefix+"x_2d_dsol.png",bbox_inches='tight')
 
 #hack: 2d alt_vol
 print "2d_alt_vol"
-fig=plt.figure(figsize=(9.0,5))
-plt.subplots_adjust(hspace=0.5)
+fig=plt.figure(figsize=(9.0,8))
+plt.subplots_adjust(hspace=0.35)
 
-sp1 = 2
+sp1 = 3
 sp2 = 4
 
-
+### FIRST ROW, S D A B ALT_VOL MEAN SLOPES ###
 the_s = value_alt_vol_mean
 the_d = value_alt_vol_mean_d
 the_a = value_alt_vol_mean_a
@@ -2203,25 +2222,22 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-"alt vol min + max"
-print min_all
-print max_all
-print " "
+# "alt vol min + max"
+# print "  " , min_all
+# print "  " , max_all
+# print " "
 
 
 ax=fig.add_subplot(sp1, sp2, 1, frameon=True)
-
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
-
 plt.xlabel('param_t_diff')
 plt.ylabel('param_q')
-
 this_plot = value_alt_vol_mean
 pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 bbox = ax.get_position()
-cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.1, bbox.width*1.5, bbox.height*0.06])
+cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.05, bbox.width*1.5, bbox.height*0.06])
 cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
 cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
 cbar.ax.tick_params(labelsize=7)
@@ -2230,11 +2246,11 @@ cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
 
+
 ax=fig.add_subplot(sp1, sp2, 2, frameon=True)
 
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
-
 this_plot = value_alt_vol_mean_d
 plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
@@ -2245,10 +2261,8 @@ ax=fig.add_subplot(sp1, sp2, 3, frameon=True)
 
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
-
 this_plot = value_alt_vol_mean_a
 plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
-
 
 
 
@@ -2266,10 +2280,72 @@ plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 
 
+### SECOND ROW, S D  ALT_VOL MEAN SLOPES ###
+the_s = value_alt_vol_mean
+the_d = value_alt_vol_mean_d
+# the_a = value_alt_vol_mean_a
+# the_b = value_alt_vol_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+
+
+ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+plt.xlabel('param_t_diff')
+plt.ylabel('param_q')
+
+this_plot = value_alt_vol_mean
+pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
+
+# print "alt vol slope mean"
+# print this_plot
+
+bbox = ax.get_position()
+cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.05, bbox.width*1.5, bbox.height*0.06])
+cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
+cbar.ax.tick_params(labelsize=7)
+plt.title('alt vol slope mean',fontsize=9)
+cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+
+ax=fig.add_subplot(sp1, sp2, 6, frameon=True)
+
+plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = value_alt_vol_mean_d
+plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 
 
 
+
+
+
+
+
+
+
+### THIRD ROW, S D  FEO/FEOT MEAN SLOPES ###
 the_s = value_alt_fe_mean
 the_d = value_alt_fe_mean_d
 the_a = value_alt_fe_mean_a
@@ -2291,13 +2367,13 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-print "alt_fe min + max"
-print min_all
-print max_all
-print " "
+# print "  alt_fe min + max"
+# print "  " , min_all
+# print "  " , max_all
+# print " "
 
 
-ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 9, frameon=True)
 
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
@@ -2306,8 +2382,8 @@ plt.xlabel('param_t_diff')
 plt.ylabel('param_q')
 
 this_plot = value_alt_fe_mean
-print "solo value_alt_fe_mean"
-print this_plot
+# print "solo value_alt_fe_mean"
+# print this_plot
 pCol = plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 bbox = ax.get_position()
@@ -2320,7 +2396,7 @@ cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
 
-ax=fig.add_subplot(sp1, sp2, 6, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 10, frameon=True)
 
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
@@ -2331,7 +2407,7 @@ plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 
 
-ax=fig.add_subplot(sp1, sp2, 7, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 11, frameon=True)
 
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
@@ -2342,7 +2418,7 @@ plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 
 
-ax=fig.add_subplot(sp1, sp2, 8, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 12, frameon=True)
 
 plt.xticks(the_xticks[::2],diff_strings[::2], fontsize=8)
 plt.yticks(the_yticks,param_strings, fontsize=8)
@@ -2361,7 +2437,25 @@ plt.savefig(outpath+prefix+"x_2d_alt_vol.png",bbox_inches='tight')
 
 
 
+#hack: some data curves, solo
+print "plot SOME DATA CURVES"
+fig=plt.figure(figsize=(10.0,10.0))
 
+ax=fig.add_subplot(2, 2, 1, frameon=True)
+for ii in range(len(param_strings)):
+    plt.plot(alt_vol[1:,ii,0], label=param_strings[ii], c=plot_col[ii], lw=1.5)
+plt.legend(fontsize=8,bbox_to_anchor=(1.2, 1.2),ncol=2,labelspacing=0.1,columnspacing=0.1)
+plt.title('alt_vol timeseries solo')
+
+
+ax=fig.add_subplot(2, 2, 3, frameon=True)
+for ii in range(len(param_strings)):
+    plt.plot(alt_fe[1:,ii,0], label=param_strings[ii], c=plot_col[ii], lw=1.5)
+#plt.legend(fontsize=8,bbox_to_anchor=(1.2, 1.2),ncol=2,labelspacing=0.1,columnspacing=0.1)
+plt.title('alt_fe timeseries solo')
+
+
+plt.savefig(outpath+prefix+"some_data_curves.png",bbox_inches='tight')
 
 
 
@@ -2371,10 +2465,10 @@ plt.savefig(outpath+prefix+"x_2d_alt_vol.png",bbox_inches='tight')
 
 
 cont_cmap = cm.rainbow
-n_cont = 15
-cont_skip = 4
+n_cont = 41
+cont_skip = 10
 
-sp1 = 2
+sp1 = 3
 sp2 = 4
 
 
@@ -2383,10 +2477,13 @@ sp2 = 4
 print "2d_alt_vol contour"
 ## HALF LINE
 #####value_dpri_mean_d = value_dpri_mean_d/2.0
-fig=plt.figure(figsize=(12.0,8.0))
+fig=plt.figure(figsize=(12.0,10.0))
+plt.subplots_adjust(hspace=0.15)
+
+alt_vol_data_contours = [0.0, 5.38]
 
 
-
+### FIRST ROW, S D A B ALT_VOL MEAN SLOPES ###
 the_s = value_alt_vol_mean
 the_d = value_alt_vol_mean_d
 the_a = value_alt_vol_mean_a
@@ -2407,6 +2504,13 @@ if np.max(the_a) > max_all:
     max_all = np.max(the_a)
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
+
+#todo: save value_alt_vol_mean_x
+if write_txt == 1:
+    np.savetxt(outpath+prefix+'value_alt_vol_mean.txt', value_alt_vol_mean)
+    np.savetxt(outpath+prefix+'value_alt_vol_mean_d.txt', value_alt_vol_mean_d)
+    np.savetxt(outpath+prefix+'value_alt_vol_mean_a.txt', value_alt_vol_mean_a)
+    np.savetxt(outpath+prefix+'value_alt_vol_mean_b.txt', value_alt_vol_mean_b)
 
 cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
 
@@ -2431,8 +2535,10 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('alt_vol slope mean',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
+
+plt.contour(x_grid,y_grid,this_plot, levels=alt_vol_data_contours, colors='w', linewidth=3.0)
 
 
 
@@ -2440,7 +2546,6 @@ cbar.solids.set_edgecolor("face")
 ax=fig.add_subplot(sp1, sp2, 2, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
-plt.ylabel('discharge q [m/yr]')
 
 this_plot = value_alt_vol_mean_d
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
@@ -2454,8 +2559,10 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('alt_vol slope mean d',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
+
+plt.contour(x_grid,y_grid,this_plot, levels=alt_vol_data_contours, colors='w', linewidth=3.0)
 
 
 
@@ -2463,7 +2570,6 @@ cbar.solids.set_edgecolor("face")
 ax=fig.add_subplot(sp1, sp2, 3, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
-plt.ylabel('discharge q [m/yr]')
 
 this_plot = value_alt_vol_mean_a
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
@@ -2477,8 +2583,10 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('alt_vol slope mean a',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
+
+plt.contour(x_grid,y_grid,this_plot, levels=alt_vol_data_contours, colors='w', linewidth=3.0)
 
 
 
@@ -2486,7 +2594,6 @@ cbar.solids.set_edgecolor("face")
 ax=fig.add_subplot(sp1, sp2, 4, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
-plt.ylabel('discharge q [m/yr]')
 
 this_plot = value_alt_vol_mean_b
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
@@ -2500,9 +2607,10 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('alt_vol slope mean b',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
+plt.contour(x_grid,y_grid,this_plot, levels=alt_vol_data_contours, colors='w', linewidth=3.0)
 
 
 
@@ -2516,6 +2624,97 @@ cbar.solids.set_edgecolor("face")
 
 
 
+
+### SECOND ROW, S D ALT_VOL MEAN SLOPES ###
+the_s = value_alt_vol_mean
+the_d = value_alt_vol_mean_d
+# the_a = value_alt_vol_mean_a
+# the_b = value_alt_vol_mean_b
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+plt.ylabel('discharge q [m/yr]')
+
+this_plot = value_alt_vol_mean
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('alt_vol slope mean',fontsize=10,labelpad=clabelpad)
+#cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+plt.contour(x_grid,y_grid,this_plot, levels=alt_vol_data_contours, colors='w', linewidth=3.0)
+
+
+
+
+ax=fig.add_subplot(sp1, sp2, 6, frameon=True)
+
+plt.xlabel('log10(mixing time [years])')
+
+this_plot = value_alt_vol_mean_d
+pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+for c in pCont.collections:
+    c.set_edgecolor("face")
+
+plt.xticks(diff_nums,diff_strings, fontsize=8)
+plt.yticks(param_nums,param_strings, fontsize=8)
+
+cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(cont_levels[::cont_skip])
+cbar.ax.set_xlabel('alt_vol slope mean d',fontsize=10,labelpad=clabelpad)
+#cbar.solids.set_rasterized(True)
+cbar.solids.set_edgecolor("face")
+
+plt.contour(x_grid,y_grid,this_plot, levels=alt_vol_data_contours, colors='w', linewidth=3.0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### THIRD ROW, S D FEO/FEOT MEAN SLOPES ###
 the_s = value_alt_fe_mean
 the_d = value_alt_fe_mean_d
 the_a = value_alt_fe_mean_a
@@ -2537,12 +2736,19 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
+#todo: save value_alt_vol_mean_x
+if write_txt == 1:
+    np.savetxt(outpath+prefix+'value_alt_fe_mean.txt', value_alt_fe_mean)
+    np.savetxt(outpath+prefix+'value_alt_fe_mean_d.txt', value_alt_fe_mean_d)
+    np.savetxt(outpath+prefix+'value_alt_fe_mean_a.txt', value_alt_fe_mean_a)
+    np.savetxt(outpath+prefix+'value_alt_fe_mean_b.txt', value_alt_fe_mean_b)
+
 cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
 
 
 
 
-ax=fig.add_subplot(sp1, sp2, 5, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 9, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
 plt.ylabel('discharge q [m/yr]')
@@ -2560,16 +2766,15 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('FeO/FeOt slope mean',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
 
 
 
-ax=fig.add_subplot(sp1, sp2, 6, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 10, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
-plt.ylabel('discharge q [m/yr]')
 
 this_plot = value_alt_fe_mean_d
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
@@ -2583,16 +2788,15 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('FeO/FeOt slope mean d',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
 
 
 
-ax=fig.add_subplot(sp1, sp2, 7, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 11, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
-plt.ylabel('discharge q [m/yr]')
 
 this_plot = value_alt_fe_mean_a
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
@@ -2606,16 +2810,15 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('FeO/FeOt slope mean a',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
 
 
 
-ax=fig.add_subplot(sp1, sp2, 8, frameon=True)
+ax=fig.add_subplot(sp1, sp2, 12, frameon=True)
 
 plt.xlabel('log10(mixing time [years])')
-plt.ylabel('discharge q [m/yr]')
 
 this_plot = value_alt_fe_mean_b
 pCont = plt.contourf(x_grid,y_grid,this_plot, levels=cont_levels, cmap=cont_cmap, antialiased=True, linewidth=0.0)
@@ -2629,7 +2832,7 @@ cbar = plt.colorbar(pCont, orientation='horizontal',shrink=bar_shrink)
 cbar.ax.tick_params(labelsize=8)
 cbar.set_ticks(cont_levels[::cont_skip])
 cbar.ax.set_xlabel('FeO/FeOt slope mean b',fontsize=10,labelpad=clabelpad)
-cbar.solids.set_rasterized(True)
+#cbar.solids.set_rasterized(True)
 cbar.solids.set_edgecolor("face")
 
 
@@ -2708,9 +2911,9 @@ plt.pcolor(this_plot, vmin=min_all, vmax=max_all)
 
 this_plot_pos = np.ma.masked_where(this_plot < 0.0, this_plot)
 plt.pcolor(this_plot_pos, vmin=min_all, vmax=max_all, edgecolors='black', linewidths='1')
-print "this_plot_pos"
-print this_plot_pos
-print " "
+# print "this_plot_pos"
+# print this_plot_pos
+# print " "
 
 
 
@@ -2722,9 +2925,9 @@ cbar.set_ticks([min_all,max_all,0.0])
 #cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
 cbar.ax.set_xlabel('alk mean',fontsize=10,labelpad=clabelpad)
 
-print "value_alk_mean"
-print value_alk_mean
-print " "
+# print "value_alk_mean"
+# print value_alk_mean
+# print " "
 
 
 ax=fig.add_subplot(2, 2, 2, frameon=True)
@@ -2746,9 +2949,9 @@ cbar.set_ticks([min_all,max_all,0.0])
 cbar.ax.set_xlabel('alk_d mean',fontsize=10,labelpad=clabelpad)
 
 
-print "value_alk_mean_d"
-print value_alk_mean_d
-print " "
+# print "value_alk_mean_d"
+# print value_alk_mean_d
+# print " "
 
 
 # ax=fig.add_subplot(2, 2, 3, frameon=True)

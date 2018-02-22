@@ -17,7 +17,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
 
-col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
+col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#df9a00', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
 
 outpath = "../output/revival/winter_basalt_box/"
 
@@ -102,7 +102,12 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
     return any_2d_interp
 
 
-
+# def any_2d_interp_pt(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear'):
+#
+#     the_f = interpolate.interp2d(x_in, y_in, z_in, kind=kind_in)
+#     any_2d_interp_tp = the_f_pt(x_diff_pt, y_param_pt)
+#
+#     return any_2d_interp_tp
 
 
 
@@ -694,90 +699,259 @@ plt.savefig(outpath+"z_dsec_curves.eps",bbox_inches='tight')
 
 
 #todo: make curve arrays etc.
-y_param_paths = np.zeros([curve_nsteps,n_curves])
-x_diff_paths = np.zeros([curve_nsteps,n_curves])
 
-y_param_paths[:,6] = curve_q_vec[:,6]
-y_param_paths[:,7] = curve_q_vec[:,7]
-y_param_paths[:,8] = curve_q_vec[:,8]
-y_param_paths[:,9] = curve_q_vec[:,9]
+n_curves = 10
+n_curves_x = 3
 
-curves_saved = np.zeros([curve_nsteps,n_curves])
-curves_saved_d = np.zeros([curve_nsteps,n_curves])
-curves_saved_a = np.zeros([curve_nsteps,n_curves])
-curves_saved_b = np.zeros([curve_nsteps,n_curves])
+y_param_paths = np.zeros([curve_nsteps,n_curves,n_curves_x])
+x_diff_paths = np.zeros([curve_nsteps,n_curves,n_curves_x])
 
-curves_total_saved = np.zeros([curve_nsteps,n_curves])
-curves_total_saved_d = np.zeros([curve_nsteps,n_curves])
-curves_total_saved_a = np.zeros([curve_nsteps,n_curves])
-curves_total_saved_b = np.zeros([curve_nsteps,n_curves])
+y_param_paths[:,6,0] = curve_q_vec[:,6]
+y_param_paths[:,7,0] = curve_q_vec[:,7]
+y_param_paths[:,8,0] = curve_q_vec[:,8]
+y_param_paths[:,9,0] = curve_q_vec[:,9]
 
-curves_dsec_saved = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves])
+y_param_paths[:,6,1] = curve_q_vec[:,6]
+y_param_paths[:,7,1] = curve_q_vec[:,7]
+y_param_paths[:,8,1] = curve_q_vec[:,8]
+y_param_paths[:,9,1] = curve_q_vec[:,9]
 
-curves_dsec_n_saved = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_n_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_n_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_n_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves])
+y_param_paths[:,6,2] = curve_q_vec[:,6]
+y_param_paths[:,7,2] = curve_q_vec[:,7]
+y_param_paths[:,8,2] = curve_q_vec[:,8]
+y_param_paths[:,9,2] = curve_q_vec[:,9]
 
-curves_dsec_bin_saved = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_bin_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_bin_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves])
-curves_dsec_bin_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves])
+# y_param_paths[:,16] = curve_q_vec[:,6]
+# y_param_paths[:,17] = curve_q_vec[:,7]
+# y_param_paths[:,18] = curve_q_vec[:,8]
+# y_param_paths[:,19] = curve_q_vec[:,9]
+#
+# y_param_paths[:,26] = curve_q_vec[:,6]
+# y_param_paths[:,27] = curve_q_vec[:,7]
+# y_param_paths[:,28] = curve_q_vec[:,8]
+# y_param_paths[:,29] = curve_q_vec[:,9]
+
+curves_saved = np.zeros([curve_nsteps,n_curves,n_curves_x])
+curves_saved_d = np.zeros([curve_nsteps,n_curves,n_curves_x])
+curves_saved_a = np.zeros([curve_nsteps,n_curves,n_curves_x])
+curves_saved_b = np.zeros([curve_nsteps,n_curves,n_curves_x])
+
+curves_total_saved = np.zeros([curve_nsteps,n_curves,n_curves_x])
+curves_total_saved_d = np.zeros([curve_nsteps,n_curves,n_curves_x])
+curves_total_saved_a = np.zeros([curve_nsteps,n_curves,n_curves_x])
+curves_total_saved_b = np.zeros([curve_nsteps,n_curves,n_curves_x])
+
+curves_dsec_saved = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+
+curves_dsec_n_saved = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_n_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_n_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_n_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+
+curves_dsec_bin_saved = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_bin_saved_d = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_bin_saved_a = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
+curves_dsec_bin_saved_b = np.zeros([curve_nsteps,minNum+1,n_curves,n_curves_x])
 
 
 interp_start = 100
 
+test_grid = np.zeros([900,900,10])
+test_grid_d = np.zeros([900,900,10])
+
 #todo: fill curves_saved
+interp_kind_alt = 'linear'
 for c in [6, 7, 8, 9]:
-    y_param_path_temp = y_param_paths[:,c]
-
-    x_diff_path_temp = 1.0*np.ones(curve_nsteps)
-    curve1 = any_2d_interp(diff_nums, param_nums, value_alt_vol_mean[:,:,0], x_diff_path_temp[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
-    curve1_vector = curve1[::-1,0]
-    curves_saved[interp_start:,c] = curve1_vector
+    for cc in [0, 1, 2]:
+        y_param_path_temp = y_param_paths[:,c,cc]
 
 
-    x_diff_path_temp_d = 3.5*np.ones(curve_nsteps)#np.linspace(3.5,5.0,num=curve_nsteps,endpoint=True)
-    curve2 = any_2d_interp(diff_nums, param_nums, value_alt_vol_mean_d[:,:,0], x_diff_path_temp_d[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
-    curve2_vector = curve2[::-1,0]
-    curves_saved_d[interp_start:,c] = curve2_vector
+        if cc == 0:
+            x_diff_path_temp_d = np.linspace(2.0,5.0,num=curve_nsteps,endpoint=True)#3.5*np.ones(curve_nsteps)
+        if cc == 1:
+            x_diff_path_temp_d = 2.5*np.ones(curve_nsteps)
+        if cc == 2:
+            x_diff_path_temp_d = 4.0*np.ones(curve_nsteps)
 
-
-    #todo: fill curves_dsec_saved
-
-    for j in range(len(any_min)):
-        curve1 = any_2d_interp(diff_nums, param_nums, value_dsec[:,:,any_min[j],0], x_diff_path_temp[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
+        x_diff_path_temp = 1.0*np.ones(curve_nsteps)
+        curve1 = any_2d_interp(diff_nums, param_nums, value_alt_vol_mean[:,:,0], x_diff_path_temp[interp_start:], y_param_path_temp[interp_start:],kind_in=interp_kind_alt)
         curve1_vector = curve1[::-1,0]
-        curves_dsec_saved[interp_start:,any_min[j],c] = curve1_vector
-
-        curve2 = any_2d_interp(diff_nums, param_nums, value_dsec_d[:,:,any_min[j],0], x_diff_path_temp_d[interp_start:], y_param_path_temp[interp_start:],kind_in='linear')
-        curve2_vector = curve2[::-1,0]
-        curves_dsec_saved_d[interp_start:,any_min[j],c] = curve2_vector
-
-
-        max_temp = np.max(curves_dsec_saved[interp_start:,any_min[j],c])
-        if np.max(curves_dsec_saved_d[interp_start:,any_min[j],c]) > max_temp:
-            max_temp = np.max(curves_dsec_saved_d[interp_start:,any_min[j],c])
-        for ii in range(interp_start,curve_nsteps):
-            if curves_dsec_saved[ii,any_min[j],c] > 0.0:
-                curves_dsec_n_saved[ii,any_min[j],c] = curves_dsec_saved[ii,any_min[j],c]/max_temp
-
-        #max_temp = np.max(curves_dsec_saved_d[interp_start:,any_min[j],c])
-        for ii in range(interp_start,curve_nsteps):
-            if curves_dsec_saved_d[ii,any_min[j],c] > 0.0:
-                curves_dsec_n_saved_d[ii,any_min[j],c] = curves_dsec_saved_d[ii,any_min[j],c]/max_temp
-
-print curves_dsec_n_saved[:,14,c] - curves_dsec_n_saved_d[:,14,c]
+        curves_saved[interp_start:,c,cc] = curve1_vector
 
 
 
-#hack: FIG: interp2d paths
+
+        curve2 = any_2d_interp(diff_nums, param_nums, value_alt_vol_mean_d[:,:,0], x_diff_path_temp_d[interp_start:], y_param_path_temp[interp_start:],kind_in=interp_kind_alt)
+        # curve2_vector = curve2[::-1,0]
+        xxx_grid, yyy_grid = np.meshgrid(diff_nums,param_nums)
+        # print "xxx_grid.shape" , xxx_grid.shape
+        # print "yyy_grid.shape" , yyy_grid.shape
+        # print "value_dsec_d[:,:,any_min[j],0].shape" , value_dsec_d[:,:,any_min[j],0].shape
+        curve2_interp = interpolate.interp2d(diff_nums, param_nums, value_alt_vol_mean_d[:,:,0], kind=interp_kind_alt)
+        curve2_vector = np.zeros(900)
+        for iii in range(900):
+            x_interp_temp = x_diff_path_temp_d[interp_start+iii]
+            y_interp_temp = y_param_path_temp[interp_start+iii]
+            curve2_vector[iii] = curve2_interp(x_interp_temp,y_interp_temp)
+            if x_interp_temp >= np.max(diff_nums):
+                x_interp_temp = np.max(diff_nums)
+                curve2_vector[iii] = curve2_vector[iii-1]
+
+            if x_interp_temp <= np.min(diff_nums):
+                x_interp_temp = np.min(diff_nums)
+                curve2_vector[iii] = curve2_vector[iii-1]
+
+            if y_interp_temp >= np.max(param_nums):
+                y_interp_temp = np.max(param_nums)
+                curve2_vector[iii] = curve2_vector[iii-1]
+
+            if y_interp_temp <= np.min(param_nums):
+                y_interp_temp = np.min(param_nums)
+                curve2_vector[iii] = curve2_vector[iii-1]
+
+
+
+        for iii in range(900-1):
+            if curve2_vector[-iii] == 0.0:
+                curve2_vector[-iii] = curve2_vector[-iii+1]
+        curves_saved_d[interp_start:,c,cc] = curve2_vector
+
+
+        #todo: fill curves_dsec_saved
+
+        for j in range(len(any_min)):
+            curve1 = any_2d_interp(diff_nums, param_nums, value_dsec[:,:,any_min[j],0], x_diff_path_temp[interp_start:], y_param_path_temp[interp_start:],kind_in=interp_kind_alt)
+
+            # if any_min[j] == 11:
+            #     test_grid[:,:,c,cc] = curve1
+
+            curve1_vector = curve1[::-1,0]
+            curves_dsec_saved[interp_start:,any_min[j],c,cc] = curve1_vector
+
+            curve2 = any_2d_interp(diff_nums, param_nums, value_dsec_d[:,:,any_min[j],0], x_diff_path_temp_d[interp_start:], y_param_path_temp[interp_start:],kind_in=interp_kind_alt)
+            xxx_grid, yyy_grid = np.meshgrid(diff_nums,param_nums)
+            # print "xxx_grid.shape" , xxx_grid.shape
+            # print "yyy_grid.shape" , yyy_grid.shape
+            # print "value_dsec_d[:,:,any_min[j],0].shape" , value_dsec_d[:,:,any_min[j],0].shape
+            curve2_interp = interpolate.interp2d(diff_nums, param_nums, value_dsec_d[:,:,any_min[j],0], kind=interp_kind_alt)
+            curve2_vector = np.zeros(900)
+            for iii in range(900):
+                x_interp_temp = x_diff_path_temp_d[interp_start+iii]
+                y_interp_temp = y_param_path_temp[interp_start+iii]
+                curve2_vector[iii] = curve2_interp(x_interp_temp,y_interp_temp)
+                if x_interp_temp >= np.max(diff_nums):
+                    x_interp_temp = np.max(diff_nums)
+                    curve2_vector[iii] = curve2_vector[iii-1]
+
+                if x_interp_temp <= np.min(diff_nums):
+                    x_interp_temp = np.min(diff_nums)
+                    curve2_vector[iii] = curve2_vector[iii-1]
+
+                if y_interp_temp >= np.max(param_nums):
+                    y_interp_temp = np.max(param_nums)
+                    curve2_vector[iii] = curve2_vector[iii-1]
+
+                if y_interp_temp <= np.min(param_nums):
+                    y_interp_temp = np.min(param_nums)
+                    curve2_vector[iii] = curve2_vector[iii-1]
+
+            for iii in range(900-1):
+                if curve2_vector[-iii] == 0.0:
+                    curve2_vector[-iii] = curve2_vector[-iii+1]
+                # x_interp_temp = 3.0
+                # y_interp_temp = 3.0
+
+                # curve2_vector[iii] = curve2[iii,-iii]
+            # curve2_vector = curve2_vector[::-1]
+            curves_dsec_saved_d[interp_start:,any_min[j],c,cc] = curve2_vector
+
+            # if any_min[j] == 17:
+            #     test_grid_d[:,:,c,cc] = curve2
+
+
+            max_temp = np.max(curves_dsec_saved[interp_start:,any_min[j],c,cc])
+            if np.max(curves_dsec_saved_d[interp_start:,any_min[j],c,cc]) > max_temp:
+                max_temp = np.max(curves_dsec_saved_d[interp_start:,any_min[j],c,cc])
+            for ii in range(interp_start,curve_nsteps):
+                #poop: normalize dsec curves here
+
+                # if curves_dsec_saved[ii,any_min[j],c,cc] > 0.0:
+                #     curves_dsec_n_saved[ii,any_min[j],c,cc] = curves_dsec_saved[ii,any_min[j],c,cc]/max_temp
+                curves_dsec_n_saved[ii,any_min[j],c,cc] = curves_dsec_saved[ii,any_min[j],c,cc]
+
+            for ii in range(interp_start,curve_nsteps):
+                # if curves_dsec_saved_d[ii,any_min[j],c,cc] > 0.0:
+                #     curves_dsec_n_saved_d[ii,any_min[j],c,cc] = curves_dsec_saved_d[ii,any_min[j],c,cc]/max_temp
+                curves_dsec_n_saved_d[ii,any_min[j],c,cc] = curves_dsec_saved_d[ii,any_min[j],c,cc]
+
+
+
+# fig=plt.figure(figsize=(16.0,4.0))
+# test_skip = 4
+#
+# ax=fig.add_subplot(1, 4, 1, frameon=True)
+# plt.pcolor(test_grid[::test_skip,::test_skip,6])
+# plt.colorbar(orientation='vertical')
+# plt.title('6')
+#
+# ax=fig.add_subplot(1, 4, 2, frameon=True)
+# plt.pcolor(test_grid[::test_skip,::test_skip,7])
+# plt.colorbar(orientation='vertical')
+# plt.title('7')
+#
+# ax=fig.add_subplot(1, 4, 3, frameon=True)
+# plt.pcolor(test_grid[::test_skip,::test_skip,8])
+# plt.colorbar(orientation='vertical')
+# plt.title('8')
+#
+# ax=fig.add_subplot(1, 4, 4, frameon=True)
+# plt.pcolor(test_grid[::test_skip,::test_skip,9])
+# plt.colorbar(orientation='vertical')
+# plt.title('9')
+# plt.savefig(outpath+"p_test_grid.png",bbox_inches='tight')
+#
+#
+#
+# fig=plt.figure(figsize=(16.0,4.0))
+# test_skip = 4
+#
+# ax=fig.add_subplot(1, 4, 1, frameon=True)
+# plt.pcolor(test_grid_d[::test_skip,::test_skip,6])
+# plt.colorbar(orientation='vertical')
+# plt.title('6')
+#
+# ax=fig.add_subplot(1, 4, 2, frameon=True)
+# plt.pcolor(test_grid_d[::test_skip,::test_skip,7])
+# plt.colorbar(orientation='vertical')
+# plt.title('7')
+#
+# ax=fig.add_subplot(1, 4, 3, frameon=True)
+# plt.pcolor(test_grid_d[::test_skip,::test_skip,8])
+# plt.colorbar(orientation='vertical')
+# plt.title('8')
+#
+# ax=fig.add_subplot(1, 4, 4, frameon=True)
+# plt.pcolor(test_grid_d[::test_skip,::test_skip,9])
+# plt.colorbar(orientation='vertical')
+# plt.title('9')
+# plt.savefig(outpath+"p_test_grid_d.png",bbox_inches='tight')
+
+
+cc = 0
+
+
+#hack: FIG: q_interp2d_curves
 path_skip = 100
 
-fig=plt.figure(figsize=(16.0,16.0*2.0/3.0))
+# cmap2 = LinearSegmentedColormap.from_list("my_colormap", ((0.8, 0.0, 0.0), (0.88, 0.59, 0.15)), N=15, gamma=1.0)
+cmap2 = LinearSegmentedColormap.from_list("my_colormap", ((0.59, 0.02, 0.11), (1.0, 0.75, 0.0)), N=15, gamma=1.0)
+age_colors = [ cmap2(x) for x in np.linspace(0.0, 1.0, 10) ]
+age_size = 45
+
+fig=plt.figure(figsize=(12.0,8))
 #plt.subplots_adjust(wspace=0.3, hspace=0.3)
 
 
@@ -786,41 +960,42 @@ plt.grid()
 
 for c in [6, 7, 8, 9]:
 # for c in [7]:
-    plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
-    plt.scatter(age_vec[interp_start::path_skip], curves_saved[interp_start::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+    plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c,cc], color=plot_col[c],label=txt_labels[c], lw=2)
+    plt.scatter(age_vec[interp_start::path_skip], curves_saved[interp_start::path_skip,c,cc], marker='o', s=age_size, facecolors=age_colors, edgecolor='none', zorder=5)
 
 plt.xlabel('Age [Myr]', fontsize=9)
 plt.ylabel('Alteration Rate', fontsize=9)
-plt.title('interpolated alteration rate histories')
+plt.title('interpolated alteration rate histories, solo')
 plt.xlim([0.5,5.0])
-
+plt.ylim([5.0,10.0])
 
 
 ax=fig.add_subplot(2, 3, 2, frameon=True)
 plt.grid()
 
 for c in [6, 7, 8, 9]:
-    plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
-    plt.scatter(age_vec[interp_start::path_skip], curves_saved_d[interp_start::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+    plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c,cc], color=plot_col[c],label=txt_labels[c], lw=2)
+    plt.scatter(age_vec[interp_start::path_skip], curves_saved_d[interp_start::path_skip,c,cc], marker='o', s=age_size, facecolors=age_colors, edgecolor='none', zorder=5)
 
 plt.xlabel('Age [Myr]', fontsize=9)
 plt.ylabel('Alteration Rate', fontsize=9)
 plt.title('interpolated alteration rate histories, dual')
 plt.xlim([0.5,5.0])
-
+plt.ylim([5.0,10.0])
 
 # COMBINED COLUMN HERE?
 ax=fig.add_subplot(2, 3, 3, frameon=True)
 plt.grid()
 
 for c in [6, 7, 8, 9]:
-    plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
-    plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2, linestyle='--')
+    plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c,cc], color=plot_col[c],label=txt_labels[c], lw=2)
+    plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c,cc], color=plot_col[c],label=txt_labels[c], lw=2, linestyle='--')
 
 plt.xlabel('Age [Myr]', fontsize=9)
 plt.ylabel('Alteration Rate', fontsize=9)
 plt.title('interpolated alteration rate histories, dual')
 plt.xlim([0.5,5.0])
+plt.ylim([5.0,10.0])
 # plt.legend(fontsize=9,bbox_to_anchor=(1.0, -0.1),ncol=1,columnspacing=0.0,labelspacing=0.0)
 
 
@@ -835,22 +1010,19 @@ plt.xlim([0.5,5.0])
 # PLOT ALL REGULAR AGE PATHS IN THE VERTICAL WITH ANNOTATIONS
 ax=fig.add_subplot(2, 3, 4, frameon=True)
 
-# cmap2 = LinearSegmentedColormap.from_list("my_colormap", ((0.8, 0.0, 0.0), (0.88, 0.59, 0.15)), N=15, gamma=1.0)
-cmap2 = LinearSegmentedColormap.from_list("my_colormap", ((0.59, 0.02, 0.11), (1.0, 0.75, 0.0)), N=15, gamma=1.0)
-age_colors = [ cmap2(x) for x in np.linspace(0.0, 1.0, 10) ]
 
 c_count = 2.0
 for c in [6, 7, 8, 9]:
     c_count = c_count + 0.5
-    plt.plot(c_count*x_diff_path_temp, y_param_paths[:,c], color=plot_col[c], label=txt_labels[c], lw=2)
+    plt.plot(c_count*x_diff_path_temp, y_param_paths[:,c,cc], color=plot_col[c], label=txt_labels[c], lw=2)
     # plt.scatter(scatter_x[::path_skip], y_param_paths[::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
-    plt.scatter(c_count*x_diff_path_temp[::path_skip], y_param_paths[::path_skip,c], marker='o', s=50, facecolors=age_colors, edgecolor='none', zorder=5)
+    plt.scatter(c_count*x_diff_path_temp[::path_skip], y_param_paths[::path_skip,c,cc], marker='o', s=age_size, facecolors=age_colors, edgecolor='none', zorder=5)
 
 
     age_marker_labels = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
     for i, txt in enumerate(age_marker_labels):
         ii = (i+1)*100 - 1
-        ax.annotate(txt, (c_count*x_diff_path_temp[ii],y_param_paths[ii,c]), xytext=(5, 0), textcoords='offset points',fontsize=8)
+        ax.annotate(txt, (c_count*x_diff_path_temp[ii],y_param_paths[ii,c,cc]), xytext=(5, 0), textcoords='offset points',fontsize=8)
 
 plt.legend(fontsize=9,bbox_to_anchor=(1.0, -0.1),ncol=1,columnspacing=0.0,labelspacing=0.0)
 
@@ -880,14 +1052,14 @@ ax=fig.add_subplot(2, 3, 5, frameon=True)
 c_count = 2.0
 for c in [6, 7, 8, 9]:
     c_count = c_count + 0.5
-    plt.plot(x_diff_path_temp_d, y_param_paths[:,c], color=plot_col[c], label=txt_labels[c], lw=2)
-    plt.scatter(x_diff_path_temp_d[::path_skip], y_param_paths[::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+    plt.plot(x_diff_path_temp_d, y_param_paths[:,c,cc], color=plot_col[c], label=txt_labels[c], lw=2)
+    plt.scatter(x_diff_path_temp_d[::path_skip], y_param_paths[::path_skip,c,cc], marker='o', s=age_size, facecolors=age_colors, edgecolor='none', zorder=5)
 
 
     age_marker_labels = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
     for i, txt in enumerate(age_marker_labels):
         ii = (i+1)*100 - 1
-        ax.annotate(txt, (x_diff_path_temp_d[ii],y_param_paths[ii,c]), xytext=(5, 0), textcoords='offset points',fontsize=8)
+        ax.annotate(txt, (x_diff_path_temp_d[ii],y_param_paths[ii,c,cc]), xytext=(5, 0), textcoords='offset points',fontsize=8)
 
 plt.legend(fontsize=9,bbox_to_anchor=(1.0, -0.1),ncol=1,columnspacing=0.0,labelspacing=0.0)
 
@@ -919,7 +1091,7 @@ for c in [6, 7, 8, 9]:
     c_plot = c_plot + 1
     plt.grid()
     for j in range(len(any_min)):
-        plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c,cc], color=col[j],label=secondary[any_min[j]], lw=1.5)
         #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
 
     # plt.xlabel('Age [Myr]', fontsize=9)
@@ -936,7 +1108,7 @@ for c in [6, 7, 8, 9]:
     c_plot = c_plot + 1
     plt.grid()
     for j in range(len(any_min)):
-        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c,cc], color=col[j],label=secondary[any_min[j]], lw=1.5)
         #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
 
     # plt.xlabel('Age [Myr]', fontsize=9)
@@ -953,9 +1125,9 @@ for c in [6, 7, 8, 9]:
     c_plot = c_plot + 1
     #plt.grid()
     for j in range(len(any_min)):
-        plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c,cc], color=col[j],label=secondary[any_min[j]], lw=1.5)
 
-        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5,linestyle='--')
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c,cc], color=col[j],label=secondary[any_min[j]], lw=1.5,linestyle='--')
         #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
 
     plt.xlabel('Age [Myr]', fontsize=9)
@@ -965,35 +1137,251 @@ for c in [6, 7, 8, 9]:
 
 
 
-
-# ax=fig.add_subplot(2, 4, 5, frameon=True)
-# plt.grid()
-#
-# for c in [6, 7, 8, 9]:
-#     plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
-#     plt.scatter(age_vec[interp_start::path_skip], curves_saved_d[interp_start::path_skip,c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
-#
-# plt.xlabel('Age [Myr]', fontsize=9)
-# plt.ylabel('Alteration Rate', fontsize=9)
-# plt.title('interpolated alteration rate histories, dual')
-# plt.xlim([0.5,5.0])
-
-
-# COMBINED COLUMN HERE?
-# ax=fig.add_subplot(1, 3, 3, frameon=True)
-# plt.grid()
-#
-# for c in [6, 7, 8, 9]:
-#     plt.plot(age_vec[interp_start:],curves_saved[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2)
-#     plt.plot(age_vec[interp_start:],curves_saved_d[interp_start:,c], color=plot_col[c],label=txt_labels[c], lw=2, linestyle='--')
-#
-# plt.xlabel('Age [Myr]', fontsize=9)
-# plt.ylabel('Alteration Rate', fontsize=9)
-# plt.title('interpolated alteration rate histories, dual')
-# plt.xlim([0.5,5.0])
-
 plt.savefig(outpath+"q_interp2d_dsec.png",bbox_inches='tight')
 plt.savefig(outpath+"z_interp2d_dsec.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+#hack: 2D dsec curve ALT!
+
+fig=plt.figure(figsize=(16.0,12.0*2.0/3.0))
+plt.subplots_adjust(hspace=0.4)
+
+the_dashes = [6, 2]
+
+
+
+ax=fig.add_subplot(3, 4, 1, frameon=True)
+#plt.grid()
+cc = 0
+for c in [6, 7, 8, 9]:
+    # for cc in [1, 2]:
+    if c == 6:
+        plot_hem = plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c],label='FC dual 6-9', lw=1.2, dashes=the_dashes)
+    if c > 6:
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Fe-Celadonite main paths', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+plt.legend( fontsize=10,bbox_to_anchor=(1.0, 1.4),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+
+
+ax=fig.add_subplot(3, 4, 2, frameon=True)
+#plt.grid()
+cc = 1
+for c in [6, 7, 8, 9]:
+    # for cc in [1, 2]:
+    if c == 6:
+        plot_hem = plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c],label='FC dual 6-9', lw=1.2, dashes=the_dashes)
+    if c > 6:
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Fe-Celadonite vertical left', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+
+
+
+ax=fig.add_subplot(3, 4, 3, frameon=True)
+#plt.grid()
+cc = 2
+for c in [6, 7, 8, 9]:
+    # for cc in [1, 2]:
+    if c == 6:
+        plot_hem = plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c],label='FC dual 6-9', lw=1.2, dashes=the_dashes)
+    if c > 6:
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Fe-Celadonite vertical right', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+
+
+
+
+ax=fig.add_subplot(3, 4, 4, frameon=True)
+#plt.grid()
+cc = 1
+for c in [6, 7, 8, 9]:
+    plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2)
+cc = 2
+for c in [6, 7, 8, 9]:
+    plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('FC left (solid) + right (dashed)', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+
+
+
+
+
+
+
+ax=fig.add_subplot(3, 4, 5, frameon=True)
+#plt.grid()
+cc = 0
+for c in [6, 7, 8, 9]:
+    # for cc in [1, 2]:
+    if c == 6:
+        plot_hem = plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,17,c,cc], color=plot_col[c],label='hem dual 6-9', lw=1.2, dashes=the_dashes)
+    if c > 6:
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Hem main paths', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+plt.legend( fontsize=10,bbox_to_anchor=(1.0, 1.4),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+
+
+ax=fig.add_subplot(3, 4, 6, frameon=True)
+#plt.grid()
+cc = 1
+for c in [6, 7, 8, 9]:
+    # for cc in [1, 2]:
+    if c == 6:
+        plot_hem = plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,17,c,cc], color=plot_col[c],label='hem dual 6-9', lw=1.2, dashes=the_dashes)
+    if c > 6:
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Hem vertical left', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+
+
+
+ax=fig.add_subplot(3, 4, 7, frameon=True)
+#plt.grid()
+cc = 2
+for c in [6, 7, 8, 9]:
+    # for cc in [1, 2]:
+    if c == 6:
+        plot_hem = plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,17,c,cc], color=plot_col[c],label='hem dual 6-9', lw=1.2, dashes=the_dashes)
+    if c > 6:
+        plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,14,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Hem vertical right', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+
+
+
+ax=fig.add_subplot(3, 4, 8, frameon=True)
+#plt.grid()
+cc = 1
+for c in [6, 7, 8, 9]:
+    plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,17,c,cc], color=plot_col[c], lw=1.2)
+cc = 2
+for c in [6, 7, 8, 9]:
+    plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,17,c,cc], color=plot_col[c], lw=1.2,  dashes=the_dashes)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('hem left (solid) + right (dashed)', fontsize=10)
+plt.xlim([0.5,5.0])
+#plt.ylim([0.0,1.0])
+
+
+#plt.legend( fontsize=10,bbox_to_anchor=(1.0, 1.4),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+#plt.legend( fontsize=10,bbox_to_anchor=(1.0, 1.4),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+# c_plot = 1
+# for c in [6, 7, 8, 9]:
+#     ax=fig.add_subplot(3, 4, 2, frameon=True)
+#     plt.grid()
+#     for j in range(len(any_min)):
+#         plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+#         #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+#
+#     # plt.xlabel('Age [Myr]', fontsize=9)
+#     plt.ylabel('Secondary Growth Rate', fontsize=9)
+#     plt.title('interpolated growth rate histories dual', color=plot_col[c])
+#     plt.xlim([0.5,5.0])
+#     # if c == 6:
+#     #     plt.legend(fontsize=8,bbox_to_anchor=(1.0, 1.4),ncol=4,columnspacing=0.0,labelspacing=0.0)
+#
+#
+# c_plot = 1
+# for c in [6, 7, 8, 9]:
+#     ax=fig.add_subplot(3, 4, 3, frameon=True)
+#     #plt.grid()
+#     for j in range(len(any_min)):
+#         plt.plot(age_vec[interp_start:],curves_dsec_n_saved[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5)
+#
+#         plt.plot(age_vec[interp_start:],curves_dsec_n_saved_d[interp_start:,any_min[j],c], color=col[j],label=secondary[any_min[j]], lw=1.5,linestyle='--')
+#         #plt.scatter(age_vec[interp_start::path_skip], curves_dsec_saved[interp_start::path_skip,any_min[j],c], marker='o', s=40, facecolor=plot_col[c], edgecolor='none')
+#
+#     plt.xlabel('Age [Myr]', fontsize=9)
+#     plt.ylabel('Secondary Growth Rate', fontsize=9)
+#     plt.title('interpolated growth rate histories dual', color=plot_col[c])
+#     plt.xlim([0.5,5.0])
+
+
+
+plt.savefig(outpath+"q_interp2d_dsec_alt.png",bbox_inches='tight')
+plt.savefig(outpath+"z_interp2d_dsec_alt.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+#hack: 2D dsec curve FB!
+
+fig=plt.figure(figsize=(16.0,12.0*2.0/3.0))
+plt.subplots_adjust(hspace=0.4)
+
+the_dashes = [6, 2]
+
+ax=fig.add_subplot(3, 4, 1, frameon=True)
+#plt.grid()
+for c in [6, 7, 8, 9]:
+    ax.fill_between(age_vec[interp_start:], curves_dsec_n_saved_d[interp_start:,14,c,1], curves_dsec_n_saved_d[interp_start:,14,c,2],facecolor=plot_col[c], linewidth=0.0, alpha=0.5)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Fe-Celadonite', fontsize=10)
+plt.xlim([0.5,5.0])
+# plt.legend( fontsize=10,bbox_to_anchor=(1.0, 1.4),ncol=1,columnspacing=0.0,labelspacing=0.0)
+
+
+ax=fig.add_subplot(3, 4, 5, frameon=True)
+#plt.grid()
+for c in [6, 7, 8, 9]:
+    ax.fill_between(age_vec[interp_start:], curves_dsec_n_saved_d[interp_start:,17,c,1], curves_dsec_n_saved_d[interp_start:,17,c,2],facecolor=plot_col[c], linewidth=0.0, alpha=0.5)
+plt.xlabel('Age [Myr]', fontsize=9)
+plt.ylabel('Secondary Growth Rate', fontsize=9)
+plt.title('Hematite', fontsize=10)
+plt.xlim([0.5,5.0])
+
+
+
+
+
+
+plt.savefig(outpath+"q_interp2d_dsec_fb.png",bbox_inches='tight')
+plt.savefig(outpath+"z_interp2d_dsec_fb.eps",bbox_inches='tight')
+
+
+
 
 
 
