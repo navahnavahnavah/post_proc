@@ -156,60 +156,70 @@ hfs_vec = np.zeros([len(steps),n_hist])
 for i in range(nsteps):
     # n_hist = 0 : fisher2000, sediment 5m/Myr, basement 500m
     hfs_vec[i,0] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,0] = 0.43
     hs_vec[i,0] = 5.0 * age_vec[i]
     dx_vec[i,0] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[0] = 500.0
 
     # n_hist = 1 : fisher2000, sediment 50m/Myr, basement 500m
     hfs_vec[i,1] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,1] = 0.43
     hs_vec[i,1] = 50.0 * age_vec[i]
     dx_vec[i,1] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[1] = 500.0
 
     # n_hist = 2 : fisher2000, sediment 5m/Myr, basement 100m
     hfs_vec[i,2] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,2] = 0.43
     hs_vec[i,2] = 5.0 * age_vec[i]
     dx_vec[i,2] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[2] = 100.0
 
     # n_hist = 3 : fisher2000, sediment 50m/Myr, basement 100m
     hfs_vec[i,3] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,3] = 0.43
     hs_vec[i,3] = 50.0 * age_vec[i]
     dx_vec[i,3] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[3] = 100.0
 
     # n_hist = 4 : sediment fixed at 100m, basement 500
     hfs_vec[i,4] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,4] = 0.43
     hs_vec[i,4] = 100.0
     dx_vec[i,4] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[4] = 500.0
 
     # n_hist = 5 : sediment fixed at 200m, basement 500
     hfs_vec[i,5] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,5] = 0.43
     hs_vec[i,5] = 200.0
     dx_vec[i,5] = (5000.0 + 500.0*age_vec[i])/2.0
     param_hb[5] = 500.0
 
     # n_hist = 6 : sediment 100m/Myr, dx fixed at 10km
     hfs_vec[i,6] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,6] = 0.43
     hs_vec[i,6] = 100.0 * age_vec[i]
     dx_vec[i,6] = 10000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[6] = 500.0
 
     # n_hist = 7 : sediment 100m/Myr, dx fixed at 25km
     hfs_vec[i,7] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,7] = 0.43
     hs_vec[i,7] = 100.0 * age_vec[i]
     dx_vec[i,7] = 25000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[7] = 500.0
 
     # n_hist = 8 : sediment 100m/Myr, dx fixed at 50km
     hfs_vec[i,8] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,8] = 0.43
     hs_vec[i,8] = 100.0 * age_vec[i]
     dx_vec[i,8] = 50000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[8] = 500.0
 
     # n_hist = 9 : sediment 100m/Myr, dx fixed at 100km
     hfs_vec[i,9] = 0.43 + 0.0085*age_vec[i]
+    #hfs_vec[i,9] = 0.43
     hs_vec[i,9] = 100.0 * age_vec[i]
     dx_vec[i,9] = 100000.0 #(5000.0 + 500.0*age_vec[i])/2.0
     param_hb[9] = 500.0
