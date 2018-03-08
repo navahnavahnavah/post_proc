@@ -172,11 +172,11 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 #todo: path + params
 in_path = "../output/revival/winter_basalt_box/"
-dir_path = "y_group_d/"
+dir_path = "z_group_c/"
 fig_path = "fig_lateral/"
 
-param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5']
-param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5]
+param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
+param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 
 diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50']
 diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5]
@@ -278,6 +278,229 @@ for j in range(1,minNum):
         value_dsec_b[:,:,j,0] = np.loadtxt(in_path + dir_path + 'value_dsec_'+str(int(j))+'_b.txt')
 
 print "any_min: " , any_min
+
+#hack: alteration index data
+nsites = 9
+ebw = 800.0
+dark_red = '#868686'
+data_lw = 2
+plot_purple = '#b678f5'
+plot_blue = '#4e94c1'
+lower_color = '#339a28'
+upper_color = '#17599e'
+fill_color = '#e4e4e4'
+
+site_locations = np.array([22.742, 25.883, 33.872, 40.706, 45.633, 55.765, 75.368, 99.006, 102.491])
+site_locations = (site_locations - 00.00)*1000.0
+
+site_names = ["1023", "1024", "1025", "1031", "1028", "1029", "1032", "1026", "1027"]
+alt_values = np.array([0.3219, 2.1072, 2.3626, 2.9470, 10.0476, 4.2820, 8.9219, 11.8331, 13.2392])
+lower_eb = np.array([0.3219, 0.04506, 0.8783, 1.7094, 5.0974, 0.8994, 5.3745, 2.5097, 3.0084])
+upper_eb = np.array([1.7081, 2.9330, 3.7662, 4.9273, 11.5331, 5.0247, 10.7375, 17.8566, 27.4308])
+
+fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
+lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
+upper_eb_fe = np.array([0.7753, 0.7442, 0.7519, 0.7812, 0.7110, 0.7610, 0.7396, 0.7104, 0.7026])
+
+
+
+
+#hack: lateral grid
+n_lateral = 100
+n_compounds = 10
+age_vector = np.linspace(0.8,3.5,n_lateral,endpoint=True)
+distance_vector = np.linspace(00000.0, 120000.0,n_lateral, endpoint=True)
+compound_alt_vol = np.zeros([n_lateral,n_compounds])
+compound_alt_fe = np.zeros([n_lateral,n_compounds])
+
+
+for i in range(n_lateral-1):
+    # compound at 5.2 % / Myr
+    compound_alt_vol[i,0] = (2.7/n_lateral)*i*5.2
+    compound_alt_fe[i,0] = 0.78 - (2.7/n_lateral)*i*(0.00405)
+
+    # compound at 8.3 % / Myr
+    compound_alt_vol[i,1] = (2.7/n_lateral)*i*8.3
+    compound_alt_fe[i,1] = 0.78 - (2.7/n_lateral)*i*(0.03188)
+
+    # compound at 5.2 % / Myr
+    if age_vector[i] > 0.5:
+        compound_alt_vol[i,2] = (2.7/n_lateral)*i*5.2 - 0.5*5.2
+        compound_alt_fe[i,2] = 0.78 - (2.7/n_lateral)*i*(0.00405) + 0.5*0.00405
+
+    # compound at 8.3 % / Myr
+    if age_vector[i] > 0.5:
+        compound_alt_vol[i,3] = (2.7/n_lateral)*i*8.3 - 0.5*8.3
+        compound_alt_fe[i,3] = 0.78 - (2.7/n_lateral)*i*(0.03188) + 0.5*0.03188
+
+    # compound SD for alt_fe
+    compound_alt_fe[i,4] = 0.78 - (2.7/n_lateral)*i*(0.06)
+    if age_vector[i] > 0.5:
+        compound_alt_fe[i,5] = 0.78 - (2.7/n_lateral)*i*(0.06) + 0.5*0.06
+
+
+
+
+
+
+
+
+
+#hack: FIG: compounds_lin
+print "compounds_lin"
+fig=plt.figure(figsize=(8.0,8.0))
+
+
+ax=fig.add_subplot(2, 1, 1, frameon=True)
+
+plt.plot(distance_vector,compound_alt_vol[:,0], label='5.2p / Myr', c=plot_col[0], lw=2, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,1], label='8.3p / Myr', c=plot_col[1], lw=2, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,2], label='5.2p / Myr .5Ma shift', c=plot_col[2], lw=2, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,3], label='8.3p / Myr .5Ma shift', c=plot_col[3], lw=2, zorder=10)
+
+#plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+
+for j in range(nsites):
+    # error bar height
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    # lower error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    # upper error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+ax.fill_between(distance_vector, compound_alt_vol[:,2], compound_alt_vol[:,1],zorder=1, facecolor='none', hatch='//', edgecolor='b', lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([-1.0,30.0])
+plt.xlabel("crust age [Myr]")
+plt.ylabel("alteration volume percent")
+plt.title("compound_alt_vol")
+plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+ax=fig.add_subplot(2, 1, 2, frameon=True)
+
+plt.plot(distance_vector,compound_alt_fe[:,0], label='0 : -0.00405', c=plot_col[0], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,1], label='1 : -0.03188', c=plot_col[1], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,2], label='2 : -0.00405 shift', c=plot_col[2], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,3], label='3 : -0.03188 shift', c=plot_col[3], lw=2)
+
+plt.plot(distance_vector,compound_alt_fe[:,4], label='4 : -0.06', c=plot_col[4], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,5], label='5 : -0.06 shift', c=plot_col[5], lw=2)
+
+#plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+
+for j in range(nsites):
+    # error bar height
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    # lower error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    # upper error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([0.6,0.8])
+plt.xlabel("crust age [Myr]")
+plt.ylabel("alteration volume percent")
+plt.title("compound_fe_vol")
+plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: compounds
+print "compounds"
+fig=plt.figure(figsize=(8.0,8.0))
+
+
+ax=fig.add_subplot(2, 1, 1, frameon=True)
+
+plt.plot(distance_vector,compound_alt_vol[:,0], label='5.2p / Myr', c=plot_col[0], lw=2, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,1], label='8.3p / Myr', c=plot_col[1], lw=2, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,2], label='5.2p / Myr .5Ma shift', c=plot_col[2], lw=2, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,3], label='8.3p / Myr .5Ma shift', c=plot_col[3], lw=2, zorder=10)
+
+#plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+
+for j in range(nsites):
+    # error bar height
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    # lower error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    # upper error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+ax.fill_between(distance_vector, compound_alt_vol[:,2], compound_alt_vol[:,1],zorder=1, facecolor='none', hatch='//', edgecolor='b', lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([-1.0,30.0])
+plt.xlabel("crust age [Myr]")
+plt.ylabel("alteration volume percent")
+plt.title("compound_alt_vol")
+plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+ax=fig.add_subplot(2, 1, 2, frameon=True)
+
+plt.plot(distance_vector,compound_alt_fe[:,0], label='0 : -0.00405', c=plot_col[0], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,1], label='1 : -0.03188', c=plot_col[1], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,2], label='2 : -0.00405 shift', c=plot_col[2], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,3], label='3 : -0.03188 shift', c=plot_col[3], lw=2)
+
+plt.plot(distance_vector,compound_alt_fe[:,4], label='4 : -0.06', c=plot_col[4], lw=2)
+plt.plot(distance_vector,compound_alt_fe[:,5], label='5 : -0.06 shift', c=plot_col[5], lw=2)
+
+#plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+
+for j in range(nsites):
+    # error bar height
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    # lower error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    # upper error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([0.6,0.8])
+plt.xlabel("crust age [Myr]")
+plt.ylabel("alteration volume percent")
+plt.title("compound_fe_vol")
+plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_compounds.png",bbox_inches='tight')
+
+
+
 
 
 
@@ -419,8 +642,7 @@ cont_y_param_max = len(param_strings) - 0
 
 
 fig=plt.figure(figsize=(12.0,9.0))
-
-
+plt.subplots_adjust(hspace=0.6)
 
 the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
 the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
@@ -443,7 +665,86 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
+square_pcolor(sp1, sp2, 1, the_s, cb_title="s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
+square_pcolor(sp1, sp2, 2, the_d, cb_title="d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 3, the_a, cb_title="a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 4, the_b, cb_title="b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor(sp1, sp2, 5, the_s, cb_title="s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 6, the_d, cb_title="d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 7, the_a, cb_title="a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 8, the_b, cb_title="b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor.png",bbox_inches='tight')
+
+
+
+
+
+
+#hack: FIG: alt_vol_pcolor_full
+print "alt_vol_pcolor_full"
+
+sp1 = 3
+sp2 = 4
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(12.0,9.0))
+plt.subplots_adjust(hspace=0.6)
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
 
 square_pcolor(sp1, sp2, 1, the_s, cb_title="s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
@@ -453,4 +754,36 @@ square_pcolor(sp1, sp2, 3, the_a, cb_title="a alt_vol", xlab=1, min_all_in=min_a
 
 square_pcolor(sp1, sp2, 4, the_b, cb_title="b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor.png",bbox_inches='tight')
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor(sp1, sp2, 5, the_s, cb_title="s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 6, the_d, cb_title="d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 7, the_a, cb_title="a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 8, the_b, cb_title="b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
