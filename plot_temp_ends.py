@@ -304,19 +304,39 @@ plt.ylabel('temperature in flow layer [C]')
 ax3=fig.add_subplot(2, 2, 3, frameon=True)
 
 
-aa = plt.plot(age_hist, cond_t_mean[:,3], color='b',lw=1.5, linestyle='--', zorder=5, label='0.4, cooling lithosphere, fast sed, lateral heat diverted')
-ax3.fill_between(age_hist, cond_t_top[:,3], cond_t_bottom[:,3], facecolor='none', edgecolor='b', hatch='//', alpha=1.0, lw=0, zorder=2, label='0.4, cooling lithosphere, fast sed, lateral heat diverted')
+# aa = plt.plot(age_hist, cond_t_mean[:,3], color='b',lw=1.5, linestyle='--', zorder=5, label='0.4, cooling lithosphere, fast sed, lateral heat diverted')
+# ax3.fill_between(age_hist, cond_t_top[:,3], cond_t_bottom[:,3], facecolor='none', edgecolor='b', hatch='//', alpha=1.0, lw=0, zorder=2, label='0.4, cooling lithosphere, fast sed, lateral heat diverted')
+#
+#
+# bb = plt.plot(age_hist, cond_t_mean[:,4], color='b',lw=1.5, linestyle='-', zorder=5, label='0.4, cooling lithosphere, slow sed, lateral heat diverted')
+# ax3.fill_between(age_hist, cond_t_top[:,4], cond_t_bottom[:,4], facecolor='#3cbeee', alpha=0.45, lw=0, zorder=1, label='0.4, cooling lithosphere, slow sed, lateral heat diverted')
+#
+# cc = plt.plot(age_hist, cond_t_mean[:,5], color='r',lw=1.5, linestyle='--', zorder=5, label='0.6, cooling lithosphere, fast sed, lateral heat diverted')
+# ax3.fill_between(age_hist, cond_t_top[:,5], cond_t_bottom[:,5], facecolor='none', hatch='\\', alpha=1.0, lw=0, edgecolor='r', zorder=2, label=' 0.6, cooling lithosphere, fast sed, lateral heat diverted')
+#
+#
+# dd = plt.plot(age_hist, cond_t_mean[:,6], color='r',lw=1.5, linestyle='-', zorder=5, label='0.6, cooling lithosphere, slow sed, lateral heat diverted')
+# ax3.fill_between(age_hist, cond_t_top[:,6], cond_t_bottom[:,6], facecolor='#d50f0f', alpha=0.3, lw=0, zorder=1, label='0.6, cooling lithosphere, slow sed, lateral heat diverted')
 
 
-bb = plt.plot(age_hist, cond_t_mean[:,4], color='b',lw=1.5, linestyle='-', zorder=5, label='0.4, cooling lithosphere, slow sed, lateral heat diverted')
-ax3.fill_between(age_hist, cond_t_top[:,4], cond_t_bottom[:,4], facecolor='#3cbeee', alpha=0.45, lw=0, zorder=1, label='0.4, cooling lithosphere, slow sed, lateral heat diverted')
 
-cc = plt.plot(age_hist, cond_t_mean[:,5], color='r',lw=1.5, linestyle='--', zorder=5, label='0.6, cooling lithosphere, fast sed, lateral heat diverted')
-ax3.fill_between(age_hist, cond_t_top[:,5], cond_t_bottom[:,5], facecolor='none', hatch='\\', alpha=1.0, lw=0, edgecolor='r', zorder=2, label=' 0.6, cooling lithosphere, fast sed, lateral heat diverted')
+aa = plt.plot(age_hist, cond_t_top[:,3], color='b',lw=1.5, linestyle='-', zorder=5, label='0.4, cooling lithosphere, fast sed, lateral heat diverted')
+aa = plt.plot(age_hist, cond_t_bottom[:,3], color='b',lw=1.5, linestyle='-', zorder=5)
+# ax3.fill_between(age_hist, cond_t_top[:,3], cond_t_bottom[:,3], facecolor='none', edgecolor='b', hatch='//', alpha=1.0, lw=0, zorder=2, label='0.4, cooling lithosphere, fast sed, lateral heat diverted')
 
 
-dd = plt.plot(age_hist, cond_t_mean[:,6], color='r',lw=1.5, linestyle='-', zorder=5, label='0.6, cooling lithosphere, slow sed, lateral heat diverted')
-ax3.fill_between(age_hist, cond_t_top[:,6], cond_t_bottom[:,6], facecolor='#d50f0f', alpha=0.3, lw=0, zorder=1, label='0.6, cooling lithosphere, slow sed, lateral heat diverted')
+bb = plt.plot(age_hist, cond_t_top[:,4], color='g',lw=1.5, linestyle='-', zorder=5, label='0.4, cooling lithosphere, slow sed, lateral heat diverted')
+bb = plt.plot(age_hist, cond_t_bottom[:,4], color='g',lw=1.5, linestyle='-', zorder=5)
+# ax3.fill_between(age_hist, cond_t_top[:,4], cond_t_bottom[:,4], facecolor='#3cbeee', alpha=0.45, lw=0, zorder=1, label='0.4, cooling lithosphere, slow sed, lateral heat diverted')
+
+cc = plt.plot(age_hist, cond_t_top[:,5], color='r',lw=1.5, linestyle='-', zorder=5, label='0.6, cooling lithosphere, fast sed, lateral heat diverted')
+cc = plt.plot(age_hist, cond_t_bottom[:,5], color='r',lw=1.5, linestyle='-', zorder=5)
+# ax3.fill_between(age_hist, cond_t_top[:,5], cond_t_bottom[:,5], facecolor='none', hatch='\\', alpha=1.0, lw=0, edgecolor='r', zorder=2, label=' 0.6, cooling lithosphere, fast sed, lateral heat diverted')
+
+
+dd = plt.plot(age_hist, cond_t_top[:,6], color='m',lw=1.5, linestyle='-', zorder=5, label='0.6, cooling lithosphere, slow sed, lateral heat diverted')
+dd = plt.plot(age_hist, cond_t_bottom[:,6], color='m',lw=1.5, linestyle='-', zorder=5)
+# ax3.fill_between(age_hist, cond_t_top[:,6], cond_t_bottom[:,6], facecolor='#d50f0f', alpha=0.3, lw=0, zorder=1, label='0.6, cooling lithosphere, slow sed, lateral heat diverted')
 
 plt.xlim([0.25,4.25])
 plt.ylim([0.0,200.0])
