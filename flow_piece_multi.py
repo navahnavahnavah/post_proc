@@ -18,7 +18,7 @@ plt.rcParams['axes.titlesize'] = 12
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 
-plot_col = ['#801515', '#c90d0d', '#d26618', '#dfa524', '#cdeb14', '#7d9d10', '#139a55', '#359ab5', '#075fd2', '#3c33a3', '#7f05d4', '#b100de', '#ff8ac2']
+plot_col = ['#801515', '#c90d0d', '#d26618', '#dfa524', '#cdeb14', '#7d9d10', '#1ff675', '#139a72', '#359ab5', '#075fd2', '#151fa4', '#3c33a3', '#7f05d4', '#b100de', '#ff8ac2']
 
 #todo: parameters
 
@@ -40,13 +40,16 @@ y_num = 51
 # param_age_nums = [0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50]
 # param_age_strings = ['0.50', '0.75', '1.00', '1.25', '1.50', '1.75', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
 
-param_age_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50])
-param_age_strings = ['0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
+# param_age_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50])
+# param_age_strings = ['0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
+
+param_age_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00])
+param_age_strings = ['0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00']
 
 # param_age_nums = [1.00, 1.50, 2.00, 2.50, 3.00, 3.50]
 # param_age_strings = ['1.00', '1.50', '2.00', '2.50', '3.00', '3.50']
 
-param_sed_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50])
+param_sed_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00])
 for i in range(len(param_age_nums)):
     param_sed_nums[i] = param_age_nums[i] * 150.0
 
@@ -79,7 +82,7 @@ cells_sed_vec = np.zeros(len(param_age_nums))
 cells_above_vec = np.zeros(len(param_age_nums))
 
 #hack: path
-sub_dir = "ao_s_150_q_3.0"
+sub_dir = "ao_s_150_q_5.0"
 linear_dir_path = "../output/revival/local_fp_output/"+sub_dir+"/"
 outpath = linear_dir_path
 
@@ -210,6 +213,7 @@ if i == max_steps:
     for j in range(len(x_sd_temps_km)):
         x_sd_temps_km[j] = x_sd_temps_km[j] - 20.0
     y_sd_temps = np.array([15.256706129177289, 22.631899695289484, 38.471851740846205, 39.824366851491085, 50.20180828213198, 58.10639892102503, 56.69024426794546, 60.72611019531446, 62.36115690094412, 62.91363204955294])
+    y_sd_temps_km = np.array([15.256706129177289, 22.631899695289484, 38.471851740846205, 39.824366851491085, 50.20180828213198, 58.10639892102503, 56.69024426794546, 60.72611019531446, 62.36115690094412])
     plt.scatter(x_sd_temps,y_sd_temps,zorder=4,s=60,facecolor='none')
     # 17.716269543933265, 1.5965832459163778
     plt.xlim([0.0,100000.0])
@@ -331,6 +335,9 @@ if i == max_steps:
     # plt.subplots_adjust(hspace=0.1)
 
     ax=fig.add_subplot(2, 2, 1, frameon=True)
+
+    plt.plot(x_sd_temps_km,y_sd_temps_km,'mo',label="data")
+
     plt.plot(x_sd_temps_km,model_interp_top[:,0],'bo-',label="model_interp_top")
     plt.plot(x_sd_temps_km,model_interp_bottom[:,0],'ro-',label="model_interp_bottom")
 
@@ -512,13 +519,13 @@ fig=plt.figure(figsize=(10.0,10.0))
 
 
 ax=fig.add_subplot(2, 2, 1, frameon=True)
-plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_mean_list,'ro-',label='t_col_mean_list')
-plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_bottom_list,'go-',label='t_col_bottom_list')
-plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_top_list,'bo-',label='t_col_top_list')
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00],t_col_mean_list,'ro-',label='t_col_mean_list')
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00],t_col_bottom_list,'go-',label='t_col_bottom_list')
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00],t_col_top_list,'bo-',label='t_col_top_list')
 
-plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_mean_list,'r^-',markersize=0)
-plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_bottom_list,'g^-',markersize=0)
-plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_top_list,'b^-',markersize=0)
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00],t_col_east_mean_list,'r^-',markersize=0)
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00],t_col_east_bottom_list,'g^-',markersize=0)
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00],t_col_east_top_list,'b^-',markersize=0)
 
 # plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_mean_list,'ro-',label='t_col_mean_list')
 # plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_bottom_list,'go-',label='t_col_bottom_list')
