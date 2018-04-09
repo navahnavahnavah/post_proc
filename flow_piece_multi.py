@@ -9,10 +9,11 @@ import multiplot_data as mpd
 import heapq
 import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from scipy import interpolate
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
-plt.rc('xtick', labelsize=8)
-plt.rc('ytick', labelsize=8)
+plt.rc('xtick', labelsize=9)
+plt.rc('ytick', labelsize=9)
 plt.rcParams['axes.titlesize'] = 12
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
@@ -30,6 +31,7 @@ chem = 1
 iso = 0
 cell = 5
 x_num = 2001
+dx_blocks = (x_num-1)/100
 y_num = 51
 
 # param_age_nums = [0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50]
@@ -38,15 +40,15 @@ y_num = 51
 # param_age_nums = [0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50]
 # param_age_strings = ['0.50', '0.75', '1.00', '1.25', '1.50', '1.75', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
 
-# param_age_nums = [0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50]
-# param_age_strings = ['0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
+param_age_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50])
+param_age_strings = ['0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
 
-param_age_nums = [1.00, 1.50, 2.00, 2.50, 3.00, 3.50]
-param_age_strings = ['1.00', '1.50', '2.00', '2.50', '3.00', '3.50']
+# param_age_nums = [1.00, 1.50, 2.00, 2.50, 3.00, 3.50]
+# param_age_strings = ['1.00', '1.50', '2.00', '2.50', '3.00', '3.50']
 
-param_sed_nums = param_age_nums[:]
+param_sed_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50])
 for i in range(len(param_age_nums)):
-    param_sed_nums[i] = param_age_nums[i] * 100.0
+    param_sed_nums[i] = param_age_nums[i] * 150.0
 
 print "param_age_nums" , param_age_nums
 print " "
@@ -59,6 +61,8 @@ t_col_top = np.zeros([x_num,len(param_age_nums)])
 
 temp_all = np.zeros([y_num,x_num,len(param_age_nums)])
 
+temp_age_dx_top = np.zeros([len(param_age_nums), dx_blocks])
+temp_age_dx_bottom = np.zeros([len(param_age_nums), dx_blocks])
 
 #todo: geotherm data
 end_temp = np.zeros([y_num,x_num,len(param_age_nums)])
@@ -75,7 +79,7 @@ cells_sed_vec = np.zeros(len(param_age_nums))
 cells_above_vec = np.zeros(len(param_age_nums))
 
 #hack: path
-sub_dir = "ao_q_5.0"
+sub_dir = "ao_s_150_q_3.0"
 linear_dir_path = "../output/revival/local_fp_output/"+sub_dir+"/"
 outpath = linear_dir_path
 
@@ -183,6 +187,7 @@ if i == max_steps:
 
     plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
     plt.savefig(outpath+'jdf_t_mean_all'+'_'+str(i)+'.png',bbox_inches='tight')
+    plt.savefig(outpath+'zps_t_mean_all'+'_'+str(i)+'.eps',bbox_inches='tight')
 
 
     #todo: t_lat.png
@@ -196,9 +201,24 @@ if i == max_steps:
         print end_temp[bitsy-cells_sed_vec[ii]-cells_flow_vec[ii]-cells_above_vec[ii],:,ii].shape
         plt.plot(x,end_temp[bitsy-cells_sed_vec[ii]-cells_flow_vec[ii]-cells_above_vec[ii],:,ii], label=param_age_strings[ii],c=plot_col[ii],lw=2)
         plt.plot(x,end_temp[bitsy-cells_sed_vec[ii]-cells_above_vec[ii]-1,:,ii],c=plot_col[ii],lw=1, linestyle=':')
+
+    x_sd_temps = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898, 100.74349368100305])
+    x_sd_temps_km = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898])
+    age_sd_temps = np.array([0.86, 0.97, 1.257, 1.434, 1.615, 1.952, 2.621, 3.511, 3.586])
+    for j in range(len(x_sd_temps)):
+        x_sd_temps[j] = (x_sd_temps[j]-20.0)*1000.0
+    for j in range(len(x_sd_temps_km)):
+        x_sd_temps_km[j] = x_sd_temps_km[j] - 20.0
+    y_sd_temps = np.array([15.256706129177289, 22.631899695289484, 38.471851740846205, 39.824366851491085, 50.20180828213198, 58.10639892102503, 56.69024426794546, 60.72611019531446, 62.36115690094412, 62.91363204955294])
+    plt.scatter(x_sd_temps,y_sd_temps,zorder=4,s=60,facecolor='none')
+    # 17.716269543933265, 1.5965832459163778
+    plt.xlim([0.0,100000.0])
+    plt.ylim([0.0,100.0])
+
+
     plt.title(sub_dir)
 
-    plt.legend(fontsize=8,loc='best')
+    plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
 
 
 
@@ -213,7 +233,7 @@ if i == max_steps:
         plt.plot(x,-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0, label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='--')
         plt.plot(x,(-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0)/((510.0*(param_age_nums[ii]**(-0.5)))/1000.0), label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='-')
     plt.ylim([0.0,0.5])
-    plt.title("Q_out [W/m^2]")
+    plt.title("Q_out [W/m^2]" + sub_dir)
 
 
 
@@ -229,7 +249,7 @@ if i == max_steps:
     for ii in range(len(param_age_nums)):
         plt.plot(x,-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0, label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='--')
     plt.ylim([0.0,0.5])
-    plt.title("Q_out [W/m^2]")
+    plt.title("Q_out [W/m^2]" + sub_dir)
 
 
 
@@ -255,9 +275,157 @@ if i == max_steps:
         print "np.max(x): " , np.max(x)
         print "sum 2: " , (np.sum(-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:400,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:400,ii])/25.0)/q_lith_temp)/400.0
     plt.ylim([0.0,1.0])
-    plt.title("Q_out / Q_in?")
+    plt.title("Q_out / Q_in?" + sub_dir)
 
     plt.savefig(outpath+'jdf_t_lat_all'+'_'+str(i)+'.png',bbox_inches='tight')
+    plt.savefig(outpath+'zps_t_lat_all'+'_'+str(i)+'.eps',bbox_inches='tight')
+
+
+
+    #hack: 2d_contour_trial DATA
+    for ii in range(len(param_age_nums)):
+        for iii in range(dx_blocks):
+            temp_age_dx_top[ii,iii] = t_col_top[iii*100.0,ii]
+            temp_age_dx_bottom[ii,iii] = t_col_bottom[iii*100.0,ii]
+    dx_blocks_array = np.linspace(0.0,100.0,dx_blocks)
+    print "dx_blocks_array.shape" , dx_blocks_array.shape
+    print "param_age_nums.shape" , param_age_nums.shape
+    print "temp_age_dx_top.shape" , temp_age_dx_top.shape
+
+
+
+    #hack: interp2d DATA MAKING
+    model_interp_top = np.zeros([len(x_sd_temps_km),8])
+    model_interp_bottom = np.zeros([len(x_sd_temps_km),8])
+    interp_shifts = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0])
+
+
+    the_f_top = interpolate.interp2d(dx_blocks_array, param_age_nums, temp_age_dx_top, kind="linear")
+    the_f_bottom = interpolate.interp2d(dx_blocks_array, param_age_nums, temp_age_dx_bottom, kind="linear")
+    for j in range(len(x_sd_temps_km)):
+        model_interp_top[j,0] = the_f_top(x_sd_temps_km[j], age_sd_temps[j])
+        model_interp_bottom[j,0] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j])
+
+        model_interp_top[j,1] = the_f_top(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[1])
+        model_interp_bottom[j,1] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[1])
+
+        model_interp_top[j,2] = the_f_top(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[2])
+        model_interp_bottom[j,2] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[2])
+
+        model_interp_top[j,3] = the_f_top(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[3])
+        model_interp_bottom[j,3] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[3])
+
+        model_interp_top[j,4] = the_f_top(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[4])
+        model_interp_bottom[j,4] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[4])
+
+        model_interp_top[j,5] = the_f_top(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[5])
+        model_interp_bottom[j,5] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[5])
+
+        model_interp_top[j,6] = the_f_top(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[6])
+        model_interp_bottom[j,6] = the_f_bottom(x_sd_temps_km[j], age_sd_temps[j]-interp_shifts[6])
+
+
+
+    #todo: 2d_contour_trial
+    fig=plt.figure(figsize=(10.0,10.0))
+    # plt.subplots_adjust(hspace=0.1)
+
+    ax=fig.add_subplot(2, 2, 1, frameon=True)
+    plt.plot(x_sd_temps_km,model_interp_top[:,0],'bo-',label="model_interp_top")
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,0],'ro-',label="model_interp_bottom")
+
+    plt.plot(x_sd_temps_km,model_interp_top[:,1],'b.-',alpha=0.9)
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,1],'r.-',alpha=0.9)
+
+    plt.plot(x_sd_temps_km,model_interp_top[:,2],'b.-',alpha=0.8)
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,2],'r.-',alpha=0.8)
+
+    plt.plot(x_sd_temps_km,model_interp_top[:,3],'b.-',alpha=0.7)
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,3],'r.-',alpha=0.7)
+
+    plt.plot(x_sd_temps_km,model_interp_top[:,4],'b.-',alpha=0.6)
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,4],'r.-',alpha=0.6)
+
+    plt.plot(x_sd_temps_km,model_interp_top[:,5],'b.-',alpha=0.5)
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,5],'r.-',alpha=0.5)
+
+    plt.plot(x_sd_temps_km,model_interp_top[:,6],'b.-',alpha=0.4)
+    plt.plot(x_sd_temps_km,model_interp_bottom[:,6],'r.-',alpha=0.4)
+
+
+    plt.legend(loc='best',fontsize=8)
+
+    plt.xlim([0.0,100.0])
+    plt.ylim([0.0,100.0])
+    plt.xlabel('distance from inflow [km]')
+    plt.ylabel('temp [C]')
+
+
+
+
+
+
+    v_min_all = np.min(temp_age_dx_top)
+    if np.min(temp_age_dx_bottom) < v_min_all:
+        v_min_all = np.min(temp_age_dx_bottom)
+
+    v_max_all = np.min(temp_age_dx_top)
+    if np.max(temp_age_dx_bottom) > v_max_all:
+        v_max_all = np.max(temp_age_dx_bottom)
+
+    ax=fig.add_subplot(2, 2, 3, frameon=True)
+    the_pcol = plt.pcolor(dx_blocks_array, param_age_nums, temp_age_dx_top, vmin=v_min_all, vmax=v_max_all,cmap=cm.rainbow)
+    plt.title (sub_dir + " temp_age_dx_top", fontsize=9)
+
+    plt.plot(x_sd_temps_km,age_sd_temps,color='k',lw=1)
+    plt.scatter(x_sd_temps_km,age_sd_temps,s=40,edgecolor='k',facecolor='none',lw=1.0,linestyle='-')
+
+    plt.scatter(x_sd_temps_km,age_sd_temps-interp_shifts[1],s=10,edgecolor='k',facecolor='k')
+    plt.scatter(x_sd_temps_km,age_sd_temps-interp_shifts[2],s=10,edgecolor='k',facecolor='k')
+    plt.scatter(x_sd_temps_km,age_sd_temps-interp_shifts[3],s=10,edgecolor='k',facecolor='k')
+    plt.scatter(x_sd_temps_km,age_sd_temps-interp_shifts[4],s=10,edgecolor='k',facecolor='k')
+    plt.scatter(x_sd_temps_km,age_sd_temps-interp_shifts[5],s=10,edgecolor='k',facecolor='k')
+    plt.scatter(x_sd_temps_km,age_sd_temps-interp_shifts[6],s=10,edgecolor='k',facecolor='k')
+
+    plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[1],color='k',lw=1)
+    plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[2],color='k',lw=1)
+    plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[3],color='k',lw=1)
+    plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[4],color='k',lw=1)
+    plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[5],color='k',lw=1)
+    plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[6],color='k',lw=1)
+
+    plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
+    plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
+    plt.colorbar(the_pcol, orientation='horizontal')
+    plt.ylabel('age of crust [Myr]')
+    plt.xlabel('distance from inflow [km]')
+
+
+    ax=fig.add_subplot(2, 2, 4, frameon=True)
+    the_pcol = plt.pcolor(dx_blocks_array, param_age_nums, temp_age_dx_bottom, vmin=v_min_all, vmax=v_max_all,cmap=cm.rainbow)
+    plt.title (sub_dir + " temp_age_dx_bottom", fontsize=9)
+    plt.scatter(x_sd_temps_km,age_sd_temps,s=40,edgecolor='k',facecolor='none')
+
+    plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
+    plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
+    plt.colorbar(the_pcol, orientation='horizontal')
+    plt.ylabel('age of crust [Myr]')
+    plt.xlabel('distance from inflow [km]')
+
+
+
+
+
+
+
+
+
+
+
+
+
+    plt.savefig(outpath+'jdf_cont_trial'+'_'+str(i)+'.png',bbox_inches='tight')
+    plt.savefig(outpath+'zps_cont_trial'+'_'+str(i)+'.eps',bbox_inches='tight')
 
 
 
@@ -277,6 +445,7 @@ for ii in range(len(param_age_nums)):
     t_col_east_mean_list[ii] = np.max(t_col_mean[:-100,ii])
     t_col_east_bottom_list[ii] = np.max(t_col_bottom[:-100,ii])
     t_col_east_top_list[ii] = np.max(t_col_top[:-100,ii])
+
 
 
 
@@ -321,16 +490,16 @@ plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
 ax=fig.add_subplot(2, 2, 3, frameon=True)
 #cmap1 = LinearSegmentedColormap.from_list("my_colormap", ((0.64, 0.1, 0.53), (0.78, 0.61, 0.02)), N=15, gamma=1.0)
 cmap1 = cm.jet
-diff_colors = [ cmap1(xc) for xc in np.linspace(0.0, 1.0, 40) ]
+diff_colors = [ cmap1(xc) for xc in np.linspace(0.0, 1.0, 30) ]
 
 ii = 3.0
 for j in range(len(x[::100])):
     plt.plot(end_temp[geotherm_base:,j*(99),ii],y[geotherm_base:],color=diff_colors[j])
-
+plt.xlim([0.0,100.0])
 
 
 plt.savefig(outpath+'jdf_geotherm'+'_'+str(i)+'.png',bbox_inches='tight')
-
+plt.savefig(outpath+'zps_geotherm'+'_'+str(i)+'.eps',bbox_inches='tight')
 
 
 
@@ -343,21 +512,21 @@ fig=plt.figure(figsize=(10.0,10.0))
 
 
 ax=fig.add_subplot(2, 2, 1, frameon=True)
-# plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_mean_list,'ro-',label='t_col_mean_list')
-# plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_bottom_list,'go-',label='t_col_bottom_list')
-# plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_top_list,'bo-',label='t_col_top_list')
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_mean_list,'ro-',label='t_col_mean_list')
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_bottom_list,'go-',label='t_col_bottom_list')
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_top_list,'bo-',label='t_col_top_list')
+
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_mean_list,'r^-',markersize=0)
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_bottom_list,'g^-',markersize=0)
+plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_top_list,'b^-',markersize=0)
+
+# plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_mean_list,'ro-',label='t_col_mean_list')
+# plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_bottom_list,'go-',label='t_col_bottom_list')
+# plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_top_list,'bo-',label='t_col_top_list')
 #
-# plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_mean_list,'r^-',markersize=0)
-# plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_bottom_list,'g^-',markersize=0)
-# plt.plot([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50],t_col_east_top_list,'b^-',markersize=0)
-
-plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_mean_list,'ro-',label='t_col_mean_list')
-plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_bottom_list,'go-',label='t_col_bottom_list')
-plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_top_list,'bo-',label='t_col_top_list')
-
-plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_east_mean_list,'r^-',markersize=0)
-plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_east_bottom_list,'g^-',markersize=0)
-plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_east_top_list,'b^-',markersize=0)
+# plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_east_mean_list,'r^-',markersize=0)
+# plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_east_bottom_list,'g^-',markersize=0)
+# plt.plot([1.00, 1.50, 2.00, 2.50, 3.00, 3.50],t_col_east_top_list,'b^-',markersize=0)
 
 plt.legend(fontsize=8, loc='best')
 plt.xlabel('age of crust [Myr]')
@@ -367,3 +536,4 @@ plt.ylim([0.0,80.0])
 plt.title('sub_dir = ' + sub_dir)
 
 plt.savefig(outpath+'jdf_t_scatter.png',bbox_inches='tight')
+plt.savefig(outpath+'zps_t_scatter.eps',bbox_inches='tight')
