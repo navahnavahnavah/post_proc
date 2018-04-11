@@ -14,7 +14,7 @@ plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
 plt.rc('xtick', labelsize=9)
 plt.rc('ytick', labelsize=9)
-plt.rcParams['axes.titlesize'] = 12
+plt.rcParams['axes.titlesize'] = 9
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 
@@ -82,8 +82,12 @@ cells_sed_vec = np.zeros(len(param_age_nums))
 cells_above_vec = np.zeros(len(param_age_nums))
 
 #hack: path
-sub_dir = "ao_s_150_q_5.0"
-linear_dir_path = "../output/revival/local_fp_output/"+sub_dir+"/"
+print_s = "150"
+print_h = "200"
+print_q = "1.0"
+sub_dir = "s= " + print_s + ", h= " + print_h + ", q= " + print_q
+print sub_dir
+linear_dir_path = "../output/revival/local_fp_output/par_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
 outpath = linear_dir_path
 
 for ii in range(len(param_age_nums)):
@@ -193,9 +197,11 @@ if i == max_steps:
     plt.savefig(outpath+'zps_t_mean_all'+'_'+str(i)+'.eps',bbox_inches='tight')
 
 
+
+
     #todo: t_lat.png
-    fig=plt.figure(figsize=(10.0,10.0))
-    ax=fig.add_subplot(2, 2, 1, frameon=True)
+    fig=plt.figure(figsize=(12.0,9.0))
+    ax=fig.add_subplot(2, 3, 1, frameon=True)
 
     #for j in range(cells_flow):
 
@@ -219,25 +225,22 @@ if i == max_steps:
     plt.xlim([0.0,100000.0])
     plt.ylim([0.0,100.0])
 
-
     plt.title(sub_dir)
 
-    plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
+    plt.legend(fontsize=8,bbox_to_anchor=(3.7, 0.7))
 
 
 
 
 
 
-
-    ax=fig.add_subplot(2, 2, 2, frameon=True)
-
+    ax=fig.add_subplot(2, 3, 2, frameon=True)
 
     for ii in range(len(param_age_nums)):
         plt.plot(x,-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0, label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='--')
         plt.plot(x,(-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0)/((510.0*(param_age_nums[ii]**(-0.5)))/1000.0), label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='-')
     plt.ylim([0.0,0.5])
-    plt.title("Q_out [W/m^2]" + sub_dir)
+    plt.title("solid Q_in, dashed Q_out ?")
 
 
 
@@ -245,22 +248,17 @@ if i == max_steps:
 
 
 
-
-
-    ax=fig.add_subplot(2, 2, 3, frameon=True)
-
-
-    for ii in range(len(param_age_nums)):
-        plt.plot(x,-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0, label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='--')
-    plt.ylim([0.0,0.5])
-    plt.title("Q_out [W/m^2]" + sub_dir)
+    # ax=fig.add_subplot(2, 2, 3, frameon=True)
+    #
+    # for ii in range(len(param_age_nums)):
+    #     plt.plot(x,-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:,ii])/25.0, label=param_age_strings[ii],c=plot_col[ii],lw=2,linestyle='--')
+    # plt.ylim([0.0,0.5])
+    # plt.title("Q_out [W/m^2]")
 
 
 
 
-
-    ax=fig.add_subplot(2, 2, 4, frameon=True)
-
+    ax=fig.add_subplot(2, 3, 3, frameon=True)
 
     for ii in range(len(param_age_nums)):
         print " "
@@ -279,10 +277,13 @@ if i == max_steps:
         print "np.max(x): " , np.max(x)
         print "sum 2: " , (np.sum(-1.2*(end_temp[bitsy-cells_above_vec[ii]-2,:400,ii]-end_temp[bitsy-cells_above_vec[ii]-3,:400,ii])/25.0)/q_lith_temp)/400.0
     plt.ylim([0.0,1.0])
-    plt.title("Q_out / Q_in?" + sub_dir)
+    plt.title("Q_out / Q_in" + sub_dir)
 
     plt.savefig(outpath+'jdf_t_lat_all'+'_'+str(i)+'.png',bbox_inches='tight')
     plt.savefig(outpath+'zps_t_lat_all'+'_'+str(i)+'.eps',bbox_inches='tight')
+
+
+
 
 
 
@@ -330,11 +331,14 @@ if i == max_steps:
 
 
 
+
+
     #todo: 2d_contour_trial
-    fig=plt.figure(figsize=(10.0,10.0))
+    fig=plt.figure(figsize=(12.0,9.0))
     # plt.subplots_adjust(hspace=0.1)
 
-    ax=fig.add_subplot(2, 2, 1, frameon=True)
+    ax=fig.add_subplot(2, 3, 1, frameon=True)
+    plt.title (sub_dir, fontsize=9)
 
     plt.plot(x_sd_temps_km,y_sd_temps_km,'mo',label="data")
 
@@ -364,8 +368,8 @@ if i == max_steps:
 
     plt.xlim([0.0,100.0])
     plt.ylim([0.0,100.0])
-    plt.xlabel('distance from inflow [km]')
-    plt.ylabel('temp [C]')
+    plt.xlabel('distance from inflow [km]',fontsize=9)
+    plt.ylabel('temp [C]',fontsize=9)
 
 
 
@@ -380,7 +384,7 @@ if i == max_steps:
     if np.max(temp_age_dx_bottom) > v_max_all:
         v_max_all = np.max(temp_age_dx_bottom)
 
-    ax=fig.add_subplot(2, 2, 3, frameon=True)
+    ax=fig.add_subplot(2, 3, 2, frameon=True)
     the_pcol = plt.pcolor(dx_blocks_array, param_age_nums, temp_age_dx_top, vmin=v_min_all, vmax=v_max_all,cmap=cm.rainbow)
     plt.title (sub_dir + " temp_age_dx_top", fontsize=9)
 
@@ -404,11 +408,11 @@ if i == max_steps:
     plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
     plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
     plt.colorbar(the_pcol, orientation='horizontal')
-    plt.ylabel('age of crust [Myr]')
-    plt.xlabel('distance from inflow [km]')
+    plt.ylabel('age of crust [Myr]',fontsize=9)
+    plt.xlabel('distance from inflow [km]',fontsize=9)
 
 
-    ax=fig.add_subplot(2, 2, 4, frameon=True)
+    ax=fig.add_subplot(2, 3, 3, frameon=True)
     the_pcol = plt.pcolor(dx_blocks_array, param_age_nums, temp_age_dx_bottom, vmin=v_min_all, vmax=v_max_all,cmap=cm.rainbow)
     plt.title (sub_dir + " temp_age_dx_bottom", fontsize=9)
     plt.scatter(x_sd_temps_km,age_sd_temps,s=40,edgecolor='k',facecolor='none')
@@ -416,8 +420,8 @@ if i == max_steps:
     plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
     plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
     plt.colorbar(the_pcol, orientation='horizontal')
-    plt.ylabel('age of crust [Myr]')
-    plt.xlabel('distance from inflow [km]')
+    plt.ylabel('age of crust [Myr]',fontsize=9)
+    plt.xlabel('distance from inflow [km]',fontsize=9)
 
 
 
@@ -461,9 +465,9 @@ for ii in range(len(param_age_nums)):
 
 
 #todo: geothermal gradients figure
-fig=plt.figure(figsize=(12.0,12.0))
+fig=plt.figure(figsize=(12.0,9.0))
 
-ax=fig.add_subplot(2, 2, 1, frameon=True)
+ax=fig.add_subplot(2, 3, 1, frameon=True)
 
 for ii in range(len(param_age_nums)):
     if (ii+1)%2 == 0:
@@ -472,13 +476,13 @@ for ii in range(len(param_age_nums)):
         #plt.plot(geotherm_mean[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],linestyle='-')
         #ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
 
-plt.xlabel('temperature [C]')
-plt.ylabel('depth below seafloor [m]')
+plt.xlabel('temperature [C]',fontsize=9)
+plt.ylabel('depth below seafloor [m]',fontsize=9)
 plt.title('sub_dir = ' + sub_dir)
 #plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
 
 
-ax=fig.add_subplot(2, 2, 2, frameon=True)
+ax=fig.add_subplot(2, 3, 2, frameon=True)
 
 for ii in range(len(param_age_nums)):
     # if (ii+1)%2 == 0:
@@ -488,13 +492,13 @@ for ii in range(len(param_age_nums)):
 
 plt.xlim([0.0,100.0])
 plt.ylim([-600.0,-400.0])
-plt.xlabel('temperature [C]')
-plt.ylabel('depth below seafloor [m]')
+plt.xlabel('temperature [C]',fontsize=9)
+plt.ylabel('depth below seafloor [m]',fontsize=9)
 plt.title('sub_dir = ' + sub_dir)
 plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
 
 
-ax=fig.add_subplot(2, 2, 3, frameon=True)
+ax=fig.add_subplot(2, 3, 3, frameon=True)
 #cmap1 = LinearSegmentedColormap.from_list("my_colormap", ((0.64, 0.1, 0.53), (0.78, 0.61, 0.02)), N=15, gamma=1.0)
 cmap1 = cm.jet
 diff_colors = [ cmap1(xc) for xc in np.linspace(0.0, 1.0, 30) ]
@@ -503,6 +507,8 @@ ii = 3.0
 for j in range(len(x[::100])):
     plt.plot(end_temp[geotherm_base:,j*(99),ii],y[geotherm_base:],color=diff_colors[j])
 plt.xlim([0.0,100.0])
+plt.xlabel('temperature [C]',fontsize=9)
+plt.ylabel('depth below seafloor [m]',fontsize=9)
 
 
 plt.savefig(outpath+'jdf_geotherm'+'_'+str(i)+'.png',bbox_inches='tight')
