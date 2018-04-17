@@ -33,6 +33,7 @@ cell = 5
 x_num = 2001
 dx_blocks = (x_num-1)/100
 y_num = 51
+write_txt = 1
 
 # param_age_nums = [0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50]
 # param_age_strings = ['0.50', '0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50']
@@ -51,7 +52,7 @@ param_age_strings = ['0.75', '1.00', '1.25', '1.50', '1.75', '2.00', '2.25', '2.
 
 param_sed_nums = np.array([0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00])
 for i in range(len(param_age_nums)):
-    param_sed_nums[i] = param_age_nums[i] * 150.0
+    param_sed_nums[i] = param_age_nums[i] * 200.0
 
 print "param_age_nums" , param_age_nums
 print " "
@@ -82,12 +83,12 @@ cells_sed_vec = np.zeros(len(param_age_nums))
 cells_above_vec = np.zeros(len(param_age_nums))
 
 #hack: path
-print_s = "150"
-print_h = "200"
-print_q = "1.0"
+print_s = "200"
+print_h = "400"
+print_q = "10.0"
 sub_dir = "s= " + print_s + ", h= " + print_h + ", q= " + print_q
 print sub_dir
-linear_dir_path = "../output/revival/local_fp_output/par_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
+linear_dir_path = "../output/revival/local_fp_output/par_k_10_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
 outpath = linear_dir_path
 
 for ii in range(len(param_age_nums)):
@@ -115,17 +116,17 @@ for ii in range(len(param_age_nums)):
 
     #todo: regular import
 
-    mask = np.loadtxt(ii_path + 'mask.txt')
+    # mask = np.loadtxt(ii_path + 'mask.txt')
     maskP = np.loadtxt(ii_path + 'maskP.txt')
-    psi0 = np.loadtxt(ii_path + 'psiMat.txt')
+    # psi0 = np.loadtxt(ii_path + 'psiMat.txt')
     perm = np.loadtxt(ii_path + 'permeability.txt')
 
     perm = np.log10(perm)
 
     temp0 = np.loadtxt(ii_path + 'hMat.txt')
     temp0 = temp0 - 273.0
-    u0 = np.loadtxt(ii_path + 'uMat.txt')
-    v0 = np.loadtxt(ii_path + 'vMat.txt')
+    # u0 = np.loadtxt(ii_path + 'uMat.txt')
+    # v0 = np.loadtxt(ii_path + 'vMat.txt')
 
 
 
@@ -146,10 +147,10 @@ for ii in range(len(param_age_nums)):
     #hack: start time loop
     for i in range(0,steps,1):
 
-        psi = psi0[:,i*len(x):((i)*len(x)+len(x))]
+        # psi = psi0[:,i*len(x):((i)*len(x)+len(x))]
         temp = temp0[:,i*len(x):((i)*len(x)+len(x))]
-        u = u0[:,i*len(x):((i)*len(x)+len(x))]
-        v = v0[:,i*len(x):((i)*len(x)+len(x))]
+        # u = u0[:,i*len(x):((i)*len(x)+len(x))]
+        # v = v0[:,i*len(x):((i)*len(x)+len(x))]
 
         # if i == steps-1:
         if i > -1:
@@ -331,6 +332,26 @@ if i == max_steps:
 
 
 
+    #hack: write interp line to text
+    interp_slope = (np.max(x_sd_temps_km) - np.min(x_sd_temps_km)) / (np.max(age_sd_temps) - np.min(age_sd_temps))
+    print "interp_slope " , interp_slope
+    age_linspace = np.linspace(0.0, 4.0, 20)
+    km_linspace = (interp_slope*(age_linspace-np.min(age_sd_temps)))
+    temp_top_linspace = np.zeros(len(age_linspace))
+    temp_bottom_linspace = np.zeros(len(age_linspace))
+    print "age_linspace" , age_linspace
+    print "km_linspace" , km_linspace
+
+    for j in range(len(age_linspace)):
+        temp_top_linspace[j] = the_f_top(km_linspace[j], age_linspace[j])
+        temp_bottom_linspace[j] = the_f_bottom(km_linspace[j], age_linspace[j])
+
+    if write_txt == 1:
+        np.savetxt(outpath+'z_age_linspace.txt', age_linspace)
+        np.savetxt(outpath+'z_km_linspace.txt', km_linspace)
+        np.savetxt(outpath+'z_temp_top_linspace.txt', temp_top_linspace)
+        np.savetxt(outpath+'z_temp_bottom_linspace.txt', temp_bottom_linspace)
+
 
 
     #todo: 2d_contour_trial
@@ -363,11 +384,14 @@ if i == max_steps:
     plt.plot(x_sd_temps_km,model_interp_top[:,6],'b.-',alpha=0.4)
     plt.plot(x_sd_temps_km,model_interp_bottom[:,6],'r.-',alpha=0.4)
 
+    plt.plot(km_linspace,temp_top_linspace,'y^-')
+    plt.plot(km_linspace,temp_bottom_linspace,'yv-')
+
 
     plt.legend(loc='best',fontsize=8)
 
     plt.xlim([0.0,100.0])
-    plt.ylim([0.0,100.0])
+    plt.ylim([0.0,120.0])
     plt.xlabel('distance from inflow [km]',fontsize=9)
     plt.ylabel('temp [C]',fontsize=9)
 
@@ -405,6 +429,8 @@ if i == max_steps:
     plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[5],color='k',lw=1)
     plt.plot(x_sd_temps_km,age_sd_temps-interp_shifts[6],color='k',lw=1)
 
+    plt.scatter(km_linspace,age_linspace,s=30,edgecolor='k',facecolor='yellow')
+
     plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
     plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
     plt.colorbar(the_pcol, orientation='horizontal')
@@ -412,10 +438,14 @@ if i == max_steps:
     plt.xlabel('distance from inflow [km]',fontsize=9)
 
 
+
+
     ax=fig.add_subplot(2, 3, 3, frameon=True)
     the_pcol = plt.pcolor(dx_blocks_array, param_age_nums, temp_age_dx_bottom, vmin=v_min_all, vmax=v_max_all,cmap=cm.rainbow)
     plt.title (sub_dir + " temp_age_dx_bottom", fontsize=9)
     plt.scatter(x_sd_temps_km,age_sd_temps,s=40,edgecolor='k',facecolor='none')
+
+    plt.scatter(km_linspace,age_linspace,s=30,edgecolor='k',facecolor='yellow')
 
     plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
     plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
@@ -437,6 +467,9 @@ if i == max_steps:
 
     plt.savefig(outpath+'jdf_cont_trial'+'_'+str(i)+'.png',bbox_inches='tight')
     plt.savefig(outpath+'zps_cont_trial'+'_'+str(i)+'.eps',bbox_inches='tight')
+
+
+
 
 
 

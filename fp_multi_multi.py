@@ -25,15 +25,14 @@ plot_col_bold = ['#801515', '#c90d0d', '#ec9c14', '#1ff675', '#1473ee', '#8c06e9
 #todo: parameters
 dx_blocks = 20
 
-#hack: path
 
 # sub_dir = "s= " + print_s + ", h= " + print_h + ", q= " + print_q
 # print sub_dir
 # linear_dir_path = "../output/revival/local_fp_output/par_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
 # outpath = linear_dir_path
 
-param_s_nums = np.array([150.0])
-param_s_strings = ['150']
+param_s_nums = np.array([200.0])
+param_s_strings = ['200']
 
 param_h_nums = np.array([200.0, 400.0, 600.0])
 param_h_strings = ['200', '400', '600']
@@ -41,8 +40,11 @@ param_h_strings = ['200', '400', '600']
 # param_h_nums = np.array([200.0])
 # param_h_strings = ['200']
 
-param_q_nums = np.array([1.0, 3.0, 5.0, 10.0, 30.0, 50.0])
-param_q_strings = ['1.0', '3.0', '5.0', '10.0', '30.0', '50.0']
+# param_q_nums = np.array([1.0, 3.0, 5.0, 10.0, 30.0, 50.0])
+# param_q_strings = ['1.0', '3.0', '5.0', '10.0', '30.0', '50.0']
+
+param_q_nums = np.array([1.0, 3.0, 5.0, 10.0, 30.0])
+param_q_strings = ['1.0', '3.0', '5.0', '10.0', '30.0']
 
 #hack: big arrays
 temp_top_linspace = np.zeros([dx_blocks,len(param_s_nums),len(param_h_nums),len(param_q_nums)])
@@ -50,6 +52,7 @@ temp_bottom_linspace = np.zeros([dx_blocks,len(param_s_nums),len(param_h_nums),l
 
 #hack: gen_path
 gen_path = '../output/revival/local_fp_output/'
+unique_string = 'k_10_s_' + param_s_strings[0]
 
 #hack: site data
 x_sd_temps = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898, 100.74349368100305])
@@ -66,7 +69,7 @@ for m in range(len(param_s_nums)):
     for mm in range(len(param_h_nums)):
         for mmm in range(len(param_q_nums)):
 
-            txt_path = "../output/revival/local_fp_output/par_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"/par_q_" + param_q_strings[mmm] + "/"
+            txt_path = "../output/revival/local_fp_output/par_k_10_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"/par_q_" + param_q_strings[mmm] + "/"
 
             km_linspace = np.loadtxt(txt_path + 'z_km_linspace.txt',delimiter='\n')
             age_linspace = np.loadtxt(txt_path + 'z_age_linspace.txt',delimiter='\n')
@@ -205,4 +208,18 @@ plt.title('temp_bottom_linspace, f(age_linspace)')
 
 plt.subplots_adjust(hspace=0.4)
 
-plt.savefig(gen_path+'fpmm_trial.png',bbox_inches='tight')
+plt.savefig(gen_path+'fpmm_trial_'+unique_string+'.png',bbox_inches='tight')
+plt.savefig(gen_path+'fpmm_trial_'+unique_string+'.eps',bbox_inches='tight')
+
+
+
+
+# #todo: iso_fig
+# fig=plt.figure(figsize=(14.0,8.0))
+#
+# ax=fig.add_subplot(2, 3, 1, frameon=True)
+#
+#
+#
+# plt.savefig(gen_path+'fpmm_trial.png',bbox_inches='tight')
+# plt.savefig(gen_path+'fpmm_trial.eps',bbox_inches='tight')
