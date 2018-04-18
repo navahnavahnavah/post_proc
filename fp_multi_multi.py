@@ -225,54 +225,84 @@ plt.savefig(gen_path+'fpmm_trial_'+unique_string+'.eps',bbox_inches='tight')
 
 
 
+#todo: 3D plot goes here
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
+fig = plt.figure(figsize=(18.0,6.0))
 
-cc = lambda arg: colorConverter.to_rgba(arg, alpha=0.6)
+## NEW INTERP STUFF GOES HERE ##
 
-# xs = np.arange(0, 10, 0.4)
-# verts = []
-# zs = [0.0, 1.0, 2.0, 3.0]
-# for z in zs:
-#     ys = np.random.rand(len(xs))
-#     ys[0], ys[-1] = 0, 0
-#     verts.append(list(zip(xs, ys)))
+plot_iter = np.arange(len(param_q_nums))
+plot_iter_back = plot_iter[::-1]
+plot_iter_back_negative = -1.0*plot_iter_back
+print "len(plot_iter_back)" , len(plot_iter_back)
 
-#top_3d = np.zeros([])
+short_length = len(km_linspace)
+start_point = 4
 
-# for mmm in range(len(param_q_nums)):
-
-
-#
-# poly = PolyCollection(verts, facecolors = [cc('r'), cc('g'), cc('b'),
-#                                            cc('y')])
-#
-# print "verts.shape" , len(verts)
-# print "verts" , verts
-# poly = PolyCollection(temp_top_linspace[:,m,mm,:])
-#
-# poly.set_alpha(0.7)
-# ax.add_collection3d(poly, zs=zs, zdir='y')
+xs = km_linspace[start_point:short_length]
 
 
 
-plot_iter = range(len(param_q_nums))
+print "temp_top_linspace[start_point:short_length,0,0,:].shape" , temp_top_linspace[start_point:short_length,0,0,:].shape
+print "xs.shape", xs.shape
+print "param_q_nums.shape" , param_q_nums.shape
 
-for mmm in range(len(param_q_nums)):
-#for mmm in plot_iter[::-1]:
-    # ax.plot(age_linspace,temp_bottom_linspace[:,0,0,mmm], zs=mmm, color=plot_col_bold[mmm], zdir='y', alpha=0.8)
-    # ax.plot(age_linspace,temp_top_linspace[:,0,0,mmm], zs=mmm, color=plot_col_bold[mmm], zdir='y', alpha=0.8)
+the_f_3d_top = interpolate.interp2d(param_q_nums, xs, temp_top_linspace[start_point:short_length,0,0,:], kind="linear")
+the_f_3d_bottom = interpolate.interp2d(param_q_nums, xs, temp_bottom_linspace[start_point:short_length,0,0,:], kind="linear")
 
-    cc = lambda arg: colorConverter.to_rgba(arg, alpha=0.6)
 
-    short_length = len(age_linspace)
-    xs = age_linspace[:short_length]
+#hack: q paths go here, len(xs) long
+n_q_paths = 10
+path_of_q = np.ones([len(xs), n_q_paths])
+path_of_q_plot = np.zeros([len(xs),n_q_paths])
+
+model_interp_3d_top = np.zeros([len(xs),n_q_paths])
+model_interp_3d_bottom = np.zeros([len(xs),n_q_paths])
+interp_shifts_3d = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0])
+
+# 0th path_of_q
+path_of_q[:len(xs)/2,0] = 3.0
+path_of_q[len(xs)/2:,0] = 5.0
+
+path_of_q[:,1] = np.linspace(30.0,1.0,len(xs))
+print "path_of_q[:,1]" , path_of_q[:,1]
+
+
+interp_to_y = interpolate.interp1d(param_q_nums, plot_iter)
+path_of_q_plot[:,0] = -1.0*interp_to_y(path_of_q[:,0])
+path_of_q_plot[:,1] = -1.0*interp_to_y(path_of_q[:,1])
+
+for n in range(n_q_paths):
+    for j in range(len(xs)):
+        model_interp_3d_top[j,n] = the_f_3d_top(path_of_q[j,n], xs[j])
+        model_interp_3d_bottom[j,n] = the_f_3d_bottom(path_of_q[j,n], xs[j])
+
+
+
+angle1 = 10
+angle2 = -115
+
+angle3 = 4
+angle4 = -115
+
+ax=fig.add_subplot(1, 3, 1, projection='3d')
+
+
+#for mmm in range(len(param_q_nums)):
+for mmm in plot_iter[::-1]:
+
+    # short_length = len(km_linspace)
+    # start_point = 4
+    # xs = km_linspace[start_point:short_length]
     verts = []
-    zs = [4.0-float(mmm)]
-    # for z in zs:
-    ys = temp_bottom_linspace[:short_length,0,0,mmm]#np.linspace(0.0,100.0,len(xs))
-    ys2 = temp_top_linspace[:short_length,0,0,mmm]
+    zs = [-1.0*float(mmm)]
+
+    mmm_fix = mmm
+    ys = temp_bottom_linspace[start_point:short_length,0,0,mmm_fix]
+    ys2 = temp_top_linspace[start_point:short_length,0,0,mmm_fix]
+
+    ys[0] = 0.0
+    ys2[0] = 0.0
 
     ys3 = np.zeros(len(xs)*2)
     ys3[:len(xs)] = ys
@@ -282,39 +312,153 @@ for mmm in range(len(param_q_nums)):
     xs3[:len(xs)] = xs
     xs3[len(xs):] = xs[::-1]
 
-    # ys3 = np.zeros(len(xs)*2)
-    # ys3[::2] = ys
-    # ys3[1::2] = ys2
-    #
-    # xs3 = np.zeros(len(xs)*2)
-    # xs3[::2] = xs
-    # xs3[1::2] = xs
-    # print xs3
-
-    #ys[0], ys[-1] = 50, 100
     verts.append(list(zip(xs3, ys3)))
-    #verts.append(list(zip(xs, ys2)))
-    # verts.append(list(zip(xs, xs, ys, ys2)))
 
-    print verts#[0]
-    print " "
-    print " "
+    poly = PolyCollection(verts, facecolors = [plot_col_bold[mmm]], edgecolors=['none'])
+    poly.set_alpha(0.7)
+    ax.add_collection3d(poly, zs=zs, zdir='y')
 
-    poly = PolyCollection(verts, facecolors = [plot_col_bold[mmm]])
+project_x = np.linspace(0.0,100.0,len(xs))
+project_x_3d = np.linspace(0.0,100.0,len(xs))
+project_y = np.zeros(len(xs))#np.linspace(-4.0,0.0,len(km_linspace))
+project_z1 = np.linspace(0.0,100.0,len(xs))
+project_z2 = np.linspace(0.0,80.0,len(xs))
+project_z3 = np.linspace(0.0,60.0,len(xs))
+project_z = np.zeros(len(xs))
+
+# cset = ax.plot(project_x_3d, project_z1, project_y, 'k.-', zdir='y')
+# cset = ax.plot(project_x_3d, project_z2, project_y, 'k.-', zdir='y')
+# cset = ax.plot(project_x_3d, project_z3, project_y, 'k.-', zdir='y')
+
+cset = ax.plot(project_x_3d, model_interp_3d_top[:,0], path_of_q_plot[:,0], 'k-', zdir='y')
+cset = ax.plot(project_x_3d, model_interp_3d_bottom[:,0], path_of_q_plot[:,0], 'k-', zdir='y')
+
+cset = ax.plot(project_x_3d, model_interp_3d_top[:,1], path_of_q_plot[:,1], 'k--', zdir='y')
+cset = ax.plot(project_x_3d, model_interp_3d_bottom[:,1], path_of_q_plot[:,1], 'k--', zdir='y')
+
+fs_label = 9
+ax.set_xlabel('x distance from inflow region [km]',fontsize=fs_label)
+ax.set_xlim3d(-5, 100)
+ax.set_ylabel('y lateral fluid velocity',fontsize=fs_label)
+ax.set_ylim3d(-4, 0)
+plt.yticks([-4.0, -3.0, -2.0, -1.0, 0.0])
+ax.set_zlabel('z temperature [C]',fontsize=fs_label)
+ax.set_zlim3d(0, 140.0)
+
+ax.view_init(angle1, angle2)
+
+
+
+
+
+
+
+
+
+ax=fig.add_subplot(1, 3, 2, projection='3d')
+
+
+cset = ax.plot(project_x, model_interp_3d_top[:,0], project_y, 'k-', zdir='y')
+cset = ax.plot(project_x, model_interp_3d_bottom[:,0], project_y, 'k-', zdir='y')
+cset = ax.plot(project_x, project_z, path_of_q_plot[:,0], 'k-', zdir='y')
+cset = ax.plot(project_x, project_z, path_of_q_plot[:,0], 'k-', zdir='y')
+
+
+cset = ax.plot(project_x, model_interp_3d_top[:,1], project_y, 'k--', zdir='y')
+cset = ax.plot(project_x, model_interp_3d_bottom[:,1], project_y, 'k--', zdir='y')
+cset = ax.plot(project_x, project_z, path_of_q_plot[:,1], 'k--', zdir='y')
+cset = ax.plot(project_x, project_z, path_of_q_plot[:,1], 'k--', zdir='y')
+
+fs_label = 9
+ax.set_xlabel('x distance from inflow region [km]',fontsize=fs_label)
+ax.set_xlim3d(-5, 100)
+ax.set_ylabel('y lateral fluid velocity',fontsize=fs_label)
+ax.set_ylim3d(-4, 0)
+plt.yticks([-4.0, -3.0, -2.0, -1.0, 0.0])
+ax.set_zlabel('z temperature [C]',fontsize=fs_label)
+ax.set_zlim3d(0, 140.0)
+
+ax.view_init(angle1, angle2)
+
+
+
+
+
+
+
+
+
+ax=fig.add_subplot(1, 3, 3, projection='3d')
+# ax.auto_scale_xyz([the_xmin, the_xmax], [the_ymin, the_ymax], [the_zmin, the_zmax*2.0])
+
+
+
+
+
+
+plot_iter = range(len(param_q_nums))
+#for mmm in range(len(param_q_nums)):
+for mmm in plot_iter[::-1]:
+
+
+    mmm_fix = mmm
+
+    # [0,0,mmm]
+    verts = []
+    zs = [-1.0*float(mmm)]
+    ys = temp_bottom_linspace[start_point:short_length,0,0,mmm_fix]
+    ys2 = temp_top_linspace[start_point:short_length,0,0,mmm_fix]
+
+    ys[0] = 0.0
+    ys2[0] = 0.0
+
+    ys3 = np.zeros(len(xs)*2)
+    ys3[:len(xs)] = ys
+    ys3[len(xs):] = ys2[::-1]
+
+    xs3 = np.zeros(len(xs)*2)
+    xs3[:len(xs)] = xs
+    xs3[len(xs):] = xs[::-1]
+
+    verts.append(list(zip(xs3, ys3)))
+
+    poly = PolyCollection(verts, facecolors = [plot_col_bold[mmm]], edgecolors=['k'])
     poly.set_alpha(0.7)
     ax.add_collection3d(poly, zs=zs, zdir='y')
 
 
 
-ax.set_xlabel('X')
-ax.set_xlim3d(0.0, 4)
-ax.set_ylabel('Y')
-ax.set_ylim3d(-1, 4)
-ax.set_zlabel('Z')
-ax.set_zlim3d(0, 140.0)
 
-#plt.show()
+fs_label = 9
+
+angle3 = 4
+angle4 = -115
+
+the_xmin = -5
+the_xmax = 100
+
+the_ymin = -4
+the_ymax = 0.0
+
+the_zmin = 0.0
+the_zmax = 140.0
+
+
+ax.set_xlabel('distance from inflow region [km]',fontsize=fs_label)
+ax.set_xlim3d(the_xmin, the_xmax)
+ax.set_ylabel('lateral fluid velocity',fontsize=fs_label)
+ax.set_ylim3d(the_ymin, the_ymax)
+plt.yticks([-4.0, -3.0, -2.0, -1.0, 0.0])
+ax.set_zlabel('temperature [C]',fontsize=fs_label)
+ax.set_zlim3d(the_zmin, the_zmax)
+
+
+
+ax.view_init(angle3, angle4)
+
+
 plt.savefig(gen_path+'fpmm_3d_'+unique_string+'.png',bbox_inches='tight')
+plt.savefig(gen_path+'fpmm_3d_'+unique_string+'.eps',bbox_inches='tight')
 
 # #todo: iso_fig
 # fig=plt.figure(figsize=(14.0,8.0))
