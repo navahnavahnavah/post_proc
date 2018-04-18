@@ -10,11 +10,21 @@ import heapq
 import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy import interpolate
+
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.collections import PolyCollection
+from matplotlib.colors import colorConverter
+
+#from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
 plt.rc('xtick', labelsize=9)
 plt.rc('ytick', labelsize=9)
 plt.rcParams['axes.titlesize'] = 10
+
+
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 
@@ -52,7 +62,7 @@ temp_bottom_linspace = np.zeros([dx_blocks,len(param_s_nums),len(param_h_nums),l
 
 #hack: gen_path
 gen_path = '../output/revival/local_fp_output/'
-unique_string = 'k_10_s_' + param_s_strings[0]
+unique_string = 's_' + param_s_strings[0]
 
 #hack: site data
 x_sd_temps = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898, 100.74349368100305])
@@ -69,7 +79,7 @@ for m in range(len(param_s_nums)):
     for mm in range(len(param_h_nums)):
         for mmm in range(len(param_q_nums)):
 
-            txt_path = "../output/revival/local_fp_output/par_k_10_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"/par_q_" + param_q_strings[mmm] + "/"
+            txt_path = "../output/revival/local_fp_output/par_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"/par_q_" + param_q_strings[mmm] + "/"
 
             km_linspace = np.loadtxt(txt_path + 'z_km_linspace.txt',delimiter='\n')
             age_linspace = np.loadtxt(txt_path + 'z_age_linspace.txt',delimiter='\n')
@@ -213,6 +223,98 @@ plt.savefig(gen_path+'fpmm_trial_'+unique_string+'.eps',bbox_inches='tight')
 
 
 
+
+
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+cc = lambda arg: colorConverter.to_rgba(arg, alpha=0.6)
+
+# xs = np.arange(0, 10, 0.4)
+# verts = []
+# zs = [0.0, 1.0, 2.0, 3.0]
+# for z in zs:
+#     ys = np.random.rand(len(xs))
+#     ys[0], ys[-1] = 0, 0
+#     verts.append(list(zip(xs, ys)))
+
+#top_3d = np.zeros([])
+
+# for mmm in range(len(param_q_nums)):
+
+
+#
+# poly = PolyCollection(verts, facecolors = [cc('r'), cc('g'), cc('b'),
+#                                            cc('y')])
+#
+# print "verts.shape" , len(verts)
+# print "verts" , verts
+# poly = PolyCollection(temp_top_linspace[:,m,mm,:])
+#
+# poly.set_alpha(0.7)
+# ax.add_collection3d(poly, zs=zs, zdir='y')
+
+
+
+plot_iter = range(len(param_q_nums))
+
+for mmm in range(len(param_q_nums)):
+#for mmm in plot_iter[::-1]:
+    # ax.plot(age_linspace,temp_bottom_linspace[:,0,0,mmm], zs=mmm, color=plot_col_bold[mmm], zdir='y', alpha=0.8)
+    # ax.plot(age_linspace,temp_top_linspace[:,0,0,mmm], zs=mmm, color=plot_col_bold[mmm], zdir='y', alpha=0.8)
+
+    cc = lambda arg: colorConverter.to_rgba(arg, alpha=0.6)
+
+    short_length = len(age_linspace)
+    xs = age_linspace[:short_length]
+    verts = []
+    zs = [4.0-float(mmm)]
+    # for z in zs:
+    ys = temp_bottom_linspace[:short_length,0,0,mmm]#np.linspace(0.0,100.0,len(xs))
+    ys2 = temp_top_linspace[:short_length,0,0,mmm]
+
+    ys3 = np.zeros(len(xs)*2)
+    ys3[:len(xs)] = ys
+    ys3[len(xs):] = ys2[::-1]
+
+    xs3 = np.zeros(len(xs)*2)
+    xs3[:len(xs)] = xs
+    xs3[len(xs):] = xs[::-1]
+
+    # ys3 = np.zeros(len(xs)*2)
+    # ys3[::2] = ys
+    # ys3[1::2] = ys2
+    #
+    # xs3 = np.zeros(len(xs)*2)
+    # xs3[::2] = xs
+    # xs3[1::2] = xs
+    # print xs3
+
+    #ys[0], ys[-1] = 50, 100
+    verts.append(list(zip(xs3, ys3)))
+    #verts.append(list(zip(xs, ys2)))
+    # verts.append(list(zip(xs, xs, ys, ys2)))
+
+    print verts#[0]
+    print " "
+    print " "
+
+    poly = PolyCollection(verts, facecolors = [plot_col_bold[mmm]])
+    poly.set_alpha(0.7)
+    ax.add_collection3d(poly, zs=zs, zdir='y')
+
+
+
+ax.set_xlabel('X')
+ax.set_xlim3d(0.0, 4)
+ax.set_ylabel('Y')
+ax.set_ylim3d(-1, 4)
+ax.set_zlabel('Z')
+ax.set_zlim3d(0, 140.0)
+
+#plt.show()
+plt.savefig(gen_path+'fpmm_3d_'+unique_string+'.png',bbox_inches='tight')
 
 # #todo: iso_fig
 # fig=plt.figure(figsize=(14.0,8.0))
