@@ -22,15 +22,15 @@ plot_col = ['#801515', '#c90d0d', '#d26618', '#dfa524', '#cdeb14', '#7d9d10', '#
 
 #todo: parameters
 
-steps = 10
-max_steps = 9
+steps = 5
+max_steps = 4
 minNum = 57
 ison=10000
 trace = 0
 chem = 1
 iso = 0
 cell = 5
-x_num = 2001
+x_num = 4001
 dx_blocks = (x_num-1)/100
 y_num = 51
 write_txt = 1
@@ -85,10 +85,10 @@ cells_above_vec = np.zeros(len(param_age_nums))
 #hack: path
 print_s = "200"
 print_h = "400"
-print_q = "10.0"
+print_q = "30.0"
 sub_dir = "s= " + print_s + ", h= " + print_h + ", q= " + print_q
 print sub_dir
-linear_dir_path = "../output/revival/local_fp_output/par_k_10_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
+linear_dir_path = "../output/revival/local_fp_output/par_k_10_s_" + print_s + "_h_" + print_h +"_new_new/par_q_" + print_q + "/"
 outpath = linear_dir_path
 
 for ii in range(len(param_age_nums)):
@@ -213,7 +213,9 @@ if i == max_steps:
         plt.plot(x,end_temp[bitsy-cells_sed_vec[ii]-cells_above_vec[ii]-1,:,ii],c=plot_col[ii],lw=1, linestyle=':')
 
     x_sd_temps = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898, 100.74349368100305])
+    # x_sd_temps = x_sd_temps - np.min(x_sd_temps)
     x_sd_temps_km = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898])
+    # x_sd_temps_km = x_sd_temps_km - np.min(x_sd_temps_km)
     age_sd_temps = np.array([0.86, 0.97, 1.257, 1.434, 1.615, 1.952, 2.621, 3.511, 3.586])
     for j in range(len(x_sd_temps)):
         x_sd_temps[j] = (x_sd_temps[j]-20.0)*1000.0
@@ -390,8 +392,8 @@ if i == max_steps:
 
     plt.legend(loc='best',fontsize=8)
 
-    plt.xlim([0.0,100.0])
-    plt.ylim([0.0,120.0])
+    # plt.xlim([0.0,100.0])
+    # plt.ylim([0.0,120.0])
     plt.xlabel('distance from inflow [km]',fontsize=9)
     plt.ylabel('temp [C]',fontsize=9)
 
@@ -431,8 +433,8 @@ if i == max_steps:
 
     plt.scatter(km_linspace,age_linspace,s=30,edgecolor='k',facecolor='yellow')
 
-    plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
-    plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
+    # plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
+    # plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
     plt.colorbar(the_pcol, orientation='horizontal')
     plt.ylabel('age of crust [Myr]',fontsize=9)
     plt.xlabel('distance from inflow [km]',fontsize=9)
@@ -447,8 +449,8 @@ if i == max_steps:
 
     plt.scatter(km_linspace,age_linspace,s=30,edgecolor='k',facecolor='yellow')
 
-    plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
-    plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
+    # plt.xlim([np.min(dx_blocks_array),np.max(dx_blocks_array)])
+    # plt.ylim([np.min(param_age_nums),np.max(param_age_nums)+0.1])
     plt.colorbar(the_pcol, orientation='horizontal')
     plt.ylabel('age of crust [Myr]',fontsize=9)
     plt.xlabel('distance from inflow [km]',fontsize=9)
