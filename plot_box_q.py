@@ -19,7 +19,7 @@ plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 
 col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#c6813a', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
 
-plot_col = ['#940000', '#d26618', '#fcae00', '#acde03', '#36aa00', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
+plot_col = ['#940000', '#d26618', '#fcae00', '#acde03', '#36aa00', '#35b5aa', '#0740d2', '#7f05d4', '#a311c8', '#ff87f3']
 
 secondary = np.array(['', 'kaolinite', 'saponite_mg', 'celadonite', 'clinoptilolite', 'pyrite', 'mont_na', 'goethite',
 'smectite', 'calcite', 'kspar', 'saponite_na', 'nont_na', 'nont_mg', 'fe_celad', 'nont_ca',
@@ -49,7 +49,7 @@ n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "y_group_j/"
+prefix = "z_group_50/"
 # path_label = prefix[3:7]
 # print path_label
 
@@ -65,8 +65,8 @@ write_txt = 1
 # param_nums = [1.0, 2.0, 3.0, 4.0]
 # param_nums_time = [(3.14e7)*(0.006/1000.0)/((1.0e-9)*1.0), (3.14e7)*(0.006/1000.0)/((1.0e-9)*2.0), (3.14e7)*(0.006/1000.0)/((1.0e-9)*3.0), (3.14e7)*(0.006/1000.0)/((1.0e-9)*4.0)]
 
-param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5']
-param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5]
+param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
+param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 param_nums_time = np.zeros(len(param_nums))
 for iii in range(len(param_nums)):
     #print param_nums[iii]
@@ -564,10 +564,10 @@ for ii in range(len(param_strings)):
             alt_vol_b[:,ii,iii] = alt_vol_b[:,ii,iii] + (sec_b[any_min[j],:,ii,iii]*molar[any_min[j]]/density[any_min[j]])
 
             if j == len(any_min) - 1:
-                alt_vol[:,ii,iii] = 100.0*alt_vol[:,ii,iii]/(pri[:,ii,iii]*molar_pri/density_pri)
-                alt_vol_d[:,ii,iii] = 100.0*alt_vol_d[:,ii,iii]/(pri_d[:,ii,iii]*molar_pri/density_pri)
-                alt_vol_a[:,ii,iii] = 100.0*alt_vol_a[:,ii,iii]/(pri_a[:,ii,iii]*molar_pri/density_pri)
-                alt_vol_b[:,ii,iii] = 100.0*alt_vol_b[:,ii,iii]/(pri_b[:,ii,iii]*molar_pri/density_pri)
+                alt_vol[:,ii,iii] = 100.0*alt_vol[:,ii,iii]/(alt_vol[:,ii,iii]+(pri[:,ii,iii]*molar_pri/density_pri))
+                alt_vol_d[:,ii,iii] = 100.0*alt_vol_d[:,ii,iii]/(alt_vol_d[:,ii,iii]+(pri_d[:,ii,iii]*molar_pri/density_pri))
+                alt_vol_a[:,ii,iii] = 100.0*alt_vol_a[:,ii,iii]/(alt_vol_a[:,ii,iii]+(pri_a[:,ii,iii]*molar_pri/density_pri))
+                alt_vol_b[:,ii,iii] = 100.0*alt_vol_b[:,ii,iii]/(alt_vol_b[:,ii,iii]+(pri_b[:,ii,iii]*molar_pri/density_pri))
 
         #todo: fe_vol data
 
@@ -850,80 +850,80 @@ fig=plt.figure(figsize=(8.0,8.0))
 
 
 
-ax=fig.add_subplot(2, 2, 1, frameon=True)
+# ax=fig.add_subplot(2, 2, 1, frameon=True)
 
 the_xticks = range(len(diff_strings))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-plt.xticks(the_xticks,diff_strings, fontsize=8)
+# plt.xticks(the_xticks,diff_strings, fontsize=8)
 the_yticks = range(len(param_strings))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-plt.yticks(the_yticks,param_strings, fontsize=8)
-
-plt.xlabel('param_t_diff')
-plt.ylabel('param_q')
-
-this_plot = np.abs(value_dpri_mean)
-plt.pcolor(this_plot)
-
-
-
-cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-cbar.ax.tick_params(labelsize=8)
-cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-cbar.ax.set_xlabel('dpri mean',fontsize=10,labelpad=clabelpad)
-
-
-
-
-
-ax=fig.add_subplot(2, 2, 2, frameon=True)
-
-plt.xticks(the_xticks,diff_strings, fontsize=8)
-plt.yticks(the_yticks,param_strings, fontsize=8)
-
-this_plot = np.abs(value_dpri_mean_d)
-plt.pcolor(this_plot)
-
-cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-cbar.ax.tick_params(labelsize=8)
-cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-cbar.ax.set_xlabel('dpri_d mean',fontsize=10,labelpad=clabelpad)
-
-
-
-
-ax=fig.add_subplot(2, 2, 3, frameon=True)
-
-plt.xticks(the_xticks,diff_strings, fontsize=8)
-plt.yticks(the_yticks,param_strings, fontsize=8)
-
-this_plot = np.abs(value_dpri_mean_a)
-plt.pcolor(this_plot)
-
-cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-cbar.ax.tick_params(labelsize=8)
-cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-cbar.ax.set_xlabel('dpri_a mean',fontsize=10,labelpad=clabelpad)
-
-
-
-
-ax=fig.add_subplot(2, 2, 4, frameon=True)
-
-plt.xticks(the_xticks,diff_strings, fontsize=8)
-plt.yticks(the_yticks,param_strings, fontsize=8)
-
-this_plot = np.abs(value_dpri_mean_b)
-plt.pcolor(this_plot)
-
-cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-cbar.ax.tick_params(labelsize=8)
-cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-cbar.ax.set_xlabel('dpri_b mean',fontsize=10,labelpad=clabelpad)
+# plt.yticks(the_yticks,param_strings, fontsize=8)
+#
+# plt.xlabel('param_t_diff')
+# plt.ylabel('param_q')
+#
+# this_plot = np.abs(value_dpri_mean)
+# plt.pcolor(this_plot)
+#
+#
+#
+# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+# cbar.ax.tick_params(labelsize=8)
+# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+# cbar.ax.set_xlabel('dpri mean',fontsize=10,labelpad=clabelpad)
+#
+#
+#
+#
+#
+# ax=fig.add_subplot(2, 2, 2, frameon=True)
+#
+# plt.xticks(the_xticks,diff_strings, fontsize=8)
+# plt.yticks(the_yticks,param_strings, fontsize=8)
+#
+# this_plot = np.abs(value_dpri_mean_d)
+# plt.pcolor(this_plot)
+#
+# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+# cbar.ax.tick_params(labelsize=8)
+# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+# cbar.ax.set_xlabel('dpri_d mean',fontsize=10,labelpad=clabelpad)
+#
+#
+#
+#
+# ax=fig.add_subplot(2, 2, 3, frameon=True)
+#
+# plt.xticks(the_xticks,diff_strings, fontsize=8)
+# plt.yticks(the_yticks,param_strings, fontsize=8)
+#
+# this_plot = np.abs(value_dpri_mean_a)
+# plt.pcolor(this_plot)
+#
+# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+# cbar.ax.tick_params(labelsize=8)
+# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+# cbar.ax.set_xlabel('dpri_a mean',fontsize=10,labelpad=clabelpad)
+#
+#
+#
+#
+# ax=fig.add_subplot(2, 2, 4, frameon=True)
+#
+# plt.xticks(the_xticks,diff_strings, fontsize=8)
+# plt.yticks(the_yticks,param_strings, fontsize=8)
+#
+# this_plot = np.abs(value_dpri_mean_b)
+# plt.pcolor(this_plot)
+#
+# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+# cbar.ax.tick_params(labelsize=8)
+# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+# cbar.ax.set_xlabel('dpri_b mean',fontsize=10,labelpad=clabelpad)
 
 
 plt.savefig(outpath+prefix+"x_2d_pri.png",bbox_inches='tight')

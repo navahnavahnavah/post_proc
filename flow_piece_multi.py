@@ -83,12 +83,12 @@ cells_sed_vec = np.zeros(len(param_age_nums))
 cells_above_vec = np.zeros(len(param_age_nums))
 
 #hack: path
-print_s = "200"
-print_h = "400"
+print_s = "100"
+print_h = "600"
 print_q = "30.0"
 sub_dir = "s= " + print_s + ", h= " + print_h + ", q= " + print_q
 print sub_dir
-linear_dir_path = "../output/revival/local_fp_output/par_k_10_s_" + print_s + "_h_" + print_h +"_new_new/par_q_" + print_q + "/"
+linear_dir_path = "../output/revival/local_fp_output/par_k_10_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
 outpath = linear_dir_path
 
 for ii in range(len(param_age_nums)):

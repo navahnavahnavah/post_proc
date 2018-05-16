@@ -36,14 +36,14 @@ plot_col_bold = ['#801515', '#c90d0d', '#ec9c14', '#1ff675', '#1473ee', '#8c06e9
 dx_blocks = 20
 
 
-param_s_nums = np.array([200.0])
-param_s_strings = ['200']
+param_s_nums = np.array([100.0])
+param_s_strings = ['100']
 
 # param_h_nums = np.array([200.0, 400.0, 600.0])
 # param_h_strings = ['200', '400', '600']
 
-param_h_nums = np.array([200.0, 400.0])
-param_h_strings = ['200', '400']
+param_h_nums = np.array([200.0, 400.0, 600.0])
+param_h_strings = ['200', '400', '600']
 
 param_q_nums = np.array([1.0, 3.0, 5.0, 10.0, 30.0])
 param_q_strings = ['1.0', '3.0', '5.0', '10.0', '30.0']
@@ -54,7 +54,7 @@ temp_bottom_linspace = np.zeros([dx_blocks,len(param_s_nums),len(param_h_nums),l
 
 #hack: gen_path
 gen_path = '../output/revival/local_fp_output/'
-unique_string = 'k_10_s_' + param_s_strings[0] + '_new_new'
+unique_string = 'k_10_s_' + param_s_strings[0] + ''
 
 #hack: site data
 x_sd_temps = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898, 100.74349368100305])
@@ -71,7 +71,7 @@ for m in range(len(param_s_nums)):
     for mm in range(len(param_h_nums)):
         for mmm in range(len(param_q_nums)):
 
-            txt_path = "../output/revival/local_fp_output/par_k_10_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"_new_new/par_q_" + param_q_strings[mmm] + "/"
+            txt_path = "../output/revival/local_fp_output/par_k_10_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"/par_q_" + param_q_strings[mmm] + "/"
 
             km_linspace = np.loadtxt(txt_path + 'z_km_linspace.txt',delimiter='\n')
             age_linspace = np.loadtxt(txt_path + 'z_age_linspace.txt',delimiter='\n')
@@ -146,8 +146,8 @@ for mm in range(len(param_h_nums)):
 
 plt.plot(x_sd_temps_km,y_sd_temps_km,markersize=6,marker='^',label="data",lw=0,markerfacecolor='none',markeredgecolor='k',markeredgewidth=1.0)
 
-# plt.xlim([-5.0,100.0])
-plt.ylim([0.0,120.0])
+plt.xlim([-5.0,100.0])
+plt.ylim([0.0,160.0])
 plt.xlabel('distance from inflow [km]',fontsize=9)
 plt.ylabel('temp [C]',fontsize=9)
 plt.title('temp_top_linspace')
@@ -173,8 +173,8 @@ for mm in range(len(param_h_nums)):
 
 plt.plot(x_sd_temps_km,y_sd_temps_km,markersize=6,marker='^',label="data",lw=0,markerfacecolor='none',markeredgecolor='k',markeredgewidth=1.0)
 
-# plt.xlim([-5.0,100.0])
-plt.ylim([0.0,120.0])
+plt.xlim([-5.0,100.0])
+plt.ylim([0.0,160.0])
 plt.xlabel('distance from inflow [km]',fontsize=9)
 plt.ylabel('temp [C]',fontsize=9)
 plt.title('temp_bottom_linspace')
@@ -200,7 +200,7 @@ for mm in range(len(param_h_nums)):
 
 # plt.plot(x_sd_temps_km,y_sd_temps_km,markersize=6,marker='^',label="data",lw=0,markerfacecolor='none',markeredgecolor='k',markeredgewidth=1.0)
 
-# plt.xlim([0.5,4.0])
+plt.xlim([0.5,4.0])
 plt.ylim([0.0,120.0])
 plt.xlabel('age_linspace [Myr]',fontsize=9)
 plt.ylabel('temp [C]',fontsize=9)

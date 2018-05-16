@@ -37,21 +37,21 @@ molar = np.array([0.0, 258.156, 480.19, 429.02, 2742.13, 119.98, 549.07, 88.851,
 504.19, 380.22, 379.259, 549.07, 395.38, 64.448, 392.34, 64.448,
 64.448, 480.19, 504.19, 85.12, 480.19, 480.19, 664.0, 664.0, 519.0])
 
-tp = 100
+tp = 1000
 n_box = 3
 minNum = 41
 
 #todo: path here
-outpath = "../output/revival/winter_basalt_box/jj_mix_1e11/"
+outpath = "../output/revival/winter_basalt_box/z_group_50/q_0.5_diff_4.50/"
 
 primary_mat5 = np.transpose(np.loadtxt(outpath + 'z_primary_mat5.txt'))*110.0/2.7
-primary_mat4 = np.transpose(np.loadtxt(outpath + 'z_primary_mat4.txt'))*110.0/2.7
+# primary_mat4 = np.transpose(np.loadtxt(outpath + 'z_primary_mat4.txt'))*110.0/2.7
 
 pri_glass = np.transpose(np.loadtxt(outpath + 'z_primary_mat5.txt'))*110.0/2.7
-pri_ol = np.transpose(np.loadtxt(outpath + 'z_primary_mat4.txt'))*140.0/2.7
-pri_pyr = np.transpose(np.loadtxt(outpath + 'z_primary_mat3.txt'))*140.0/2.7
-pri_plag = np.transpose(np.loadtxt(outpath + 'z_primary_mat2.txt'))*140.0/2.7
-primary_mat_total = pri_glass + pri_ol + pri_pyr + pri_plag
+# pri_ol = np.transpose(np.loadtxt(outpath + 'z_primary_mat4.txt'))*140.0/2.7
+# pri_pyr = np.transpose(np.loadtxt(outpath + 'z_primary_mat3.txt'))*140.0/2.7
+# pri_plag = np.transpose(np.loadtxt(outpath + 'z_primary_mat2.txt'))*140.0/2.7
+primary_mat_total = pri_glass# + pri_ol + pri_pyr + pri_plag
 pri_glass_dual = pri_glass[1,:] + pri_glass[2,:]
 
 
@@ -158,41 +158,41 @@ if np.min(pri_glass[2,:])/np.max(pri_glass[2,:]) < mini:
 
 
 
-fig=plt.figure(figsize=(12,7))
+fig=plt.figure(figsize=(9,3))
 
-ax1=fig.add_subplot(2,3,1)
+ax1=fig.add_subplot(1,3,1)
 
-plt.plot(times,np.transpose(pri_glass[1,:]/np.max(pri_glass[1,:])),linestyle='-',c='k',lw=1,label='glass')
+plt.plot(times,np.transpose(pri_glass[0,:]/np.max(pri_glass[0,:])),linestyle='-',c='k',lw=1,label='glass')
 plt.ylim([mini,1.0])
-plt.title('A', x=0.08, y=0.85,horizontalalignment='left')
-
-
-ax1=fig.add_subplot(2,3,4)
-
-plt.plot(times,np.transpose(pri_glass[2,:]/np.max(pri_glass[2,:])),linestyle='-',c='k',lw=1,label='glass')
-#plt.ylim([mini,1.0])
-plt.title('B', x=0.08, y=0.85,horizontalalignment='left')
+plt.title('solo', horizontalalignment='left')
 
 
 ax1=fig.add_subplot(1,3,2)
 
-plt.plot(times,np.transpose(pri_glass_dual[:]/np.max(pri_glass_dual[:])),linestyle='-',c='k',lw=1,label='glass')
-#plt.legend(bbox_to_anchor=(2.2, 1.18), ncol=4, labelspacing=0.0, fontsize=12)
-plt.ylim([mini,1.0])
-plt.title('A + B', x=0.08, y=0.92,horizontalalignment='left')
-
-
+plt.plot(times,np.transpose(pri_glass[1,:]/np.max(pri_glass[1,:])),linestyle='-',c='k',lw=1,label='glass')
+#plt.ylim([mini,1.0])
+plt.title('A',horizontalalignment='left')
 
 
 ax1=fig.add_subplot(1,3,3)
 
-plt.plot(times,np.transpose(pri_glass[0,:]/np.max(pri_glass[0,:])),linestyle='-',c='k',lw=1,label='glass')
+plt.plot(times,np.transpose(pri_glass[2,:]/np.max(pri_glass[2,:])),linestyle='-',c='k',lw=1,label='glass')
+#plt.legend(bbox_to_anchor=(2.2, 1.18), ncol=4, labelspacing=0.0, fontsize=12)
 plt.ylim([mini,1.0])
-plt.xlabel('time [Myr]')
-plt.title('Solo', x=0.08, y=0.92, horizontalalignment='left')
+plt.title('B', horizontalalignment='left')
 
 
-plt.subplots_adjust( wspace=0.4 , hspace=0.2, top=0.85 )
+#
+#
+# ax1=fig.add_subplot(1,3,3)
+#
+# plt.plot(times,np.transpose(pri_glass[0,:]/np.max(pri_glass[0,:])),linestyle='-',c='k',lw=1,label='glass')
+# plt.ylim([mini,1.0])
+# plt.xlabel('time [Myr]')
+# plt.title('Solo', x=0.08, y=0.92, horizontalalignment='left')
+#
+#
+# plt.subplots_adjust( wspace=0.4 , hspace=0.2, top=0.85 )
 
 
 
@@ -234,35 +234,22 @@ plt.savefig(outpath+'masterplot'+'.png',bbox_inches='tight')
 
 #hack: secondary triple
 
-fig=plt.figure()
+fig=plt.figure(figsize=(9.0,2.8))
 
 the_lw = 1.0
 
-ax1=fig.add_subplot(2,3,1)
+ax1=fig.add_subplot(1,3,1)
 
 j = 0
 for i in range(1,minNum):
     if np.max(secondary_mat[i,:,:]) > 0.0:
         print j
-        if np.max(secondary_mat[i,1,:]) > 0.0:
-            plt.plot(times,np.transpose(secondary_mat[i,1,:]), c=col[j], label=secondary[i], lw=the_lw)
+        if np.max(secondary_mat[i,0,:]) > 0.0:
+            plt.plot(times,np.transpose(secondary_mat[i,0,:]), c=col[j], label=secondary[i], lw=the_lw)
         j = j+1
 #plt.legend(fontsize=8,loc='best',ncol=2)
 #plt.xlabel('time [Myr]')
-plt.title('A', x=0.08, y=0.85,horizontalalignment='left')
-
-
-ax1=fig.add_subplot(2,3,4)
-
-j = 0
-for i in range(1,minNum):
-    if np.max(secondary_mat[i,:,:]) > 0.0:
-        if np.max(secondary_mat[i,2,:]) > 0.0:
-            plt.plot(times,np.transpose(secondary_mat[i,2,:]), c=col[j], label=secondary[i], lw=the_lw)
-        j = j+1
-#plt.legend(fontsize=8,loc='best',ncol=2)
-plt.xlabel('time [Myr]')
-plt.title('B', x=0.08, y=0.85,horizontalalignment='left')
+plt.title('solo', x=0.08, y=0.85,horizontalalignment='left')
 
 
 ax1=fig.add_subplot(1,3,2)
@@ -270,13 +257,27 @@ ax1=fig.add_subplot(1,3,2)
 j = 0
 for i in range(1,minNum):
     if np.max(secondary_mat[i,:,:]) > 0.0:
-        if np.max(secondary_mat_sum[i,:]) > 0.0:
-            plt.plot(times,np.transpose(secondary_mat_sum[i,:]), c=col[j], label=secondary[i], lw=the_lw)
+        if np.max(secondary_mat[i,1,:]) > 0.0:
+            plt.plot(times,np.transpose(secondary_mat[i,1,:]), c=col[j], label=secondary[i], lw=the_lw)
         j = j+1
-plt.legend(bbox_to_anchor=(0.4, 1.18), fontsize=8,ncol=3, labelspacing=0.0)
+#plt.legend(fontsize=8,loc='best',ncol=2)
+plt.legend(bbox_to_anchor=(1.1, 1.48), fontsize=8,ncol=2, labelspacing=0.0)
 plt.xlabel('time [Myr]')
-plt.title('A + B', x=0.08, y=0.92,horizontalalignment='left')
+plt.title('a', x=0.08, y=0.85,horizontalalignment='left')
 
+
+# ax1=fig.add_subplot(1,3,3)
+#
+# j = 0
+# for i in range(1,minNum):
+#     if np.max(secondary_mat[i,:,:]) > 0.0:
+#         if np.max(secondary_mat_sum[i,:]) > 0.0:
+#             plt.plot(times,np.transpose(secondary_mat_sum[i,:]), c=col[j], label=secondary[i], lw=the_lw)
+#         j = j+1
+# plt.legend(bbox_to_anchor=(0.4, 1.18), fontsize=8,ncol=3, labelspacing=0.0)
+# plt.xlabel('time [Myr]')
+# plt.title('A + B', x=0.08, y=0.92,horizontalalignment='left')
+#
 
 
 
@@ -285,16 +286,16 @@ ax1=fig.add_subplot(1,3,3)
 j = 0
 for i in range(1,minNum):
     if np.max(secondary_mat[i,:,:]) > 0.0:
-        if np.max(secondary_mat[i,0,:]) > 0.0:
-            plt.plot(times,np.transpose(secondary_mat[i,0,:]), c=col[j], label=secondary[i], lw=the_lw)
+        if np.max(secondary_mat[i,2,:]) > 0.0:
+            plt.plot(times,np.transpose(secondary_mat[i,2,:]), c=col[j], label=secondary[i], lw=the_lw)
         j = j+1
 #plt.legend(fontsize=8,loc='best',ncol=2)
-plt.legend(bbox_to_anchor=(1.3, 1.18), fontsize=8,ncol=3, labelspacing=0.0)
+plt.legend(bbox_to_anchor=(1.1, 1.48), fontsize=8,ncol=2, labelspacing=0.0)
 plt.xlabel('time [Myr]')
-plt.title('Solo', x=0.08, y=0.92, horizontalalignment='left')
+plt.title('b', x=0.08, y=0.85, horizontalalignment='left')
 
 
-plt.subplots_adjust( wspace=0.2 , hspace=0.2, top=0.85 )
+plt.subplots_adjust(top=0.75 )
 plt.savefig(outpath+'mat_secondary_triple'+'.png',bbox_inches='tight')
 
 
@@ -303,10 +304,10 @@ plt.savefig(outpath+'mat_secondary_triple'+'.png',bbox_inches='tight')
 the_lw = 1.5
 the_fs = 8
 
-kwargs_s = dict(color='#7a1807', linewidth=the_lw, label='s')
+kwargs_s = dict(color='#a82913', linewidth=the_lw, label='s')
 kwargs_d = dict(color='#2a49b4', linewidth=the_lw, label='d')
 kwargs_a = dict(color='#2b90d1', linewidth=the_lw, label='a')
-kwargs_b = dict(color='#2ab455', linewidth=the_lw, label='b')
+kwargs_b = dict(color='#6bb42a', linewidth=the_lw, label='b')
 
 
 
@@ -314,14 +315,14 @@ kwargs_b = dict(color='#2ab455', linewidth=the_lw, label='b')
 
 fig=plt.figure(figsize=(12.0,4.0))
 
-li = 0
+li = 20
 
 ax1=fig.add_subplot(2,4,1)
 # plt.plot(times[li:],np.transpose(solute_ph_mean[li:]), **kwargs_s)
 plt.plot(times[li:],np.transpose(solute_ph[0,li:]), **kwargs_s)
 plt.plot(times[li:],np.transpose(solute_ph[1,li:]), **kwargs_a)
 plt.plot(times[li:],np.transpose(solute_ph[2,li:]), **kwargs_b)
-plt.legend(fontsize=8,loc='best',ncol=2)
+plt.legend(fontsize=8,bbox_to_anchor=(1.7, 1.25),ncol=3,labelspacing=-0.1,columnspacing=0.2)
 plt.title('pH', fontsize=the_fs)
 
 
@@ -336,8 +337,8 @@ plt.title('alk', fontsize=the_fs)
 ax1=fig.add_subplot(2,4,3)
 #plt.plot(times[li:],np.transpose(solute_c_mean[li:]), c=col[1], linestyle="-", lw=2, label='dic')
 plt.plot(times[li:],np.transpose(solute_c[0,li:]), **kwargs_s)
-#plt.plot(times[li:],np.transpose(solute_c[1,li:]), **kwargs_a)
-#plt.plot(times[li:],np.transpose(solute_c[2,li:]), **kwargs_b)
+plt.plot(times[li:],np.transpose(solute_c[1,li:]), **kwargs_a)
+plt.plot(times[li:],np.transpose(solute_c[2,li:]), **kwargs_b)
 plt.title('C', fontsize=the_fs)
 
 
@@ -385,7 +386,7 @@ plt.title('Al', fontsize=the_fs)
 
 
 
-plt.subplots_adjust( wspace=0.5 , hspace=0.2 )
+plt.subplots_adjust( wspace=0.5 , hspace=0.3 )
 plt.savefig(outpath+'mat_solute_full'+'.png',bbox_inches='tight')
 
 
@@ -406,7 +407,7 @@ ax1=fig.add_subplot(2,4,1)
 plt.plot(times[:li],np.transpose(solute_ph[0,:li]), **kwargs_s)
 plt.plot(times[:li],np.transpose(solute_ph[1,:li]), **kwargs_a)
 plt.plot(times[:li],np.transpose(solute_ph[2,:li]), **kwargs_b)
-plt.legend(fontsize=8,loc='best',ncol=2)
+plt.legend(fontsize=8,bbox_to_anchor=(1.7, 1.25),ncol=3,labelspacing=-0.1,columnspacing=0.2)
 plt.title('pH', fontsize=the_fs)
 
 
@@ -421,8 +422,8 @@ plt.title('alk', fontsize=the_fs)
 ax1=fig.add_subplot(2,4,3)
 #plt.plot(times[:li],np.transpose(solute_c_mean[:li]), c=col[1], linestyle="-", lw=2, label='dic')
 plt.plot(times[:li],np.transpose(solute_c[0,:li]), **kwargs_s)
-#plt.plot(times[:li],np.transpose(solute_c[1,:li]), **kwargs_a)
-#plt.plot(times[:li],np.transpose(solute_c[2,:li]), **kwargs_b)
+plt.plot(times[:li],np.transpose(solute_c[1,:li]), **kwargs_a)
+plt.plot(times[:li],np.transpose(solute_c[2,:li]), **kwargs_b)
 plt.title('C', fontsize=the_fs)
 
 
@@ -470,5 +471,5 @@ plt.title('Al', fontsize=the_fs)
 
 
 
-plt.subplots_adjust( wspace=0.5 , hspace=0.2 )
+plt.subplots_adjust( wspace=0.5 , hspace=0.3 )
 plt.savefig(outpath+'mat_solute_init'+'.png',bbox_inches='tight')
