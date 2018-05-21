@@ -172,7 +172,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 #todo: path + params
 in_path = "../output/revival/winter_basalt_box/"
-dir_path = "z_group_c/"
+dir_path = "z_group_50_base/"
 fig_path = "fig_lateral/"
 
 param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
@@ -415,7 +415,7 @@ plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.png",bbox_inches='tight')
-
+plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.eps",bbox_inches='tight')
 
 
 
