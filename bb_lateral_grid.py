@@ -48,7 +48,7 @@ def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_c
 
     if the_cbar == 1:
         bbox = ax2.get_position()
-        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-0.05, bbox.width*1.0, bbox.height*0.05])
+        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-0.06, bbox.width*1.0, bbox.height*0.05])
         cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
         cbar.set_ticks(np.linspace(min_all_in,max_all_in,num=bar_bins,endpoint=True))
         cbar.ax.tick_params(labelsize=7)
@@ -171,8 +171,9 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
+temp_string = "50"
 in_path = "../output/revival/winter_basalt_box/"
-dir_path = "z_group_50_base/"
+dir_path = "z_group_"+temp_string+"_base/"
 fig_path = "fig_lateral/"
 
 param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
@@ -313,30 +314,64 @@ distance_vector = np.linspace(00000.0, 120000.0,n_lateral, endpoint=True)
 compound_alt_vol = np.zeros([n_lateral,n_compounds])
 compound_alt_fe = np.zeros([n_lateral,n_compounds])
 
+compound_alt_vol_shift = np.zeros([n_lateral,n_compounds])
+compound_alt_fe_shift = np.zeros([n_lateral,n_compounds])
+
+compound_alt_vol_labels = [3.0, 5.0, 10.0, 15.0, 20.0]
+compound_alt_fe_labels = [0.005, 0.01, 0.02, 0.04, 0.06, 0.08]
+
 
 for i in range(n_lateral-1):
-    # compound at 5.2 % / Myr
-    compound_alt_vol[i,0] = (2.7/n_lateral)*i*5.2
-    compound_alt_fe[i,0] = 0.78 - (2.7/n_lateral)*i*(0.00405)
+    # compound at 3.0 % / Myr
+    compound_alt_vol[i,0] = (2.7/n_lateral)*i*compound_alt_vol_labels[0]
+    # compound at 5.0 % / Myr
+    compound_alt_vol[i,1] = (2.7/n_lateral)*i*compound_alt_vol_labels[1]
+    # compound at 10.0 % / Myr
+    compound_alt_vol[i,2] = (2.7/n_lateral)*i*compound_alt_vol_labels[2]
+    # compound at 15.0 % / Myr
+    compound_alt_vol[i,3] = (2.7/n_lateral)*i*compound_alt_vol_labels[3]
+    # compound at 20.0 % / Myr
+    compound_alt_vol[i,4] = (2.7/n_lateral)*i*compound_alt_vol_labels[4]
 
-    # compound at 8.3 % / Myr
-    compound_alt_vol[i,1] = (2.7/n_lateral)*i*8.3
-    compound_alt_fe[i,1] = 0.78 - (2.7/n_lateral)*i*(0.03188)
-
-    # compound at 5.2 % / Myr
+    # compound at 10.0 % / Myr
     if age_vector[i] > 0.5:
-        compound_alt_vol[i,2] = (2.7/n_lateral)*i*5.2 - 0.5*5.2
-        compound_alt_fe[i,2] = 0.78 - (2.7/n_lateral)*i*(0.00405) + 0.5*0.00405
+        compound_alt_vol_shift[i,0] = (2.7/n_lateral)*i*compound_alt_vol_labels[0] - 0.5*compound_alt_vol_labels[0]
+        compound_alt_vol_shift[i,1] = (2.7/n_lateral)*i*compound_alt_vol_labels[1] - 0.5*compound_alt_vol_labels[1]
+        compound_alt_vol_shift[i,2] = (2.7/n_lateral)*i*compound_alt_vol_labels[2] - 0.5*compound_alt_vol_labels[2]
+        compound_alt_vol_shift[i,3] = (2.7/n_lateral)*i*compound_alt_vol_labels[3] - 0.5*compound_alt_vol_labels[3]
+        compound_alt_vol_shift[i,4] = (2.7/n_lateral)*i*compound_alt_vol_labels[4] - 0.5*compound_alt_vol_labels[4]
 
-    # compound at 8.3 % / Myr
-    if age_vector[i] > 0.5:
-        compound_alt_vol[i,3] = (2.7/n_lateral)*i*8.3 - 0.5*8.3
-        compound_alt_fe[i,3] = 0.78 - (2.7/n_lateral)*i*(0.03188) + 0.5*0.03188
+        compound_alt_fe_shift[i,0] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[0] + 0.5*compound_alt_fe_labels[0]
+        compound_alt_fe_shift[i,1] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[1] + 0.5*compound_alt_fe_labels[1]
+        compound_alt_fe_shift[i,2] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[2] + 0.5*compound_alt_fe_labels[2]
+        compound_alt_fe_shift[i,3] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[3] + 0.5*compound_alt_fe_labels[3]
+        compound_alt_fe_shift[i,4] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[4] + 0.5*compound_alt_fe_labels[4]
+        compound_alt_fe_shift[i,5] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[5] + 0.5*compound_alt_fe_labels[4]
 
-    # compound SD for alt_fe
-    compound_alt_fe[i,4] = 0.78 - (2.7/n_lateral)*i*(0.06)
-    if age_vector[i] > 0.5:
-        compound_alt_fe[i,5] = 0.78 - (2.7/n_lateral)*i*(0.06) + 0.5*0.06
+
+    compound_alt_fe[i,0] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[0]
+    compound_alt_fe[i,1] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[1]
+    compound_alt_fe[i,2] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[2]
+    compound_alt_fe[i,3] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[3]
+    compound_alt_fe[i,4] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[4]
+    compound_alt_fe[i,5] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[5]
+
+
+
+    # # compound at 10.0 % / Myr
+    # if age_vector[i] > 0.5:
+    #     compound_alt_vol[i,2] = (2.7/n_lateral)*i*5.2 - 0.5*5.2
+    #     compound_alt_fe[i,2] = 0.78 - (2.7/n_lateral)*i*(0.00405) + 0.5*0.00405
+    #
+    # # compound at 15.0 % / Myr
+    # if age_vector[i] > 0.5:
+    #     compound_alt_vol[i,3] = (2.7/n_lateral)*i*8.3 - 0.5*8.3
+    #     compound_alt_fe[i,3] = 0.78 - (2.7/n_lateral)*i*(0.03188) + 0.5*0.03188
+    #
+    # # compound SD for alt_fe
+    # compound_alt_fe[i,4] = 0.78 - (2.7/n_lateral)*i*(0.06)
+    # if age_vector[i] > 0.5:
+    #     compound_alt_fe[i,5] = 0.78 - (2.7/n_lateral)*i*(0.06) + 0.5*0.06
 
 
 
@@ -348,15 +383,17 @@ for i in range(n_lateral-1):
 
 #hack: FIG: compounds_lin
 print "compounds_lin"
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(12.0,8.0))
+rainbow_lw = 1.5
 
+ax=fig.add_subplot(2, 2, 1, frameon=True)
 
-ax=fig.add_subplot(2, 1, 1, frameon=True)
+plt.plot(distance_vector,compound_alt_vol[:,0], label=str(compound_alt_vol_labels[0]), c=plot_col[0], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,1], label=str(compound_alt_vol_labels[1]), c=plot_col[1], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,2], label=str(compound_alt_vol_labels[2]), c=plot_col[2], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,3], label=str(compound_alt_vol_labels[3]), c=plot_col[3], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol[:,4], label=str(compound_alt_vol_labels[4]), c=plot_col[4], lw=rainbow_lw, zorder=10)
 
-plt.plot(distance_vector,compound_alt_vol[:,0], label='5.2p / Myr', c=plot_col[0], lw=2, zorder=10)
-plt.plot(distance_vector,compound_alt_vol[:,1], label='8.3p / Myr', c=plot_col[1], lw=2, zorder=10)
-plt.plot(distance_vector,compound_alt_vol[:,2], label='5.2p / Myr .5Ma shift', c=plot_col[2], lw=2, zorder=10)
-plt.plot(distance_vector,compound_alt_vol[:,3], label='8.3p / Myr .5Ma shift', c=plot_col[3], lw=2, zorder=10)
 
 #plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
 plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
@@ -371,7 +408,7 @@ for j in range(nsites):
 
 ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
 
-ax.fill_between(distance_vector, compound_alt_vol[:,2], compound_alt_vol[:,1],zorder=1, facecolor='none', hatch='//', edgecolor='b', lw=0)
+# ax.fill_between(distance_vector, compound_alt_vol[:,2], compound_alt_vol[:,1],zorder=1, facecolor='none', hatch='//', edgecolor='b', lw=0)
 
 plt.xlim([20000.0,110000.0])
 plt.ylim([-1.0,30.0])
@@ -382,15 +419,58 @@ plt.legend(fontsize=8,loc='best',ncol=1)
 
 
 
-ax=fig.add_subplot(2, 1, 2, frameon=True)
 
-plt.plot(distance_vector,compound_alt_fe[:,0], label='0 : -0.00405', c=plot_col[0], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,1], label='1 : -0.03188', c=plot_col[1], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,2], label='2 : -0.00405 shift', c=plot_col[2], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,3], label='3 : -0.03188 shift', c=plot_col[3], lw=2)
 
-plt.plot(distance_vector,compound_alt_fe[:,4], label='4 : -0.06', c=plot_col[4], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,5], label='5 : -0.06 shift', c=plot_col[5], lw=2)
+
+
+ax=fig.add_subplot(2, 2, 2, frameon=True)
+
+plt.plot(distance_vector,compound_alt_vol_shift[:,0], label=str(compound_alt_vol_labels[0]), c=plot_col[0], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol_shift[:,1], label=str(compound_alt_vol_labels[1]), c=plot_col[1], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol_shift[:,2], label=str(compound_alt_vol_labels[2]), c=plot_col[2], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol_shift[:,3], label=str(compound_alt_vol_labels[3]), c=plot_col[3], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_vol_shift[:,4], label=str(compound_alt_vol_labels[4]), c=plot_col[4], lw=rainbow_lw, zorder=10)
+
+
+#plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+
+for j in range(nsites):
+    # error bar height
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    # lower error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    # upper error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([-1.0,30.0])
+plt.xlabel("crust age [Myr]")
+plt.ylabel("alteration volume percent")
+plt.title("compound_alt_vol")
+plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 2, 3, frameon=True)
+
+plt.plot(distance_vector,compound_alt_fe[:,0], label=str(compound_alt_fe_labels[0]), c=plot_col[0], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe[:,1], label=str(compound_alt_fe_labels[1]), c=plot_col[1], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe[:,2], label=str(compound_alt_fe_labels[2]), c=plot_col[2], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe[:,3], label=str(compound_alt_fe_labels[3]), c=plot_col[3], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe[:,4], label=str(compound_alt_fe_labels[4]), c=plot_col[4], lw=rainbow_lw, zorder=10)
 
 #plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
 plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
@@ -411,11 +491,51 @@ plt.xlabel("crust age [Myr]")
 plt.ylabel("alteration volume percent")
 plt.title("compound_fe_vol")
 plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 2, 4, frameon=True)
+
+plt.plot(distance_vector,compound_alt_fe_shift[:,0], label=str(compound_alt_fe_labels[0]), c=plot_col[0], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe_shift[:,1], label=str(compound_alt_fe_labels[1]), c=plot_col[1], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe_shift[:,2], label=str(compound_alt_fe_labels[2]), c=plot_col[2], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe_shift[:,3], label=str(compound_alt_fe_labels[3]), c=plot_col[3], lw=rainbow_lw, zorder=10)
+plt.plot(distance_vector,compound_alt_fe_shift[:,4], label=str(compound_alt_fe_labels[4]), c=plot_col[4], lw=rainbow_lw, zorder=10)
+
+#plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+
+for j in range(nsites):
+    # error bar height
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    # lower error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    # upper error bar
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([0.6,0.8])
+plt.xlabel("crust age [Myr]")
+plt.ylabel("alteration volume percent")
+plt.title("compound_fe_vol")
+plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
 
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.png",bbox_inches='tight')
-plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.eps",bbox_inches='tight')
+# plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.eps",bbox_inches='tight')
 
 
 
@@ -427,77 +547,77 @@ plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.eps",bbox_inches='tight')
 
 
 
-
-
-#hack: FIG: compounds
-print "compounds"
-fig=plt.figure(figsize=(8.0,8.0))
-
-
-ax=fig.add_subplot(2, 1, 1, frameon=True)
-
-plt.plot(distance_vector,compound_alt_vol[:,0], label='5.2p / Myr', c=plot_col[0], lw=2, zorder=10)
-plt.plot(distance_vector,compound_alt_vol[:,1], label='8.3p / Myr', c=plot_col[1], lw=2, zorder=10)
-plt.plot(distance_vector,compound_alt_vol[:,2], label='5.2p / Myr .5Ma shift', c=plot_col[2], lw=2, zorder=10)
-plt.plot(distance_vector,compound_alt_vol[:,3], label='8.3p / Myr .5Ma shift', c=plot_col[3], lw=2, zorder=10)
-
-#plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
-plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
-
-for j in range(nsites):
-    # error bar height
-    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
-    # lower error bar
-    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
-    # upper error bar
-    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
-
-ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
-
-ax.fill_between(distance_vector, compound_alt_vol[:,2], compound_alt_vol[:,1],zorder=1, facecolor='none', hatch='//', edgecolor='b', lw=0)
-
-plt.xlim([20000.0,110000.0])
-plt.ylim([-1.0,30.0])
-plt.xlabel("crust age [Myr]")
-plt.ylabel("alteration volume percent")
-plt.title("compound_alt_vol")
-plt.legend(fontsize=8,loc='best',ncol=1)
-
-
-
-ax=fig.add_subplot(2, 1, 2, frameon=True)
-
-plt.plot(distance_vector,compound_alt_fe[:,0], label='0 : -0.00405', c=plot_col[0], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,1], label='1 : -0.03188', c=plot_col[1], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,2], label='2 : -0.00405 shift', c=plot_col[2], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,3], label='3 : -0.03188 shift', c=plot_col[3], lw=2)
-
-plt.plot(distance_vector,compound_alt_fe[:,4], label='4 : -0.06', c=plot_col[4], lw=2)
-plt.plot(distance_vector,compound_alt_fe[:,5], label='5 : -0.06 shift', c=plot_col[5], lw=2)
-
-#plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
-plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
-
-for j in range(nsites):
-    # error bar height
-    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
-    # lower error bar
-    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
-    # upper error bar
-    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
-
-ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
-
-plt.xlim([20000.0,110000.0])
-plt.ylim([0.6,0.8])
-plt.xlabel("crust age [Myr]")
-plt.ylabel("alteration volume percent")
-plt.title("compound_fe_vol")
-plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
-
-
-
-plt.savefig(in_path+dir_path+fig_path+"z_compounds.png",bbox_inches='tight')
+#
+#
+# #shack: FIG: compounds
+# print "compounds"
+# fig=plt.figure(figsize=(8.0,8.0))
+#
+#
+# ax=fig.add_subplot(2, 1, 1, frameon=True)
+#
+# plt.plot(distance_vector,compound_alt_vol[:,0], label='5.2p / Myr', c=plot_col[0], lw=2, zorder=10)
+# plt.plot(distance_vector,compound_alt_vol[:,1], label='8.3p / Myr', c=plot_col[1], lw=2, zorder=10)
+# plt.plot(distance_vector,compound_alt_vol[:,2], label='5.2p / Myr .5Ma shift', c=plot_col[2], lw=2, zorder=10)
+# plt.plot(distance_vector,compound_alt_vol[:,3], label='8.3p / Myr .5Ma shift', c=plot_col[3], lw=2, zorder=10)
+#
+# #plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+# plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+#
+# for j in range(nsites):
+#     # error bar height
+#     plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+#     # lower error bar
+#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+#     # upper error bar
+#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+#
+# ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+#
+# ax.fill_between(distance_vector, compound_alt_vol[:,2], compound_alt_vol[:,1],zorder=1, facecolor='none', hatch='//', edgecolor='b', lw=0)
+#
+# plt.xlim([20000.0,110000.0])
+# plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]")
+# plt.ylabel("alteration volume percent")
+# plt.title("compound_alt_vol")
+# plt.legend(fontsize=8,loc='best',ncol=1)
+#
+#
+#
+# ax=fig.add_subplot(2, 1, 2, frameon=True)
+#
+# plt.plot(distance_vector,compound_alt_fe[:,0], label='0 : -0.00405', c=plot_col[0], lw=2)
+# plt.plot(distance_vector,compound_alt_fe[:,1], label='1 : -0.03188', c=plot_col[1], lw=2)
+# plt.plot(distance_vector,compound_alt_fe[:,2], label='2 : -0.00405 shift', c=plot_col[2], lw=2)
+# plt.plot(distance_vector,compound_alt_fe[:,3], label='3 : -0.03188 shift', c=plot_col[3], lw=2)
+#
+# plt.plot(distance_vector,compound_alt_fe[:,4], label='4 : -0.06', c=plot_col[4], lw=2)
+# plt.plot(distance_vector,compound_alt_fe[:,5], label='5 : -0.06 shift', c=plot_col[5], lw=2)
+#
+# #plt.scatter(site_locations,fe_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
+# plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+#
+# for j in range(nsites):
+#     # error bar height
+#     plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+#     # lower error bar
+#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+#     # upper error bar
+#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+#
+# ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+#
+# plt.xlim([20000.0,110000.0])
+# plt.ylim([0.6,0.8])
+# plt.xlabel("crust age [Myr]")
+# plt.ylabel("alteration volume percent")
+# plt.title("compound_fe_vol")
+# plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+#
+#
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_compounds.png",bbox_inches='tight')
 
 
 
@@ -631,81 +751,81 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_pcolor.png",bbox_inches='tight')
 
 
 
-#hack: FIG: alt_vol_pcolor
-print "alt_vol_pcolor"
-
-sp1 = 3
-sp2 = 4
-
-cont_x_diff_max = len(diff_strings) - 2
-cont_y_param_max = len(param_strings) - 0
-
-
-fig=plt.figure(figsize=(12.0,9.0))
-plt.subplots_adjust(hspace=0.6)
-
-the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
-the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-square_pcolor(sp1, sp2, 1, the_s, cb_title="s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 2, the_d, cb_title="d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 3, the_a, cb_title="a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 4, the_b, cb_title="b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-
-the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
-the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-square_pcolor(sp1, sp2, 5, the_s, cb_title="s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 6, the_d, cb_title="d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 7, the_a, cb_title="a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 8, the_b, cb_title="b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor.png",bbox_inches='tight')
+# #shack: FIG: alt_vol_pcolor
+# print "alt_vol_pcolor"
+#
+# sp1 = 3
+# sp2 = 4
+#
+# cont_x_diff_max = len(diff_strings) - 2
+# cont_y_param_max = len(param_strings) - 0
+#
+#
+# fig=plt.figure(figsize=(12.0,9.0))
+# plt.subplots_adjust(hspace=0.6)
+#
+# the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# square_pcolor(sp1, sp2, 1, the_s, cb_title="s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 2, the_d, cb_title="d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 3, the_a, cb_title="a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 4, the_b, cb_title="b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+#
+#
+# the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# square_pcolor(sp1, sp2, 5, the_s, cb_title="s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 6, the_d, cb_title="d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 7, the_a, cb_title="a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 8, the_b, cb_title="b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor.png",bbox_inches='tight')
 
 
 
@@ -722,7 +842,7 @@ cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
 
-fig=plt.figure(figsize=(12.0,9.0))
+fig=plt.figure(figsize=(10.0,8.0))
 plt.subplots_adjust(hspace=0.6)
 
 the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
@@ -746,13 +866,16 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-square_pcolor(sp1, sp2, 1, the_s, cb_title="s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+min_all = 1.0
+max_all = 17.0
 
-square_pcolor(sp1, sp2, 2, the_d, cb_title="d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 3, the_a, cb_title="a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 4, the_b, cb_title="b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
 
 
@@ -777,13 +900,16 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-square_pcolor(sp1, sp2, 5, the_s, cb_title="s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+min_all = 0.005
+max_all = 0.10
 
-square_pcolor(sp1, sp2, 6, the_d, cb_title="d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 7, the_a, cb_title="a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 8, the_b, cb_title="b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
