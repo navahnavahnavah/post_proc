@@ -49,7 +49,7 @@ n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "z_group_60_base/"
+prefix = "z_group_dd_full_30/"
 # path_label = prefix[3:7]
 # print path_label
 
@@ -67,6 +67,8 @@ write_txt = 1
 
 param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
 param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+# param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0']
+# param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
 param_nums_time = np.zeros(len(param_nums))
 for iii in range(len(param_nums)):
     #print param_nums[iii]
@@ -850,80 +852,85 @@ fig=plt.figure(figsize=(8.0,8.0))
 
 
 
-# ax=fig.add_subplot(2, 2, 1, frameon=True)
+ax=fig.add_subplot(2, 2, 1, frameon=True)
 
 the_xticks = range(len(diff_strings))
 for i in the_xticks:
     the_xticks[i] = the_xticks[i] + 0.5
 print "the_xticks" , the_xticks
-# plt.xticks(the_xticks,diff_strings, fontsize=8)
+plt.xticks(the_xticks,diff_strings, fontsize=8)
 the_yticks = range(len(param_strings))
 for i in the_yticks:
     the_yticks[i] = the_yticks[i] + 0.5
 print "the_yticks" , the_yticks
-# plt.yticks(the_yticks,param_strings, fontsize=8)
-#
-# plt.xlabel('param_t_diff')
-# plt.ylabel('param_q')
-#
-# this_plot = np.abs(value_dpri_mean)
-# plt.pcolor(this_plot)
-#
-#
-#
-# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-# cbar.ax.tick_params(labelsize=8)
-# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-# cbar.ax.set_xlabel('dpri mean',fontsize=10,labelpad=clabelpad)
-#
-#
-#
-#
-#
-# ax=fig.add_subplot(2, 2, 2, frameon=True)
-#
-# plt.xticks(the_xticks,diff_strings, fontsize=8)
-# plt.yticks(the_yticks,param_strings, fontsize=8)
-#
-# this_plot = np.abs(value_dpri_mean_d)
-# plt.pcolor(this_plot)
-#
-# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-# cbar.ax.tick_params(labelsize=8)
-# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-# cbar.ax.set_xlabel('dpri_d mean',fontsize=10,labelpad=clabelpad)
-#
-#
-#
-#
-# ax=fig.add_subplot(2, 2, 3, frameon=True)
-#
-# plt.xticks(the_xticks,diff_strings, fontsize=8)
-# plt.yticks(the_yticks,param_strings, fontsize=8)
-#
-# this_plot = np.abs(value_dpri_mean_a)
-# plt.pcolor(this_plot)
-#
-# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-# cbar.ax.tick_params(labelsize=8)
-# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-# cbar.ax.set_xlabel('dpri_a mean',fontsize=10,labelpad=clabelpad)
-#
-#
-#
-#
-# ax=fig.add_subplot(2, 2, 4, frameon=True)
-#
-# plt.xticks(the_xticks,diff_strings, fontsize=8)
-# plt.yticks(the_yticks,param_strings, fontsize=8)
-#
-# this_plot = np.abs(value_dpri_mean_b)
-# plt.pcolor(this_plot)
-#
-# cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
-# cbar.ax.tick_params(labelsize=8)
-# cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
-# cbar.ax.set_xlabel('dpri_b mean',fontsize=10,labelpad=clabelpad)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+plt.xlabel('param_t_diff')
+plt.ylabel('param_q')
+
+this_plot = np.abs(value_dpri_mean)
+plt.pcolor(this_plot)
+
+
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+
+
+max_all = np.max(this_plot)*1.05
+print "debug 2d_pri ", max_all
+
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),max_all,num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('dpri mean',fontsize=10,labelpad=clabelpad)
+
+
+
+
+
+ax=fig.add_subplot(2, 2, 2, frameon=True)
+
+plt.xticks(the_xticks,diff_strings, fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = np.abs(value_dpri_mean_d)
+plt.pcolor(this_plot)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('dpri_d mean',fontsize=10,labelpad=clabelpad)
+
+
+
+
+ax=fig.add_subplot(2, 2, 3, frameon=True)
+
+plt.xticks(the_xticks,diff_strings, fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = np.abs(value_dpri_mean_a)
+plt.pcolor(this_plot)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('dpri_a mean',fontsize=10,labelpad=clabelpad)
+
+
+
+
+ax=fig.add_subplot(2, 2, 4, frameon=True)
+
+plt.xticks(the_xticks,diff_strings, fontsize=8)
+plt.yticks(the_yticks,param_strings, fontsize=8)
+
+this_plot = np.abs(value_dpri_mean_b)
+plt.pcolor(this_plot)
+
+cbar = plt.colorbar(orientation='horizontal',shrink=bar_shrink)
+cbar.ax.tick_params(labelsize=8)
+cbar.set_ticks(np.linspace(np.min(this_plot[this_plot>0.0]),np.max(this_plot),num=bar_bins,endpoint=True))
+cbar.ax.set_xlabel('dpri_b mean',fontsize=10,labelpad=clabelpad)
 
 
 plt.savefig(outpath+prefix+"x_2d_pri.png",bbox_inches='tight')
@@ -1355,6 +1362,8 @@ for j in range(len(any_min)):
         bbox = ax.get_position()
         cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-y_off, bbox.width*1.5, bbox.height*0.06])
         cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+        print "debug ", min_all, max_all
+        max_all = max_all*1.05
         cbar.set_ticks(np.linspace(min_all,max_all,num=bar_bins,endpoint=True))
         cbar.ax.tick_params(labelsize=7)
         #plt.title('CaCO3 at end',fontsize=9)
@@ -2512,6 +2521,13 @@ if write_txt == 1:
     np.savetxt(outpath+prefix+'value_alt_vol_mean_a.txt', value_alt_vol_mean_a)
     np.savetxt(outpath+prefix+'value_alt_vol_mean_b.txt', value_alt_vol_mean_b)
 
+#todo: save value_dpri_mean_x
+if write_txt == 1:
+    np.savetxt(outpath+prefix+'value_dpri_mean.txt', value_dpri_mean)
+    np.savetxt(outpath+prefix+'value_dpri_mean_d.txt', value_dpri_mean_d)
+    np.savetxt(outpath+prefix+'value_dpri_mean_a.txt', value_dpri_mean_a)
+    np.savetxt(outpath+prefix+'value_dpri_mean_b.txt', value_dpri_mean_b)
+
 cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
 
 
@@ -2736,7 +2752,7 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-#todo: save value_alt_vol_mean_x
+#todo: save value_alt_fe_mean_x
 if write_txt == 1:
     np.savetxt(outpath+prefix+'value_alt_fe_mean.txt', value_alt_fe_mean)
     np.savetxt(outpath+prefix+'value_alt_fe_mean_d.txt', value_alt_fe_mean_d)

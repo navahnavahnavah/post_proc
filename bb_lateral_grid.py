@@ -25,9 +25,9 @@ def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_c
     ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
 
     if xlab == 1:
-        plt.xlabel('log10(mixing time [years])', fontsize=8)
-    if ylab == 1:
-        plt.ylabel('discharge q [m/yr]', fontsize=8)
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
 
     pCol = ax2.pcolor(pcolor_block, cmap=cont_cmap, antialiased=True, vmin=min_all_in, vmax=max_all_in)
 
@@ -44,12 +44,14 @@ def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_c
     plt.xticks(x_integers[::xskip],diff_strings[::xskip], fontsize=8)
     plt.yticks(y_integers[::yskip],param_strings[::yskip], fontsize=8)
 
-    plt.title(cb_title, fontsize=9)
+    plt.title(cb_title, fontsize=8)
 
     if the_cbar == 1:
         bbox = ax2.get_position()
-        cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-0.06, bbox.width*1.0, bbox.height*0.05])
-        cbar = plt.colorbar(pCol, cax = cax,orientation='horizontal')
+        # cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-0.06, bbox.width*1.0, bbox.height*0.05])
+        cax = fig.add_axes([bbox.xmin-0.04, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pCol, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
         cbar.set_ticks(np.linspace(min_all_in,max_all_in,num=bar_bins,endpoint=True))
         cbar.ax.tick_params(labelsize=7)
         #cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
@@ -171,13 +173,16 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "50"
+temp_string = "30"
 in_path = "../output/revival/winter_basalt_box/"
-dir_path = "z_group_"+temp_string+"_base/"
+dir_path = "z_group_dd_full_"+temp_string+"/"
 fig_path = "fig_lateral/"
 
 param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
 param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+
+# param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0']
+# param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
 
 diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50']
 diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5]
@@ -196,6 +201,11 @@ value_alt_fe_mean_d = np.zeros([len(param_strings),len(diff_strings),n_grids])
 value_alt_fe_mean_a = np.zeros([len(param_strings),len(diff_strings),n_grids])
 value_alt_fe_mean_b = np.zeros([len(param_strings),len(diff_strings),n_grids])
 
+value_dpri_mean = np.zeros([len(param_strings),len(diff_strings),n_grids])
+value_dpri_mean_d = np.zeros([len(param_strings),len(diff_strings),n_grids])
+value_dpri_mean_a = np.zeros([len(param_strings),len(diff_strings),n_grids])
+value_dpri_mean_b = np.zeros([len(param_strings),len(diff_strings),n_grids])
+
 
 #poop: make value_sec_x grids
 minNum = 41
@@ -204,7 +214,9 @@ value_dsec_d = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 value_dsec_a = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 value_dsec_b = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 
-
+#009BC7
+#c7c7c7
+#80BBFF
 #poop: make alt_ind age curves
 curve_nsteps = 1000
 n_curves = 10
@@ -228,6 +240,10 @@ alt_fe_curve_d = np.zeros([curve_nsteps,n_curves])
 alt_fe_curve_a = np.zeros([curve_nsteps,n_curves])
 alt_fe_curve_b = np.zeros([curve_nsteps,n_curves])
 
+dpri_curve = np.zeros([curve_nsteps,n_curves])
+dpri_curve_d = np.zeros([curve_nsteps,n_curves])
+dpri_curve_a = np.zeros([curve_nsteps,n_curves])
+dpri_curve_b = np.zeros([curve_nsteps,n_curves])
 
 dsec_curve = np.zeros([curve_nsteps,n_curves,minNum+1])
 dsec_curve_d = np.zeros([curve_nsteps,n_curves,minNum+1])
@@ -245,6 +261,11 @@ value_alt_fe_mean[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean.tx
 value_alt_fe_mean_d[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_d.txt')
 value_alt_fe_mean_a[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_a.txt')
 value_alt_fe_mean_b[:,:,0] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_b.txt')
+
+value_dpri_mean[:,:,0] = np.loadtxt(in_path + dir_path + 'value_dpri_mean.txt')
+value_dpri_mean_d[:,:,0] = np.loadtxt(in_path + dir_path + 'value_dpri_mean_d.txt')
+value_dpri_mean_a[:,:,0] = np.loadtxt(in_path + dir_path + 'value_dpri_mean_a.txt')
+value_dpri_mean_b[:,:,0] = np.loadtxt(in_path + dir_path + 'value_dpri_mean_b.txt')
 
 
 #todo: LOAD IN value_sec_x.txt
@@ -283,8 +304,8 @@ print "any_min: " , any_min
 #hack: alteration index data
 nsites = 9
 ebw = 800.0
-dark_red = '#868686'
-data_lw = 2
+dark_red = '#aaaaaa'
+data_lw = 1
 plot_purple = '#b678f5'
 plot_blue = '#4e94c1'
 lower_color = '#339a28'
@@ -320,6 +341,11 @@ compound_alt_fe_shift = np.zeros([n_lateral,n_compounds])
 compound_alt_vol_labels = [3.0, 5.0, 10.0, 15.0, 20.0]
 compound_alt_fe_labels = [0.005, 0.01, 0.02, 0.04, 0.06, 0.08]
 
+compound_alt_vol_solo = np.zeros([n_lateral, len(param_strings)])
+compound_alt_fe_solo = np.zeros([n_lateral, len(param_strings)])
+
+compound_alt_vol_solo_shift = np.zeros([n_lateral, len(param_strings)])
+compound_alt_fe_solo_shift = np.zeros([n_lateral, len(param_strings)])
 
 for i in range(n_lateral-1):
     # compound at 3.0 % / Myr
@@ -356,6 +382,14 @@ for i in range(n_lateral-1):
     compound_alt_fe[i,4] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[4]
     compound_alt_fe[i,5] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[5]
 
+
+    for ii in range(len(param_strings)):
+        compound_alt_vol_solo[i,ii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,0]
+        compound_alt_fe_solo[i,ii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,0]
+
+        if age_vector[i] > 0.5:
+            compound_alt_vol_solo_shift[i,ii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,0] - 0.5*value_alt_vol_mean[ii,0,0]
+            compound_alt_fe_solo_shift[i,ii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,0] + 0.5*value_alt_fe_mean[ii,0,0]
 
 
     # # compound at 10.0 % / Myr
@@ -394,7 +428,6 @@ plt.plot(distance_vector,compound_alt_vol[:,2], label=str(compound_alt_vol_label
 plt.plot(distance_vector,compound_alt_vol[:,3], label=str(compound_alt_vol_labels[3]), c=plot_col[3], lw=rainbow_lw, zorder=10)
 plt.plot(distance_vector,compound_alt_vol[:,4], label=str(compound_alt_vol_labels[4]), c=plot_col[4], lw=rainbow_lw, zorder=10)
 
-
 #plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
 plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
 
@@ -420,9 +453,6 @@ plt.legend(fontsize=8,loc='best',ncol=1)
 
 
 
-
-
-
 ax=fig.add_subplot(2, 2, 2, frameon=True)
 
 plt.plot(distance_vector,compound_alt_vol_shift[:,0], label=str(compound_alt_vol_labels[0]), c=plot_col[0], lw=rainbow_lw, zorder=10)
@@ -430,7 +460,6 @@ plt.plot(distance_vector,compound_alt_vol_shift[:,1], label=str(compound_alt_vol
 plt.plot(distance_vector,compound_alt_vol_shift[:,2], label=str(compound_alt_vol_labels[2]), c=plot_col[2], lw=rainbow_lw, zorder=10)
 plt.plot(distance_vector,compound_alt_vol_shift[:,3], label=str(compound_alt_vol_labels[3]), c=plot_col[3], lw=rainbow_lw, zorder=10)
 plt.plot(distance_vector,compound_alt_vol_shift[:,4], label=str(compound_alt_vol_labels[4]), c=plot_col[4], lw=rainbow_lw, zorder=10)
-
 
 #plt.scatter(site_locations,alt_values,edgecolor=dark_red,color=dark_red,zorder=10,s=60, label="data from sites")
 plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
@@ -445,21 +474,12 @@ for j in range(nsites):
 
 ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
 
-
 plt.xlim([20000.0,110000.0])
 plt.ylim([-1.0,30.0])
 plt.xlabel("crust age [Myr]")
 plt.ylabel("alteration volume percent")
 plt.title("compound_alt_vol")
 plt.legend(fontsize=8,loc='best',ncol=1)
-
-
-
-
-
-
-
-
 
 
 
@@ -491,12 +511,6 @@ plt.xlabel("crust age [Myr]")
 plt.ylabel("alteration volume percent")
 plt.title("compound_fe_vol")
 plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
-
-
-
-
-
-
 
 
 
@@ -541,6 +555,128 @@ plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.png",bbox_inches='tight')
 
 
 
+
+
+
+
+
+#hack: FIG: comp_lin_solo
+print "comp_lin_solo"
+fig=plt.figure(figsize=(12.0,6.0))
+rainbow_lw = 1.5
+
+ax=fig.add_subplot(2, 3, 1, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(distance_vector,compound_alt_vol_solo[:,ii], label=str(param_strings[ii]), c=plot_col[ii+1], lw=rainbow_lw, zorder=10)
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(distance_vector,compound_alt_vol_solo_shift[:,ii], label=str(param_strings[ii]), c=plot_col[ii+1], lw=rainbow_lw, zorder=10)
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+## RATIOS OF SHIFT
+
+ax=fig.add_subplot(2, 3, 3, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(distance_vector,compound_alt_vol_solo_shift[:,ii]/compound_alt_fe_solo_shift[:,ii], label=str(param_strings[ii]), c=plot_col[ii+1], lw=rainbow_lw, zorder=10)
+
+plt.plot(site_locations, alt_values/fe_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+# for j in range(nsites):
+#     plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+#     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+# ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+#plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("SHIFT RATIOS", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 4, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(distance_vector,compound_alt_fe_solo[:,ii], label=str(param_strings[ii]), c=plot_col[ii+1], lw=rainbow_lw, zorder=10)
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 5, frameon=True)
+
+for ii in range(len(param_strings)):
+    plt.plot(distance_vector,compound_alt_fe_solo_shift[:,ii], label=str(param_strings[ii]), c=plot_col[ii+1], lw=rainbow_lw, zorder=10)
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_solo.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"zzz_comp_lin_solo.eps",bbox_inches='tight')
+# plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.eps",bbox_inches='tight')
 
 
 
@@ -735,6 +871,8 @@ for j in range(len(any_min)):
     if j == 0:
         sp_factor = 0
 
+    if max_all == 0.0:
+        max_all = 0.01
 
     square_pcolor_min(sp1, sp2, sp_factor+1, the_s, cb_title="s dsec rate "+secondary[the_min], xlab=0, ylab=0, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
@@ -842,8 +980,47 @@ cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
 
-fig=plt.figure(figsize=(10.0,8.0))
-plt.subplots_adjust(hspace=0.6)
+fig=plt.figure(figsize=(8.0,5.5))
+plt.subplots_adjust(hspace=0.4)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+
+
+
+
 
 the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
 the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
@@ -866,16 +1043,16 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-min_all = 1.0
-max_all = 17.0
+# min_all = 1.0
+# max_all = 17.0
 
-square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
 
 
@@ -900,16 +1077,16 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-min_all = 0.005
-max_all = 0.10
+# min_all = 0.005
+# max_all = 0.10
 
-square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
