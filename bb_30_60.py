@@ -13,9 +13,11 @@ plt.rc('xtick', labelsize=8)
 plt.rc('ytick', labelsize=8)
 plt.rcParams['axes.titlesize'] = 9
 plt.rcParams['axes.labelsize'] = 11
+# plt.rcParams['hatch.linewidth'] = 2.0
 from matplotlib.colors import LinearSegmentedColormap
 
-plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
+plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de', '#fba8ff']
+plot_col_hatch = ['#000000', '#690a0a', '#984408', '#af7e11', '#7a9a0e', '#137c2a', '#35b5aa', '#0740d2', '#7f05d4', '#b100de', '#fba8ff']
 
 col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#df9a00', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
 
@@ -174,22 +176,22 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 #todo: path + params
 temp_string = "60"
-temp_string_list = ['30', '40', '50', '60']
+temp_string_list = ['20', '30', '40', '50', '60']
 in_path = "../output/revival/winter_basalt_box/"
 
 
-# param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
-# param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
+param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 
-param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0']
-param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+# param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0']
+# param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
 
 diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50']
 diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5]
 
 
 #poop: make 2d alt_ind grids
-n_grids = 4
+n_grids = 5
 
 
 value_alt_vol_mean = np.zeros([len(param_strings),len(diff_strings),n_grids])
@@ -296,6 +298,20 @@ compound_alt_fe_solo_shift = np.zeros([n_lateral, len(param_strings),n_grids])
 
 
 
+
+
+compound_alt_vol_dual_max = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_dual_max = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_dual_max_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_dual_max_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_dual_min = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_dual_min = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_dual_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_dual_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
 for iii in range(len(temp_string_list)):
 
     dir_path = "z_group_dd_full_"+temp_string_list[iii]+"/"
@@ -356,9 +372,21 @@ for iii in range(len(temp_string_list)):
             compound_alt_vol_solo[i,ii,iii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,iii]
             compound_alt_fe_solo[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,iii]
 
+            compound_alt_vol_dual_max[i,ii,iii] = (2.7/n_lateral)*i*np.max(value_alt_vol_mean_d[:,:,iii])
+            compound_alt_fe_dual_max[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.max(value_alt_fe_mean_d[:,:,iii])
+
+            compound_alt_vol_dual_min[i,ii,iii] = (2.7/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii])
+            compound_alt_fe_dual_min[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii])
+
             if age_vector[i] > 0.5:
                 compound_alt_vol_solo_shift[i,ii,iii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,iii] - 0.5*value_alt_vol_mean[ii,0,iii]
                 compound_alt_fe_solo_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,iii] + 0.5*value_alt_fe_mean[ii,0,iii]
+
+                compound_alt_vol_dual_max_shift[i,ii,iii] = (2.7/n_lateral)*i*np.max(value_alt_vol_mean_d[:,:,iii]) - 0.5*np.max(value_alt_vol_mean_d[:,:,iii])
+                compound_alt_fe_dual_max_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.max(value_alt_fe_mean_d[:,:,iii]) + 0.5*np.max(value_alt_fe_mean_d[:,:,iii])
+
+                compound_alt_vol_dual_min_shift[i,ii,iii] = (2.7/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii]) - 0.5*np.min(value_alt_vol_mean_d[:,:,iii])
+                compound_alt_fe_dual_min_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii]) + 0.5*np.min(value_alt_fe_mean_d[:,:,iii])
 
 
 
@@ -488,3 +516,148 @@ plt.ylabel("FeO/FeOt", fontsize=9)
 plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_solo_36.png",bbox_inches='tight')
 plt.savefig(in_path+dir_path+fig_path+"zzz_comp_lin_solo_36.eps",bbox_inches='tight')
 # plt.savefig(in_path+dir_path+fig_path+"z_compounds_lin.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+dual_alpha = 0.4
+hatch_alpha = 1.0
+hatch_string = '||'
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+
+#hack: FIG: comp_lin_fill_36
+print "comp_lin_fill_36"
+fig=plt.figure(figsize=(16.0,8.0))
+rainbow_lw = 1.0
+
+ax=fig.add_subplot(2, 3, 1, frameon=True)
+
+for iii in range(len(temp_string_list)):
+    ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii], compound_alt_vol_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=10, alpha=1.0)
+    # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor=plot_col[iii+1], lw=0, zorder=10+iii, alpha=dual_alpha)
+    ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+    ax.fill_between(distance_vector, compound_alt_vol_solo_shift[:,0,iii], compound_alt_vol_solo_shift[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=10)
+    # ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor=plot_col[iii+1], lw=0, zorder=10+iii, alpha=dual_alpha)
+    jump = ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+## RATIOS OF SHIFT
+
+# ax=fig.add_subplot(2, 3, 3, frameon=True)
+#
+# for ii in range(len(param_strings)):
+#     plt.plot(distance_vector,compound_alt_vol_solo_shift[:,ii]/compound_alt_fe_solo_shift[:,ii], label=str(param_strings[ii]), c=plot_col[ii+1], lw=rainbow_lw, zorder=10)
+#
+# plt.plot(site_locations, alt_values/fe_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+# # for j in range(nsites):
+# #     plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+# #     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+# #     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+# # ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+#
+# plt.xlim([20000.0,110000.0])
+# #plt.ylim([-1.0,30.0])
+# # plt.xlabel("crust age [Myr]", fontsize=9)
+# plt.ylabel("SHIFT RATIOS", fontsize=9)
+# #plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+hatch_strings = ['//', '//', '//', '//', '//']
+
+
+
+ax=fig.add_subplot(2, 3, 4, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+    ax.fill_between(distance_vector, compound_alt_fe_solo[:,0,iii], compound_alt_fe_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=10)
+    # ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor=plot_col[iii+1], lw=0, zorder=10+iii, alpha=dual_alpha)
+    ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 5, frameon=True)
+
+for iii in range(len(temp_string_list)):
+    ax.fill_between(distance_vector, compound_alt_fe_solo_shift[:,0,iii], compound_alt_fe_solo_shift[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=10)
+    ax.fill_between(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], compound_alt_fe_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_fill_36.png",bbox_inches='tight')

@@ -15,7 +15,7 @@ plt.rcParams['axes.titlesize'] = 9
 plt.rcParams['axes.labelsize'] = 11
 from matplotlib.colors import LinearSegmentedColormap
 
-plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de']
+plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de', '#fba8ff']
 
 col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff2', '#20267c','#8f00ff', '#ec52ff', '#6e6e6e', '#000000', '#df9a00', '#7d4e22', '#ffff00', '#df9a00', '#812700', '#6b3f67', '#0f9995', '#4d4d4d', '#d9d9d9', '#e9acff']
 
@@ -173,7 +173,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "30"
+temp_string = "20"
 in_path = "../output/revival/winter_basalt_box/"
 dir_path = "z_group_dd_full_"+temp_string+"/"
 fig_path = "fig_lateral/"
@@ -874,7 +874,7 @@ for j in range(len(any_min)):
     if max_all == 0.0:
         max_all = 0.01
 
-    square_pcolor_min(sp1, sp2, sp_factor+1, the_s, cb_title="s dsec rate "+secondary[the_min], xlab=0, ylab=0, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor_min(sp1, sp2, sp_factor+1, the_s, cb_title=temp_string + " " + "s dsec rate "+secondary[the_min], xlab=0, ylab=0, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
     square_pcolor_min(sp1, sp2, sp_factor+2, the_d, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
 

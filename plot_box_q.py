@@ -49,7 +49,7 @@ n_box = 3
 minNum = 41
 
 #todo: path here
-prefix = "z_group_dd_full_30/"
+prefix = "z_group_dd_full_70/"
 # path_label = prefix[3:7]
 # print path_label
 
