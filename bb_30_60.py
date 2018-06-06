@@ -367,7 +367,7 @@ for iii in range(len(temp_string_list)):
     for i in range(n_lateral-1):
 
 
-
+        shift_myr = 0.4
         for ii in range(len(param_strings)):
             compound_alt_vol_solo[i,ii,iii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,iii]
             compound_alt_fe_solo[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,iii]
@@ -378,15 +378,15 @@ for iii in range(len(temp_string_list)):
             compound_alt_vol_dual_min[i,ii,iii] = (2.7/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii])
             compound_alt_fe_dual_min[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii])
 
-            if age_vector[i] > 0.5:
-                compound_alt_vol_solo_shift[i,ii,iii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,iii] - 0.5*value_alt_vol_mean[ii,0,iii]
-                compound_alt_fe_solo_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,iii] + 0.5*value_alt_fe_mean[ii,0,iii]
+            if age_vector[i] > shift_myr:
+                compound_alt_vol_solo_shift[i,ii,iii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,iii] - shift_myr*value_alt_vol_mean[ii,0,iii]
+                compound_alt_fe_solo_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,iii] + shift_myr*value_alt_fe_mean[ii,0,iii]
 
-                compound_alt_vol_dual_max_shift[i,ii,iii] = (2.7/n_lateral)*i*np.max(value_alt_vol_mean_d[:,:,iii]) - 0.5*np.max(value_alt_vol_mean_d[:,:,iii])
-                compound_alt_fe_dual_max_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.max(value_alt_fe_mean_d[:,:,iii]) + 0.5*np.max(value_alt_fe_mean_d[:,:,iii])
+                compound_alt_vol_dual_max_shift[i,ii,iii] = (2.7/n_lateral)*i*np.max(value_alt_vol_mean_d[:,:,iii]) - shift_myr*np.max(value_alt_vol_mean_d[:,:,iii])
+                compound_alt_fe_dual_max_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.max(value_alt_fe_mean_d[:,:,iii]) + shift_myr*np.max(value_alt_fe_mean_d[:,:,iii])
 
-                compound_alt_vol_dual_min_shift[i,ii,iii] = (2.7/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii]) - 0.5*np.min(value_alt_vol_mean_d[:,:,iii])
-                compound_alt_fe_dual_min_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii]) + 0.5*np.min(value_alt_fe_mean_d[:,:,iii])
+                compound_alt_vol_dual_min_shift[i,ii,iii] = (2.7/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii]) - shift_myr*np.min(value_alt_vol_mean_d[:,:,iii])
+                compound_alt_fe_dual_min_shift[i,ii,iii] = 0.78 - (2.7/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii]) + shift_myr*np.min(value_alt_fe_mean_d[:,:,iii])
 
 
 
@@ -588,6 +588,105 @@ plt.ylabel("alteration volume percent", fontsize=9)
 
 
 
+
+
+
+
+
+
+
+# ax=fig.add_subplot(2, 3, 3, frameon=True)
+#
+# for iii in range(len(temp_string_list)):
+#     # ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.78-compound_alt_fe_solo[:,0,iii]), compound_alt_vol_solo[:,-1,iii]/(0.78-compound_alt_fe_solo[:,-1,iii]), facecolor=plot_col[iii+1], lw=0, zorder=10, alpha=1.0)
+#
+#     plt.plot(distance_vector, compound_alt_vol_solo_shift[:,0,iii]/(0.78-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+#     plt.plot(distance_vector, compound_alt_vol_solo_shift[:,-1,iii]/(0.78-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+#
+#     # print "debug"
+#     # print 0.78-compound_alt_fe_solo[:,0,iii]
+#     # print " "
+#
+#     # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii]/(0.78+compound_alt_fe_dual_max[:,0,iii]), color=plot_col_hatch[iii+1], linestyle='--')
+#     # plt.plot(distance_vector, compound_alt_vol_dual_min[:,-1,iii]/(0.78+compound_alt_fe_dual_min[:,-1,iii]), color=plot_col_hatch[iii+1], linestyle='--')
+#
+#
+#     # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+#
+#
+# plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+# # for j in range(nsites):
+# #     plt.plot([site_locations[j],site_locations[j]],[lower_eb[j]/(0.78-lower_eb_fe[j]),upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+# #     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+# #     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+#
+# ratio_upper = np.zeros(len(upper_eb_fe))
+# ratio_lower = np.zeros(len(upper_eb_fe))
+#
+# for iii in range(len(ratio_upper)):
+#     ratio_upper[iii] = np.max([upper_eb[iii]/(0.78-upper_eb_fe[iii]) , upper_eb[iii]/(0.78-lower_eb_fe[iii]) , lower_eb[iii]/(0.78-upper_eb_fe[iii]) , lower_eb[iii]/(0.78-lower_eb_fe[iii]) ])
+#
+#     ratio_lower[iii] = np.min([upper_eb[iii]/(0.78-upper_eb_fe[iii]) , upper_eb[iii]/(0.78-lower_eb_fe[iii]) , lower_eb[iii]/(0.78-upper_eb_fe[iii]) , lower_eb[iii]/(0.78-lower_eb_fe[iii]) ])
+#
+# print "debug upper"
+# print ratio_upper
+# print " "
+# print "debug lower"
+# print ratio_lower
+# print " "
+# print " "
+#
+# ax.fill_between(site_locations, ratio_lower, ratio_upper, facecolor=fill_color, lw=0, zorder=0)
+#
+# plt.plot(site_locations, ratio_lower, color='k')
+# plt.plot(site_locations, ratio_upper, color='c')
+#
+# plt.xlim([20000.0,110000.0])
+# plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+# plt.ylim([5.0,300.0])
+#
+# plt.ylabel("ratio solo", fontsize=9)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# ax=fig.add_subplot(2, 3, 6, frameon=True)
+#
+# for iii in range(len(temp_string_list)):
+#     # ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.78-compound_alt_fe_solo[:,0,iii]), compound_alt_vol_solo[:,-1,iii]/(0.78-compound_alt_fe_solo[:,-1,iii]), facecolor=plot_col[iii+1], lw=0, zorder=10, alpha=1.0)
+#
+#     plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.80-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+#     plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.80-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+#
+#     # print "debug"
+#     # print 0.78-compound_alt_fe_solo[:,0,iii]
+#     # print " "
+#
+#     # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii]/(0.78+compound_alt_fe_dual_max[:,0,iii]), color=plot_col_hatch[iii+1], linestyle='--')
+#     # plt.plot(distance_vector, compound_alt_vol_dual_min[:,-1,iii]/(0.78+compound_alt_fe_dual_min[:,-1,iii]), color=plot_col_hatch[iii+1], linestyle='--')
+#
+#
+#     # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+#
+#
+# plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+# plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+# plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+#
+# plt.xlim([20000.0,110000.0])
+# plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+# plt.ylim([5.0,300.0])
+#
+# plt.ylabel("ratio solo", fontsize=9)
+
+
+
 ## RATIOS OF SHIFT
 
 # ax=fig.add_subplot(2, 3, 3, frameon=True)
@@ -661,3 +760,227 @@ plt.ylabel("FeO/FeOt", fontsize=9)
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_fill_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_fill_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: comp_lin_INIT_36
+print "comp_lin_INIT_36"
+fig=plt.figure(figsize=(23.0,8.0))
+rainbow_lw = 1.0
+
+
+
+
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 5, 1, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.78001-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.78001-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.78, (((0.78, 0.80, 0.82)))')
+
+
+
+
+
+ax=fig.add_subplot(2, 5, 2, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.79-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.79-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.79, (((0.78, 0.80, 0.82)))')
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 5, 3, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.80-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.80-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.80, (((0.78, 0.80, 0.82)))')
+
+
+
+
+ax=fig.add_subplot(2, 5, 4, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.81-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.81-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.81, (((0.78, 0.80, 0.82)))')
+
+
+
+
+
+ax=fig.add_subplot(2, 5, 5, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.82-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.82-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.82, (((0.78, 0.80, 0.82)))')
+
+
+
+
+
+
+ax=fig.add_subplot(2, 5, 6, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.83-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.83-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.83, (((0.78, 0.80, 0.82)))')
+
+
+
+
+
+
+
+ax=fig.add_subplot(2, 5, 7, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii]/(0.88-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii]/(0.88-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.8-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+plt.plot(site_locations, alt_values/(0.82-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio solo/solo 0.88, (((0.78, 0.80, 0.82)))')
+
+
+
+
+ax=fig.add_subplot(2, 5, 10, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,0,iii]/(0.78-compound_alt_fe_solo[:,0,iii]), color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,-1,iii]/(0.78-compound_alt_fe_solo[:,-1,iii]), color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values/(0.78-fe_values), color='k', linestyle='-', lw=3, zorder=13)
+
+ratio_upper = np.zeros(len(upper_eb_fe))
+ratio_lower = np.zeros(len(upper_eb_fe))
+
+for iii in range(len(ratio_upper)):
+    ratio_upper[iii] = np.max([upper_eb[iii]/(0.78-upper_eb_fe[iii]) , upper_eb[iii]/(0.78-lower_eb_fe[iii]) , lower_eb[iii]/(0.78-upper_eb_fe[iii]) , lower_eb[iii]/(0.78-lower_eb_fe[iii]) ])
+
+    ratio_lower[iii] = np.min([upper_eb[iii]/(0.78-upper_eb_fe[iii]) , upper_eb[iii]/(0.78-lower_eb_fe[iii]) , lower_eb[iii]/(0.78-upper_eb_fe[iii]) , lower_eb[iii]/(0.78-lower_eb_fe[iii]) ])
+
+print "debug upper"
+print ratio_upper
+print " "
+print "debug lower"
+print ratio_lower
+print " "
+print " "
+
+ax.fill_between(site_locations, ratio_lower, ratio_upper, facecolor=fill_color, lw=0, zorder=0)
+
+plt.plot(site_locations, ratio_lower, color='k')
+plt.plot(site_locations, ratio_upper, color='c')
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.0,300.0])
+plt.ylabel("ratio", fontsize=9)
+plt.title('ratio shift/solo, 0.78')
+
+
+
+
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_INIT_36.png",bbox_inches='tight')
+#plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_fill_36.eps",bbox_inches='tight')

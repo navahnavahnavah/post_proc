@@ -173,7 +173,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "20"
+temp_string = "30"
 in_path = "../output/revival/winter_basalt_box/"
 dir_path = "z_group_dd_full_"+temp_string+"/"
 fig_path = "fig_lateral/"
@@ -973,14 +973,14 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_pcolor.png",bbox_inches='tight')
 #hack: FIG: alt_vol_pcolor_full
 print "alt_vol_pcolor_full"
 
-sp1 = 3
+sp1 = 4
 sp2 = 4
 
 cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
 
-fig=plt.figure(figsize=(8.0,5.5))
+fig=plt.figure(figsize=(8.0,8.0))
 plt.subplots_adjust(hspace=0.4)
 
 
@@ -1087,6 +1087,49 @@ square_pcolor(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab
 square_pcolor(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
 square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+
+
+
+
+
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+square_pcolor(sp1, sp2, 13, the_s, cb_title=temp_string + " " + "s slope ratio", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 14, the_d, cb_title=temp_string + " " + "d slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 15, the_a, cb_title=temp_string + " " + "a slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
