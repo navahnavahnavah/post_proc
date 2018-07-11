@@ -173,19 +173,23 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "30"
+temp_string = "60"
 in_path = "../output/revival/winter_basalt_box/"
-dir_path = "z_group_dd_full_"+temp_string+"/"
+dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral/"
+
+if not os.path.exists(in_path+dir_path+"fig_lateral"):
+    os.makedirs(in_path+dir_path+"fig_lateral")
+
 
 param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
 param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 
-# param_strings = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0']
-# param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+# diff_strings = ['2.00', '2.50', '3.00', '3.50', '4.00', '4.50', '5.00', '5.50', '6.00']
+# diff_nums = [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0]
 
-diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50']
-diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5]
+diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50', '4.75', '5.00', '5.25', '5.50', '5.75', '6.00']
+diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 4.25, 5.5, 5.75, 6.0]
 
 
 #poop: make 2d alt_ind grids
@@ -214,9 +218,7 @@ value_dsec_d = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 value_dsec_a = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 value_dsec_b = np.zeros([len(param_strings),len(diff_strings),minNum+1,n_grids])
 
-#009BC7
-#c7c7c7
-#80BBFF
+
 #poop: make alt_ind age curves
 curve_nsteps = 1000
 n_curves = 10
@@ -347,49 +349,50 @@ compound_alt_fe_solo = np.zeros([n_lateral, len(param_strings)])
 compound_alt_vol_solo_shift = np.zeros([n_lateral, len(param_strings)])
 compound_alt_fe_solo_shift = np.zeros([n_lateral, len(param_strings)])
 
+active_myr = 3.5
 for i in range(n_lateral-1):
     # compound at 3.0 % / Myr
-    compound_alt_vol[i,0] = (2.7/n_lateral)*i*compound_alt_vol_labels[0]
+    compound_alt_vol[i,0] = (active_myr/n_lateral)*i*compound_alt_vol_labels[0]
     # compound at 5.0 % / Myr
-    compound_alt_vol[i,1] = (2.7/n_lateral)*i*compound_alt_vol_labels[1]
+    compound_alt_vol[i,1] = (active_myr/n_lateral)*i*compound_alt_vol_labels[1]
     # compound at 10.0 % / Myr
-    compound_alt_vol[i,2] = (2.7/n_lateral)*i*compound_alt_vol_labels[2]
+    compound_alt_vol[i,2] = (active_myr/n_lateral)*i*compound_alt_vol_labels[2]
     # compound at 15.0 % / Myr
-    compound_alt_vol[i,3] = (2.7/n_lateral)*i*compound_alt_vol_labels[3]
+    compound_alt_vol[i,3] = (active_myr/n_lateral)*i*compound_alt_vol_labels[3]
     # compound at 20.0 % / Myr
-    compound_alt_vol[i,4] = (2.7/n_lateral)*i*compound_alt_vol_labels[4]
+    compound_alt_vol[i,4] = (active_myr/n_lateral)*i*compound_alt_vol_labels[4]
 
     # compound at 10.0 % / Myr
     if age_vector[i] > 0.5:
-        compound_alt_vol_shift[i,0] = (2.7/n_lateral)*i*compound_alt_vol_labels[0] - 0.5*compound_alt_vol_labels[0]
-        compound_alt_vol_shift[i,1] = (2.7/n_lateral)*i*compound_alt_vol_labels[1] - 0.5*compound_alt_vol_labels[1]
-        compound_alt_vol_shift[i,2] = (2.7/n_lateral)*i*compound_alt_vol_labels[2] - 0.5*compound_alt_vol_labels[2]
-        compound_alt_vol_shift[i,3] = (2.7/n_lateral)*i*compound_alt_vol_labels[3] - 0.5*compound_alt_vol_labels[3]
-        compound_alt_vol_shift[i,4] = (2.7/n_lateral)*i*compound_alt_vol_labels[4] - 0.5*compound_alt_vol_labels[4]
+        compound_alt_vol_shift[i,0] = (active_myr/n_lateral)*i*compound_alt_vol_labels[0] - 0.5*compound_alt_vol_labels[0]
+        compound_alt_vol_shift[i,1] = (active_myr/n_lateral)*i*compound_alt_vol_labels[1] - 0.5*compound_alt_vol_labels[1]
+        compound_alt_vol_shift[i,2] = (active_myr/n_lateral)*i*compound_alt_vol_labels[2] - 0.5*compound_alt_vol_labels[2]
+        compound_alt_vol_shift[i,3] = (active_myr/n_lateral)*i*compound_alt_vol_labels[3] - 0.5*compound_alt_vol_labels[3]
+        compound_alt_vol_shift[i,4] = (active_myr/n_lateral)*i*compound_alt_vol_labels[4] - 0.5*compound_alt_vol_labels[4]
 
-        compound_alt_fe_shift[i,0] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[0] + 0.5*compound_alt_fe_labels[0]
-        compound_alt_fe_shift[i,1] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[1] + 0.5*compound_alt_fe_labels[1]
-        compound_alt_fe_shift[i,2] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[2] + 0.5*compound_alt_fe_labels[2]
-        compound_alt_fe_shift[i,3] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[3] + 0.5*compound_alt_fe_labels[3]
-        compound_alt_fe_shift[i,4] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[4] + 0.5*compound_alt_fe_labels[4]
-        compound_alt_fe_shift[i,5] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[5] + 0.5*compound_alt_fe_labels[4]
+        compound_alt_fe_shift[i,0] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[0] + 0.5*compound_alt_fe_labels[0]
+        compound_alt_fe_shift[i,1] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[1] + 0.5*compound_alt_fe_labels[1]
+        compound_alt_fe_shift[i,2] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[2] + 0.5*compound_alt_fe_labels[2]
+        compound_alt_fe_shift[i,3] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[3] + 0.5*compound_alt_fe_labels[3]
+        compound_alt_fe_shift[i,4] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[4] + 0.5*compound_alt_fe_labels[4]
+        compound_alt_fe_shift[i,5] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[5] + 0.5*compound_alt_fe_labels[4]
 
 
-    compound_alt_fe[i,0] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[0]
-    compound_alt_fe[i,1] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[1]
-    compound_alt_fe[i,2] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[2]
-    compound_alt_fe[i,3] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[3]
-    compound_alt_fe[i,4] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[4]
-    compound_alt_fe[i,5] = 0.78 - (2.7/n_lateral)*i*compound_alt_fe_labels[5]
+    compound_alt_fe[i,0] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[0]
+    compound_alt_fe[i,1] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[1]
+    compound_alt_fe[i,2] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[2]
+    compound_alt_fe[i,3] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[3]
+    compound_alt_fe[i,4] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[4]
+    compound_alt_fe[i,5] = 0.78 - (active_myr/n_lateral)*i*compound_alt_fe_labels[5]
 
 
     for ii in range(len(param_strings)):
-        compound_alt_vol_solo[i,ii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,0]
-        compound_alt_fe_solo[i,ii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,0]
+        compound_alt_vol_solo[i,ii] = (active_myr/n_lateral)*i*value_alt_vol_mean[ii,0,0]
+        compound_alt_fe_solo[i,ii] = 0.78 - (active_myr/n_lateral)*i*value_alt_fe_mean[ii,0,0]
 
         if age_vector[i] > 0.5:
-            compound_alt_vol_solo_shift[i,ii] = (2.7/n_lateral)*i*value_alt_vol_mean[ii,0,0] - 0.5*value_alt_vol_mean[ii,0,0]
-            compound_alt_fe_solo_shift[i,ii] = 0.78 - (2.7/n_lateral)*i*value_alt_fe_mean[ii,0,0] + 0.5*value_alt_fe_mean[ii,0,0]
+            compound_alt_vol_solo_shift[i,ii] = (active_myr/n_lateral)*i*value_alt_vol_mean[ii,0,0] - 0.5*value_alt_vol_mean[ii,0,0]
+            compound_alt_fe_solo_shift[i,ii] = 0.78 - (active_myr/n_lateral)*i*value_alt_fe_mean[ii,0,0] + 0.5*value_alt_fe_mean[ii,0,0]
 
 
     # # compound at 10.0 % / Myr
@@ -792,6 +795,8 @@ print "dsec_contour"
 fig=plt.figure(figsize=(12.0,9.0))
 plt.subplots_adjust(wspace=0.5, hspace=0.5)
 
+print "any_min" , any_min
+
 the_min = any_min[0]
 the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
 the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
@@ -1097,12 +1102,15 @@ square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab
 
 
 
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
 
-
-the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
-the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+# the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
 
 min_all = np.min(the_s)
 if np.min(the_d) < min_all:
