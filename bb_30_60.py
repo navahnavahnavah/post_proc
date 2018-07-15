@@ -115,9 +115,10 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "60"
+temp_string = "65"
 # temp_string_list = ['20', '30', '40', '50', '60']
-temp_string_list = ['30', '30', '40', '50', '60']
+# temp_string_list = ['30', '40', '50', '60']
+temp_string_list = ['30', '35', '40', '45', '50', '55', '60', '65']
 in_path = "../output/revival/winter_basalt_box/"
 
 
@@ -130,10 +131,10 @@ param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 # diff_nums = [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0]
 
 diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50', '4.75', '5.00', '5.25', '5.50', '5.75', '6.00']
-diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 4.25, 5.5, 5.75, 6.0]
+diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0]
 
 #poop: make 2d alt_ind grids
-n_grids = 5
+n_grids = 8
 
 
 value_alt_vol_mean = np.zeros([len(param_strings),len(diff_strings),n_grids])
@@ -511,9 +512,9 @@ plt.savefig(in_path+dir_path+fig_path+"zzz_comp_lin_solo_36.eps",bbox_inches='ti
 dual_alpha = 0.4
 hatch_alpha = 1.0
 hatch_string = '||'
-hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
 #hatch_strings = ['\\\\', 'o', '//', '++', '..']
-hatch_strings = ['\\\\', '\\\\', '.', '\\\\', '||']
+hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
 solo_alpha = 0.4
 lw_for_plot = 2.0
 
@@ -599,7 +600,7 @@ plt.ylabel("alteration volume percent", fontsize=9)
 
 
 
-hatch_strings = ['//', '//', '//', '//', '//']
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
 
 
 
@@ -902,10 +903,17 @@ cont_y_param_max = len(param_strings) - 0
 
 
 
+#poop: dimensions
+dim1 = 12.0
+dim2 = 14.0
+
+
+
+
 #hack: FIG: ai_pri_36
 print "ai_pri_36"
 
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(dim1,dim2))
 plt.subplots_adjust(hspace=0.4)
 
 #value_alt_vol_mean_d[:,:,iii]
@@ -1000,11 +1008,10 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_pri_36.png",bbox_inches='tight')
 
 
 
-
 #hack: FIG: ai_1_36
 print "ai_1_36"
 
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(dim1,dim2))
 plt.subplots_adjust(hspace=0.4)
 
 for iii in range(len(temp_string_list)):
@@ -1056,7 +1063,7 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.png",bbox_inches='tight')
 #hack: FIG: ai_2_36
 print "ai_2_36"
 
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(dim1,dim2))
 plt.subplots_adjust(hspace=0.4)
 
 for iii in range(len(temp_string_list)):
@@ -1110,7 +1117,7 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.png",bbox_inches='tight')
 print "ai_3_36"
 # new ratio is d_pri : alt-fe
 
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(dim1,dim2))
 plt.subplots_adjust(hspace=0.4)
 
 for iii in range(len(temp_string_list)):
@@ -1139,13 +1146,13 @@ for iii in range(len(temp_string_list)):
     the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
     the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
     the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = the_a
+    #the_b = the_a
 
     the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:])
     the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
     the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
     the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = the_a_row
+    #the_b_row = the_a_row
 
     min_all = np.min(the_s_row)
     if np.min(the_d_row) < min_all:
@@ -1182,7 +1189,7 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_3_36.png",bbox_inches='tight')
 print "ai_4_36"
 # new ratio is  alt-fe : dpri
 
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(dim1,dim2))
 plt.subplots_adjust(hspace=0.4)
 
 for iii in range(len(temp_string_list)):
@@ -1192,13 +1199,13 @@ for iii in range(len(temp_string_list)):
     the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
     the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
     the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = the_a
+    #the_b = the_a
 
     the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
     the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
     the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
     the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = the_a_row
+    #the_b_row = the_a_row
 
     min_all = np.min(the_s_row)
     if np.min(the_d_row) < min_all:
@@ -1236,7 +1243,7 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_4_36.png",bbox_inches='tight')
 print "ai_5_36"
 # new ratio is d_pri : alt-fe
 
-fig=plt.figure(figsize=(8.0,8.0))
+fig=plt.figure(figsize=(dim1,dim2))
 plt.subplots_adjust(hspace=0.4)
 
 for iii in range(len(temp_string_list)):
@@ -1296,6 +1303,14 @@ sp22 = len(temp_string_list)
 fig=plt.figure(figsize=(12.0,12.0))
 #plt.subplots_adjust(hspace=0.4)
 
+cmap_divide = cont_y_param_max
+
+blue_cmap = LinearSegmentedColormap.from_list("blue_colormap", ((0.1, 0.8, 1.0), (0.0, 0.0, 0.5)), N=30, gamma=1.0)
+blue_colors = [ blue_cmap(x) for x in np.linspace(0.0, 1.0, cmap_divide) ]
+
+red_cmap = LinearSegmentedColormap.from_list("red_colormap", ((0.8, 0.5, 0.0), (0.5, 0.0, 0.0)), N=30, gamma=1.0)
+red_colors = [ red_cmap(x) for x in np.linspace(0.0, 1.0, cmap_divide) ]
+
 for iii in range(len(temp_string_list)):
 
     # the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii])
@@ -1353,14 +1368,16 @@ for iii in range(len(temp_string_list)):
     min_all = -0.05
     max_all = 1.05
 
+    q_skip = 2
+
     ax=fig.add_subplot(sp22, sp11, iii*sp11 + 1, frameon=True)
     for ii in range(len(param_strings)):
-        # red = alt_fe_mean_d
-        # plt.plot(diff_nums,value_alt_fe_mean[ii,:,iii]/np.max(value_alt_fe_mean[ii,:,iii]),color='r',zorder=3)
-        plt.plot(diff_nums,value_alt_fe_mean[ii,:,iii]/max_all_alt_fe,color='r',zorder=3)
-        # blue = dpri
-        # plt.plot(diff_nums,np.abs(value_dpri_mean_s[ii,:,iii])/np.max(np.abs(value_dpri_mean_s[ii,:,iii])),color='b',zorder=5)
-        plt.plot(diff_nums,np.abs(value_dpri_mean[ii,:,iii])/max_all_dpri_mean,color='b',zorder=5)
+
+        # red = alt_fe_mean
+        plt.plot(diff_nums,value_alt_fe_mean[ii,:,iii]/max_all_alt_fe,color=red_colors[ii],zorder=3)
+        # blue = dpri_mean
+        plt.plot(diff_nums,np.abs(value_dpri_mean[ii,:,iii])/max_all_dpri_mean,color=blue_colors[ii],zorder=5)
+
     plt.title('temp = ' + temp_string_list[iii] + 'chamber s')
     plt.ylim([min_all,max_all])
     if iii != len(temp_string_list)-1:
@@ -1372,9 +1389,9 @@ for iii in range(len(temp_string_list)):
     for ii in range(len(param_strings)):
         # red = alt_fe_mean_d
         # plt.plot(diff_nums,value_alt_fe_mean_d[ii,:,iii]/np.max(value_alt_fe_mean_d[ii,:,iii]),color='r',zorder=3)
-        plt.plot(diff_nums,value_alt_fe_mean_d[ii,:,iii]/max_all_alt_fe,color='r',zorder=3)
+        plt.plot(diff_nums,value_alt_fe_mean_d[ii,:,iii]/max_all_alt_fe,color=red_colors[ii],zorder=3)
         # blue = dpri
-        plt.plot(diff_nums,np.abs(value_dpri_mean_d[ii,:,iii])/max_all_dpri_mean,color='b',zorder=5)
+        plt.plot(diff_nums,np.abs(value_dpri_mean_d[ii,:,iii])/max_all_dpri_mean,color=blue_colors[ii],zorder=5)
     plt.title('temp = ' + temp_string_list[iii] + 'chamber d')
     plt.ylim([min_all,max_all])
     if iii != len(temp_string_list)-1:
@@ -1384,9 +1401,9 @@ for iii in range(len(temp_string_list)):
     for ii in range(len(param_strings)):
         # red = alt_fe_mean_d
         # plt.plot(diff_nums,value_alt_fe_mean_a[ii,:,iii]/np.max(value_alt_fe_mean_a[ii,:,iii]),color='r',zorder=3)
-        plt.plot(diff_nums,value_alt_fe_mean_a[ii,:,iii]/max_all_alt_fe,color='r',zorder=3)
+        plt.plot(diff_nums,value_alt_fe_mean_a[ii,:,iii]/max_all_alt_fe,color=red_colors[ii],zorder=3)
         # blue = dpri
-        plt.plot(diff_nums,np.abs(value_dpri_mean_a[ii,:,iii])/max_all_dpri_mean,color='b',zorder=5)
+        plt.plot(diff_nums,np.abs(value_dpri_mean_a[ii,:,iii])/max_all_dpri_mean,color=blue_colors[ii],zorder=5)
     plt.title('temp = ' + temp_string_list[iii] + 'chamber a')
     plt.ylim([min_all,max_all])
     if iii != len(temp_string_list)-1:
@@ -1396,9 +1413,9 @@ for iii in range(len(temp_string_list)):
     for ii in range(len(param_strings)):
         # red = alt_fe_mean_d
         # plt.plot(diff_nums,value_alt_fe_mean_b[ii,:,iii]/np.max(value_alt_fe_mean_b[ii,:,iii]),color='r',zorder=3)
-        plt.plot(diff_nums,value_alt_fe_mean_b[ii,:,iii]/max_all_alt_fe,color='r',zorder=3)
+        plt.plot(diff_nums,value_alt_fe_mean_b[ii,:,iii]/max_all_alt_fe,color=red_colors[ii],zorder=3)
         # blue = dpri
-        plt.plot(diff_nums,np.abs(value_dpri_mean_b[ii,:,iii])/max_all_dpri_mean,color='b',zorder=5)
+        plt.plot(diff_nums,np.abs(value_dpri_mean_b[ii,:,iii])/max_all_dpri_mean,color=blue_colors[ii],zorder=5)
     plt.title('temp = ' + temp_string_list[iii] + 'chamber b')
     plt.ylim([min_all,max_all])
     if iii != len(temp_string_list)-1:

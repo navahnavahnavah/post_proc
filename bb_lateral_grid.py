@@ -173,7 +173,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "60"
+temp_string = "65"
 in_path = "../output/revival/winter_basalt_box/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral/"
@@ -189,7 +189,7 @@ param_nums = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 # diff_nums = [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0]
 
 diff_strings = ['2.00', '2.25', '2.50', '2.75', '3.00', '3.25', '3.50', '3.75', '4.00', '4.25', '4.50', '4.75', '5.00', '5.25', '5.50', '5.75', '6.00']
-diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 4.25, 5.5, 5.75, 6.0]
+diff_nums = [2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0]
 
 
 #poop: make 2d alt_ind grids
@@ -1141,3 +1141,48 @@ square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio",
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
+
+
+
+
+
+#hack: FIG: fig5_contours
+print "dsec_contour"
+fig=plt.figure(figsize=(12.0,9.0))
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+print "any_min" , any_min
+
+the_min = any_min[0]
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+
+square_contour_min(sp1, sp2, 1, the_s, cb_title="s dsec rate "+secondary[the_min], xlab=1, ylab=1, the_cbar=1, cont_levels_in=cont_levels)
+
+square_contour_min(sp1, sp2, 2, the_d, cb_title="d dsec rate", xlab=1, cont_levels_in=cont_levels)
+
+square_contour_min(sp1, sp2, 3, the_a, cb_title="a dsec rate", xlab=1, cont_levels_in=cont_levels)
+
+square_contour_min(sp1, sp2, 4, the_b, cb_title="b dsec rate", xlab=1, cont_levels_in=cont_levels)
+
+plt.savefig(in_path+dir_path+fig_path+"z_dsec_contours.png",bbox_inches='tight')
