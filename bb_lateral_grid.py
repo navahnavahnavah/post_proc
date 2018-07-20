@@ -173,7 +173,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "65"
+temp_string = "40"
 in_path = "../output/revival/winter_basalt_box/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral/"
@@ -838,74 +838,117 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_contours.png",bbox_inches='tight')
 
 
 
-#hack: FIG: dsec_pcolor
-print "dsec_pcolor"
-
-sp1 = (len(any_min)+1)/2
-sp2 = 8
-
-
-fig=plt.figure(figsize=(20.0,len(any_min)))
-plt.subplots_adjust(hspace=0.6)
-
-for j in range(len(any_min)):
-
-    the_min = any_min[j]
-    the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-    the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-    the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-    the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-
-    min_all = np.min(the_s)
-    if np.min(the_d) < min_all:
-        min_all = np.min(the_d)
-    if np.min(the_a) < min_all:
-        min_all = np.min(the_a)
-    if np.min(the_b) < min_all:
-        min_all = np.min(the_b)
-
-    max_all = np.max(the_s)
-    if np.max(the_d) > max_all:
-        max_all = np.max(the_d)
-    if np.max(the_a) > max_all:
-        max_all = np.max(the_a)
-    if np.max(the_b) > max_all:
-        max_all = np.max(the_b)
-
-    sp_factor = (j*4)
-    if j == 0:
-        sp_factor = 0
-
-    if max_all == 0.0:
-        max_all = 0.01
-
-    square_pcolor_min(sp1, sp2, sp_factor+1, the_s, cb_title=temp_string + " " + "s dsec rate "+secondary[the_min], xlab=0, ylab=0, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor_min(sp1, sp2, sp_factor+2, the_d, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor_min(sp1, sp2, sp_factor+3, the_a, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor_min(sp1, sp2, sp_factor+4, the_b, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_dsec_pcolor.png",bbox_inches='tight')
-
-
-
-
-
-
-# #shack: FIG: alt_vol_pcolor
-# print "alt_vol_pcolor"
+# #hack: FIG: dsec_pcolor
+# print "dsec_pcolor"
 #
-# sp1 = 3
+# sp1 = (len(any_min)+1)/2
+# sp2 = 8
+#
+#
+# fig=plt.figure(figsize=(20.0,len(any_min)))
+# plt.subplots_adjust(hspace=0.6)
+#
+# for j in range(len(any_min)):
+#
+#     the_min = any_min[j]
+#     the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#     the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#     the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#     the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#
+#     min_all = np.min(the_s)
+#     if np.min(the_d) < min_all:
+#         min_all = np.min(the_d)
+#     if np.min(the_a) < min_all:
+#         min_all = np.min(the_a)
+#     if np.min(the_b) < min_all:
+#         min_all = np.min(the_b)
+#
+#     max_all = np.max(the_s)
+#     if np.max(the_d) > max_all:
+#         max_all = np.max(the_d)
+#     if np.max(the_a) > max_all:
+#         max_all = np.max(the_a)
+#     if np.max(the_b) > max_all:
+#         max_all = np.max(the_b)
+#
+#     sp_factor = (j*4)
+#     if j == 0:
+#         sp_factor = 0
+#
+#     if max_all == 0.0:
+#         max_all = 0.01
+#
+#     square_pcolor_min(sp1, sp2, sp_factor+1, the_s, cb_title=temp_string + " " + "s dsec rate "+secondary[the_min], xlab=0, ylab=0, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor_min(sp1, sp2, sp_factor+2, the_d, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor_min(sp1, sp2, sp_factor+3, the_a, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor_min(sp1, sp2, sp_factor+4, the_b, cb_title=" ", xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_dsec_pcolor.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+#
+# #hack: FIG: alt_vol_pcolor_full
+# print "alt_vol_pcolor_full"
+#
+# sp1 = 4
 # sp2 = 4
 #
-# cont_x_diff_max = len(diff_strings) - 2
+# cont_x_diff_max = len(diff_strings) - 0
 # cont_y_param_max = len(param_strings) - 0
 #
 #
-# fig=plt.figure(figsize=(12.0,9.0))
-# plt.subplots_adjust(hspace=0.6)
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+#
+#
+# the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+# the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+# the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+# the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# # min_all = 1.0
+# # max_all = 17.0
+#
+# square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+#
+#
+#
+#
 #
 # the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
 # the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
@@ -928,13 +971,16 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_pcolor.png",bbox_inches='tight')
 # if np.max(the_b) > max_all:
 #     max_all = np.max(the_b)
 #
-# square_pcolor(sp1, sp2, 1, the_s, cb_title="s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+# # min_all = 1.0
+# # max_all = 17.0
 #
-# square_pcolor(sp1, sp2, 2, the_d, cb_title="d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 #
-# square_pcolor(sp1, sp2, 3, the_a, cb_title="a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 #
-# square_pcolor(sp1, sp2, 4, the_b, cb_title="b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
 #
 #
 #
@@ -959,201 +1005,157 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_pcolor.png",bbox_inches='tight')
 # if np.max(the_b) > max_all:
 #     max_all = np.max(the_b)
 #
-# square_pcolor(sp1, sp2, 5, the_s, cb_title="s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+# # min_all = 0.005
+# # max_all = 0.10
 #
-# square_pcolor(sp1, sp2, 6, the_d, cb_title="d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# square_pcolor(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 #
-# square_pcolor(sp1, sp2, 7, the_a, cb_title="a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# square_pcolor(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 #
-# square_pcolor(sp1, sp2, 8, the_b, cb_title="b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# square_pcolor(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
 #
 #
-# plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor.png",bbox_inches='tight')
+#
+#
+#
+#
+#
+#
+#
+#
+# the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+#
+# # the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# # the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# # the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# # the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# # min_all = 0.005
+# # max_all = 0.10
+#
+# square_pcolor(sp1, sp2, 13, the_s, cb_title=temp_string + " " + "s slope ratio", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 14, the_d, cb_title=temp_string + " " + "d slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 15, the_a, cb_title=temp_string + " " + "a slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+# square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
+
+
+
+
+
+
+def square_contour_5(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=[1.0,2.0],fillz_purple=0):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    if xlab == 1:
+        plt.xlabel('log10(mixing time [years])', fontsize=8)
+    if ylab == 1:
+        plt.ylabel('discharge q [m/yr]', fontsize=8)
+
+    if fillz_purple == 1:
+        pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels[-5::2],cmap=cm.Purples, linewidths=0.0)
+
+    if fillz_purple == 2:
+        pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels[-5::2],cmap=cm.Wistia, linewidths=0.0)
+
+    pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=f5_cmap, antialiased=True, linewidths=1.0)
+    # for c in pCont.collections:
+    #     c.set_edgecolor("face")
+
+    plt.xticks(diff_nums[:cont_x_diff_max:xskip],diff_strings[::xskip], fontsize=8)
+    plt.yticks(param_nums[:cont_y_param_max:yskip],param_strings[::yskip], fontsize=8)
+
+    plt.title(cb_title, fontsize=9)
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.025, bbox.width*2.0, bbox.height*0.07])
+        cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+        cbar.set_ticks(cont_levels_in[::cont_skip])
+        cbar.ax.tick_params(labelsize=7)
+        #print "cont_levels" , cont_levels
+        # cbar.solids.set_edgecolor("face")
+    return square_contour_5
+
+
+
+
+def square_contour_overlap(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=[1.0,2.0],cmap_in=cm.jet, is_xtick=0, is_ytick=0,col='k'):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    if xlab == 1:
+        plt.xlabel('log10(mixing time [years])', fontsize=8)
+    if ylab == 1:
+        plt.ylabel('discharge q [m/yr]', fontsize=8)
+
+    pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=[cont_levels_in[0],cont_levels[-1]],cmap=cmap_in,alpha=0.5)
+    # pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=cmap_in, antialiased=True, linewidths=1.0)
+    pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, colors=col, antialiased=True, linewidths=1.0)
+
+    if is_xtick == 1:
+        plt.xticks(diff_nums[:cont_x_diff_max:xskip],diff_strings[::xskip], fontsize=8)
+    if is_ytick == 1:
+        plt.yticks(param_nums[:cont_y_param_max:yskip],param_strings[::yskip], fontsize=8)
 
+    plt.title(cb_title, fontsize=9)
 
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.025, bbox.width*2.0, bbox.height*0.07])
+        cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+        cbar.set_ticks(cont_levels_in[::cont_skip])
+        cbar.ax.tick_params(labelsize=7)
+        #print "cont_levels" , cont_levels
+        # cbar.solids.set_edgecolor("face")
 
+    return square_contour_overlap
 
 
 
-#hack: FIG: alt_vol_pcolor_full
-print "alt_vol_pcolor_full"
 
-sp1 = 4
-sp2 = 4
+#poop: fig5_overlap parameters
+fo_sp1 = 3
+fo_sp2 = 4
+f5_n_cont = 11
+cont_skip = 2
 
-cont_x_diff_max = len(diff_strings) - 0
-cont_y_param_max = len(param_strings) - 0
 
 
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
 
-
-
-the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
-the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
-the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
-the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-# min_all = 1.0
-# max_all = 17.0
-
-square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-
-
-
-
-the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
-the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-# min_all = 1.0
-# max_all = 17.0
-
-square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-
-the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
-the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-# min_all = 0.005
-# max_all = 0.10
-
-square_pcolor(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-
-
-
-
-
-
-
-
-the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
-the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-
-# the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
-# the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-# the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-# the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-# min_all = 0.005
-# max_all = 0.10
-
-square_pcolor(sp1, sp2, 13, the_s, cb_title=temp_string + " " + "s slope ratio", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 14, the_d, cb_title=temp_string + " " + "d slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 15, the_a, cb_title=temp_string + " " + "a slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
-
-
-
-
-
-#hack: FIG: fig5_contours
-print "dsec_contour"
+#hack: FIG: fig5_overlap
+print "fig5_overlap"
 fig=plt.figure(figsize=(12.0,9.0))
-plt.subplots_adjust(wspace=0.5, hspace=0.5)
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
 
-print "any_min" , any_min
 
-the_min = any_min[0]
+# sap-mg
+the_min = 2
 the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
 the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
 the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
@@ -1175,14 +1177,911 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-cont_levels = np.linspace(min_all,max_all,num=n_cont,endpoint=True)
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-6:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Blues
+fixed_col = '#207aa1'
 
-square_contour_min(sp1, sp2, 1, the_s, cb_title="s dsec rate "+secondary[the_min], xlab=1, ylab=1, the_cbar=1, cont_levels_in=cont_levels)
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="fig5_overlap [Mg]", xlab=0, ylab=1, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
 
-square_contour_min(sp1, sp2, 2, the_d, cb_title="d dsec rate", xlab=1, cont_levels_in=cont_levels)
 
-square_contour_min(sp1, sp2, 3, the_a, cb_title="a dsec rate", xlab=1, cont_levels_in=cont_levels)
 
-square_contour_min(sp1, sp2, 4, the_b, cb_title="b dsec rate", xlab=1, cont_levels_in=cont_levels)
 
-plt.savefig(in_path+dir_path+fig_path+"z_dsec_contours.png",bbox_inches='tight')
+# sap-na
+the_min = 11
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-5:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Greens
+fixed_col = '#4b991b'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+# clin
+the_min = 31
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-5:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Oranges
+fixed_col = '#ad3400'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+
+
+
+# nont-mg
+the_min = 13
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-5:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Purples
+fixed_col = '#400596'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_overlap.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"zz_fig5_overlap.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: fig5_overlap_fe
+print "fig5_overlap_fe"
+fig=plt.figure(figsize=(12.0,9.0))
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
+
+
+# goethite
+the_min = 7
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-6:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Blues
+fixed_col = '#207aa1'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="fig5_overlap [Fe]", xlab=0, ylab=1, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+
+
+
+
+# pyrite
+the_min = 5
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-5:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Greens
+fixed_col = '#4b991b'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+# fe-celadonite
+the_min = 14
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-5:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Oranges
+fixed_col = '#ad3400'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+
+
+
+# nont-mg
+the_min = 13
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+cont_levels = cont_levels0[-5:]
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+the_cmap_in = cm.Purples
+fixed_col = '#400596'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_overlap_fe.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"zz_fig5_overlap_fe.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: fig5_OOM
+print "fig5_OOM"
+fig=plt.figure(figsize=(12.0,9.0))
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
+
+
+# sap-mg
+the_min = 2
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+
+min_all_oom = np.min(the_s[the_s>0])
+if np.min(the_d[the_d>0]) < min_all_oom:
+    min_all_oom = np.min(the_d[the_d>0])
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# cont_levels = [min_all_oom, 10.0*min_all_oom, max_all]
+cont_levels = [max_all*0.7, max_all]
+
+the_cmap_in = cm.Blues
+fixed_col = '#207aa1'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="fig5_overlap [Mg]", xlab=0, ylab=1, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+
+
+
+
+# sap-na
+the_min = 11
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all_oom = np.min(the_s[the_s>0])
+if np.min(the_d[the_d>0]) < min_all_oom:
+    min_all_oom = np.min(the_d[the_d>0])
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# cont_levels = [min_all_oom, 10.0*min_all_oom, max_all]
+# cont_levels = [10.0*min_all_oom, max_all]
+cont_levels = [max_all*0.9, max_all]
+
+the_cmap_in = cm.Greens
+fixed_col = '#4b991b'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+# clin
+the_min = 31
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all_oom = np.min(the_s[the_s>0])
+if np.min(the_d[the_d>0]) < min_all_oom:
+    min_all_oom = np.min(the_d[the_d>0])
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# cont_levels = [min_all_oom, 10.0*min_all_oom, max_all]
+# cont_levels = [10.0*min_all_oom, max_all]
+cont_levels = [max_all*0.7, max_all]
+
+the_cmap_in = cm.Oranges
+fixed_col = '#ad3400'
+
+if max_all > 0.0:
+    square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+    square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+
+
+
+# # nont-mg
+# the_min = 13
+# the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#
+# min_all_oom = np.min(the_s[the_s>0])
+# if np.min(the_d[the_d>0]) < min_all_oom:
+#     min_all_oom = np.min(the_d[the_d>0])
+# # if np.min(the_a) < min_all:
+# #     min_all = np.min(the_a)
+# # if np.min(the_b) < min_all:
+# #     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# cont_levels = [min_all_oom, 10.0*min_all_oom, max_all]
+#
+# the_cmap_in = cm.Purples
+# fixed_col = '#400596'
+#
+# if max_all > 0.0:
+#     square_contour_overlap(fo_sp1, fo_sp2, 1, the_s, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+#     square_contour_overlap(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+#     square_contour_overlap(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+#     square_contour_overlap(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,col=fixed_col)
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_OOM.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#poop: fig_5 parameters
+f5_sp1 = 6
+f5_sp2 = 4
+f5_cmap = cm.Blues
+f5_n_cont = 11
+cont_skip = 2
+f5_purple = 1
+
+
+
+#hack: FIG: fig5_contours
+print "fig5_contours"
+fig=plt.figure(figsize=(11.0,14.0))
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
+
+#print "any_min" , any_min
+
+
+row = 0
+# sap-mg
+#the_min = any_min[0]
+the_min = 2
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Blues
+
+if max_all > 0.0:
+    square_contour_5(f5_sp1, f5_sp2, 1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, 2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, 3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, 4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+row = 1
+# sap-na
+the_min = 11
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Blues
+
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+row = 2
+# clin
+the_min = 31
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Blues
+
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+row = 3
+# nont-mg
+the_min = 13
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Blues
+
+if max_all > 0.0:
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_contours.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#poop: fig_5_fe parameters
+f5_sp1 = 6
+f5_sp2 = 4
+f5_cmap = cm.Reds
+f5_n_cont = 11
+cont_skip = 2
+f5_purple = 2
+
+#hack: FIG: fig5_fe_contours
+print "fig5_fe_contours"
+fig=plt.figure(figsize=(11.0,14.0))
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
+
+#print "any_min" , any_min
+
+
+row = 0
+# pyrite
+#the_min = any_min[0]
+the_min = 5
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Reds
+
+square_contour_5(f5_sp1, f5_sp2, 1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, 2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, 3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, 4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+row = 1
+# goethite
+the_min = 7
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Reds
+
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+
+row = 2
+# nont-na
+the_min = 12
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Reds
+
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+row = 3
+# nont-mg
+the_min = 13
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Reds
+
+if max_all > 0.0:
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+row = 4
+# nont-ca
+the_min = 15
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Reds
+
+if max_all > 0.0:
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+
+row = 5
+# fe-celad
+the_min = 14
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+f5_cmap = cm.Reds
+
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_fe_contours.png",bbox_inches='tight')
