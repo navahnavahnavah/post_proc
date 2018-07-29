@@ -21,15 +21,22 @@ col = ['#6e0202', '#fc385b', '#ff7411', '#19a702', '#00520d', '#00ffc2', '#609ff
 
 
 
-def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0):
+def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet):
     ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
 
-    if xlab == 1:
+    if xlab == 10:
         plt.xlabel('log10(mixing time [years])', fontsize=7)
     if ylab == 11:
         plt.ylabel('discharge q [m/yr]', fontsize=7)
 
-    pCol = ax2.pcolor(pcolor_block, cmap=cont_cmap, antialiased=True, vmin=min_all_in, vmax=max_all_in)
+
+
+    pCol = ax2.pcolor(pcolor_block, cmap=fn_cmap_in, antialiased=True, vmin=min_all_in, vmax=max_all_in)
+    pCol.set_edgecolor('face')
+
+    inter_levels = np.linspace(np.min(pcolor_block),np.max(pcolor_block),num=n_cont,endpoint=True)
+    pCont = ax2.contour(pcolor_block, 11, colors="#000000", antialiased=True, linewidths=0.4)
+    #pCont = ax2.contour(pcolor_block, 10, colors="#000000", antialiased=True, linewidths=0.25)
 
     x_integers = range(len(diff_nums[:cont_x_diff_max]))
     for x_i in range(len(x_integers)):
@@ -42,9 +49,10 @@ def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_c
     plt.xlim([np.min(x_integers)-0.5,np.max(x_integers)+0.5])
 
     plt.xticks(x_integers[::xskip],diff_strings[::xskip], fontsize=8)
-    plt.yticks(y_integers[::yskip],param_strings[::yskip], fontsize=8)
+    plt.yticks(y_integers[1::yskip],param_strings[1::yskip], fontsize=8)
 
     plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
 
     if the_cbar == 1:
         bbox = ax2.get_position()
@@ -62,6 +70,68 @@ def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_c
 
 
 
+def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+
+
+    pCol = ax2.pcolor(pcolor_block, cmap=fn_cmap_in, antialiased=True, vmin=min_all_in, vmax=max_all_in,alpha=0.0)
+    pCol.set_edgecolor('face')
+
+    inter_levels = np.linspace(np.min(pcolor_block),np.max(pcolor_block),num=20,endpoint=True)
+    pCont = ax2.contour(pcolor_block, inter_levels, colors="#adadad", antialiased=True, linewidths=0.4)
+    #pCont = ax2.contour(pcolor_block, 10, colors="#000000", antialiased=True, linewidths=0.25)
+
+    pCont = ax2.contourf(pcolor_block, [inter_levels[11],inter_levels[-1]], colors="#ffd9d9", antialiased=True)
+
+    pCont = ax2.contourf(pcolor_block, [0.0,inter_levels[6]], colors="#defeff", antialiased=True)
+
+
+    pCont = ax2.contour(pcolor_block, levels=[0.027, 0.05, 0.0667, 0.926, 4.8, 9.26], colors="#2eb324", antialiased=True, linewidths=1.0)
+
+    # pCont = ax2.contourf(pcolor_block, [0.027, 0.05, 0.0667], colors="#86fb63", antialiased=True)
+    # pCont = ax2.contourf(pcolor_block, [0.926, 4.8, 9.26], colors="#fbd563", antialiased=True)
+
+    x_integers = range(len(diff_nums[:cont_x_diff_max]))
+    for x_i in range(len(x_integers)):
+        x_integers[x_i] = x_integers[x_i] + 0.5
+
+    y_integers = range(len(param_nums[:cont_y_param_max]))
+    for y_i in range(len(y_integers)):
+        y_integers[y_i] = y_integers[y_i] + 0.5
+
+    plt.xlim([np.min(x_integers)-0.5,np.max(x_integers)+0.5])
+
+    plt.xticks(x_integers[::xskip],diff_strings[::xskip], fontsize=8)
+    plt.yticks(y_integers[1::yskip],param_strings[1::yskip], fontsize=8)
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        # cax = fig.add_axes([bbox.xmin+0.0, bbox.ymin-0.06, bbox.width*1.0, bbox.height*0.05])
+        cax = fig.add_axes([bbox.xmin-0.04, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pCol, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        cbar.set_ticks(np.linspace(min_all_in,max_all_in,num=bar_bins,endpoint=True))
+        cbar.ax.tick_params(labelsize=7)
+        #cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
+        cbar.solids.set_edgecolor("face")
+
+    return square_pcolor_f
+
+
+
+
+
+
+
 def square_pcolor_min(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0):
     ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
 
@@ -71,6 +141,8 @@ def square_pcolor_min(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, t
         plt.ylabel('discharge q [m/yr]', fontsize=7)
 
     pCol = ax2.pcolor(pcolor_block, cmap=cont_cmap, antialiased=True, vmin=min_all_in, vmax=max_all_in)
+
+
 
     x_integers = range(len(diff_nums[:cont_x_diff_max]))
     for x_i in range(len(x_integers)):
@@ -349,7 +421,7 @@ compound_alt_fe_solo = np.zeros([n_lateral, len(param_strings)])
 compound_alt_vol_solo_shift = np.zeros([n_lateral, len(param_strings)])
 compound_alt_fe_solo_shift = np.zeros([n_lateral, len(param_strings)])
 
-active_myr = 3.5
+active_myr = 4.0
 for i in range(n_lateral-1):
     # compound at 3.0 % / Myr
     compound_alt_vol[i,0] = (active_myr/n_lateral)*i*compound_alt_vol_labels[0]
@@ -769,8 +841,8 @@ n_cont = 41
 cont_skip = 10
 bar_shrink = 0.9
 clabelpad = 0
-xskip = 2
-yskip = 1
+xskip = 4
+yskip = 2
 bar_bins = 4
 
 sp1 = 3
@@ -897,134 +969,164 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_contours.png",bbox_inches='tight')
 
 
 
-#
-# #hack: FIG: alt_vol_pcolor_full
-# print "alt_vol_pcolor_full"
-#
-# sp1 = 4
-# sp2 = 4
-#
-# cont_x_diff_max = len(diff_strings) - 0
-# cont_y_param_max = len(param_strings) - 0
-#
-#
-# fig=plt.figure(figsize=(8.0,8.0))
-# plt.subplots_adjust(hspace=0.4)
-#
-#
-#
-# the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
-# the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
-# the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
-# the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
-#
-# min_all = np.min(the_s)
-# if np.min(the_d) < min_all:
-#     min_all = np.min(the_d)
-# if np.min(the_a) < min_all:
-#     min_all = np.min(the_a)
-# if np.min(the_b) < min_all:
-#     min_all = np.min(the_b)
-#
-# max_all = np.max(the_s)
-# if np.max(the_d) > max_all:
-#     max_all = np.max(the_d)
-# if np.max(the_a) > max_all:
-#     max_all = np.max(the_a)
-# if np.max(the_b) > max_all:
-#     max_all = np.max(the_b)
-#
-# # min_all = 1.0
-# # max_all = 17.0
-#
-# square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-#
-#
-#
-#
-#
-# the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
-# the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-# the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-# the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-#
-# min_all = np.min(the_s)
-# if np.min(the_d) < min_all:
-#     min_all = np.min(the_d)
-# if np.min(the_a) < min_all:
-#     min_all = np.min(the_a)
-# if np.min(the_b) < min_all:
-#     min_all = np.min(the_b)
-#
-# max_all = np.max(the_s)
-# if np.max(the_d) > max_all:
-#     max_all = np.max(the_d)
-# if np.max(the_a) > max_all:
-#     max_all = np.max(the_a)
-# if np.max(the_b) > max_all:
-#     max_all = np.max(the_b)
-#
-# # min_all = 1.0
-# # max_all = 17.0
-#
-# square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-#
-#
-# the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
-# the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-# the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-# the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
-#
-# min_all = np.min(the_s)
-# if np.min(the_d) < min_all:
-#     min_all = np.min(the_d)
-# if np.min(the_a) < min_all:
-#     min_all = np.min(the_a)
-# if np.min(the_b) < min_all:
-#     min_all = np.min(the_b)
-#
-# max_all = np.max(the_s)
-# if np.max(the_d) > max_all:
-#     max_all = np.max(the_d)
-# if np.max(the_a) > max_all:
-#     max_all = np.max(the_a)
-# if np.max(the_b) > max_all:
-#     max_all = np.max(the_b)
-#
-# # min_all = 0.005
-# # max_all = 0.10
-#
-# square_pcolor(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-# square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+
+#hack: FIG: alt_vol_pcolor_full
+print "alt_vol_pcolor_full"
+
+sp1 = 4
+sp2 = 4
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(7.0,7.0))
+plt.subplots_adjust(hspace=0.4)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+
+the_a = the_d
+the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+the_a = the_d
+the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+the_a = the_d
+the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+
+
+
+
+
+
+
+
+
 # the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
 # the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
 # the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
@@ -1061,9 +1163,182 @@ plt.savefig(in_path+dir_path+fig_path+"z_dsec_contours.png",bbox_inches='tight')
 # square_pcolor(sp1, sp2, 15, the_a, cb_title=temp_string + " " + "a slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
 #
 # square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
-#
-#
-# plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_alt_vol_pcolor_full.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: y_alt_vol_pcolor_full
+print "y_alt_vol_pcolor_full"
+
+sp1 = 4
+sp2 = 4
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(7.0,7.0))
+plt.subplots_adjust(hspace=0.4)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+
+the_a = the_d
+the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor_f(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+the_a = the_d
+the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor_f(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+
+the_a = the_d
+the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor_f(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_f(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+
+plt.savefig(in_path+dir_path+fig_path+"y_alt_vol_pcolor_full.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"y_alt_vol_pcolor_full.eps",bbox_inches='tight')
+
+
+
+
+
+
 
 
 
@@ -1079,19 +1354,23 @@ def square_contour_5(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, the_
         plt.ylabel('discharge q [m/yr]', fontsize=8)
 
     if fillz_purple == 1:
-        pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels[-5::2],cmap=cm.Purples, linewidths=0.0)
+        pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels,cmap=cm.Purples, linewidths=0.0)
 
     if fillz_purple == 2:
-        pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels[-5::2],cmap=cm.Wistia, linewidths=0.0)
+        pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels,cmap=cm.Wistia, linewidths=0.0)
 
-    pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=f5_cmap, antialiased=True, linewidths=1.0)
+    # pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=f5_cmap, antialiased=True, linewidths=1.0)
+    pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, colors=['#818181'], antialiased=True, linewidths=1.0)
     # for c in pCont.collections:
     #     c.set_edgecolor("face")
 
-    plt.xticks(diff_nums[:cont_x_diff_max:xskip],diff_strings[::xskip], fontsize=8)
-    plt.yticks(param_nums[:cont_y_param_max:yskip],param_strings[::yskip], fontsize=8)
+    plt.xticks(diff_nums[:cont_x_diff_max:xskip],[], fontsize=8)
+    plt.yticks(param_nums[:cont_y_param_max:yskip],[], fontsize=8)
+    # plt.xticks([])
+    # plt.yticks([])
 
     plt.title(cb_title, fontsize=9)
+    plt.tick_params(top='off', right='off', which='both')
 
     if the_cbar == 1:
         bbox = ax2.get_position()
@@ -1668,7 +1947,7 @@ plt.savefig(in_path+dir_path+fig_path+"z_fig5_OOM.png",bbox_inches='tight')
 
 
 
-#poop: fig_5 parameters
+
 f5_sp1 = 6
 f5_sp2 = 4
 f5_cmap = cm.Blues
@@ -1681,7 +1960,7 @@ f5_purple = 1
 #hack: FIG: fig5_contours
 print "fig5_contours"
 fig=plt.figure(figsize=(11.0,14.0))
-plt.subplots_adjust(wspace=0.2, hspace=0.5)
+plt.subplots_adjust(wspace=0.2, hspace=0.2)
 
 #print "any_min" , any_min
 
@@ -1716,7 +1995,7 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 f5_cmap = cm.Blues
 
 if max_all > 0.0:
-    square_contour_5(f5_sp1, f5_sp2, 1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, 1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
     square_contour_5(f5_sp1, f5_sp2, 2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
     square_contour_5(f5_sp1, f5_sp2, 3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
     square_contour_5(f5_sp1, f5_sp2, 4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
@@ -1752,7 +2031,7 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
 f5_cmap = cm.Blues
 
-square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
@@ -1789,7 +2068,7 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
 f5_cmap = cm.Blues
 
-square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
@@ -1826,7 +2105,7 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 f5_cmap = cm.Blues
 
 if max_all > 0.0:
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
     square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
     square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
     square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
@@ -1834,6 +2113,7 @@ if max_all > 0.0:
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_fig5_contours.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_VEC_CONT_MG.eps",bbox_inches='tight')
 
 
 
@@ -1847,7 +2127,6 @@ plt.savefig(in_path+dir_path+fig_path+"z_fig5_contours.png",bbox_inches='tight')
 
 
 
-#poop: fig_5_fe parameters
 f5_sp1 = 6
 f5_sp2 = 4
 f5_cmap = cm.Reds
@@ -1858,7 +2137,7 @@ f5_purple = 2
 #hack: FIG: fig5_fe_contours
 print "fig5_fe_contours"
 fig=plt.figure(figsize=(11.0,14.0))
-plt.subplots_adjust(wspace=0.2, hspace=0.5)
+plt.subplots_adjust(wspace=0.2, hspace=0.2)
 
 #print "any_min" , any_min
 
@@ -1892,7 +2171,7 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
 f5_cmap = cm.Reds
 
-square_contour_5(f5_sp1, f5_sp2, 1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, 1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, 2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, 3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, 4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
@@ -1929,7 +2208,7 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
 f5_cmap = cm.Reds
 
-square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
@@ -1942,10 +2221,10 @@ square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_
 row = 2
 # nont-na
 the_min = 12
-the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0] + value_dsec[:cont_y_param_max,:cont_x_diff_max,13,0] + value_dsec[:cont_y_param_max,:cont_x_diff_max,15,0]
+the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0] + value_dsec_d[:cont_y_param_max,:cont_x_diff_max,13,0] + value_dsec_d[:cont_y_param_max,:cont_x_diff_max,15,0]
+the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0] + value_dsec_a[:cont_y_param_max,:cont_x_diff_max,13,0] + value_dsec_a[:cont_y_param_max,:cont_x_diff_max,15,0]
+the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0] + value_dsec_b[:cont_y_param_max,:cont_x_diff_max,13,0] + value_dsec_b[:cont_y_param_max,:cont_x_diff_max,15,0]
 
 min_all = np.min(the_s)
 if np.min(the_d) < min_all:
@@ -1967,91 +2246,91 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
 f5_cmap = cm.Reds
 
-square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 
 
 
+# row = 3
+# # nont-mg
+# the_min = 13
+# the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+# #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+# f5_cmap = cm.Reds
+#
+# if max_all > 0.0:
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+# row = 4
+# # nont-ca
+# the_min = 15
+# the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+# the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+# #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+# f5_cmap = cm.Reds
+#
+# if max_all > 0.0:
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+#     square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+
+
+
+
+
+
 row = 3
-# nont-mg
-the_min = 13
-the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
-#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
-f5_cmap = cm.Reds
-
-if max_all > 0.0:
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-
-
-
-
-
-row = 4
-# nont-ca
-the_min = 15
-the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_a = value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-the_b = value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]
-
-min_all = np.min(the_s)
-if np.min(the_d) < min_all:
-    min_all = np.min(the_d)
-if np.min(the_a) < min_all:
-    min_all = np.min(the_a)
-if np.min(the_b) < min_all:
-    min_all = np.min(the_b)
-
-max_all = np.max(the_s)
-if np.max(the_d) > max_all:
-    max_all = np.max(the_d)
-if np.max(the_a) > max_all:
-    max_all = np.max(the_a)
-if np.max(the_b) > max_all:
-    max_all = np.max(the_b)
-
-cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
-#cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
-f5_cmap = cm.Reds
-
-if max_all > 0.0:
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-    square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
-
-
-
-
-
-
-row = 5
 # fe-celad
 the_min = 14
 the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]
@@ -2079,9 +2358,10 @@ cont_levels = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
 #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
 f5_cmap = cm.Reds
 
-square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=1, the_cbar=1, cont_levels_in=cont_levels,fillz_purple=f5_purple)
+square_contour_5(f5_sp1, f5_sp2, (4*row)+1, the_s, cb_title="[s]"+secondary[the_min], xlab=0, ylab=0, the_cbar=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+2, the_d, cb_title="[d]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+3, the_a, cb_title="[a]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_min], xlab=0, cont_levels_in=cont_levels,fillz_purple=f5_purple)
 
 plt.savefig(in_path+dir_path+fig_path+"z_fig5_fe_contours.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_fig5_VEC_CONT_FE.eps",bbox_inches='tight')

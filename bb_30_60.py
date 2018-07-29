@@ -344,7 +344,7 @@ for iii in range(len(temp_string_list)):
 
         #hack: define the shift!!
         shift_myr = 0.5
-        active_myr = 3.5
+        active_myr = 4.0
         for ii in range(len(param_strings)):
             compound_alt_vol_solo[i,ii,iii] = (active_myr/n_lateral)*i*value_alt_vol_mean[ii,0,iii]
             compound_alt_fe_solo[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*value_alt_fe_mean[ii,0,iii]
@@ -533,7 +533,7 @@ for iii in range(len(temp_string_list)):
     # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
     # plt.plot(distance_vector, compound_alt_vol_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
 
-    plt.plot(distance_vector, compound_alt_vol_solo[:,0,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
     plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
 
@@ -565,13 +565,10 @@ for iii in range(len(temp_string_list)):
     # plt.plot(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
     # plt.plot(distance_vector, compound_alt_vol_dual_min_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
 
-    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,0,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
     plt.plot(distance_vector, compound_alt_vol_solo_shift[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
-print "compare minimum dual 60"
-print compound_alt_vol_dual_min_shift[:,0,-1]
-print "compare minimum solo 50"
-print compound_alt_vol_solo_shift[:,0,-2]
+
 
 plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
 for j in range(nsites):
@@ -669,6 +666,449 @@ plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_fill_36.eps",bbox_inches='tigh
 
 
 
+
+
+
+
+
+
+
+
+
+
+dual_alpha = 0.4
+hatch_alpha = 1.0
+hatch_string = '||'
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+#hatch_strings = ['\\\\', 'o', '//', '++', '..']
+hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
+solo_alpha = 0.4
+lw_for_plot = 1.0
+
+#hack: FIG: y_long_trial_36
+print "y_long_trial_36"
+fig=plt.figure(figsize=(16.0,8.0))
+rainbow_lw = 1.0
+
+
+
+ax=fig.add_subplot(2, 3, 1, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 0 or iii == 2 or iii == 4 or iii == 6:
+        # ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii], compound_alt_vol_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+
+        # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_vol_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 0 or iii == 2 or iii == 4 or iii == 6:
+        # ax.fill_between(distance_vector, compound_alt_vol_solo_shift[:,0,iii], compound_alt_vol_solo_shift[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        jump = ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+        # plt.plot(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_vol_dual_min_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_vol_solo_shift[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
+
+
+ax=fig.add_subplot(2, 3, 4, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 0 or iii == 2 or iii == 4 or iii == 6:
+
+        # ax.fill_between(distance_vector, compound_alt_fe_solo[:,0,iii], compound_alt_fe_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+        # plt.plot(distance_vector, compound_alt_fe_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_fe_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_fe_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 5, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 0 or iii == 2 or iii == 4 or iii == 6:
+
+        # ax.fill_between(distance_vector, compound_alt_fe_solo_shift[:,0,iii], compound_alt_fe_solo_shift[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        ax.fill_between(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], compound_alt_fe_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+        # plt.plot(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_fe_dual_min_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_fe_solo_shift[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"y_long_trial_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"y_long_trial_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dual_alpha = 0.4
+hatch_alpha = 1.0
+hatch_string = '||'
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+#hatch_strings = ['\\\\', 'o', '//', '++', '..']
+hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
+solo_alpha = 0.4
+lw_for_plot = 1.0
+
+#hack: FIG: yy_long_trial_36
+print "yy_long_trial_36"
+fig=plt.figure(figsize=(16.0,8.0))
+rainbow_lw = 1.0
+
+
+
+ax=fig.add_subplot(2, 3, 1, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 1 or iii == 3 or iii == 5 or iii == 7:
+        # ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii], compound_alt_vol_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+
+        # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_vol_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 1 or iii == 3 or iii == 5 or iii == 7:
+        # ax.fill_between(distance_vector, compound_alt_vol_solo_shift[:,0,iii], compound_alt_vol_solo_shift[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        jump = ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+        # plt.plot(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_vol_dual_min_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_vol_solo_shift[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([-1.0,30.0])
+# plt.xlabel("crust age [Myr]", fontsize=9)
+plt.ylabel("alteration volume percent", fontsize=9)
+#plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
+
+
+ax=fig.add_subplot(2, 3, 4, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 1 or iii == 3 or iii == 5 or iii == 7:
+
+        # ax.fill_between(distance_vector, compound_alt_fe_solo[:,0,iii], compound_alt_fe_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+        # plt.plot(distance_vector, compound_alt_fe_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_fe_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_fe_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 5, frameon=True)
+
+for iii in range(len(temp_string_list)):
+
+    if iii == 1 or iii == 3 or iii == 5 or iii == 7:
+
+        # ax.fill_between(distance_vector, compound_alt_fe_solo_shift[:,0,iii], compound_alt_fe_solo_shift[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+        ax.fill_between(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], compound_alt_fe_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+        # plt.plot(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+        # plt.plot(distance_vector, compound_alt_fe_dual_min_shift[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+
+        plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+        #plt.plot(distance_vector, compound_alt_fe_solo_shift[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+for j in range(nsites):
+    plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+    plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+plt.xlim([20000.0,110000.0])
+plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+plt.ylim([0.6,0.8])
+plt.ylabel("FeO/FeOt", fontsize=9)
+#plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"yy_long_trial_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"yy_long_trial_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dual_alpha = 0.4
+hatch_alpha = 1.0
+hatch_string = '||'
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+#hatch_strings = ['\\\\', 'o', '//', '++', '..']
+hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
+solo_alpha = 0.4
+lw_for_plot = 1.0
+
+#hack: FIG: yyy_long_trial_36
+print "yyy_long_trial_36"
+fig=plt.figure(figsize=(20.0,7.0))
+rainbow_lw = 1.0
+
+
+
+
+
+for iii in range(len(temp_string_list)):
+
+    ax=fig.add_subplot(2, len(temp_string_list), iii+1, frameon=True)
+
+
+    ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+    plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+    jump = ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+    plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([-1.0,30.0])
+    # plt.xlabel("crust age [Myr]", fontsize=9)
+    # plt.ylabel("alteration volume percent", fontsize=9)
+    #plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+
+
+
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
+
+
+ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+
+for iii in range(len(temp_string_list)):
+
+
+    ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+    ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+    plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+    ax.fill_between(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], compound_alt_fe_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+
+    plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+    plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+    ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([0.6,0.8])
+    # plt.ylabel("FeO/FeOt", fontsize=9)
+    #plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"yyy_long_trial_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"yyy_long_trial_36.eps",bbox_inches='tight')
 
 
 
@@ -862,13 +1302,6 @@ for iii in range(len(ratio_upper)):
 
     ratio_lower[iii] = np.min([upper_eb[iii]/(0.78-upper_eb_fe[iii]) , upper_eb[iii]/(0.78-lower_eb_fe[iii]) , lower_eb[iii]/(0.78-upper_eb_fe[iii]) , lower_eb[iii]/(0.78-lower_eb_fe[iii]) ])
 
-print "debug upper"
-print ratio_upper
-print " "
-print "debug lower"
-print ratio_lower
-print " "
-print " "
 
 ax.fill_between(site_locations, ratio_lower, ratio_upper, facecolor=fill_color, lw=0, zorder=0)
 
@@ -1001,7 +1434,7 @@ for iii in range(len(temp_string_list)):
 
 
 plt.savefig(in_path+dir_path+fig_path+"z_ai_pri_36.png",bbox_inches='tight')
-
+plt.savefig(in_path+dir_path+fig_path+"z_AI_PRI_36.eps",bbox_inches='tight')
 
 
 
@@ -1054,7 +1487,7 @@ for iii in range(len(temp_string_list)):
     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
 plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.png",bbox_inches='tight')
-
+plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.eps",bbox_inches='tight')
 
 
 
@@ -1106,7 +1539,7 @@ for iii in range(len(temp_string_list)):
     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
 plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.png",bbox_inches='tight')
-
+plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.eps",bbox_inches='tight')
 
 
 
