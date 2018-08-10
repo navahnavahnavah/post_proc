@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import math
 import os.path
+from scipy import stats
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy import interpolate
 plt.rcParams['contour.negative_linestyle'] = 'solid'
@@ -228,6 +229,7 @@ lower_color = '#339a28'
 upper_color = '#17599e'
 fill_color = '#e4e4e4'
 
+#poop: site locations
 site_locations = np.array([22.742, 25.883, 33.872, 40.706, 45.633, 55.765, 75.368, 99.006, 102.491])
 site_locations = (site_locations - 00.00)*1000.0
 
@@ -239,6 +241,14 @@ upper_eb = np.array([1.7081, 2.9330, 3.7662, 4.9273, 11.5331, 5.0247, 10.7375, 1
 fe_values = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.6714, 0.7416, 0.7039, 0.6708, 0.6403])
 lower_eb_fe = np.array([0.7753, 0.7442, 0.7208, 0.7409, 0.6240, 0.7260, 0.6584, 0.6299, 0.6084])
 upper_eb_fe = np.array([0.7753, 0.7442, 0.7519, 0.7812, 0.7110, 0.7610, 0.7396, 0.7104, 0.7026])
+
+# site_locations_1028
+site_locations_1028 = np.array([22.742, 25.883, 33.872, 40.706, 55.765, 75.368, 99.006, 102.491])
+site_locations_1028 = (site_locations_1028 - 00.00)*1000.0
+
+alt_values_1028 = np.array([0.3219, 2.1072, 2.3626, 2.9470, 4.2820, 8.9219, 11.8331, 13.2392])
+
+fe_values_1028 = np.array([0.7753, 0.7442, 0.7519, 0.7610, 0.7416, 0.7039, 0.6708, 0.6403])
 
 
 
@@ -270,6 +280,39 @@ compound_alt_fe_dual_min = np.zeros([n_lateral, len(param_strings),n_grids])
 
 compound_alt_vol_dual_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
 compound_alt_fe_dual_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
+
+
+# new a , b compounds
+compound_alt_vol_a_max = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_a_max = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_a_max_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_a_max_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_a_min = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_a_min = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_a_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_a_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
+
+
+
+compound_alt_vol_b_max = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_b_max = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_b_max_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_b_max_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_b_min = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_b_min = np.zeros([n_lateral, len(param_strings),n_grids])
+
+compound_alt_vol_b_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+compound_alt_fe_b_min_shift = np.zeros([n_lateral, len(param_strings),n_grids])
+
+
+
 
 for iii in range(len(temp_string_list)):
 
@@ -343,7 +386,7 @@ for iii in range(len(temp_string_list)):
 
 
         #hack: define the shift!!
-        shift_myr = 0.5
+        shift_myr = 0.6
         active_myr = 4.0
         for ii in range(len(param_strings)):
             compound_alt_vol_solo[i,ii,iii] = (active_myr/n_lateral)*i*value_alt_vol_mean[ii,0,iii]
@@ -355,6 +398,19 @@ for iii in range(len(temp_string_list)):
             compound_alt_vol_dual_min[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii])
             compound_alt_fe_dual_min[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii])
 
+
+            # new a
+            compound_alt_vol_a_max[i,ii,iii] = (active_myr/n_lateral)*i*np.max(value_alt_vol_mean_a[:,:,iii])
+            compound_alt_fe_a_max[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.max(value_alt_fe_mean_a[:,:,iii])
+            compound_alt_vol_a_min[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_a[:,:,iii])
+            compound_alt_fe_a_min[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_a[:,:,iii])
+
+            # new b
+            compound_alt_vol_b_max[i,ii,iii] = (active_myr/n_lateral)*i*np.max(value_alt_vol_mean_b[:,:,iii])
+            compound_alt_fe_b_max[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.max(value_alt_fe_mean_b[:,:,iii])
+            compound_alt_vol_b_min[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_b[:,:,iii])
+            compound_alt_fe_b_min[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_b[:,:,iii])
+
             if age_vector[i] > shift_myr:
                 compound_alt_vol_solo_shift[i,ii,iii] = (active_myr/n_lateral)*i*value_alt_vol_mean[ii,0,iii] - shift_myr*value_alt_vol_mean[ii,0,iii]
                 compound_alt_fe_solo_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*value_alt_fe_mean[ii,0,iii] + shift_myr*value_alt_fe_mean[ii,0,iii]
@@ -365,6 +421,19 @@ for iii in range(len(temp_string_list)):
                 compound_alt_vol_dual_min_shift[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_d[:,:,iii]) - shift_myr*np.min(value_alt_vol_mean_d[:,:,iii])
                 compound_alt_fe_dual_min_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_d[:,:,iii]) + shift_myr*np.min(value_alt_fe_mean_d[:,:,iii])
 
+                # new a
+                compound_alt_vol_a_max_shift[i,ii,iii] = (active_myr/n_lateral)*i*np.max(value_alt_vol_mean_a[:,:,iii]) - shift_myr*np.max(value_alt_vol_mean_a[:,:,iii])
+                compound_alt_fe_a_max_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.max(value_alt_fe_mean_a[:,:,iii]) + shift_myr*np.max(value_alt_fe_mean_a[:,:,iii])
+
+                compound_alt_vol_a_min_shift[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_a[:,:,iii]) - shift_myr*np.min(value_alt_vol_mean_a[:,:,iii])
+                compound_alt_fe_a_min_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_a[:,:,iii]) + shift_myr*np.min(value_alt_fe_mean_a[:,:,iii])
+
+                # new b
+                compound_alt_vol_b_max_shift[i,ii,iii] = (active_myr/n_lateral)*i*np.max(value_alt_vol_mean_b[:,:,iii]) - shift_myr*np.max(value_alt_vol_mean_b[:,:,iii])
+                compound_alt_fe_b_max_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.max(value_alt_fe_mean_b[:,:,iii]) + shift_myr*np.max(value_alt_fe_mean_b[:,:,iii])
+
+                compound_alt_vol_b_min_shift[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_b[:,:,iii]) - shift_myr*np.min(value_alt_vol_mean_b[:,:,iii])
+                compound_alt_fe_b_min_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_b[:,:,iii]) + shift_myr*np.min(value_alt_fe_mean_b[:,:,iii])
 
 
 
@@ -666,13 +735,52 @@ plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_fill_36.eps",bbox_inches='tigh
 
 
 
+#poop: confidence interval
+#st.t.interval(0.95, len(a)-1, loc=np.mean(a), scale=st.sem(a))
+
+print " "
+
+slope, intercept, r_value, p_value, std_err = stats.linregress(site_locations,alt_values)
+print "slope: " , slope
+print "intercept: " , intercept
+print "r_value: " , r_value
+print "p_value: " , p_value
+print "std_err: " , std_err
+
+print " "
 
 
 
+slope_fe, intercept_fe, r_value_fe, p_value_fe, std_err_fe = stats.linregress(site_locations,fe_values)
+print "slope_fe: " , slope_fe
+print "intercept_fe: " , intercept_fe
+print "r_value_fe: " , r_value_fe
+print "p_value_fe: " , p_value_fe
+print "std_err_fe: " , std_err_fe
+
+print " "
 
 
 
+slope_1028, intercept_1028, r_value_1028, p_value_1028, std_err_1028 = stats.linregress(site_locations_1028,alt_values_1028)
+print "slope_1028: " , slope_1028
+print "intercept_1028: " , intercept_1028
+print "r_value_1028: " , r_value_1028
+print "p_value_1028: " , p_value_1028
+print "std_err_1028: " , std_err_1028
 
+print " "
+
+
+
+slope_fe_1028, intercept_fe_1028, r_value_fe_1028, p_value_fe_1028, std_err_fe_1028 = stats.linregress(site_locations_1028,fe_values_1028)
+print "slope_fe_1028: " , slope_fe_1028
+print "intercept_fe_1028: " , intercept_fe_1028
+print "r_value_fe_1028: " , r_value_fe_1028
+print "p_value_fe_1028: " , p_value_fe_1028
+print "std_err_fe_1028: " , std_err_fe_1028
+
+print " "
 
 
 
@@ -690,22 +798,24 @@ print "y_long_trial_36"
 fig=plt.figure(figsize=(16.0,8.0))
 rainbow_lw = 1.0
 
+dark_red = '#373c41'
+
 
 
 ax=fig.add_subplot(2, 3, 1, frameon=True)
 
-for iii in range(len(temp_string_list)):
+# for iii in range(len(temp_string_list)):
 
-    if iii == 0 or iii == 2 or iii == 4 or iii == 6:
-        # ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii], compound_alt_vol_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
-        ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
-
-
-        # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
-        # plt.plot(distance_vector, compound_alt_vol_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
-
-        plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
-        #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    # if iii == 0 or iii == 2 or iii == 4 or iii == 6:
+    #     # ax.fill_between(distance_vector, compound_alt_vol_solo[:,0,iii], compound_alt_vol_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+    #     ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+    #
+    #
+    #     # plt.plot(distance_vector, compound_alt_vol_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+    #     # plt.plot(distance_vector, compound_alt_vol_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+    #
+    #     plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    #     #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
 
 plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
@@ -714,6 +824,24 @@ for j in range(nsites):
     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
 ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+#poop: actually plotting regressions
+the_slope, the_intercept = np.polyfit(site_locations, alt_values, 1)
+the_slope_1028, the_intercept_1028 = np.polyfit(site_locations_1028, alt_values_1028, 1)
+plt.plot(site_locations, site_locations*the_slope + the_intercept, lw=2.0, color='k')
+plt.plot(site_locations,site_locations*(the_slope+(2.64e-5)+(2.64e-5)) + the_intercept, lw=1.0, color='k')
+plt.plot(site_locations,site_locations*(the_slope-(2.64e-5)-(2.64e-5)) + the_intercept, lw=1.0, color='k')
+
+
+plt.plot(site_locations_1028, site_locations_1028*the_slope_1028 + the_intercept_1028, lw=2.0, color='m')
+
+
+# plt.plot(site_locations, site_locations*0.00012601 + the_intercept, lw=2.0, color='m')
+# plt.plot(site_locations, site_locations*0.00015999 + the_intercept, lw=2.0, color='m')
+#plt.plot([distance_vector[0],distance_vector[-1]])
+print "the_slope: " , the_slope
+print "the_intercept: " , the_intercept
+
 
 plt.xlim([20000.0,110000.0])
 plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
@@ -748,6 +876,8 @@ for j in range(nsites):
     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
 ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
 
+
+
 plt.xlim([20000.0,110000.0])
 plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
 plt.ylim([-1.0,30.0])
@@ -764,18 +894,18 @@ hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
 ax=fig.add_subplot(2, 3, 4, frameon=True)
 
 
-for iii in range(len(temp_string_list)):
+# for iii in range(len(temp_string_list)):
 
-    if iii == 0 or iii == 2 or iii == 4 or iii == 6:
-
-        # ax.fill_between(distance_vector, compound_alt_fe_solo[:,0,iii], compound_alt_fe_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
-        ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
-
-        # plt.plot(distance_vector, compound_alt_fe_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
-        # plt.plot(distance_vector, compound_alt_fe_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
-
-        plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
-        #plt.plot(distance_vector, compound_alt_fe_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    # if iii == 0 or iii == 2 or iii == 4 or iii == 6:
+    #
+    #     # ax.fill_between(distance_vector, compound_alt_fe_solo[:,0,iii], compound_alt_fe_solo[:,-1,iii], facecolor=plot_col[iii+1], lw=0, zorder=15-iii, alpha=solo_alpha)
+    #     ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+    #
+    #     # plt.plot(distance_vector, compound_alt_fe_dual_max[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+    #     # plt.plot(distance_vector, compound_alt_fe_dual_min[:,0,iii], lw=lw_for_plot, color=plot_col_hatch[iii+1])
+    #
+    #     plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    #     #plt.plot(distance_vector, compound_alt_fe_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
 plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
 for j in range(nsites):
@@ -783,6 +913,15 @@ for j in range(nsites):
     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
 ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+the_slope_fe, the_intercept_fe = np.polyfit(site_locations, fe_values, 1)
+the_slope_fe_1028, the_intercept_fe_1028 = np.polyfit(site_locations_1028, fe_values_1028, 1)
+plt.plot(site_locations, site_locations*the_slope_fe + the_intercept_fe, lw=2.0, color='k')
+plt.plot(site_locations_1028, site_locations_1028*the_slope_fe_1028 + the_intercept_fe_1028, lw=2.0, color='m')
+# plt.plot(site_locations, site_locations*(-1.52E-06) + the_intercept_fe, lw=2.0, color='m')
+# plt.plot(site_locations, site_locations*(-1.08E-06) + the_intercept_fe, lw=2.0, color='m')
+print "the_slope_fe: " , the_slope_fe
+print "the_intercept_fe: " , the_intercept_fe
 
 plt.xlim([20000.0,110000.0])
 plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
@@ -1020,29 +1159,36 @@ hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
 solo_alpha = 0.4
 lw_for_plot = 1.0
 
+hatch_a = '|||'
+hatch_b = '..'
+
+fill_color = '#f1f1f1'
+new_grey = '#535353'
+
 #hack: FIG: yyy_long_trial_36
 print "yyy_long_trial_36"
-fig=plt.figure(figsize=(20.0,7.0))
+fig=plt.figure(figsize=(32.0,7.5))
 rainbow_lw = 1.0
 
 
 
+nub = range(len(temp_string_list))
 
 
-for iii in range(len(temp_string_list)):
+for iii in nub[2:]:
 
     ax=fig.add_subplot(2, len(temp_string_list), iii+1, frameon=True)
 
 
-    ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+    # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+    # #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
-    plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
-    #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
+    jump = ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
 
-    jump = ax.fill_between(distance_vector, compound_alt_vol_dual_max_shift[:,0,iii], compound_alt_vol_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
-
-    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=0.5, color=new_grey)
 
 
     plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
@@ -1055,6 +1201,7 @@ for iii in range(len(temp_string_list)):
     plt.xlim([20000.0,110000.0])
     plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
     plt.ylim([-1.0,30.0])
+    plt.title(temp_string_list[iii])
     # plt.xlabel("crust age [Myr]", fontsize=9)
     # plt.ylabel("alteration volume percent", fontsize=9)
     #plt.legend(fontsize=8,loc='best',ncol=1)
@@ -1072,19 +1219,19 @@ hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
 ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
 
 
-for iii in range(len(temp_string_list)):
+for iii in nub[2:]:
 
 
     ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
 
-    ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
+    # ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
 
-    plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
 
+    ax.fill_between(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], compound_alt_fe_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
 
-    ax.fill_between(distance_vector, compound_alt_fe_dual_max_shift[:,0,iii], compound_alt_fe_dual_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_strings[iii], edgecolor=plot_col_hatch[iii+1])
-
-    plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=lw_for_plot, color=plot_col[iii+1])
+    plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=0.5, color=new_grey)
 
 
     plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
@@ -1103,12 +1250,242 @@ for iii in range(len(temp_string_list)):
 
 
 
-
-
-
-
 plt.savefig(in_path+dir_path+fig_path+"yyy_long_trial_36.png",bbox_inches='tight')
 plt.savefig(in_path+dir_path+fig_path+"yyy_long_trial_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+dual_alpha = 0.4
+hatch_alpha = 1.0
+hatch_string = '||'
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+#hatch_strings = ['\\\\', 'o', '//', '++', '..']
+hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
+solo_alpha = 0.4
+lw_for_plot = 1.0
+
+hatch_a = '|||'
+hatch_b = '|||'
+
+fill_color = '#f1f1f1'
+new_grey = '#317783'
+
+#hack: FIG: yyy_a_long_trial_36
+print "yyy_a_long_trial_36"
+fig=plt.figure(figsize=(32.0,7.5))
+rainbow_lw = 1.0
+
+
+
+nub = range(len(temp_string_list))
+
+
+for iii in nub[2:]:
+
+    ax=fig.add_subplot(2, len(temp_string_list), iii+1, frameon=True)
+
+
+    # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+    # #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+    jump = ax.fill_between(distance_vector, compound_alt_vol_a_max_shift[:,0,iii], compound_alt_vol_a_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=0.5, color=new_grey)
+
+
+    plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([-1.0,30.0])
+    plt.title(temp_string_list[iii])
+    # plt.xlabel("crust age [Myr]", fontsize=9)
+    # plt.ylabel("alteration volume percent", fontsize=9)
+    #plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+
+
+
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
+
+
+ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+
+for iii in nub[2:]:
+
+
+    ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+    # ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+
+
+    ax.fill_between(distance_vector, compound_alt_fe_a_max_shift[:,0,iii], compound_alt_fe_a_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=0.5, color=new_grey)
+
+
+    plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+    ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([0.6,0.8])
+    # plt.ylabel("FeO/FeOt", fontsize=9)
+    #plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"yyy_a_long_trial_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"yyy_a_long_trial_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dual_alpha = 0.4
+hatch_alpha = 1.0
+hatch_string = '||'
+hatch_strings = ['\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\', '\\\\']
+#hatch_strings = ['\\\\', 'o', '//', '++', '..']
+hatch_strings = ['\\\\', '.', '\\\\', '||', '\\\\', '.', '\\\\', '||']
+solo_alpha = 0.4
+lw_for_plot = 1.0
+
+hatch_a = '|||'
+hatch_b = '|||'
+
+fill_color = '#f1f1f1'
+new_grey = '#b46e0f'
+
+#hack: FIG: yyy_b_long_trial_36
+print "yyy_b_long_trial_36"
+fig=plt.figure(figsize=(32.0,7.5))
+rainbow_lw = 1.0
+
+
+
+nub = range(len(temp_string_list))
+
+
+for iii in nub[2:]:
+
+    ax=fig.add_subplot(2, len(temp_string_list), iii+1, frameon=True)
+
+
+    # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+    # #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+
+    jump = ax.fill_between(distance_vector, compound_alt_vol_b_max_shift[:,0,iii], compound_alt_vol_b_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii], lw=0.5, color=new_grey)
+
+
+    plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([-1.0,30.0])
+    plt.title(temp_string_list[iii])
+    # plt.xlabel("crust age [Myr]", fontsize=9)
+    # plt.ylabel("alteration volume percent", fontsize=9)
+    #plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+
+
+
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
+
+
+ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+
+for iii in nub[2:]:
+
+
+    ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+    # ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+
+
+    ax.fill_between(distance_vector, compound_alt_fe_b_max_shift[:,0,iii], compound_alt_fe_b_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=0.5, color=new_grey)
+
+
+    plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+    ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([0.6,0.8])
+    # plt.ylabel("FeO/FeOt", fontsize=9)
+    #plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"yyy_b_long_trial_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"yyy_b_long_trial_36.eps",bbox_inches='tight')
+
+
 
 
 
@@ -1326,8 +1703,8 @@ plt.savefig(in_path+dir_path+fig_path+"z_comp_lin_INIT_36.png",bbox_inches='tigh
 sp1 = 4
 sp2 = len(temp_string_list)
 cont_cmap = cm.rainbow
-xskip = 2
-yskip = 1
+xskip = 4
+yskip = 2
 bar_bins = 4
 
 cont_x_diff_max = len(diff_strings) - 0
@@ -1342,379 +1719,379 @@ dim2 = 14.0
 
 
 
-
-#hack: FIG: ai_pri_36
-print "ai_pri_36"
-
-fig=plt.figure(figsize=(dim1,dim2))
-plt.subplots_adjust(hspace=0.4)
-
-#value_alt_vol_mean_d[:,:,iii]
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-
-    the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    # min_all = 1.0
-    # max_all = 17.0
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s dpri " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d dpri " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a dpri " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b dpri " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-
-
-
+#
+# #hack: FIG: ai_pri_36
+# print "ai_pri_36"
+#
+# fig=plt.figure(figsize=(dim1,dim2))
+# plt.subplots_adjust(hspace=0.4)
+#
+# #value_alt_vol_mean_d[:,:,iii]
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#
+#     the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     # min_all = 1.0
+#     # max_all = 17.0
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s dpri " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d dpri " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a dpri " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b dpri " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 #
 #
-# the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
-# the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-# the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-# the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
 #
-# # the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
-# # the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
-# # the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
-# # the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
 #
-# min_all = np.min(the_s)
-# if np.min(the_d) < min_all:
-#     min_all = np.min(the_d)
-# if np.min(the_a) < min_all:
-#     min_all = np.min(the_a)
-# if np.min(the_b) < min_all:
-#     min_all = np.min(the_b)
+# #
+# #
+# # the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# # the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# # the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# # the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+# #
+# # # the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# # # the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# # # the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]
+# # # the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]
+# #
+# # min_all = np.min(the_s)
+# # if np.min(the_d) < min_all:
+# #     min_all = np.min(the_d)
+# # if np.min(the_a) < min_all:
+# #     min_all = np.min(the_a)
+# # if np.min(the_b) < min_all:
+# #     min_all = np.min(the_b)
+# #
+# # max_all = np.max(the_s)
+# # if np.max(the_d) > max_all:
+# #     max_all = np.max(the_d)
+# # if np.max(the_a) > max_all:
+# #     max_all = np.max(the_a)
+# # if np.max(the_b) > max_all:
+# #     max_all = np.max(the_b)
+# #
+# # # min_all = 0.005
+# # # max_all = 0.10
+# #
+# # square_pcolor(sp1, sp2, 13, the_s, cb_title=temp_string + " " + "s slope ratio", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+# #
+# # square_pcolor(sp1, sp2, 14, the_d, cb_title=temp_string + " " + "d slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# #
+# # square_pcolor(sp1, sp2, 15, the_a, cb_title=temp_string + " " + "a slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# #
+# # square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
 #
-# max_all = np.max(the_s)
-# if np.max(the_d) > max_all:
-#     max_all = np.max(the_d)
-# if np.max(the_a) > max_all:
-#     max_all = np.max(the_a)
-# if np.max(the_b) > max_all:
-#     max_all = np.max(the_b)
 #
-# # min_all = 0.005
-# # max_all = 0.10
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_pri_36.png",bbox_inches='tight')
+# plt.savefig(in_path+dir_path+fig_path+"z_AI_PRI_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+# #hack: FIG: ai_1_36
+# print "ai_1_36"
 #
-# square_pcolor(sp1, sp2, 13, the_s, cb_title=temp_string + " " + "s slope ratio", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+# fig=plt.figure(figsize=(dim1,dim2))
+# plt.subplots_adjust(hspace=0.4)
 #
-# square_pcolor(sp1, sp2, 14, the_d, cb_title=temp_string + " " + "d slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+# for iii in range(len(temp_string_list)):
 #
-# square_pcolor(sp1, sp2, 15, the_a, cb_title=temp_string + " " + "a slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
+#     the_s = np.abs(value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
 #
-# square_pcolor(sp1, sp2, 16, the_b, cb_title=temp_string + " " + "b slope ratio", xlab=1, min_all_in=min_all, max_all_in=max_all)
-
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_pri_36.png",bbox_inches='tight')
-plt.savefig(in_path+dir_path+fig_path+"z_AI_PRI_36.eps",bbox_inches='tight')
-
-
-
-
-
-
-#hack: FIG: ai_1_36
-print "ai_1_36"
-
-fig=plt.figure(figsize=(dim1,dim2))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-
-    the_s_row = np.abs(value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    # min_all = 1.0
-    # max_all = 17.0
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s alt_vol " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.png",bbox_inches='tight')
-plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.eps",bbox_inches='tight')
-
-
-
-
-
-#hack: FIG: ai_2_36
-print "ai_2_36"
-
-fig=plt.figure(figsize=(dim1,dim2))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-
-    the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    # min_all = 1.0
-    # max_all = 17.0
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s alt_fe " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.png",bbox_inches='tight')
-plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.eps",bbox_inches='tight')
-
-
-
-
-
-
-#hack: FIG: ai_3_36
-print "ai_3_36"
-# new ratio is d_pri : alt-fe
-
-fig=plt.figure(figsize=(dim1,dim2))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    # the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    # the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    # the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    # the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    #
-    # the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    # the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    # the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    # the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-
-    # the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    # the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    # the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    # the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    #
-    # the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    # the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    # the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    # the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-
-    the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    #the_b = the_a
-
-    the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    #the_b_row = the_a_row
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s RATIO " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_3_36.png",bbox_inches='tight')
-
-
-
-
-
-
-
-
-
-#hack: FIG: ai_4_36
-print "ai_4_36"
-# new ratio is  alt-fe : dpri
-
-fig=plt.figure(figsize=(dim1,dim2))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-
-    the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    #the_b = the_a
-
-    the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    #the_b_row = the_a_row
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s RATIO FLIP " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d RATIO flip " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a RATIO flip " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b RATIO flip " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_4_36.png",bbox_inches='tight')
-
-
-
-
-
-
-
-
-
-
-#hack: FIG: ai_5_36
-print "ai_5_36"
-# new ratio is d_pri : alt-fe
-
-fig=plt.figure(figsize=(dim1,dim2))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = the_a
-
-    the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = the_a_row
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s RATIO " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_5_36.png",bbox_inches='tight')
+#     the_s_row = np.abs(value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     # min_all = 1.0
+#     # max_all = 17.0
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s alt_vol " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b alt_vol " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.png",bbox_inches='tight')
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_1_36.eps",bbox_inches='tight')
+
+
+
+
+
+# #hack: FIG: ai_2_36
+# print "ai_2_36"
+#
+# fig=plt.figure(figsize=(dim1,dim2))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#
+#     the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     # min_all = 1.0
+#     # max_all = 17.0
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s alt_fe " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b alt_fe " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.png",bbox_inches='tight')
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_2_36.eps",bbox_inches='tight')
+
+
+
+
+
+
+# #hack: FIG: ai_3_36
+# print "ai_3_36"
+# # new ratio is d_pri : alt-fe
+#
+# fig=plt.figure(figsize=(dim1,dim2))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     # the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     # the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     # the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     # the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     #
+#     # the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     # the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     # the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     # the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     # the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     # the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     # the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     # the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     #
+#     # the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     # the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     # the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     # the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     #the_b = the_a
+#
+#     the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#     #the_b_row = the_a_row
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s RATIO " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_3_36.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+# #hack: FIG: ai_4_36
+# print "ai_4_36"
+# # new ratio is  alt-fe : dpri
+#
+# fig=plt.figure(figsize=(dim1,dim2))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#
+#     the_s = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     #the_b = the_a
+#
+#     the_s_row = np.abs(value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#     #the_b_row = the_a_row
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s RATIO FLIP " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d RATIO flip " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a RATIO flip " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b RATIO flip " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_4_36.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+# #hack: FIG: ai_5_36
+# print "ai_5_36"
+# # new ratio is d_pri : alt-fe
+#
+# fig=plt.figure(figsize=(dim1,dim2))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = the_a
+#
+#     the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = the_a_row
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s RATIO " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b RATIO " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_5_36.png",bbox_inches='tight')
 
 
 
@@ -1856,7 +2233,6 @@ for iii in range(len(temp_string_list)):
 
 
 
-
 plt.savefig(in_path+dir_path+fig_path+"z_ai_CHUNKS_36.png",bbox_inches='tight')
 
 
@@ -1867,102 +2243,102 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_CHUNKS_36.png",bbox_inches='tight')
 
 
 
-#hack: FIG: ai_dpri_to_feot
-print "ai_dpri_to_feot"
-save_string = "dpri_to_feot "
-
-
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = the_a
-
-    the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = the_a_row
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_dpri_to_feot.png",bbox_inches='tight')
-
-
-
+# #hack: FIG: ai_dpri_to_feot
+# print "ai_dpri_to_feot"
+# save_string = "dpri_to_feot "
+#
+#
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = the_a
+#
+#     the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = the_a_row
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_dpri_to_feot.png",bbox_inches='tight')
 
 
 
 
 
-#hack: FIG: ai_dpri_to_mgo
-print "ai_dpri_to_mgo"
-save_string = "dpri_to_mgo "
 
 
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
 
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = the_a
-
-    the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = the_a_row
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"z_ai_dpri_to_mgo.png",bbox_inches='tight')
+# #hack: FIG: ai_dpri_to_mgo
+# print "ai_dpri_to_mgo"
+# save_string = "dpri_to_mgo "
+#
+#
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]/save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = the_a
+#
+#     the_s_row = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = 2.0*np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,:]/save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = the_a_row
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"z_ai_dpri_to_mgo.png",bbox_inches='tight')
 
 
 
@@ -2027,24 +2403,28 @@ plt.savefig(in_path+dir_path+fig_path+"z_ai_calc_to_dpri.png",bbox_inches='tight
 
 
 #poop: THE 2D SAVE JUNE FIGS!
+tempy_index_shift = 2
 
-#hack: FIG: save_feot
-print "save_feot"
 
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
+#hack: FIG: only_feot
+print "only_feot"
 
-for iii in range(len(temp_string_list)):
+fig=plt.figure(figsize=(9.0,14.0))
+plt.subplots_adjust(hspace=0.2)
+
+for iii in range(len(temp_string_list[tempy_index_shift:-1])):
+
+    iii = iii + tempy_index_shift
 
     the_s = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_d = 0.5*np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
     the_a = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
     the_b = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
 
-    the_s_row = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+    the_s_row = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_d_row = 0.5*np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_a_row = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_b_row = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
 
     min_all = np.min(the_s_row)
     if np.min(the_d_row) < min_all:
@@ -2065,149 +2445,41 @@ for iii in range(len(temp_string_list)):
     # min_all = 1.0
     # max_all = 17.0
 
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s save_feot " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s only_feot " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d save_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d only_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a save_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a only_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b save_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b only_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-plt.savefig(in_path+dir_path+fig_path+"save_feot.png",bbox_inches='tight')
-
-
+plt.savefig(in_path+dir_path+fig_path+"only_feot.png",bbox_inches='tight')
 
 
 
 
+#hack: FIG: only_dpri_feot
+print "only_dpri_feot"
 
-#hack: FIG: save_fe_num
-print "save_fe_num"
-save_string = "save_fe_num "
+fig=plt.figure(figsize=(9.0,14.0))
+plt.subplots_adjust(hspace=0.2)
 
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
+for iii in range(len(temp_string_list[tempy_index_shift:-1])):
 
-for iii in range(len(temp_string_list)):
+    iii = iii + tempy_index_shift
 
-    the_s = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_s = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_d = 0.5*np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_a = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_b = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
 
-    the_s_row = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+    the_s_row = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_d_row = 0.5*np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_a_row = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_b_row = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
 
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"save_fe_num.png",bbox_inches='tight')
-
-
-
-
-
-
-
-
-
-
-
-
-#hack: FIG: save_mg_num
-print "save_mg_num"
-save_string = "save_mg_num "
-
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-
-    the_s_row = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
-
-    min_all = np.min(the_s_row)
-    if np.min(the_d_row) < min_all:
-        min_all = np.min(the_d_row)
-    if np.min(the_a_row) < min_all:
-        min_all = np.min(the_a_row)
-    if np.min(the_b_row) < min_all:
-        min_all = np.min(the_b_row)
-
-    max_all = np.max(the_s_row)
-    if np.max(the_d_row) > max_all:
-        max_all = np.max(the_d_row)
-    if np.max(the_a_row) > max_all:
-        max_all = np.max(the_a_row)
-    if np.max(the_b_row) > max_all:
-        max_all = np.max(the_b_row)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
-
-plt.savefig(in_path+dir_path+fig_path+"save_mg_num.png",bbox_inches='tight')
-
-
-
-
-
-
-
-
-
-#hack: FIG: save_mg_to_fe
-print "save_mg_to_fe"
-save_string = "mg_to_fe"
-
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
-
-for iii in range(len(temp_string_list)):
-
-    the_s = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
-
-    the_s_row = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+    the_b = the_a
+    the_b_row = the_a_row
 
     min_all = np.min(the_s_row)
     if np.min(the_d_row) < min_all:
@@ -2228,17 +2500,15 @@ for iii in range(len(temp_string_list)):
     # min_all = 1.0
     # max_all = 17.0
 
-    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s only_dpri_feot " + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d only_dpri_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a only_dpri_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b only_dpri_feot " + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-plt.savefig(in_path+dir_path+fig_path+"save_mg_to_fe.png",bbox_inches='tight')
-
-
+plt.savefig(in_path+dir_path+fig_path+"only_dpri_feot.png",bbox_inches='tight')
 
 
 
@@ -2246,24 +2516,26 @@ plt.savefig(in_path+dir_path+fig_path+"save_mg_to_fe.png",bbox_inches='tight')
 
 
 
-#hack: FIG: save_k_to_fe
-print "save_k_to_fe"
-save_string = "k_to_fe"
+#hack: FIG: only_mgo
+print "only_mgo"
+save_string = "only_mgo "
 
-fig=plt.figure(figsize=(8.0,8.0))
-plt.subplots_adjust(hspace=0.4)
+fig=plt.figure(figsize=(9.0,14.0))
+plt.subplots_adjust(hspace=0.2)
 
-for iii in range(len(temp_string_list)):
+for iii in range(len(temp_string_list[tempy_index_shift:-1])):
 
-    the_s = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_d = np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_a = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
-    the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+    iii = iii + tempy_index_shift
 
-    the_s_row = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
-    the_d_row = np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
-    the_a_row = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
-    the_b_row = np.abs(save_k2o_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+    the_s = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_d = 0.5*np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_a = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+
+    the_s_row = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_d_row = 0.5*np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_a_row = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_b_row = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
 
     min_all = np.min(the_s_row)
     if np.min(the_d_row) < min_all:
@@ -2281,8 +2553,59 @@ for iii in range(len(temp_string_list)):
     if np.max(the_b_row) > max_all:
         max_all = np.max(the_b_row)
 
-    # min_all = 1.0
-    # max_all = 17.0
+    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+plt.savefig(in_path+dir_path+fig_path+"only_mgo.png",bbox_inches='tight')
+
+
+
+
+
+#hack: FIG: only_dpri_mgo
+print "only_dpri_mgo"
+save_string = "only_dpri_mgo "
+
+fig=plt.figure(figsize=(9.0,14.0))
+plt.subplots_adjust(hspace=0.2)
+
+for iii in range(len(temp_string_list[tempy_index_shift:-1])):
+
+    iii = iii + tempy_index_shift
+
+    the_s = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_d = 0.5*np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_a = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+
+    the_s_row = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_d_row = 0.5*np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_a_row = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_b_row = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+
+    the_b = the_a
+    the_b_row = the_a_row
+
+    min_all = np.min(the_s_row)
+    if np.min(the_d_row) < min_all:
+        min_all = np.min(the_d_row)
+    if np.min(the_a_row) < min_all:
+        min_all = np.min(the_a_row)
+    if np.min(the_b_row) < min_all:
+        min_all = np.min(the_b_row)
+
+    max_all = np.max(the_s_row)
+    if np.max(the_d_row) > max_all:
+        max_all = np.max(the_d_row)
+    if np.max(the_a_row) > max_all:
+        max_all = np.max(the_a_row)
+    if np.max(the_b_row) > max_all:
+        max_all = np.max(the_b_row)
 
     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
@@ -2292,4 +2615,324 @@ for iii in range(len(temp_string_list)):
 
     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
 
-plt.savefig(in_path+dir_path+fig_path+"save_k_to_fe.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"only_dpri_mgo.png",bbox_inches='tight')
+
+
+
+
+
+
+#hack: FIG: only_dpri_k2o
+print "only_k2o"
+save_string = "only_k2o "
+
+fig=plt.figure(figsize=(9.0,14.0))
+plt.subplots_adjust(hspace=0.2)
+
+for iii in range(len(temp_string_list[tempy_index_shift:-1])):
+
+    iii = iii + tempy_index_shift
+
+    the_s = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_d = 0.5*np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_a = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_b = np.abs(save_k2o_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+
+    the_s_row = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,:-1])
+    the_d_row = 0.5*np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,:-1])
+    the_a_row = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,:-1])
+    the_b_row = np.abs(save_k2o_mean_b[:cont_y_param_max,:cont_x_diff_max,:-1])
+
+    min_all = np.min(the_s_row)
+    if np.min(the_d_row) < min_all:
+        min_all = np.min(the_d_row)
+    if np.min(the_a_row) < min_all:
+        min_all = np.min(the_a_row)
+    if np.min(the_b_row) < min_all:
+        min_all = np.min(the_b_row)
+
+    max_all = np.max(the_s_row)
+    if np.max(the_d_row) > max_all:
+        max_all = np.max(the_d_row)
+    if np.max(the_a_row) > max_all:
+        max_all = np.max(the_a_row)
+    if np.max(the_b_row) > max_all:
+        max_all = np.max(the_b_row)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+plt.savefig(in_path+dir_path+fig_path+"only_k2o.png",bbox_inches='tight')
+
+#374046
+
+
+
+
+#hack: FIG: only_k2o
+print "only_dpri_k2o"
+save_string = "only_dpri_k2o "
+
+fig=plt.figure(figsize=(9.0,14.0))
+plt.subplots_adjust(hspace=0.2)
+
+for iii in range(len(temp_string_list[tempy_index_shift:-1])):
+
+    iii = iii + tempy_index_shift
+
+    the_s = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_d = 0.5*np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_a = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+    the_b = np.abs(save_k2o_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])/np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+
+    the_s_row = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_d_row = 0.5*np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_a_row = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+    the_b_row = np.abs(save_k2o_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])/np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,tempy_index_shift:-1])
+
+    min_all = np.min(the_s_row)
+    if np.min(the_d_row) < min_all:
+        min_all = np.min(the_d_row)
+    if np.min(the_a_row) < min_all:
+        min_all = np.min(the_a_row)
+    if np.min(the_b_row) < min_all:
+        min_all = np.min(the_b_row)
+
+    max_all = np.max(the_s_row)
+    if np.max(the_d_row) > max_all:
+        max_all = np.max(the_d_row)
+    if np.max(the_a_row) > max_all:
+        max_all = np.max(the_a_row)
+    if np.max(the_b_row) > max_all:
+        max_all = np.max(the_b_row)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+    square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+
+plt.savefig(in_path+dir_path+fig_path+"only_dpri_k2o.png",bbox_inches='tight')
+
+
+
+
+# #hack: FIG: save_fe_num
+# print "save_fe_num"
+# save_string = "save_fe_num "
+#
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#
+#     the_s_row = np.abs(save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"save_fe_num.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+# #hack: FIG: save_mg_num
+# print "save_mg_num"
+# save_string = "save_mg_num "
+#
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#
+#     the_s_row = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / (save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:] + save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"save_mg_num.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+# #hack: FIG: save_mg_to_fe
+# print "save_mg_to_fe"
+# save_string = "mg_to_fe"
+#
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#
+#     the_s_row = np.abs(save_mgo_mean[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(save_mgo_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(save_mgo_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     # min_all = 1.0
+#     # max_all = 17.0
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"save_mg_to_fe.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+# #hack: FIG: save_k_to_fe
+# print "save_k_to_fe"
+# save_string = "k_to_fe"
+#
+# fig=plt.figure(figsize=(8.0,8.0))
+# plt.subplots_adjust(hspace=0.4)
+#
+# for iii in range(len(temp_string_list)):
+#
+#     the_s = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_d = np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_a = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,iii])
+#     the_b = np.abs(save_mgo_mean_b[:cont_y_param_max,:cont_x_diff_max,iii]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,iii])
+#
+#     the_s_row = np.abs(save_k2o_mean[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_d_row = np.abs(save_k2o_mean_d[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_d[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_a_row = np.abs(save_k2o_mean_a[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_a[:cont_y_param_max,:cont_x_diff_max,:])
+#     the_b_row = np.abs(save_k2o_mean_b[:cont_y_param_max,:cont_x_diff_max,:]) / ( save_feot_mean_b[:cont_y_param_max,:cont_x_diff_max,:])
+#
+#     min_all = np.min(the_s_row)
+#     if np.min(the_d_row) < min_all:
+#         min_all = np.min(the_d_row)
+#     if np.min(the_a_row) < min_all:
+#         min_all = np.min(the_a_row)
+#     if np.min(the_b_row) < min_all:
+#         min_all = np.min(the_b_row)
+#
+#     max_all = np.max(the_s_row)
+#     if np.max(the_d_row) > max_all:
+#         max_all = np.max(the_d_row)
+#     if np.max(the_a_row) > max_all:
+#         max_all = np.max(the_a_row)
+#     if np.max(the_b_row) > max_all:
+#         max_all = np.max(the_b_row)
+#
+#     # min_all = 1.0
+#     # max_all = 17.0
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 1, the_s, cb_title="s " + save_string + temp_string_list[iii], xlab=0, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 2, the_d, cb_title="d " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 3, the_a, cb_title="a " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+#     square_pcolor(sp2, sp1, iii*sp1 + 4, the_b, cb_title="b " + save_string + temp_string_list[iii], xlab=0, min_all_in=min_all, max_all_in=max_all)
+#
+# plt.savefig(in_path+dir_path+fig_path+"save_k_to_fe.png",bbox_inches='tight')
