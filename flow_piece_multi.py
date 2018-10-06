@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import math
-import streamplot as sp
-import multiplot_data as mpd
+# import streamplot as sp
+# import multiplot_data as mpd
 import heapq
 import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -22,8 +22,8 @@ plot_col = ['#801515', '#c90d0d', '#d26618', '#dfa524', '#cdeb14', '#7d9d10', '#
 
 #todo: parameters
 
-steps = 5
-max_steps = 4
+steps = 10
+max_steps = 9
 minNum = 57
 ison=10000
 trace = 0
@@ -84,11 +84,11 @@ cells_above_vec = np.zeros(len(param_age_nums))
 
 #hack: path
 print_s = "100"
-print_h = "600"
-print_q = "30.0"
+print_h = "200"
+print_q = "50.0"
 sub_dir = "s= " + print_s + ", h= " + print_h + ", q= " + print_q
 print sub_dir
-linear_dir_path = "../output/revival/local_fp_output/par_k_10_s_" + print_s + "_h_" + print_h +"/par_q_" + print_q + "/"
+linear_dir_path = "../output/revival/local_fp_output/oc_output/oc_k_13_s_" + print_s + "_h_" + print_h +"_ts/par_q_" + print_q + "/"
 outpath = linear_dir_path
 
 for ii in range(len(param_age_nums)):
@@ -178,7 +178,7 @@ for ii in range(len(param_age_nums)):
 
 
 #todo: jdf_t_mean.png
-
+print "what's i vs max_steps? " , i , max_steps
 if i == max_steps:
     fig=plt.figure(figsize=(10.0,10.0))
     ax=fig.add_subplot(2, 2, 1, frameon=True)
@@ -348,6 +348,7 @@ if i == max_steps:
         temp_top_linspace[j] = the_f_top(km_linspace[j], age_linspace[j])
         temp_bottom_linspace[j] = the_f_bottom(km_linspace[j], age_linspace[j])
 
+    #hack: MAYBE WRITE TO FILE?
     if write_txt == 1:
         np.savetxt(outpath+'z_age_linspace.txt', age_linspace)
         np.savetxt(outpath+'z_km_linspace.txt', km_linspace)
@@ -514,40 +515,41 @@ for ii in range(len(param_age_nums)):
 plt.xlabel('temperature [C]',fontsize=9)
 plt.ylabel('depth below seafloor [m]',fontsize=9)
 plt.title('sub_dir = ' + sub_dir)
-#plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
-
-
-ax=fig.add_subplot(2, 3, 2, frameon=True)
-
-for ii in range(len(param_age_nums)):
-    # if (ii+1)%2 == 0:
-    plt.plot(geotherm_left[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],label=param_age_strings[ii])
-    plt.plot(geotherm_right[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],linestyle='-')
-    #plt.plot(geotherm_mean[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],linestyle='-')
-
-plt.xlim([0.0,100.0])
-plt.ylim([-600.0,-400.0])
-plt.xlabel('temperature [C]',fontsize=9)
-plt.ylabel('depth below seafloor [m]',fontsize=9)
-plt.title('sub_dir = ' + sub_dir)
+plt.xlim([0.0,160.0])
 plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
 
 
-ax=fig.add_subplot(2, 3, 3, frameon=True)
-#cmap1 = LinearSegmentedColormap.from_list("my_colormap", ((0.64, 0.1, 0.53), (0.78, 0.61, 0.02)), N=15, gamma=1.0)
-cmap1 = cm.jet
-diff_colors = [ cmap1(xc) for xc in np.linspace(0.0, 1.0, 30) ]
+# ax=fig.add_subplot(2, 3, 2, frameon=True)
+#
+# for ii in range(len(param_age_nums)):
+#     # if (ii+1)%2 == 0:
+#     plt.plot(geotherm_left[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],label=param_age_strings[ii])
+#     plt.plot(geotherm_right[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],linestyle='-')
+#     #plt.plot(geotherm_mean[geotherm_base:,ii],y[geotherm_base:],c=plot_col[ii],linestyle='-')
+#
+# plt.xlim([0.0,100.0])
+# plt.ylim([-600.0,-400.0])
+# plt.xlabel('temperature [C]',fontsize=9)
+# plt.ylabel('depth below seafloor [m]',fontsize=9)
+# plt.title('sub_dir = ' + sub_dir)
+# plt.legend(fontsize=8,bbox_to_anchor=(1.2, 0.7))
 
-ii = 3.0
-for j in range(len(x[::100])):
-    plt.plot(end_temp[geotherm_base:,j*(99),ii],y[geotherm_base:],color=diff_colors[j])
-plt.xlim([0.0,100.0])
-plt.xlabel('temperature [C]',fontsize=9)
-plt.ylabel('depth below seafloor [m]',fontsize=9)
+
+# ax=fig.add_subplot(2, 3, 3, frameon=True)
+# #cmap1 = LinearSegmentedColormap.from_list("my_colormap", ((0.64, 0.1, 0.53), (0.78, 0.61, 0.02)), N=15, gamma=1.0)
+# cmap1 = cm.jet
+# diff_colors = [ cmap1(xc) for xc in np.linspace(0.0, 1.0, 30) ]
+#
+# ii = 3.0
+# for j in range(len(x[::100])):
+#     plt.plot(end_temp[geotherm_base:,j*(99),ii],y[geotherm_base:],color=diff_colors[j])
+# plt.xlim([0.0,100.0])
+# plt.xlabel('temperature [C]',fontsize=9)
+# plt.ylabel('depth below seafloor [m]',fontsize=9)
 
 
-plt.savefig(outpath+'jdf_geotherm'+'_'+str(i)+'.png',bbox_inches='tight')
-plt.savefig(outpath+'zps_geotherm'+'_'+str(i)+'.eps',bbox_inches='tight')
+plt.savefig(outpath+'jdf_geotherm'+'_'+print_q+'.png',bbox_inches='tight')
+plt.savefig(outpath+'zps_geotherm'+'_'+print_q+'.eps',bbox_inches='tight')
 
 
 
@@ -580,8 +582,8 @@ plt.legend(fontsize=8, loc='best')
 plt.xlabel('age of crust [Myr]')
 plt.ylabel('mean lateral fluid temperature along 100km of crust')
 
-plt.ylim([0.0,80.0])
+plt.ylim([0.0,160.0])
 plt.title('sub_dir = ' + sub_dir)
 
-plt.savefig(outpath+'jdf_t_scatter.png',bbox_inches='tight')
-plt.savefig(outpath+'zps_t_scatter.eps',bbox_inches='tight')
+plt.savefig(outpath+'jdf_t_scatter_'+print_q+'.png',bbox_inches='tight')
+plt.savefig(outpath+'jdf_t_scatter_'+print_q+'.eps',bbox_inches='tight')

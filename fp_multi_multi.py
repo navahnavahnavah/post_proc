@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import math
-import streamplot as sp
-import multiplot_data as mpd
+# import streamplot as sp
+# import multiplot_data as mpd
 import heapq
 import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -26,7 +26,7 @@ plt.rcParams['axes.titlesize'] = 10
 
 
 
-plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
+plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989, #7563e2"
 
 plot_col = ['#801515', '#c90d0d', '#d26618', '#EDB92E', '#cdeb14', '#7d9d10', '#1ff675', '#139a72', '#48b4d1', '#075fd2', '#7f05d4', '#b100de', '#ff8ac2']
 
@@ -39,22 +39,23 @@ dx_blocks = 20
 param_s_nums = np.array([100.0])
 param_s_strings = ['100']
 
+
 # param_h_nums = np.array([200.0, 400.0, 600.0])
 # param_h_strings = ['200', '400', '600']
 
-param_h_nums = np.array([200.0, 400.0, 600.0])
-param_h_strings = ['200', '400', '600']
+param_h_nums = np.array([200.0, 200.0])
+param_h_strings = ['200', '200']
 
-param_q_nums = np.array([1.0, 3.0, 5.0, 10.0, 30.0])
-param_q_strings = ['1.0', '3.0', '5.0', '10.0', '30.0']
+param_q_nums = np.array([1.0, 3.0, 5.0, 10.0, 30.0, 50.0])
+param_q_strings = ['1.0', '3.0', '5.0', '10.0', '30.0', '50.0']
 
 #hack: big arrays
 temp_top_linspace = np.zeros([dx_blocks,len(param_s_nums),len(param_h_nums),len(param_q_nums)])
 temp_bottom_linspace = np.zeros([dx_blocks,len(param_s_nums),len(param_h_nums),len(param_q_nums)])
 
 #hack: gen_path
-gen_path = '../output/revival/local_fp_output/'
-unique_string = 'k_10_s_' + param_s_strings[0] + ''
+gen_path = '../output/revival/local_fp_output/oc_output/'
+unique_string = 'k_13_s_' + param_s_strings[0] + ''
 
 #hack: site data
 x_sd_temps = np.array([22.443978220690354, 25.50896648184225, 33.32254358359559, 39.22503621559518, 44.528597832059546, 54.624706528797645, 74.32349268195217, 100.7522853289375, 102.99635346420898, 100.74349368100305])
@@ -71,7 +72,7 @@ for m in range(len(param_s_nums)):
     for mm in range(len(param_h_nums)):
         for mmm in range(len(param_q_nums)):
 
-            txt_path = "../output/revival/local_fp_output/par_k_10_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"/par_q_" + param_q_strings[mmm] + "/"
+            txt_path = "../output/revival/local_fp_output/oc_output/oc_k_13_s_" + param_s_strings[m] + "_h_" + param_h_strings[mm] +"_ts/par_q_" + param_q_strings[mmm] + "/"
 
             km_linspace = np.loadtxt(txt_path + 'z_km_linspace.txt',delimiter='\n')
             age_linspace = np.loadtxt(txt_path + 'z_age_linspace.txt',delimiter='\n')
@@ -212,6 +213,50 @@ plt.subplots_adjust(hspace=0.4)
 
 plt.savefig(gen_path+'fpmm_trial_'+unique_string+'.png',bbox_inches='tight')
 plt.savefig(gen_path+'fpmm_trial_'+unique_string+'.eps',bbox_inches='tight')
+
+
+
+
+#hack: PLOT K 10, 11, 12, 13
+#todo: trial_fig
+fig=plt.figure(figsize=(14.0,8.0))
+
+ax=fig.add_subplot(2, 3, 1, frameon=True)
+
+n_color = 0
+for m in range(len(param_s_nums)):
+    for mm in [0]:
+        for mmm in range(len(param_q_nums)):
+            plt.plot(km_linspace,temp_top_linspace[:,m,mm,mmm],label="s: " + param_s_strings[m] + ", h: " + param_h_strings[mm] +", q: " + param_q_strings[mmm], lw=2.0, color=plot_col[n_color])
+            plt.plot(km_linspace,temp_bottom_linspace[:,m,mm,mmm], linestyle='-', lw=1.0,color=plot_col[n_color])
+            n_color = n_color + 1
+
+plt.plot(x_sd_temps_km,y_sd_temps_km,'k^',label="data")
+
+plt.ylim([0.0,120.0])
+plt.xlabel('distance from inflow [km]',fontsize=9)
+plt.ylabel('temp [C]',fontsize=9)
+plt.title('param_h = 200')
+
+plt.legend(fontsize=8,bbox_to_anchor=(-0.15, 0.7))
+
+
+
+
+
+
+
+
+
+
+
+plt.subplots_adjust(hspace=0.4)
+
+plt.savefig(gen_path+'gr_fill_'+unique_string+'.png',bbox_inches='tight')
+plt.savefig(gen_path+'gr_fill_'+unique_string+'.eps',bbox_inches='tight')
+
+
+
 
 
 
@@ -711,78 +756,84 @@ temp_bottom_back = np.zeros([len(param_s_nums),len(param_h_nums),len(param_q_num
 #             for t in range(ts_back):
 #                 temp_top_back[m,mm,mmm,t] = the_f_3d_top(param_q_nums[mmm],)
 
-fig=plt.figure(figsize=(14.0,14.0))
-
-# if mm == 1:
-#     the_line.set_dashes(dashes)
-#     the_line.set_linewidth(thin_line)
-# if mm == 2:
-#     the_line.set_dashes(dashes0)
-#     the_line.set_linewidth(thick_line)
-
-#hack: 2D cohort
-
-
-n_color = 0
-for mm in [0,1]:
-    ax=fig.add_subplot(3, 3, mm+1)
-    for m in [0]:
-        for mmm in [0,1,2,3,4]:
-            n_color = mmm#n_color + 1
-            this_label = 'q=' + param_q_strings[mmm]
-            plt.scatter(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
-            plt.plot(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
-
-            plt.scatter((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
-            plt.plot((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
-
-            plt.title('h=' + param_h_strings[mm],fontsize=9)
-            plt.xlim([-0.5,4.5])
-            plt.ylim([0.0,140.0])
-            plt.xlabel('value of q',fontsize=9)
-            plt.ylabel('temp [C]',fontsize=9)
-            if mm == 0:
-                plt.legend(fontsize=8,bbox_to_anchor=(-0.05, 1.0))
-
-n_color = 0
-for mm in [0]:
-    ax=fig.add_subplot(3, 3, 3+mm+1)
-    for m in [0]:
-        for mmm in [1]:
-            n_color = mmm#n_color + 1
-            this_label = 'q=' + param_q_strings[mmm]
-            plt.scatter(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
-            plt.plot(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
-
-            # plt.scatter((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
-            # plt.plot((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
-
-            # 10 timesteps back
-            for t in range(10):
-
-                # this only works for h = 200, but ok
-                temp_top_back = np.zeros(dx_blocks)
-                temp_bottom_back = np.zeros(dx_blocks)
-                dx_shift = 10.0
-                for j in range(dx_blocks):
-                    print "j" , j
-                    print km_linspace[j]-((j+1.0)*dx_shift)
-                    print " "
-                    temp_top_back[j] = the_f_3d_top(param_q_nums[mmm],km_linspace[j]-((t+1.0)*dx_shift))
-                    temp_bottom_back[j] = the_f_3d_bottom(param_q_nums[mmm],km_linspace[j]-((t+1.0)*dx_shift))
-
-                plt.scatter((t+1.0)*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_back[:], facecolor=plot_col[n_color], edgecolor='none')
-                plt.plot((t+1.0)*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_back[:], color=plot_col[n_color], lw=0.5)
-
-            plt.title('h=' + param_h_strings[mm],fontsize=9)
-            plt.xlim([-0.5,10.5])
-            plt.ylim([-10.0,140.0])
-            plt.xlabel('value of q',fontsize=9)
-            plt.ylabel('temp [C]',fontsize=9)
-            if mm == 0:
-                plt.legend(fontsize=8,bbox_to_anchor=(-0.05, 1.0))
 
 
 
-plt.savefig(gen_path+'fpmm_cohort_'+unique_string+'.png',bbox_inches='tight')
-plt.savefig(gen_path+'fpmm_cohort_'+unique_string+'.eps',bbox_inches='tight')
+
+
+
+# fig=plt.figure(figsize=(14.0,14.0))
+#
+# # if mm == 1:
+# #     the_line.set_dashes(dashes)
+# #     the_line.set_linewidth(thin_line)
+# # if mm == 2:
+# #     the_line.set_dashes(dashes0)
+# #     the_line.set_linewidth(thick_line)
+#
+# #hack: 2D cohort
+#
+#
+# n_color = 0
+# for mm in [0,1]:
+#     ax=fig.add_subplot(3, 3, mm+1)
+#     for m in [0]:
+#         for mmm in [0,1,2,3,4]:
+#             n_color = mmm#n_color + 1
+#             this_label = 'q=' + param_q_strings[mmm]
+#             plt.scatter(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
+#             plt.plot(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
+#
+#             plt.scatter((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
+#             plt.plot((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
+#
+#             plt.title('h=' + param_h_strings[mm],fontsize=9)
+#             plt.xlim([-0.5,4.5])
+#             plt.ylim([0.0,140.0])
+#             plt.xlabel('value of q',fontsize=9)
+#             plt.ylabel('temp [C]',fontsize=9)
+#             if mm == 0:
+#                 plt.legend(fontsize=8,bbox_to_anchor=(-0.05, 1.0))
+#
+# n_color = 0
+# for mm in [0]:
+#     ax=fig.add_subplot(3, 3, 3+mm+1)
+#     for m in [0]:
+#         for mmm in [1]:
+#             n_color = mmm#n_color + 1
+#             this_label = 'q=' + param_q_strings[mmm]
+#             plt.scatter(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
+#             plt.plot(n_color*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
+#
+#             # plt.scatter((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], label=this_label, facecolor=plot_col[n_color], edgecolor='none')
+#             # plt.plot((n_color+0.25)*np.ones(len(temp_bottom_linspace[:,m,mm,mmm])), temp_bottom_linspace[:,m,mm,mmm], color=plot_col[n_color], lw=0.5)
+#
+#             # 10 timesteps back
+#             for t in range(10):
+#
+#                 # this only works for h = 200, but ok
+#                 temp_top_back = np.zeros(dx_blocks)
+#                 temp_bottom_back = np.zeros(dx_blocks)
+#                 dx_shift = 10.0
+#                 for j in range(dx_blocks):
+#                     print "j" , j
+#                     print km_linspace[j]-((j+1.0)*dx_shift)
+#                     print " "
+#                     temp_top_back[j] = the_f_3d_top(param_q_nums[mmm],km_linspace[j]-((t+1.0)*dx_shift))
+#                     temp_bottom_back[j] = the_f_3d_bottom(param_q_nums[mmm],km_linspace[j]-((t+1.0)*dx_shift))
+#
+#                 plt.scatter((t+1.0)*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_back[:], facecolor=plot_col[n_color], edgecolor='none')
+#                 plt.plot((t+1.0)*np.ones(len(temp_top_linspace[:,m,mm,mmm])), temp_top_back[:], color=plot_col[n_color], lw=0.5)
+#
+#             plt.title('h=' + param_h_strings[mm],fontsize=9)
+#             plt.xlim([-0.5,10.5])
+#             plt.ylim([-10.0,140.0])
+#             plt.xlabel('value of q',fontsize=9)
+#             plt.ylabel('temp [C]',fontsize=9)
+#             if mm == 0:
+#                 plt.legend(fontsize=8,bbox_to_anchor=(-0.05, 1.0))
+#
+#
+#
+# plt.savefig(gen_path+'fpmm_cohort_'+unique_string+'.png',bbox_inches='tight')
+# plt.savefig(gen_path+'fpmm_cohort_'+unique_string+'.eps',bbox_inches='tight')

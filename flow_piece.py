@@ -4,11 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import math
-import streamplot as sp
-import multiplot_data as mpd
+# import streamplot as sp
+# import multiplot_data as mpd
 import heapq
 import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import sys
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
 plt.rc('xtick', labelsize=8)
@@ -17,7 +18,8 @@ plt.rcParams['axes.titlesize'] = 12
 
 plt.rcParams['axes.color_cycle'] = "#CE1836, #F85931, #EDB92E, #A3A948, #009989"
 
-plot_col = ['#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#6c05d4', '#9e00de', '#e287f7']
+# plot_col = ['#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#6c05d4', '#9e00de', '#e287f7']
+plot_col = ['#801515', '#c90d0d', '#d26618', '#dfa524', '#cdeb14', '#7d9d10', '#1ff675', '#139a72', '#359ab5', '#075fd2', '#151fa4', '#3c33a3', '#7f05d4', '#b100de', '#ff8ac2', '#ff8ac2']
 
 
 #todo: parameters
@@ -32,8 +34,11 @@ iso = 0
 cell = 5
 
 #poop: path
-sub_dir = "ao_3.50/"
-outpath = "../output/revival/local_fp_output/ao_q_5.0/" + sub_dir
+# sub_dir = "ao_0.50/"
+print "COMMAND LINE ARGUMENTS " + sys.argv[1]
+sub_dir = "ao_" + str(sys.argv[1]) + "/"
+# outpath = "../output/revival/local_fp_output/par_k_10_s_100_h_200/par_q_5.0/" + sub_dir
+outpath = "../output/revival/local_fp_output/oc_output/oc_k_11_s_100_h_200_ts/par_q_5.0/" + sub_dir
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
@@ -73,7 +78,7 @@ yCell = y0[1::cell]
 xg, yg = np.meshgrid(x[:],y[:])
 xgCell, ygCell = np.meshgrid(xCell[:],yCell[:])
 
-mask = np.loadtxt(path + 'mask.txt')
+# mask = np.loadtxt(path + 'mask.txt')
 maskP = np.loadtxt(path + 'maskP.txt')
 psi0 = np.loadtxt(path + 'psiMat.txt')
 perm = np.loadtxt(path + 'permeability.txt')
@@ -91,13 +96,13 @@ print perm[:,-1]
 
 temp0 = np.loadtxt(path + 'hMat.txt')
 temp0 = temp0 - 273.0
-u0 = np.loadtxt(path + 'uMat.txt')
-v0 = np.loadtxt(path + 'vMat.txt')
-lambdaMat = np.loadtxt(path + 'lambdaMat.txt')
+# u0 = np.loadtxt(path + 'uMat.txt')
+# v0 = np.loadtxt(path + 'vMat.txt')
+# lambdaMat = np.loadtxt(path + 'lambdaMat.txt')
 
 u_ts = np.zeros([steps])
 
-lam = np.loadtxt(path + 'lambdaMat.txt')
+# lam = np.loadtxt(path + 'lambdaMat.txt')
 
 
 def cut(geo0,index):
@@ -167,7 +172,7 @@ plt.legend(bbox_to_anchor=(1.0,1.0),fontsize=8)
 plt.savefig(outpath+'jdf_q_lith.png',bbox_inches='tight')
 
 
-delta = np.zeros(lambdaMat.shape)
+# delta = np.zeros(lambdaMat.shape)
 
 conv_mean_qu = 0.0
 conv_max_qu = 0.0
@@ -188,8 +193,8 @@ for i in range(0,steps,1):
     # rho = rho0[:,i*len(x):((i)*len(x)+len(x))]
     # perm = perm0[:,i*len(x):((i)*len(x)+len(x))]
     temp = temp0[:,i*len(x):((i)*len(x)+len(x))]
-    u = u0[:,i*len(x):((i)*len(x)+len(x))]
-    v = v0[:,i*len(x):((i)*len(x)+len(x))]
+    # u = u0[:,i*len(x):((i)*len(x)+len(x))]
+    # v = v0[:,i*len(x):((i)*len(x)+len(x))]
 
     #poop: flow layer mean temp
     print maskP.shape
@@ -267,30 +272,30 @@ for i in range(0,steps,1):
 
 
 
-    #todo: sed_thick.png
-    cap1 = int((param_w/50.0)) + 4
-    cap2 = int((param_w_rhs/50.0)) + 4
-
-
-    colMax = np.zeros(len(x))
-    for n in range(cap1,len(x)-cap2):
-        cmax = np.max(u[:,n])*(3.14e7)
-        cmin = np.min(u[:,n])*(3.14e7)
-        if np.abs(cmax) > np.abs(cmin):
-            colMax[n] = cmax
-        if np.abs(cmax) < np.abs(cmin):
-            colMax[n] = cmin
-        #colMax[n] = cmax
-        #print colMax[n]
-    colMean = np.sum(colMax)/len(x[cap1:-cap2])
-    print u_ts.shape
-    u_ts[i] = colMean
-
-
-
-    fig=plt.figure()
-    plt.plot(mpd.interp_s-mpd.interp_b)
-    plt.savefig(outpath+'sed_thick.png',bbox_inches='tight')
+    # #todo: sed_thick.png
+    # cap1 = int((param_w/50.0)) + 4
+    # cap2 = int((param_w_rhs/50.0)) + 4
+    #
+    #
+    # colMax = np.zeros(len(x))
+    # for n in range(cap1,len(x)-cap2):
+    #     cmax = np.max(u[:,n])*(3.14e7)
+    #     cmin = np.min(u[:,n])*(3.14e7)
+    #     if np.abs(cmax) > np.abs(cmin):
+    #         colMax[n] = cmax
+    #     if np.abs(cmax) < np.abs(cmin):
+    #         colMax[n] = cmin
+    #     #colMax[n] = cmax
+    #     #print colMax[n]
+    # colMean = np.sum(colMax)/len(x[cap1:-cap2])
+    # print u_ts.shape
+    # u_ts[i] = colMean
+    #
+    #
+    #
+    # fig=plt.figure()
+    # # plt.plot(mpd.interp_s-mpd.interp_b)
+    # plt.savefig(outpath+'sed_thick.png',bbox_inches='tight')
 
 
 
@@ -299,9 +304,93 @@ for i in range(0,steps,1):
     #todo: FIG: jdf_i.png
 
 
-    fig=plt.figure(figsize=(10.0,6.0))
+    # fig=plt.figure(figsize=(10.0,6.0))
+    #
+    # y_limit = 2*len(y)/4
+    #
+    #
+    # # temp plot
+    # varStep = temp
+    # varMat = varStep
+    # contours = np.linspace(np.min(varStep),np.max(varStep),30)
+    #
+    # ax1=fig.add_subplot(2,1,2, aspect=asp/2.0,frameon=False)
+    # pGlass = plt.contourf(x, y[y_limit:], varStep[y_limit:,:], 30, cmap=cm.rainbow, alpha=1.0,color='#444444',antialiased=True)
+    # p = plt.contour(xg[y_limit:,:],yg[y_limit:,:],perm[y_limit:,:],[-14.9],colors='black',linewidths=np.array([1.5]))
+    # CS = plt.contour(xg[y_limit:,:], yg[y_limit:,:], psi[y_limit:,:], 8, colors='black',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    # #cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    #
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep[y_limit:,:]),np.max(varStep[y_limit:,:]),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('TEMPERATURE [$^{o}$C]')
+    # cbar.solids.set_edgecolor("face")
+    #
+    #
+    #
+    # # u velocity plot
+    # varMat = u*(3.14e7)#ca0
+    # varStep = u*(3.14e7)#ca
+    # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+    #
+    # ax1=fig.add_subplot(2,2,1, aspect=asp/4.0,frameon=False)
+    # pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # plt.yticks(domain_y_ticks)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    #
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('u [m/yr]')
+    # cbar.solids.set_edgecolor("face")
+    #
+    #
+    # # v velocity plot
+    # varMat = v*(3.14e7)#dic0
+    # varStep = v*(3.14e7)#dic
+    # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+    #
+    # ax1=fig.add_subplot(2,2,2, aspect=asp/4.0,frameon=False)
+    # pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # plt.yticks(domain_y_ticks)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    #
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('v [m/yr]')
+    # cbar.solids.set_edgecolor("face")
+    #
+    # plt.savefig(outpath+'jdf_'+str(i+restart)+'.png',bbox_inches='tight')
 
-    y_limit = 2*len(y)/4
+
+
+
+
+
+
+    #hack: figure for paper
+
+    fig=plt.figure(figsize=(15.0,6.0))
+
+    y_limit = len(y)/4
+
+    xn = len(x)
+    lim_a = 0.0
+    lim_b = 10000.0
+    lim_a0 = int(lim_a/(x[1]-x[0]))
+    lim_b0 = int(lim_b/(x[1]-x[0]))
+    lim_u = len(y)/4
+    lim_o = len(y)
+
+    aspSQ = asp/80.0
+    aspZ = asp
 
 
     # temp plot
@@ -325,47 +414,87 @@ for i in range(0,steps,1):
 
 
 
-    # u velocity plot
-    varMat = u*(3.14e7)#ca0
-    varStep = u*(3.14e7)#ca
-    contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-    ax1=fig.add_subplot(2,2,1, aspect=asp/4.0,frameon=False)
-    pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
-    plt.xticks(domain_x_ticks,domain_x_tick_labels)
-    plt.yticks(domain_y_ticks)
-    for c in pGlass.collections:
-        c.set_edgecolor("face")
-
-    cbar= plt.colorbar(pGlass, orientation='horizontal')
-    cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
-    cbar.ax.set_xlabel('u [m/yr]')
-    cbar.solids.set_edgecolor("face")
 
 
-    # v velocity plot
-    varMat = v*(3.14e7)#dic0
-    varStep = v*(3.14e7)#dic
-    contours = np.linspace(np.min(varMat),np.max(varMat),10)
+    varMat = temp[lim_u:lim_o,lim_a0:lim_b0]
+    varStep = temp[lim_u:lim_o,lim_a0:lim_b0]
+    contours = np.linspace(np.min(varStep),np.max(varStep),20)
 
-    ax1=fig.add_subplot(2,2,2, aspect=asp/4.0,frameon=False)
-    pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
-    plt.xticks(domain_x_ticks,domain_x_tick_labels)
-    plt.yticks(domain_y_ticks)
-    for c in pGlass.collections:
-        c.set_edgecolor("face")
+    ax1=fig.add_subplot(2,2,1, aspect=aspSQ*3.0,frameon=False)
+    pGlass = plt.contourf(x[lim_a0:lim_b0], y[lim_u:lim_o], varStep, 40, cmap=cm.rainbow,vmin = np.min(varStep),vmax=np.max(varStep))
+    CS = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0], yg[lim_u:lim_o,lim_a0:lim_b0], psi[lim_u:lim_o,lim_a0:lim_b0], 8, colors='black',linewidths=np.array([0.5]))
+    p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],[-14.9,-15.0,-16.0,-13.5],colors='black',linewidths=np.array([1.5]))
+    cMask = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],maskP[lim_u:lim_o,lim_a0:lim_b0],[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
 
-    cbar= plt.colorbar(pGlass, orientation='horizontal')
-    cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
-    cbar.ax.set_xlabel('v [m/yr]')
-    cbar.solids.set_edgecolor("face")
+    plt.xlim([lim_a,lim_b])
+    plt.ylim([3*np.min(y)/4,0.])
+    cbar = plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
+    # cbar.set_ticks(np.linspace(np.min(temp),temp_max,5))
+    # cbar.set_clim(np.min(temp), temp_max)
+    plt.title('LEFT OUTCROP')
 
-    plt.savefig(outpath+'jdf_'+str(i+restart)+'.png',bbox_inches='tight')
+
+    ax=fig.add_subplot(2, 2, 2, frameon=True)
+    plt.plot(varStep,y[lim_u:lim_o])
+    plt.xlim()
 
 
 
+    # varMat = temp[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+    # varStep = temp[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,2, aspect=aspSQ/1000,frameon=False)
+    # pGlass = plt.contourf(x[xn-lim_b0:xn-lim_a0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow,vmin = np.min(temp),vmax=180)
+    # CS = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0]/1000, yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0], psi[lim_u:lim_o,xn-lim_b0:xn-lim_a0], 8, colors='black',linewidths=np.array([0.5]))
+    # p = plt.contour(xg/1000,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg/1000,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.xlim([(np.max(x)-lim_b)/1000,(np.max(x)-lim_a)/1000])
+    # plt.ylim([np.min(y),0.])
+    # plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
+    # plt.title('RIGHT OUTCROP')
+
+
+
+    # # u velocity plot
+    # varMat = u*(3.14e7)#ca0
+    # varStep = u*(3.14e7)#ca
+    # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+    #
+    # ax1=fig.add_subplot(2,2,1, aspect=asp/4.0,frameon=False)
+    # pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # plt.yticks(domain_y_ticks)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    #
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('u [m/yr]')
+    # cbar.solids.set_edgecolor("face")
+    #
+    #
+    # # v velocity plot
+    # varMat = v*(3.14e7)#dic0
+    # varStep = v*(3.14e7)#dic
+    # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+    #
+    # ax1=fig.add_subplot(2,2,2, aspect=asp/4.0,frameon=False)
+    # pGlass = plt.contourf(x, y, varStep, contours,cmap=cm.rainbow, alpha=1.0,antialiased=True)
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # plt.yticks(domain_y_ticks)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    #
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('v [m/yr]')
+    # cbar.solids.set_edgecolor("face")
+
+    plt.savefig(outpath+'a_paper_'+str(i+restart)+'.png',bbox_inches='tight')
 
 
 
@@ -373,94 +502,100 @@ for i in range(0,steps,1):
 
 
 
-    #todo: FIG: jdfaq.png
-
-    #-aquifer
-
-    fig=plt.figure()
-
-
-    # aqx = 17
-    # aqx2 = (len(x)) - 17
-    aqx = int((param_w/50.0)) +30 #+ 20
-    aqx2 = len(x) - int((param_w_rhs/50.0)) - 32 #- 40
-    aqy = 0
-    aqy2 = len(y)
-
-
-    # u velocity in the channel
-    varMat = u[aqy:aqy2,aqx:aqx2]*(3.14e7)#ca0
-    varStep = u[aqy:aqy2,aqx:aqx2]*(3.14e7)#ca
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-    scanned = varStep[:,bitsx/2]
-    #print scanned
-    print "mean scanned qu" , np.mean(scanned[np.abs(scanned)>0.001])
-    # print "sum scanned qu" , np.sum(scanned[scanned>0.001])/(200.0/(y[1]-y[0]))
-    print "sum scanned qu" , np.sum(scanned[scanned>0.001])/((200.0+1.5*(y[1]-y[0]))/(y[1]-y[0]))
-    print "mmaaxx scanned qu" , np.max(scanned)
-    # print "max qu" , np.max(scanned)
-    # print "mean psi" , np.mean(psi)
-    print "max psi" , np.max(psi)
-    # print "max psi, aquifer" , np.max(psi[aqy:aqy2,aqx:aqx2])
-    # print "mean psi, aquifer" , np.mean(psi[aqy:aqy2,aqx:aqx2])
-
-    #print np.sum(heapq.nlargest(4,scanned))/4.0
-
-    print " "
-
-    if i >= 4:
-        conv_count = conv_count + 1
-        # conv_mean_qu = conv_mean_qu + np.sum(scanned[scanned>0.001])/(200.0/(y[1]-y[0]))
-        conv_mean_qu = conv_mean_qu + np.mean(scanned[np.abs(scanned)>0.1])#np.sum(scanned)/(200.0/(y[1]-y[0]))
-        conv_max_qu = conv_max_qu + np.max(varStep)
-        conv_mean_psi = conv_mean_psi + np.mean(psi)
-        conv_max_psi = conv_max_psi + np.max(psi)
-    if i == 9:
-    #if i >= 4:
-        print "means over time:"
-        print "conv_mean_qu" , conv_mean_qu/float(conv_count)
-        print "conv_max_qu" , conv_max_qu/float(conv_count)
-        print "conv_mean_psi" , conv_mean_psi/float(conv_count)
-        print "conv_max_psi" , conv_max_psi/float(conv_count)
-
-    ax1=fig.add_subplot(2,1,1, aspect=asp/4.0,frameon=False)
-    pGlass=plt.contourf(x[aqx:aqx2],y[aqy:aqy2],varStep,contours,cmap=cm.rainbow,alpha=1.0,antialiased=True)
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
-    p = plt.contour(xg[aqy:aqy2,aqx:aqx2],yg[aqy:aqy2,aqx:aqx2],perm[aqy:aqy2,aqx:aqx2],[-14.9],colors='black',linewidths=np.array([0.5]))
-    plt.xticks(domain_x_ticks,domain_x_tick_labels)
-    for c in pGlass.collections:
-        c.set_edgecolor("face")
-
-    plt.ylim([y[aqy],y[aqy2-1]])
-    cbar= plt.colorbar(pGlass, orientation='horizontal')
-    cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
-    cbar.ax.set_xlabel('u [m/yr]')
-    cbar.solids.set_edgecolor("face")
 
 
 
-    varMat = v[aqy:aqy2,aqx:aqx2]*(3.14e7)#c14[aqy:aqy2,aqx:aqx2]#*(3.14e7)#dic0
-    varStep = v[aqy:aqy2,aqx:aqx2]*(3.14e7)#c14[aqy:aqy2,aqx:aqx2]#*(3.14e7)#dic
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,1,2, aspect=asp/4.0,frameon=False)
-    pGlass = plt.contourf(x[aqx:aqx2], y[aqy:aqy2], varStep, contours, cmap=cm.rainbow, alpha=1.0,antialiased=True)
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
-    p = plt.contour(xg[aqy:aqy2,aqx:aqx2],yg[aqy:aqy2,aqx:aqx2],perm[aqy:aqy2,aqx:aqx2],[-14.9],colors='black',linewidths=np.array([0.5]))
-    plt.xticks(domain_x_ticks,domain_x_tick_labels)
-    for c in pGlass.collections:
-        c.set_edgecolor("face")
 
 
 
-    plt.ylim([y[aqy],y[aqy2-1]])
-    cbar= plt.colorbar(pGlass, orientation='horizontal')
-    cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
-    cbar.ax.set_xlabel('v [m/yr]')
-    cbar.solids.set_edgecolor("face")
-
-
-    plt.savefig(outpath+'jdfaq_'+str(i+restart)+'.png',bbox_inches='tight')
+    # #todo: FIG: jdfaq.png
+    #
+    # #-aquifer
+    #
+    # fig=plt.figure()
+    #
+    #
+    # # aqx = 17
+    # # aqx2 = (len(x)) - 17
+    # aqx = int((param_w/50.0)) +30 #+ 20
+    # aqx2 = len(x) - int((param_w_rhs/50.0)) - 32 #- 40
+    # aqy = 0
+    # aqy2 = len(y)
+    #
+    #
+    # # u velocity in the channel
+    # varMat = u[aqy:aqy2,aqx:aqx2]*(3.14e7)#ca0
+    # varStep = u[aqy:aqy2,aqx:aqx2]*(3.14e7)#ca
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    # scanned = varStep[:,bitsx/2]
+    # #print scanned
+    # print "mean scanned qu" , np.mean(scanned[np.abs(scanned)>0.001])
+    # # print "sum scanned qu" , np.sum(scanned[scanned>0.001])/(200.0/(y[1]-y[0]))
+    # print "sum scanned qu" , np.sum(scanned[scanned>0.001])/((200.0+1.5*(y[1]-y[0]))/(y[1]-y[0]))
+    # print "mmaaxx scanned qu" , np.max(scanned)
+    # # print "max qu" , np.max(scanned)
+    # # print "mean psi" , np.mean(psi)
+    # print "max psi" , np.max(psi)
+    # # print "max psi, aquifer" , np.max(psi[aqy:aqy2,aqx:aqx2])
+    # # print "mean psi, aquifer" , np.mean(psi[aqy:aqy2,aqx:aqx2])
+    #
+    # #print np.sum(heapq.nlargest(4,scanned))/4.0
+    #
+    # print " "
+    #
+    # if i >= 4:
+    #     conv_count = conv_count + 1
+    #     # conv_mean_qu = conv_mean_qu + np.sum(scanned[scanned>0.001])/(200.0/(y[1]-y[0]))
+    #     conv_mean_qu = conv_mean_qu + np.mean(scanned[np.abs(scanned)>0.1])#np.sum(scanned)/(200.0/(y[1]-y[0]))
+    #     conv_max_qu = conv_max_qu + np.max(varStep)
+    #     conv_mean_psi = conv_mean_psi + np.mean(psi)
+    #     conv_max_psi = conv_max_psi + np.max(psi)
+    # if i == 9:
+    # #if i >= 4:
+    #     print "means over time:"
+    #     print "conv_mean_qu" , conv_mean_qu/float(conv_count)
+    #     print "conv_max_qu" , conv_max_qu/float(conv_count)
+    #     print "conv_mean_psi" , conv_mean_psi/float(conv_count)
+    #     print "conv_max_psi" , conv_max_psi/float(conv_count)
+    #
+    # ax1=fig.add_subplot(2,1,1, aspect=asp/4.0,frameon=False)
+    # pGlass=plt.contourf(x[aqx:aqx2],y[aqy:aqy2],varStep,contours,cmap=cm.rainbow,alpha=1.0,antialiased=True)
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    # p = plt.contour(xg[aqy:aqy2,aqx:aqx2],yg[aqy:aqy2,aqx:aqx2],perm[aqy:aqy2,aqx:aqx2],[-14.9],colors='black',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    #
+    # plt.ylim([y[aqy],y[aqy2-1]])
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('u [m/yr]')
+    # cbar.solids.set_edgecolor("face")
+    #
+    #
+    #
+    # varMat = v[aqy:aqy2,aqx:aqx2]*(3.14e7)#c14[aqy:aqy2,aqx:aqx2]#*(3.14e7)#dic0
+    # varStep = v[aqy:aqy2,aqx:aqx2]*(3.14e7)#c14[aqy:aqy2,aqx:aqx2]#*(3.14e7)#dic
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,1,2, aspect=asp/4.0,frameon=False)
+    # pGlass = plt.contourf(x[aqx:aqx2], y[aqy:aqy2], varStep, contours, cmap=cm.rainbow, alpha=1.0,antialiased=True)
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
+    # p = plt.contour(xg[aqy:aqy2,aqx:aqx2],yg[aqy:aqy2,aqx:aqx2],perm[aqy:aqy2,aqx:aqx2],[-14.9],colors='black',linewidths=np.array([0.5]))
+    # plt.xticks(domain_x_ticks,domain_x_tick_labels)
+    # for c in pGlass.collections:
+    #     c.set_edgecolor("face")
+    #
+    #
+    #
+    # plt.ylim([y[aqy],y[aqy2-1]])
+    # cbar= plt.colorbar(pGlass, orientation='horizontal')
+    # cbar.set_ticks(np.linspace(np.min(varStep),np.max(varStep),num=bar_bins,endpoint=True))
+    # cbar.ax.set_xlabel('v [m/yr]')
+    # cbar.solids.set_edgecolor("face")
+    #
+    #
+    # plt.savefig(outpath+'jdfaq_'+str(i+restart)+'.png',bbox_inches='tight')
 
 
 
@@ -475,7 +610,7 @@ for i in range(0,steps,1):
     aspSQ = asp/80.0
     aspZ = asp
 
-    if i==0:
+    # if i==0:
 
         #todo: FIG: zoom plot
 
@@ -520,242 +655,242 @@ for i in range(0,steps,1):
         # plt.savefig(outpath+'jdfZoom_'+str(i)+'.png',bbox_inches='tight')
 
 
-        #todo: FIG: jdfZoomK_0.png
-
-        fig=plt.figure(figsize=(6.0,8.0))
-
-        varMat = perm[lim_u:lim_o,lim_a0:lim_b0]
-        varStep = perm[lim_u:lim_o,lim_a0:lim_b0]
-        contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-        ax1=fig.add_subplot(3,2,1,aspect=aspSQ/1000.0,frameon=False)
-        pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000.0, y[lim_u:lim_o], varStep)
-        #p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],
-        #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
-
-        plt.xlim([lim_a/1000.0,lim_b/1000.0])
-        plt.ylim([-1250.0, 0.0])
-        plt.title('LEFT OUTCROP kx')
-
-        varMat = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-        varStep = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-        contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-        ax1=fig.add_subplot(3,2,2,aspect=aspSQ/1000.0,frameon=False)
-        pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000.0, y[lim_u:lim_o], varStep)
-        #p = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0],
-        #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
-
-        plt.xlim([(np.max(x)-lim_b)/1000.0,(np.max(x)-lim_a)/1000.0])
-        plt.ylim([-1250.0, 0.0])
-        plt.title('RIGHT OUTCROP kx')
-
-
-
-
-        varMat = perm[lim_u:lim_o,lim_a0:lim_b0]
-        varStep = perm[lim_u:lim_o,lim_a0:lim_b0]
-        contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-        ax1=fig.add_subplot(3,2,3,aspect=aspSQ/1000.0,frameon=False)
-        pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000.0, y[lim_u:lim_o], varStep)
-        #p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],
-        #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
-
-        plt.xlim([lim_a/1000.0,lim_b/1000.0])
-        plt.ylim([-1250.0, 0.0])
-        plt.title('LEFT OUTCROP ky')
-
-        varMat = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-        varStep = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-        contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-        ax1=fig.add_subplot(3,2,4,aspect=aspSQ/1000.0,frameon=False)
-        pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000.0, y[lim_u:lim_o], varStep)
-        #p = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0],
-        #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
-
-        plt.xlim([(np.max(x)-lim_b)/1000.0,(np.max(x)-lim_a)/1000.0])
-        plt.ylim([-1250.0, 0.0])
-        plt.title('RIGHT OUTCROP ky')
-
-
-
-
-
-
-
-        varMat = maskP[lim_u:lim_o,lim_a0:lim_b0]
-        varStep = maskP[lim_u:lim_o,lim_a0:lim_b0]
-        contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-        ax1=fig.add_subplot(3,2,5,aspect=aspSQ/1000.0,frameon=False)
-        pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000.0, y[lim_u:lim_o], varStep)
-        #p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],
-        #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
-
-        plt.xlim([lim_a/1000.0,lim_b/1000.0])
-        plt.ylim([-1250.0, 0.0])
-        plt.title('LEFT OUTCROP maskP')
-
-        varMat = maskP[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-        varStep = maskP[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-        contours = np.linspace(np.min(varMat),np.max(varMat),10)
-
-        ax1=fig.add_subplot(3,2,6,aspect=aspSQ/1000.0,frameon=False)
-        pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000.0, y[lim_u:lim_o], varStep)
-        #p = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0],
-        #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
-
-        plt.xlim([(np.max(x)-lim_b)/1000.0,(np.max(x)-lim_a)/1000.0])
-        plt.ylim([-1250.0, 0.0])
-        plt.title('RIGHT OUTCROP maskP')
-
-
-
-        plt.savefig(outpath+'jdfZoomK_'+str(i)+'.png',bbox_inches='tight')
-
-
-    #todo: FIG: zoomVel_
-    temp_max = 180.0
-
-    fig=plt.figure(figsize=(9.0,9.0))
-
-    varMat = temp[lim_u:lim_o,lim_a0:lim_b0]
-    varStep = temp[lim_u:lim_o,lim_a0:lim_b0]
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,2,1, aspect=aspSQ/1000,frameon=False)
-    pGlass = plt.contourf(x[lim_a0:lim_b0]/1000, y[lim_u:lim_o], varStep, 40, cmap=cm.rainbow,vmin = np.min(temp),vmax=180)
-    CS = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0]/1000, yg[lim_u:lim_o,lim_a0:lim_b0], psi[lim_u:lim_o,lim_a0:lim_b0], 8, colors='black',linewidths=np.array([0.5]))
-    p = plt.contour(xg/1000,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
-    cMask = plt.contour(xg/1000,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.xlim([lim_a/1000.0,lim_b/1000.0])
-    plt.ylim([np.min(y),0.])
-    cbar = plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
-    # cbar.set_ticks(np.linspace(np.min(temp),temp_max,5))
-    # cbar.set_clim(np.min(temp), temp_max)
-    plt.title('LEFT OUTCROP')
-
-
-    varMat = temp[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-    varStep = temp[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,2,2, aspect=aspSQ/1000,frameon=False)
-    pGlass = plt.contourf(x[xn-lim_b0:xn-lim_a0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow,vmin = np.min(temp),vmax=180)
-    CS = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0]/1000, yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0], psi[lim_u:lim_o,xn-lim_b0:xn-lim_a0], 8, colors='black',linewidths=np.array([0.5]))
-    p = plt.contour(xg/1000,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
-    cMask = plt.contour(xg/1000,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.xlim([(np.max(x)-lim_b)/1000,(np.max(x)-lim_a)/1000])
-    plt.ylim([np.min(y),0.])
-    plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
-    plt.title('RIGHT OUTCROP')
-
-
-    varStep = psi[lim_u:lim_o,lim_a0:lim_b0]
-    varMat = varStep
-
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-    ax1=fig.add_subplot(2,2,3, aspect=aspSQ/1000,frameon=False)
-    pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow)
-    #p = plt.contour(xg,yg,perm,[-15.9],colors='black',linewidths=np.array([1.5]))
-    #cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.xlim([lim_a/1000,lim_b/1000])
-    plt.ylim([np.min(y),0.])
-
-
-    varStep = psi[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
-    varMat = varStep
-
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-    ax1=fig.add_subplot(2,2,4, aspect=aspSQ/1000,frameon=False)
-    pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow)
-    #p = plt.contour(xg,yg,perm,[-15.9],colors='black',linewidths=np.array([1.5]))
-    #cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.xlim([(np.max(x)-lim_b)/1000,(np.max(x)-lim_a)/1000])
-    plt.ylim([np.min(y),0.])
-
-    plt.savefig(outpath+'jdfZoomVel_'+str(i+restart)+'.png',bbox_inches='tight')
-
-
-
-
-
-
-    #todo: FIG: zoom_u_v
-
-    fig=plt.figure()
-
-    varMat = u[:,lim_a0:lim_b0]*(3.14e7)
-    varStep = u[:,lim_a0:lim_b0]*(3.14e7)
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,2,1, aspect=aspSQ,frameon=False)
-    pGlass = plt.pcolor(x[lim_a0:lim_b0], y, varStep, cmap=cm.rainbow)
-    p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.colorbar(pGlass,orientation='horizontal',label='x velocity [m/yr]')
-
-    plt.xlim([lim_a,lim_b])
-    plt.ylim([np.min(y),0.])
-    plt.title('LEFT OUTCROP')
-
-
-    varMat = u[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
-    varStep = u[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,2,2, aspect=aspSQ,frameon=False)
-    pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0], y, varStep,cmap=cm.rainbow)
-    p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.colorbar(pGlass,orientation='horizontal',label='x velocity [m/yr]')
-
-    plt.xlim([np.max(x)-lim_b,np.max(x)-lim_a])
-    plt.ylim([np.min(y),0.])
-    plt.title('RIGHT OUTCROP')
-
-
-
-    varMat = v[:,lim_a0:lim_b0]*(3.14e7)
-    varStep = v[:,lim_a0:lim_b0]*(3.14e7)
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,2,3, aspect=aspSQ,frameon=False)
-    pGlass = plt.pcolor(x[lim_a0:lim_b0], y, varStep, cmap=cm.rainbow)
-    p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.colorbar(pGlass,orientation='horizontal',label='y velocity [m/yr]')
-
-    plt.xlim([lim_a,lim_b])
-    plt.ylim([np.min(y),0.])
-
-
-    varMat = v[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
-    varStep = v[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
-    contours = np.linspace(np.min(varMat),np.max(varMat),20)
-
-    ax1=fig.add_subplot(2,2,4, aspect=aspSQ,frameon=False)
-    pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0], y, varStep,cmap=cm.rainbow)
-    p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
-    cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
-
-    plt.colorbar(pGlass,orientation='horizontal',label='y velocity [m/yr]')
-
-    plt.xlim([np.max(x)-lim_b,np.max(x)-lim_a])
-    plt.ylim([np.min(y),0.])
-
-
-
-    plt.savefig(outpath+'jdfZoom_u_v_'+str(i+restart)+'.png')
+        # #todo: FIG: jdfZoomK_0.png
+        #
+        # fig=plt.figure(figsize=(6.0,8.0))
+        #
+        # varMat = perm[lim_u:lim_o,lim_a0:lim_b0]
+        # varStep = perm[lim_u:lim_o,lim_a0:lim_b0]
+        # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+        #
+        # ax1=fig.add_subplot(3,2,1,aspect=aspSQ/1000.0,frameon=False)
+        # pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000.0, y[lim_u:lim_o], varStep)
+        # #p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],
+        # #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
+        #
+        # plt.xlim([lim_a/1000.0,lim_b/1000.0])
+        # plt.ylim([-1250.0, 0.0])
+        # plt.title('LEFT OUTCROP kx')
+        #
+        # varMat = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+        # varStep = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+        # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+        #
+        # ax1=fig.add_subplot(3,2,2,aspect=aspSQ/1000.0,frameon=False)
+        # pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000.0, y[lim_u:lim_o], varStep)
+        # #p = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0],
+        # #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
+        #
+        # plt.xlim([(np.max(x)-lim_b)/1000.0,(np.max(x)-lim_a)/1000.0])
+        # plt.ylim([-1250.0, 0.0])
+        # plt.title('RIGHT OUTCROP kx')
+        #
+        #
+        #
+        #
+        # varMat = perm[lim_u:lim_o,lim_a0:lim_b0]
+        # varStep = perm[lim_u:lim_o,lim_a0:lim_b0]
+        # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+        #
+        # ax1=fig.add_subplot(3,2,3,aspect=aspSQ/1000.0,frameon=False)
+        # pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000.0, y[lim_u:lim_o], varStep)
+        # #p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],
+        # #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
+        #
+        # plt.xlim([lim_a/1000.0,lim_b/1000.0])
+        # plt.ylim([-1250.0, 0.0])
+        # plt.title('LEFT OUTCROP ky')
+        #
+        # varMat = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+        # varStep = perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+        # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+        #
+        # ax1=fig.add_subplot(3,2,4,aspect=aspSQ/1000.0,frameon=False)
+        # pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000.0, y[lim_u:lim_o], varStep)
+        # #p = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0],
+        # #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
+        #
+        # plt.xlim([(np.max(x)-lim_b)/1000.0,(np.max(x)-lim_a)/1000.0])
+        # plt.ylim([-1250.0, 0.0])
+        # plt.title('RIGHT OUTCROP ky')
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        # varMat = maskP[lim_u:lim_o,lim_a0:lim_b0]
+        # varStep = maskP[lim_u:lim_o,lim_a0:lim_b0]
+        # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+        #
+        # ax1=fig.add_subplot(3,2,5,aspect=aspSQ/1000.0,frameon=False)
+        # pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000.0, y[lim_u:lim_o], varStep)
+        # #p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],
+        # #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
+        #
+        # plt.xlim([lim_a/1000.0,lim_b/1000.0])
+        # plt.ylim([-1250.0, 0.0])
+        # plt.title('LEFT OUTCROP maskP')
+        #
+        # varMat = maskP[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+        # varStep = maskP[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+        # contours = np.linspace(np.min(varMat),np.max(varMat),10)
+        #
+        # ax1=fig.add_subplot(3,2,6,aspect=aspSQ/1000.0,frameon=False)
+        # pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000.0, y[lim_u:lim_o], varStep)
+        # #p = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0],perm[lim_u:lim_o,xn-lim_b0:xn-lim_a0],
+        # #[-12.0,-13.5],colors='black',linewidths=np.array([2.0]))
+        #
+        # plt.xlim([(np.max(x)-lim_b)/1000.0,(np.max(x)-lim_a)/1000.0])
+        # plt.ylim([-1250.0, 0.0])
+        # plt.title('RIGHT OUTCROP maskP')
+        #
+        #
+        #
+        # plt.savefig(outpath+'jdfZoomK_'+str(i)+'.png',bbox_inches='tight')
+
+
+    # #todo: FIG: zoomVel_
+    # temp_max = 180.0
+    #
+    # fig=plt.figure(figsize=(9.0,9.0))
+    #
+    # varMat = temp[lim_u:lim_o,lim_a0:lim_b0]
+    # varStep = temp[lim_u:lim_o,lim_a0:lim_b0]
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,1, aspect=aspSQ/1000,frameon=False)
+    # pGlass = plt.contourf(x[lim_a0:lim_b0]/1000, y[lim_u:lim_o], varStep, 40, cmap=cm.rainbow,vmin = np.min(temp),vmax=180)
+    # CS = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0]/1000, yg[lim_u:lim_o,lim_a0:lim_b0], psi[lim_u:lim_o,lim_a0:lim_b0], 8, colors='black',linewidths=np.array([0.5]))
+    # p = plt.contour(xg/1000,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg/1000,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.xlim([lim_a/1000.0,lim_b/1000.0])
+    # plt.ylim([np.min(y),0.])
+    # cbar = plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
+    # # cbar.set_ticks(np.linspace(np.min(temp),temp_max,5))
+    # # cbar.set_clim(np.min(temp), temp_max)
+    # plt.title('LEFT OUTCROP')
+    #
+    #
+    # varMat = temp[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+    # varStep = temp[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,2, aspect=aspSQ/1000,frameon=False)
+    # pGlass = plt.contourf(x[xn-lim_b0:xn-lim_a0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow,vmin = np.min(temp),vmax=180)
+    # CS = plt.contour(xg[lim_u:lim_o,xn-lim_b0:xn-lim_a0]/1000, yg[lim_u:lim_o,xn-lim_b0:xn-lim_a0], psi[lim_u:lim_o,xn-lim_b0:xn-lim_a0], 8, colors='black',linewidths=np.array([0.5]))
+    # p = plt.contour(xg/1000,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg/1000,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.xlim([(np.max(x)-lim_b)/1000,(np.max(x)-lim_a)/1000])
+    # plt.ylim([np.min(y),0.])
+    # plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
+    # plt.title('RIGHT OUTCROP')
+    #
+    #
+    # varStep = psi[lim_u:lim_o,lim_a0:lim_b0]
+    # varMat = varStep
+    #
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    # ax1=fig.add_subplot(2,2,3, aspect=aspSQ/1000,frameon=False)
+    # pGlass = plt.pcolor(x[lim_a0:lim_b0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow)
+    # #p = plt.contour(xg,yg,perm,[-15.9],colors='black',linewidths=np.array([1.5]))
+    # #cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.xlim([lim_a/1000,lim_b/1000])
+    # plt.ylim([np.min(y),0.])
+    #
+    #
+    # varStep = psi[lim_u:lim_o,xn-lim_b0:xn-lim_a0]
+    # varMat = varStep
+    #
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    # ax1=fig.add_subplot(2,2,4, aspect=aspSQ/1000,frameon=False)
+    # pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0]/1000, y[lim_u:lim_o], varStep, cmap=cm.rainbow)
+    # #p = plt.contour(xg,yg,perm,[-15.9],colors='black',linewidths=np.array([1.5]))
+    # #cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.xlim([(np.max(x)-lim_b)/1000,(np.max(x)-lim_a)/1000])
+    # plt.ylim([np.min(y),0.])
+    #
+    # plt.savefig(outpath+'jdfZoomVel_'+str(i+restart)+'.png',bbox_inches='tight')
+
+
+
+
+
+
+    # #todo: FIG: zoom_u_v
+    #
+    # fig=plt.figure()
+    #
+    # varMat = u[:,lim_a0:lim_b0]*(3.14e7)
+    # varStep = u[:,lim_a0:lim_b0]*(3.14e7)
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,1, aspect=aspSQ,frameon=False)
+    # pGlass = plt.pcolor(x[lim_a0:lim_b0], y, varStep, cmap=cm.rainbow)
+    # p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.colorbar(pGlass,orientation='horizontal',label='x velocity [m/yr]')
+    #
+    # plt.xlim([lim_a,lim_b])
+    # plt.ylim([np.min(y),0.])
+    # plt.title('LEFT OUTCROP')
+    #
+    #
+    # varMat = u[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
+    # varStep = u[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,2, aspect=aspSQ,frameon=False)
+    # pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0], y, varStep,cmap=cm.rainbow)
+    # p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.colorbar(pGlass,orientation='horizontal',label='x velocity [m/yr]')
+    #
+    # plt.xlim([np.max(x)-lim_b,np.max(x)-lim_a])
+    # plt.ylim([np.min(y),0.])
+    # plt.title('RIGHT OUTCROP')
+    #
+    #
+    #
+    # varMat = v[:,lim_a0:lim_b0]*(3.14e7)
+    # varStep = v[:,lim_a0:lim_b0]*(3.14e7)
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,3, aspect=aspSQ,frameon=False)
+    # pGlass = plt.pcolor(x[lim_a0:lim_b0], y, varStep, cmap=cm.rainbow)
+    # p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.colorbar(pGlass,orientation='horizontal',label='y velocity [m/yr]')
+    #
+    # plt.xlim([lim_a,lim_b])
+    # plt.ylim([np.min(y),0.])
+    #
+    #
+    # varMat = v[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
+    # varStep = v[:,xn-lim_b0:xn-lim_a0]*(3.14e7)
+    # contours = np.linspace(np.min(varMat),np.max(varMat),20)
+    #
+    # ax1=fig.add_subplot(2,2,4, aspect=aspSQ,frameon=False)
+    # pGlass = plt.pcolor(x[xn-lim_b0:xn-lim_a0], y, varStep,cmap=cm.rainbow)
+    # p = plt.contour(xg,yg,perm,[-14.9],colors='black',linewidths=np.array([1.5]))
+    # cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
+    #
+    # plt.colorbar(pGlass,orientation='horizontal',label='y velocity [m/yr]')
+    #
+    # plt.xlim([np.max(x)-lim_b,np.max(x)-lim_a])
+    # plt.ylim([np.min(y),0.])
+    #
+    #
+    #
+    # plt.savefig(outpath+'jdfZoom_u_v_'+str(i+restart)+'.png')
 
 
 
