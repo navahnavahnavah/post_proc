@@ -81,13 +81,14 @@ for m in range(len(param_s_nums)):
 
 
 
-#todo: trial_fig
-fig=plt.figure(figsize=(14.0,8.0))
+#todo: trial_fig ffpm_trial
+fig=plt.figure(figsize=(24.0,8.0))
 
 ax=fig.add_subplot(2, 3, 1, frameon=True)
 
 n_color = 0
-for m in range(len(param_s_nums)):
+# for m in range(len(param_s_nums)):
+for m in [0]:
     for mm in [0]:
         for mmm in range(len(param_q_nums)):
             plt.plot(km_linspace,temp_top_linspace[:,m,mm,mmm],label="s: " + param_s_strings[m] + ", h: " + param_h_strings[mm] +", q: " + param_q_strings[mmm], lw=2.0, color=plot_col[n_color])
@@ -123,6 +124,26 @@ plt.title('param_h = 400')
 
 
 
+#todo: bar-hist-trial
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+bar_width = (km_linspace[-1] - km_linspace[-2])/5.0
+
+
+for mmm in range(len(param_q_nums)-1):
+    rects1 = plt.bar(km_linspace+bar_width*mmm, temp_bottom_linspace[:,0,0,mmm], bar_width, bottom=temp_top_linspace[:,0,0,mmm],
+                     color=plot_col_bold[mmm+1],
+                     lw=0.0,
+                     label='0')
+plt.ylim([0.0,140.0])
+
+
+# rects2 = plt.bar(km_linspace + bar_width, temp_bottom_linspace[:,0,0,1], bar_width,
+#                  color=plot_col_bold[1],
+#                  edgecolor=plot_col_bold[1],
+#                  label='1')
+
+
+
 
 dashes = [6, 3]
 thick_line = 1.25
@@ -132,7 +153,8 @@ dashes0 = [2, 3]
 ax=fig.add_subplot(2, 3, 4, frameon=True)
 
 
-for mm in range(len(param_h_nums)):
+# for mm in range(len(param_h_nums)):
+for m in [0]:
     n_color = 0
     for m in range(len(param_s_nums)):
         for mmm in range(len(param_q_nums)):
@@ -148,7 +170,7 @@ for mm in range(len(param_h_nums)):
 plt.plot(x_sd_temps_km,y_sd_temps_km,markersize=6,marker='^',label="data",lw=0,markerfacecolor='none',markeredgecolor='k',markeredgewidth=1.0)
 
 plt.xlim([-5.0,100.0])
-plt.ylim([0.0,160.0])
+plt.ylim([0.0,80.0])
 plt.xlabel('distance from inflow [km]',fontsize=9)
 plt.ylabel('temp [C]',fontsize=9)
 plt.title('temp_top_linspace')
@@ -159,7 +181,8 @@ plt.legend(fontsize=8,bbox_to_anchor=(-0.15, 0.7))
 ax=fig.add_subplot(2, 3, 5, frameon=True)
 
 
-for mm in range(len(param_h_nums)):
+# for mm in range(len(param_h_nums)):
+for m in [0]:
     n_color = 0
     for m in range(len(param_s_nums)):
         for mmm in range(len(param_q_nums)):
@@ -175,7 +198,7 @@ for mm in range(len(param_h_nums)):
 plt.plot(x_sd_temps_km,y_sd_temps_km,markersize=6,marker='^',label="data",lw=0,markerfacecolor='none',markeredgecolor='k',markeredgewidth=1.0)
 
 plt.xlim([-5.0,100.0])
-plt.ylim([0.0,160.0])
+plt.ylim([0.0,80.0])
 plt.xlabel('distance from inflow [km]',fontsize=9)
 plt.ylabel('temp [C]',fontsize=9)
 plt.title('temp_bottom_linspace')
@@ -229,6 +252,30 @@ for m in range(len(param_s_nums)):
         for mmm in range(len(param_q_nums)):
             plt.plot(km_linspace,temp_top_linspace[:,m,mm,mmm],label="s: " + param_s_strings[m] + ", h: " + param_h_strings[mm] +", q: " + param_q_strings[mmm], lw=2.0, color=plot_col[n_color])
             plt.plot(km_linspace,temp_bottom_linspace[:,m,mm,mmm], linestyle='-', lw=1.0,color=plot_col[n_color])
+            n_color = n_color + 1
+
+plt.plot(x_sd_temps_km,y_sd_temps_km,'k^',label="data")
+
+plt.ylim([0.0,120.0])
+plt.xlabel('distance from inflow [km]',fontsize=9)
+plt.ylabel('temp [C]',fontsize=9)
+plt.title('param_h = 200')
+
+
+
+
+
+ax=fig.add_subplot(2, 3, 2, frameon=True)
+
+n_color = 0
+for m in range(len(param_s_nums)):
+    for mm in [0]:
+        for mmm in range(len(param_q_nums)):
+
+            ax.fill_between(km_linspace[::2], temp_top_linspace[::2,m,mm,mmm], temp_bottom_linspace[::2,m,mm,mmm], facecolor=plot_col[n_color], lw=0, zorder=0, alpha=0.8)
+
+            # plt.plot(km_linspace,temp_top_linspace[:,m,mm,mmm],label="s: " + param_s_strings[m] + ", h: " + param_h_strings[mm] +", q: " + param_q_strings[mmm], lw=2.0, color=plot_col[n_color])
+            # plt.plot(km_linspace,temp_bottom_linspace[:,m,mm,mmm], linestyle='-', lw=1.0,color=plot_col[n_color])
             n_color = n_color + 1
 
 plt.plot(x_sd_temps_km,y_sd_temps_km,'k^',label="data")
@@ -656,7 +703,7 @@ ax.view_init(angle1, angle2)
 
 
 plt.savefig(gen_path+'fpmm_3d_'+unique_string+'.png',bbox_inches='tight')
-plt.savefig(gen_path+'fpmm_3d_'+unique_string+'.eps',bbox_inches='tight')
+# plt.savefig(gen_path+'fpmm_3d_'+unique_string+'.eps',bbox_inches='tight')
 
 
 
@@ -740,7 +787,7 @@ plt.ylabel('temperature [C]')
 plt.legend(fontsize=10,bbox_to_anchor=(1.3, 1.0))
 
 plt.savefig(gen_path+'fpmm_bunches_'+unique_string+'.png',bbox_inches='tight')
-plt.savefig(gen_path+'fpmm_bunches_'+unique_string+'.eps',bbox_inches='tight')
+# plt.savefig(gen_path+'fpmm_bunches_'+unique_string+'.eps',bbox_inches='tight')
 
 
 
