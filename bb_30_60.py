@@ -386,8 +386,10 @@ for iii in range(len(temp_string_list)):
 
 
         #hack: define the shift!!
-        shift_myr = 0.6
-        active_myr = 4.0
+        shift_myr = 0.0
+        #poop: block_scale
+        block_scale = 0.856#*(3.5/2.7)
+        active_myr = 4.5*block_scale
         for ii in range(len(param_strings)):
             compound_alt_vol_solo[i,ii,iii] = (active_myr/n_lateral)*i*value_alt_vol_mean[ii,0,iii]
             compound_alt_fe_solo[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*value_alt_fe_mean[ii,0,iii]
@@ -434,6 +436,29 @@ for iii in range(len(temp_string_list)):
 
                 compound_alt_vol_b_min_shift[i,ii,iii] = (active_myr/n_lateral)*i*np.min(value_alt_vol_mean_b[:,:,iii]) - shift_myr*np.min(value_alt_vol_mean_b[:,:,iii])
                 compound_alt_fe_b_min_shift[i,ii,iii] = 0.78 - (active_myr/n_lateral)*i*np.min(value_alt_fe_mean_b[:,:,iii]) + shift_myr*np.min(value_alt_fe_mean_b[:,:,iii])
+
+
+
+    #poop: recalibrate
+    if iii == len(temp_string_list)-2:
+        print "len(temp_string_list)-2 " , temp_string_list[iii]
+        print "a max slope: " , np.max(value_alt_vol_mean_a[:,:,iii])# * (active_myr/n_lateral)
+        print "a min slope: " , np.min(value_alt_vol_mean_a[:,:,iii])# * (active_myr/n_lateral)
+
+        print "len(temp_string_list)-2 " , temp_string_list[iii]
+        print "b max slope: " , np.max(value_alt_vol_mean_b[:,:,iii])# * (active_myr/n_lateral)
+        print "b min slope: " , np.min(value_alt_vol_mean_b[:,:,iii])# * (active_myr/n_lateral)
+
+        print " "
+        print " "
+
+        print "len(temp_string_list)-2 " , temp_string_list[iii]
+        print "a max slope fe: " , np.max(value_alt_fe_mean_a[:,:,iii])# * (active_myr/n_lateral)
+        print "a min slope fe: " , np.min(value_alt_fe_mean_a[:,:,iii])# * (active_myr/n_lateral)
+
+        print "len(temp_string_list)-2 " , temp_string_list[iii]
+        print "b max slope fe: " , np.max(value_alt_fe_mean_b[:,:,iii])# * (active_myr/n_lateral)
+        print "b min slope fe: " , np.min(value_alt_fe_mean_b[:,:,iii])# * (active_myr/n_lateral)
 
 
 
@@ -825,7 +850,7 @@ for j in range(nsites):
     plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
 ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
 
-#poop: actually plotting regressions
+#poop: alt_vol regressions
 the_slope, the_intercept = np.polyfit(site_locations, alt_values, 1)
 the_slope_1028, the_intercept_1028 = np.polyfit(site_locations_1028, alt_values_1028, 1)
 plt.plot(site_locations, site_locations*the_slope + the_intercept, lw=2.0, color='k')
@@ -834,6 +859,8 @@ plt.plot(site_locations,site_locations*(the_slope-(2.64e-5)-(2.64e-5)) + the_int
 
 
 plt.plot(site_locations_1028, site_locations_1028*the_slope_1028 + the_intercept_1028, lw=2.0, color='m')
+plt.plot(site_locations_1028,site_locations_1028*(the_slope_1028+(9.13e-6)+(9.13e-6)) + the_intercept_1028, lw=1.0, color='m')
+plt.plot(site_locations_1028,site_locations_1028*(the_slope_1028-(9.13e-6)-(9.13e-6)) + the_intercept_1028, lw=1.0, color='m')
 
 
 # plt.plot(site_locations, site_locations*0.00012601 + the_intercept, lw=2.0, color='m')
@@ -916,10 +943,17 @@ ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fi
 
 the_slope_fe, the_intercept_fe = np.polyfit(site_locations, fe_values, 1)
 the_slope_fe_1028, the_intercept_fe_1028 = np.polyfit(site_locations_1028, fe_values_1028, 1)
+
+#poop: fe regressions
 plt.plot(site_locations, site_locations*the_slope_fe + the_intercept_fe, lw=2.0, color='k')
+plt.plot(site_locations,site_locations*(the_slope_fe+(3.32e-7)+(3.32e-7)) + the_intercept_fe, lw=1.0, color='k')
+plt.plot(site_locations,site_locations*(the_slope_fe-(3.32e-7)-(3.32e-7)) + the_intercept_fe, lw=1.0, color='k')
+
+
 plt.plot(site_locations_1028, site_locations_1028*the_slope_fe_1028 + the_intercept_fe_1028, lw=2.0, color='m')
-# plt.plot(site_locations, site_locations*(-1.52E-06) + the_intercept_fe, lw=2.0, color='m')
-# plt.plot(site_locations, site_locations*(-1.08E-06) + the_intercept_fe, lw=2.0, color='m')
+plt.plot(site_locations_1028,site_locations_1028*(the_slope_fe_1028+(1.87e-7)+(1.87e-7)) + the_intercept_fe_1028, lw=1.0, color='m')
+plt.plot(site_locations_1028,site_locations_1028*(the_slope_fe_1028-(1.87e-7)-(1.87e-7)) + the_intercept_fe_1028, lw=1.0, color='m')
+
 print "the_slope_fe: " , the_slope_fe
 print "the_intercept_fe: " , the_intercept_fe
 
@@ -1487,6 +1521,219 @@ plt.savefig(in_path+dir_path+fig_path+"yyy_b_long_trial_36.eps",bbox_inches='tig
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: yyy_ab_long_trial_36
+print "yyy_ab_long_trial_36"
+fig=plt.figure(figsize=(48,11.25))
+# fig=plt.figure(figsize=(32.0,7.5))
+rainbow_lw = 1.0
+
+
+
+nub = range(len(temp_string_list))
+
+#block_scale = 0.856
+
+for iii in nub[2:-1]:
+
+    ax=fig.add_subplot(2, len(temp_string_list), iii+1, frameon=True)
+
+    intercept_toggle = 0.0
+
+
+    # ax.fill_between(distance_vector, compound_alt_vol_dual_max[:,0,iii], compound_alt_vol_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_vol_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+    # #plt.plot(distance_vector, compound_alt_vol_solo[:,-1,iii], lw=lw_for_plot, color=plot_col[iii+1])
+
+    new_grey = '#317783'
+
+
+
+    jump = ax.fill_between(distance_vector, compound_alt_vol_a_max_shift[:,0,iii]+the_intercept*intercept_toggle, compound_alt_vol_a_min_shift[:,0,iii]+the_intercept*intercept_toggle, facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    # print " "
+    # print "AB stats"
+    # print "distance_vector" , distance_vector
+    # print " "
+    # print "compound_alt_vol_a_max_shift[:,0,iii]"
+    # print compound_alt_vol_a_max_shift[:,0,iii]
+    # print " "
+
+    new_grey = '#b46e0f'
+
+    jump = ax.fill_between(distance_vector, compound_alt_vol_b_max_shift[:,0,iii]+the_intercept*intercept_toggle, compound_alt_vol_b_min_shift[:,0,iii]+the_intercept*intercept_toggle, facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    # print " "
+    # print "compound_alt_vol_b_max_shift[:,0,iii]"
+    # print compound_alt_vol_b_max_shift[:,0,iii]
+    # print " "
+
+    plt.plot(distance_vector, compound_alt_vol_solo_shift[:,:,iii]+the_intercept*intercept_toggle, lw=0.5, color=new_grey)
+
+
+    plt.plot(site_locations, alt_values, color=dark_red, linestyle='-', lw=data_lw, zorder=3)
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb[j],lower_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb[j],upper_eb[j]],c=dark_red, lw=data_lw, zorder=3)
+    ax.fill_between(site_locations, lower_eb, upper_eb, facecolor=fill_color, lw=0, zorder=0)
+
+    print "attempt at scaling the_slope"
+    print the_slope/(3.677e-5)
+    print " "
+    print "lower" , (the_slope-(2.64e-5)-(2.64e-5))/(3.677e-5)
+    print "upper" , (the_slope+(2.64e-5)+(2.64e-5))/(3.677e-5)
+
+
+
+    plt.plot(site_locations, site_locations*the_slope + the_intercept*intercept_toggle, lw=2.0, color='k')
+    plt.plot(site_locations,site_locations*(the_slope+(2.64e-5)+(2.64e-5)) + the_intercept*intercept_toggle, lw=1.0, color='k')
+    plt.plot(site_locations,site_locations*(the_slope-(2.64e-5)-(2.64e-5)) + the_intercept*intercept_toggle, lw=1.0, color='k')
+
+    plt.plot(site_locations, site_locations*1.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*2.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*3.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*4.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*5.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*6.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*7.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*8.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*9.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*10.0*(3.677e-5), lw=1.0, color='m',zorder=55)
+
+    plt.plot(site_locations, site_locations*4.71*(3.677e-5), lw=1.5, color='g',zorder=55)
+    plt.plot(site_locations, site_locations*9.6*(3.677e-5), lw=1.5, color='g',zorder=55)
+
+    plt.plot(site_locations, site_locations*0.14*(3.677e-5), lw=1.5, linestyle='--', color='g',zorder=55)
+    plt.plot(site_locations, site_locations*11.25*(3.677e-5), lw=1.5, linestyle='--', color='g',zorder=55)
+
+    plt.plot(site_locations, site_locations*0.127*(3.677e-5), lw=1.5, linestyle=':', color='b',zorder=55)
+    plt.plot(site_locations, site_locations*9.628*(3.677e-5), lw=1.5, linestyle=':', color='b',zorder=55)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([-1.0,30.0])
+    plt.title(temp_string_list[iii])
+    # plt.xlabel("crust age [Myr]", fontsize=9)
+    # plt.ylabel("alteration volume percent", fontsize=9)
+    #plt.legend(fontsize=8,loc='best',ncol=1)
+
+
+
+
+
+
+
+
+hatch_strings = ['//', '//', '//', '//', '//','//', '//', '//', '//', '//']
+
+
+ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+
+for iii in nub[2:-1]:
+
+
+    ax=fig.add_subplot(2, len(temp_string_list), len(temp_string_list) + iii+1, frameon=True)
+
+    # ax.fill_between(distance_vector, compound_alt_fe_dual_max[:,0,iii], compound_alt_fe_dual_min[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_a, edgecolor=plot_col_hatch[iii+1])
+    #
+    # plt.plot(distance_vector, compound_alt_fe_solo[:,:,iii], lw=0.5, color=plot_col[iii+1])
+
+
+    new_grey = '#317783'
+
+    ax.fill_between(distance_vector, compound_alt_fe_a_max_shift[:,0,iii], compound_alt_fe_a_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    # print " "
+    # print "AB stats"
+    # print "distance_vector" , distance_vector
+    # print " "
+    # print "compound_alt_fe_a_max_shift[:,0,iii]"
+    # print compound_alt_fe_a_max_shift[:,0,iii]
+    # print " "
+
+    new_grey = '#b46e0f'
+
+    ax.fill_between(distance_vector, compound_alt_fe_b_max_shift[:,0,iii], compound_alt_fe_b_min_shift[:,0,iii], facecolor='none', lw=0, zorder=15-iii, alpha=hatch_alpha, hatch=hatch_b, edgecolor=new_grey)
+
+    # print " "
+    # print "compound_alt_fe_b_max_shift[:,0,iii]"
+    # print compound_alt_fe_b_max_shift[:,0,iii]
+    # print " "
+
+    plt.plot(distance_vector, compound_alt_fe_solo_shift[:,:,iii], lw=0.5, color=new_grey)
+
+
+
+    plt.plot(site_locations,fe_values,color=dark_red,linestyle='-')
+    for j in range(nsites):
+        plt.plot([site_locations[j],site_locations[j]],[lower_eb_fe[j],upper_eb_fe[j]],c=dark_red, zorder=-1)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[lower_eb_fe[j],lower_eb_fe[j]],c=dark_red)
+        plt.plot([site_locations[j]-ebw,site_locations[j]+ebw],[upper_eb_fe[j],upper_eb_fe[j]],c=dark_red)
+    ax.fill_between(site_locations, lower_eb_fe, upper_eb_fe,zorder=-2, facecolor=fill_color, lw=0)
+
+
+    intercept_toggle_fe = 0.0
+
+    # plt.plot(site_locations, site_locations*the_slope_fe + (the_intercept_fe - (intercept_toggle_fe*0.78)), lw=2.0, color='k')
+    # plt.plot(site_locations,site_locations*(the_slope_fe+(3.32e-7)+(3.32e-7)) + (the_intercept_fe - (intercept_toggle_fe*0.78)), lw=1.0, color='k')
+    # plt.plot(site_locations,site_locations*(the_slope_fe-(3.32e-7)-(3.32e-7)) + (the_intercept_fe - (intercept_toggle_fe*0.78)), lw=1.0, color='k')
+
+    plt.plot(site_locations, site_locations*the_slope_fe + 0.78, lw=2.0, color='k')
+    plt.plot(site_locations,site_locations*(the_slope_fe+(3.32e-7)+(3.32e-7)) + 0.78, lw=1.0, color='k')
+    plt.plot(site_locations,site_locations*(the_slope_fe-(3.32e-7)-(3.32e-7)) + 0.78, lw=1.0, color='k')
+
+    print "attempt at scaling the_slope"
+    print the_slope_fe/(3.677e-5)
+    print " "
+    print "lower" , (the_slope_fe-(3.32e-7)-(3.32e-7))/(3.677e-5)
+    print "upper" , (the_slope_fe+(3.32e-7)+(3.32e-7))/(3.677e-5)
+
+
+    plt.plot(site_locations, site_locations*(-0.01)*(3.677e-5) + 0.78, lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.02)*(3.677e-5) + 0.78, lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.03)*(3.677e-5) + 0.78, lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.04)*(3.677e-5) + 0.78, lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.05)*(3.677e-5) + 0.78, lw=1.0, color='m',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.06)*(3.677e-5) + 0.78, lw=1.0, color='m',zorder=55)
+
+
+    plt.plot(site_locations, site_locations*(-0.00748)*(3.677e-5) + 0.78, lw=1.5, color='g',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.0347)*(3.677e-5) + 0.78, lw=1.5, color='g',zorder=55)
+
+    plt.plot(site_locations, site_locations*(-0.0008819)*(3.677e-5) + 0.78, lw=1.5, linestyle='--', color='g',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.05539)*(3.677e-5) + 0.78, lw=1.5, linestyle='--', color='g',zorder=55)
+
+    plt.plot(site_locations, site_locations*(-0.00075)*(3.677e-5) + 0.78, lw=1.5, linestyle=':', color='b',zorder=55)
+    plt.plot(site_locations, site_locations*(-0.04741)*(3.677e-5) + 0.78, lw=1.5, linestyle=':', color='b',zorder=55)
+
+    plt.xlim([20000.0,110000.0])
+    plt.xticks(np.linspace(20000,110000,10), np.linspace(2,11,10))
+    plt.ylim([0.6,0.8])
+    # plt.ylabel("FeO/FeOt", fontsize=9)
+    #plt.legend(fontsize=8,ncol=2,bbox_to_anchor=(0.5, -0.1))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"yyy_ab_long_trial_36.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"yyy_ab_long_trial_36.eps",bbox_inches='tight')
 
 
 ##hack: temp shift!

@@ -37,8 +37,10 @@ cell = 5
 # sub_dir = "ao_0.50/"
 print "COMMAND LINE ARGUMENTS " + sys.argv[1]
 sub_dir = "ao_" + str(sys.argv[1]) + "/"
-# outpath = "../output/revival/local_fp_output/par_k_10_s_100_h_200/par_q_5.0/" + sub_dir
-outpath = "../output/revival/local_fp_output/oc_output/oc_k_11_s_100_h_200_ts/par_q_5.0/" + sub_dir
+
+#outpath = "../output/revival/local_fp_output/oc_output/oc_k_11_s_100_h_200_ts/par_q_5.0/" + sub_dir
+
+outpath = "../output/revival/local_fp_output/nov_fp_tests/" + sub_dir
 path = outpath
 param_w = 300.0
 param_w_rhs = 200.0
@@ -377,16 +379,16 @@ for i in range(0,steps,1):
 
     #hack: figure for paper
 
-    fig=plt.figure(figsize=(15.0,6.0))
+    fig=plt.figure(figsize=(30.0,12.0))
 
-    y_limit = len(y)/4
+    y_limit = len(y)/2
 
     xn = len(x)
     lim_a = 0.0
-    lim_b = 10000.0
+    lim_b = 6000.0
     lim_a0 = int(lim_a/(x[1]-x[0]))
     lim_b0 = int(lim_b/(x[1]-x[0]))
-    lim_u = len(y)/4
+    lim_u = 5*len(y)/12
     lim_o = len(y)
 
     aspSQ = asp/80.0
@@ -407,8 +409,11 @@ for i in range(0,steps,1):
         c.set_edgecolor("face")
     #cMask = plt.contour(xg,yg,maskP,[0.0,0.5],colors='w',linewidths=np.array([0.5]))
 
+
+    ### NOVEMBER UPDATE
     cbar= plt.colorbar(pGlass, orientation='horizontal')
     cbar.set_ticks(np.linspace(np.min(varStep[y_limit:,:]),np.max(varStep[y_limit:,:]),num=bar_bins,endpoint=True))
+    # cbar.set_ticks(0.0,100.0,num=bar_bins,endpoint=True))
     cbar.ax.set_xlabel('TEMPERATURE [$^{o}$C]')
     cbar.solids.set_edgecolor("face")
 
@@ -421,22 +426,27 @@ for i in range(0,steps,1):
     contours = np.linspace(np.min(varStep),np.max(varStep),20)
 
     ax1=fig.add_subplot(2,2,1, aspect=aspSQ*3.0,frameon=False)
-    pGlass = plt.contourf(x[lim_a0:lim_b0], y[lim_u:lim_o], varStep, 40, cmap=cm.rainbow,vmin = np.min(varStep),vmax=np.max(varStep))
+    pGlass = plt.contourf(x[lim_a0:lim_b0], y[lim_u:lim_o], varStep, 40, cmap=cm.rainbow,vmin = 0.0,vmax=60.0)
     CS = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0], yg[lim_u:lim_o,lim_a0:lim_b0], psi[lim_u:lim_o,lim_a0:lim_b0], 8, colors='black',linewidths=np.array([0.5]))
+    for c in pGlass.collections:
+        c.set_edgecolor("face")
     p = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],perm[lim_u:lim_o,lim_a0:lim_b0],[-14.9,-15.0,-16.0,-13.5],colors='black',linewidths=np.array([1.5]))
     cMask = plt.contour(xg[lim_u:lim_o,lim_a0:lim_b0],yg[lim_u:lim_o,lim_a0:lim_b0],maskP[lim_u:lim_o,lim_a0:lim_b0],[0.0,0.5],colors='w',alpha=1.0,linewidths=np.array([1.5]))
 
     plt.xlim([lim_a,lim_b])
-    plt.ylim([3*np.min(y)/4,0.])
+    plt.ylim([7*np.min(y)/12,0.])
     cbar = plt.colorbar(pGlass,orientation='horizontal', fraction=0.046)
+    cbar.set_ticks(np.linspace(0.0,80.0,num=9,endpoint=True))
     # cbar.set_ticks(np.linspace(np.min(temp),temp_max,5))
     # cbar.set_clim(np.min(temp), temp_max)
-    plt.title('LEFT OUTCROP')
+    cbar.solids.set_edgecolor("face")
+    plt.title('LEFT OUTCROP new')
 
 
     ax=fig.add_subplot(2, 2, 2, frameon=True)
-    plt.plot(varStep,y[lim_u:lim_o])
-    plt.xlim()
+    plt.plot(varStep[:,::10],y[lim_u:lim_o])
+    plt.plot(varStep[:,-5:],y[lim_u:lim_o],color='k',linewidth=2.0)
+    plt.xlim([0.0,70.0])
 
 
 
@@ -495,6 +505,7 @@ for i in range(0,steps,1):
     # cbar.solids.set_edgecolor("face")
 
     plt.savefig(outpath+'a_paper_'+str(i+restart)+'.png',bbox_inches='tight')
+    # plt.savefig(outpath+'b_paper_'+str(i+restart)+'.eps',bbox_inches='tight')
 
 
 

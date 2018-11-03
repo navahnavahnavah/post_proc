@@ -1144,7 +1144,7 @@ def square_pcolor(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_c
 
 
 
-def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0):
+def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
     ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
 
     sign_change = 1.0
@@ -1157,12 +1157,24 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
         plt.ylabel('discharge q [m/yr]', fontsize=7)
 
 
-
+    block_scale = 0.856
     pCol = ax2.pcolor(pcolor_block, cmap=fn_cmap_in, antialiased=True, vmin=min_all_in, vmax=max_all_in,alpha=0.0)
     pCol.set_edgecolor('face')
 
     #inter_levels = np.linspace(np.min(pcolor_block),np.max(pcolor_block),num=20,endpoint=True)
-    inter_levels = np.linspace(sign_change*min_all,sign_change*max_all,num=25,endpoint=True)
+
+
+
+
+    # inter_levels = np.linspace(sign_change*min_all,sign_change*max_all,num=55,endpoint=True)*block_scale
+    inter_levels = np.linspace(sign_change*min_all,sign_change*max_all,num=20,endpoint=True)*block_scale
+
+    # if the_type == "dpri":
+    #     inter_levels = np.linspace(0.0,0.00028,num=55,endpoint=True)
+    # if the_type == "ai1":
+    #     inter_levels = np.linspace(0.0,12.0,num=55,endpoint=True)
+    # if the_type == "ai2":
+    #     inter_levels = np.linspace(0.0,0.056,num=55,endpoint=True)
 
     #pCont = ax2.contour(pcolor_block, 10, colors="#000000", antialiased=True, linewidths=0.25)
 
@@ -1181,10 +1193,28 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
         solo_count_2 = sign_change*solo_cont_2/2.0
         solo_count_3 = sign_change*solo_cont_3/2.0
 
-    fill_trial = np.array([0.000143341318329,0.000151735708505])*(3.14e4)
-    fill_trial_fe = np.array([1.31968788388e-06,1.41493932225e-06])*(3.14e4)
-    pContff = ax2.contour(pcolor_block, fill_trial, colors=['k','#676767'], antialiased=True, lw=1.5)
-    pContff = ax2.contour(pcolor_block, fill_trial_fe, colors=['k','#676767'], antialiased=True, lw=1.5)
+    fill_trial = np.array([0.000143341318329-(2.64e-5)-(2.64e-5),0.000143341318329,0.000143341318329+(2.64e-5)+(2.64e-5)])/(3.677e-5)
+    fill_trial_1028 = np.array([0.000151735708505-(9.13e-6)-(9.13e-6),0.000151735708505,0.000151735708505+(9.13e-6)+(9.13e-6)])/(3.677e-5)
+
+
+    fill_trial_fe = np.array([(1.31968788388e-06)-(3.32e-7)-(3.32e-7),1.31968788388e-06,(1.31968788388e-06)+(3.32e-7)+(3.32e-7)])/(3.677e-5)
+    fill_trial_fe_1028 = np.array([(1.41493932225e-06)-(1.87e-7)-(1.87e-7),1.41493932225e-06,(1.41493932225e-06)+(1.87e-7)+(1.87e-7)])/(3.677e-5)
+
+    print " "
+    print "fill_trial: " , fill_trial
+    print " "
+    print "fill_trial_fe: " , fill_trial_fe
+    print " "
+
+    pContff = ax2.contour(pcolor_block*block_scale, fill_trial, colors=['k','k','k'], antialiased=True, linewidths=1.0, zorder=10)
+    pContff = ax2.contour(pcolor_block*block_scale, fill_trial_fe, colors=['k','k','k'], antialiased=True, linewidths=1.0, zorder=10)
+
+    # pCont_fill = ax2.contourf(pcolor_block*block_scale, fill_trial, colors='none', hatches=['//', '...', '++'], antialiased=True, zorder=10, edgecolors='#cf370e', alpha=0.0)
+    # pCont_fill = ax2.contourf(pcolor_block*block_scale, fill_trial_fe, colors='none', hatches=['//', '...', '++'], antialiased=True, zorder=10, alpha=0.0)
+
+
+    # pContff = ax2.contour(pcolor_block, fill_trial_1028, colors=['#22c900','k','#041f96'], linewidths=1.75, linestyles='--', zorder=10)
+    # pContff = ax2.contour(pcolor_block, fill_trial_fe_1028, colors=['#22c900','k','#041f96'], linewidths=1.75, linestyles='--', zorder=10)
 
 
     # pCont = ax2.contour(pcolor_block, levels=solo_cont_1, colors="#1a6f08", antialiased=True, linewidths=2.0,zorder=5, linestyles="-")
@@ -1194,7 +1224,16 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
 
 
     # pCont = ax2.contour(pcolor_block, inter_levels, cmap=plasma, antialiased=True, linewidths=1.1)
-    pContf = ax2.contourf(pcolor_block, inter_levels, cmap=plasma_flip, antialiased=True)
+
+    cmap_oct =  LinearSegmentedColormap.from_list("", ["#edf8b1", "#7fcdbb", "#2c7fb8"])
+    cmap_oct =  LinearSegmentedColormap.from_list("", ["#9dffea", "#207c69"])
+    cmap_oct =  LinearSegmentedColormap.from_list("", ["#c3fff2", "#38d7b6", "#1b5448"])
+    #cmap_oct =  LinearSegmentedColormap.from_list("", ["#9dffea", "#1b5448"])
+
+    cmap_oct =  LinearSegmentedColormap.from_list("", ["#ccece6", "#99d8c9", "#66c2a4", "#41ae76", "#238b45", "#005824"])
+
+    #pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=cmap_oct, antialiased=True)
+    pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=plasma_flip, antialiased=True)
     for c in pContf.collections:
         c.set_edgecolor("face")
 
@@ -1221,9 +1260,30 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
         cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
         cax.yaxis.set_ticks_position('left')
         cbar.set_ticks(inter_levels[::2])
+        # if the_type == "dpri":
+        #     cbar.set_ticks(np.linspace(0.0,0.00028,num=5,endpoint=True))
+        # if the_type == "ai1":
+        #     cbar.set_ticks(np.linspace(0.0,12.0,num=7,endpoint=True))
+        # if the_type == "ai2":
+        #     cbar.set_ticks(np.linspace(0.0,0.056,num=5,endpoint=True))
         cbar.ax.tick_params(labelsize=7)
         #cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
         cbar.solids.set_edgecolor("face")
+
+    zgrad = np.gradient(pcolor_block*block_scale)
+    fulgrad = np.sqrt(zgrad[0]**2 + zgrad[1]**2)
+    # plt.contour(fulgrad,colors='w', zorder=25)
+
+
+    grad_int_blue = np.linspace(0.0,0.000048,10)
+    grad_plot = plt.contour(np.abs(zgrad[0]), levels=grad_int_blue, cmap=cm.Blues, zorder=15, lw=0.5)
+    plt.colorbar(grad_plot)
+    if np.max(np.abs(zgrad[1])) > 0:
+        print zgrad[1]
+        # grad_int_red = np.linspace(0.0,0.000030,10)
+        # grad_plot = plt.contour(np.abs(zgrad[1]), levels=grad_int_red, cmap=cm.Reds, zorder=15, lw=0.5)
+        # plt.colorbar(grad_plot)
+
 
     return square_pcolor_f
 
@@ -1522,7 +1582,7 @@ compound_alt_fe_solo = np.zeros([n_lateral, len(param_strings)])
 compound_alt_vol_solo_shift = np.zeros([n_lateral, len(param_strings)])
 compound_alt_fe_solo_shift = np.zeros([n_lateral, len(param_strings)])
 
-active_myr = 4.0
+active_myr = 4.5
 for i in range(n_lateral-1):
     # compound at 3.0 % / Myr
     compound_alt_vol[i,0] = (active_myr/n_lateral)*i*compound_alt_vol_labels[0]
@@ -2546,13 +2606,13 @@ if np.max(the_b) > max_all:
 # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
 # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
 
-square_pcolor_f(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+square_pcolor_f(sp1, sp2, 5, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
 
-square_pcolor_f(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+square_pcolor_f(sp1, sp2, 6, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
 
-square_pcolor_f(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+square_pcolor_f(sp1, sp2, 7, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
 
-square_pcolor_f(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+square_pcolor_f(sp1, sp2, 8, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
 
 
 
@@ -2586,13 +2646,13 @@ if np.max(the_b) > max_all:
 # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
 # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
 
-square_pcolor_f(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+square_pcolor_f(sp1, sp2, 9, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
 
-square_pcolor_f(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+square_pcolor_f(sp1, sp2, 10, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
 
-square_pcolor_f(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+square_pcolor_f(sp1, sp2, 11, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
 
-square_pcolor_f(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+square_pcolor_f(sp1, sp2, 12, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
 
 
 plt.savefig(in_path+dir_path+fig_path+"yy_alt_vol_pcolor_full.png",bbox_inches='tight')
