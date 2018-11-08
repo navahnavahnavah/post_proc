@@ -14,6 +14,7 @@ plt.rc('ytick', labelsize=8)
 plt.rcParams['axes.titlesize'] = 9
 plt.rcParams['axes.labelsize'] = 11
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import colorConverter
 
 plot_col = ['#000000', '#940000', '#d26618', '#dfa524', '#9ac116', '#139a31', '#35b5aa', '#0740d2', '#7f05d4', '#b100de', '#fba8ff']
 
@@ -2664,6 +2665,19 @@ plt.savefig(in_path+dir_path+fig_path+"yy_alt_vol_pcolor_full.eps",bbox_inches='
 
 
 
+#poop: NOVEMBER LUMP
+#hack: FIG: a_lump
+print "a_lump"
+
+fig=plt.figure(figsize=(11.0,11.0))
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"a_lump.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"a_lump.eps",bbox_inches='tight')
+
+
 
 
 
@@ -2737,6 +2751,9 @@ def square_contour_overlap(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0
         # cbar.solids.set_edgecolor("face")
 
     return square_contour_overlap
+
+
+
 
 
 
@@ -3270,7 +3287,6 @@ plt.savefig(in_path+dir_path+fig_path+"z_fig5_OOM.png",bbox_inches='tight')
 
 
 
-
 f5_sp1 = 6
 f5_sp2 = 4
 f5_cmap = cm.Blues
@@ -3688,3 +3704,196 @@ square_contour_5(f5_sp1, f5_sp2, (4*row)+4, the_b, cb_title="[b]"+secondary[the_
 
 plt.savefig(in_path+dir_path+fig_path+"z_fig5_fe_contours.png",bbox_inches='tight')
 plt.savefig(in_path+dir_path+fig_path+"z_fig5_VEC_CONT_FE.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+#poop: nov
+
+
+def square_contour_nov(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, the_cbar=0, cont_levels_in=[1.0,2.0],cmap_in=cm.jet, is_xtick=0, is_ytick=0,col='k'):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    if xlab == 1:
+        plt.xlabel('log10(mixing time [years])', fontsize=8)
+    if ylab == 1:
+        plt.ylabel('discharge q [m/yr]', fontsize=8)
+
+    hex_it = colorConverter.to_rgba(col, alpha=0.1)
+
+    alpha_cmap =  LinearSegmentedColormap.from_list("", [hex_it,col])
+
+    # pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=[cont_levels_in[0],cont_levels[-1]],cmap=cmap_in,alpha=0.5)
+    # pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=cmap_in, antialiased=True, linewidths=1.5)
+
+    #pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, colors=col, antialiased=True, linewidths=1.0)
+
+    # pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=alpha_cmap, linewidths=[2.0, 2.0, 0.1, 0.1])
+    the_widths = np.linspace(0.1,1.5,len(cont_levels_in))
+    the_widhts = the_widths[::-1]
+    pCont = ax2.contour(x_grid,y_grid,cont_block, levels=cont_levels_in, colors=col, linewidths=the_widths)
+
+
+    # smooth_cont_levels = np.linspace(cont_levels_in[0],cont_levels_in[-1],40)
+    # pContF = ax2.contourf(x_grid,y_grid,cont_block,levels=cont_levels_in,cmap=alpha_cmap, linewidths=0.0, linewidth=0.0, linestyle=None, extend='neither', antialiased=True)
+    # for c in pContF.collections:
+    #     c.set_edgecolor("face")
+
+    if is_xtick == 1:
+        plt.xticks(diff_nums[:cont_x_diff_max:xskip],diff_strings[::xskip], fontsize=10)
+    if is_ytick == 1:
+        plt.yticks(param_nums[:cont_y_param_max:yskip],param_strings[::yskip], fontsize=10)
+
+    plt.title(cb_title, fontsize=12)
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin+0.25, bbox.ymin-0.025, bbox.width*2.0, bbox.height*0.07])
+        cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+        cbar.set_ticks(cont_levels_in[::cont_skip])
+        cbar.ax.tick_params(labelsize=10)
+        #print "cont_levels" , cont_levels
+        # cbar.solids.set_edgecolor("face")
+
+    return square_contour_nov
+
+
+
+
+
+
+#hack: FIG: z_nov_overlap
+print "Z NOV OVERLAP"
+fig=plt.figure(figsize=(20.0,14.0))
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
+
+the_mins = [2, 11, 31, 13]
+the_fix = ['#ba4316', '#83dd1e', '#1667a7', '#db16df']
+
+
+for a_min in range(4):
+
+
+
+    the_min = the_mins[a_min]
+    the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+    the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+    the_a = 2.0*value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(0.5*value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+    the_b = 2.0*value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(0.5*value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+
+    the_a = the_d
+    the_b = the_d
+
+    min_all = np.min(the_s)
+    if np.min(the_d) < min_all:
+        min_all = np.min(the_d)
+    if np.min(the_a) < min_all:
+        min_all = np.min(the_a)
+    if np.min(the_b) < min_all:
+        min_all = np.min(the_b)
+
+    max_all = np.max(the_s)
+    if np.max(the_d) > max_all:
+        max_all = np.max(the_d)
+    if np.max(the_a) > max_all:
+        max_all = np.max(the_a)
+    if np.max(the_b) > max_all:
+        max_all = np.max(the_b)
+
+    f5_n_cont = 20
+    cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+    # cont_levels = cont_levels0[-6:]
+    cont_levels = cont_levels0[-10:]
+    #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+    the_cmap_in = cm.autumn
+    # fixed_col = '#207aa1'
+    fixed_col = the_fix[a_min]
+
+    if max_all > 0.0:
+        square_contour_nov(fo_sp1, fo_sp2, 1, the_s, cb_title="fig5_overlap [Mg]", xlab=0, ylab=1, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+        square_contour_nov(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+        square_contour_nov(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+        square_contour_nov(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap.pdf",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap.eps",bbox_inches='tight',rasterized=True)
+
+
+
+
+
+
+
+#hack: FIG: z_nov_fe_overlap
+print "Z NOV FE OVERLAP"
+fig=plt.figure(figsize=(20.0,14.0))
+plt.subplots_adjust(wspace=0.2, hspace=0.5)
+
+the_mins = [7, 5, 14, 13]
+the_fix = ['#ba4316', '#83dd1e', '#1667a7', '#db16df']
+
+
+for a_min in range(4):
+
+
+
+    the_min = the_mins[a_min]
+    the_s = value_dsec[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+    the_d = value_dsec_d[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+    the_a = 2.0*value_dsec_a[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(0.5*value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+    the_b = 2.0*value_dsec_b[:cont_y_param_max,:cont_x_diff_max,the_min,0]/np.abs(0.5*value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+
+    if a_min == 3:
+        the_s = the_s + value_dsec[:cont_y_param_max,:cont_x_diff_max,15,0]/np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+        the_d = the_d + value_dsec_d[:cont_y_param_max,:cont_x_diff_max,15,0]/np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+        the_a = 2.0*the_a + value_dsec_a[:cont_y_param_max,:cont_x_diff_max,15,0]/np.abs(0.5*value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])
+        the_b = 2.0*the_b + value_dsec_b[:cont_y_param_max,:cont_x_diff_max,15,0]/np.abs(0.5*value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])
+
+    the_a = the_d
+    the_b = the_d
+
+    min_all = np.min(the_s)
+    if np.min(the_d) < min_all:
+        min_all = np.min(the_d)
+    if np.min(the_a) < min_all:
+        min_all = np.min(the_a)
+    if np.min(the_b) < min_all:
+        min_all = np.min(the_b)
+
+    max_all = np.max(the_s)
+    if np.max(the_d) > max_all:
+        max_all = np.max(the_d)
+    if np.max(the_a) > max_all:
+        max_all = np.max(the_a)
+    if np.max(the_b) > max_all:
+        max_all = np.max(the_b)
+
+    f5_n_cont = 20
+    cont_levels0 = np.linspace(min_all,max_all,num=f5_n_cont,endpoint=True)
+    # cont_levels = cont_levels0[-6:]
+    cont_levels = cont_levels0[-10:]
+    #cont_levels = [min_all, max_all/10.0, max_all*0.9, max_all]
+    the_cmap_in = cm.autumn
+    # fixed_col = '#207aa1'
+    fixed_col = the_fix[a_min]
+
+    if max_all > 0.0:
+        square_contour_nov(fo_sp1, fo_sp2, 1, the_s, cb_title="fig5_overlap [Fe]", xlab=0, ylab=1, the_cbar=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+        square_contour_nov(fo_sp1, fo_sp2, 2, the_d, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+        square_contour_nov(fo_sp1, fo_sp2, 3, the_a, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+        square_contour_nov(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_nov_fe_overlap.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_nov_fe_overlap.pdf",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_nov_fe_overlap.eps",bbox_inches='tight',rasterized=True)
