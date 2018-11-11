@@ -2666,16 +2666,769 @@ plt.savefig(in_path+dir_path+fig_path+"yy_alt_vol_pcolor_full.eps",bbox_inches='
 
 
 #poop: NOVEMBER LUMP
+
+
+
+
+
 #hack: FIG: a_lump
 print "a_lump"
 
-fig=plt.figure(figsize=(11.0,11.0))
+fig=plt.figure(figsize=(13.0,15.0))
+plt.subplots_adjust(hspace=0.25)
+
+
+
+q_slices = [1.0, 3.0, 5.0]
+# q_slices = [1.0]
+
+for slice in range(len(q_slices)):
+    for slice_index in range(len(param_nums)):
+        if param_nums[slice_index] == q_slices[slice]:
+
+            ax=fig.add_subplot(5, 3, slice+1, frameon=True)
+
+            temp_row_d = np.abs(value_dpri_mean_d[slice_index,:cont_x_diff_max,0])
+            temp_row_a = np.abs(value_dpri_mean_a[slice_index,:cont_x_diff_max,0])/2.0
+            temp_row_b = np.abs(value_dpri_mean_b[slice_index,:cont_x_diff_max,0])/2.0
+
+            max_all = np.max(temp_row_d)
+            if np.max(temp_row_a) > max_all:
+                max_all = np.max(temp_row_a)
+            if np.max(temp_row_b) > max_all:
+                max_all = np.max(temp_row_b)
+
+            temp_row_d = temp_row_d/max_all
+            temp_row_a = temp_row_a/max_all
+            temp_row_b = temp_row_b/max_all
+
+            plt.plot(diff_nums,temp_row_d, color='red', label='dual total', lw=2.0)
+            plt.plot(diff_nums,temp_row_a, color='green', label='mobile, ch_a', lw=2.0)
+            plt.plot(diff_nums,temp_row_b+temp_row_a, color='b', label='stagnant, ch_b', lw=2.0)
+
+            plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([0.0,1.05])
+
+            if slice == 0.0:
+                plt.legend(fontsize=8,ncol=3,bbox_to_anchor=(1.0, 1.3))
+
+
+
+
+
+            ax=fig.add_subplot(5, 3, slice+4, frameon=True)
+
+            temp_row_d = np.abs(value_dpri_mean_d[slice_index,:cont_x_diff_max,0])
+            temp_row_a = np.abs(value_dpri_mean_a[slice_index,:cont_x_diff_max,0])/2.0
+            temp_row_b = np.abs(value_dpri_mean_b[slice_index,:cont_x_diff_max,0])/2.0
+
+            max_all = np.max(temp_row_d)
+            if np.max(temp_row_a) > max_all:
+                max_all = np.max(temp_row_a)
+            if np.max(temp_row_b) > max_all:
+                max_all = np.max(temp_row_b)
+
+            temp_row_d = temp_row_d#/max_all
+            temp_row_a = temp_row_a#/max_all
+            temp_row_b = temp_row_b#/max_all
+
+            plt.plot(diff_nums,temp_row_d, color='red', label='dual total', lw=2.0)
+            plt.plot(diff_nums,temp_row_d-temp_row_b, color='b', label='stagnant, ch_b', lw=2.0)
+
+            ax.fill_between(diff_nums, np.zeros(len(diff_nums)), temp_row_d-temp_row_b, facecolor='#749cec', lw=0)
+            ax.fill_between(diff_nums, temp_row_d-temp_row_b, temp_row_d, facecolor='#fc9e91', lw=0)
+
+
+            plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([0.0,0.0003])
+
+
+
+
+
+            ax=fig.add_subplot(5, 3, slice+7, frameon=True)
+
+            temp_row_d = np.abs(value_dpri_mean_d[slice_index,:cont_x_diff_max,0])
+            temp_row_a = np.abs(value_dpri_mean_a[slice_index,:cont_x_diff_max,0])/2.0
+            temp_row_b = np.abs(value_dpri_mean_b[slice_index,:cont_x_diff_max,0])/2.0
+
+            max_all = np.max(temp_row_d)
+            if np.max(temp_row_a) > max_all:
+                max_all = np.max(temp_row_a)
+            if np.max(temp_row_b) > max_all:
+                max_all = np.max(temp_row_b)
+
+            temp_row_d = temp_row_d#/max_all
+            temp_row_a = temp_row_a/temp_row_d
+            temp_row_b = temp_row_b/temp_row_d
+
+            # plt.plot(diff_nums,temp_row_d, color='red', label='dual total', lw=2.0)
+            plt.plot(diff_nums,(temp_row_a), color='green', label='mobile, ch_a', lw=2.0)
+            plt.plot(diff_nums,(temp_row_b), color='b', label='stagnant, ch_b', lw=2.0)
+            # plt.plot(diff_nums,1.0-temp_row_b, color='b', label='stagnant, ch_b', lw=2.0)
+
+            plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            #plt.ylim([0.0,1.05])
+
 
 
 
 
 plt.savefig(in_path+dir_path+fig_path+"a_lump.png",bbox_inches='tight')
 plt.savefig(in_path+dir_path+fig_path+"a_lump.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+#hack: FIG: a_sec_lump
+print "a_sec_lump"
+
+fig=plt.figure(figsize=(15.0,15.0))
+plt.subplots_adjust(hspace=0.25, wspace=0.1)
+
+
+
+q_slices = [1.0, 3.0, 5.0]
+# q_slices = [1.0]
+
+
+
+lump_mins = [2, 11, 13, 31]
+
+l_style = ['solid', '--', '-.']
+
+for slice in range(len(q_slices)):
+    for slice_index in range(len(param_nums)):
+        if param_nums[slice_index] == q_slices[slice]:
+
+            ax=fig.add_subplot(5, 3, slice+1, frameon=True)
+
+            mindex = 0
+            m_color = '#c93939'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            mindex = 1
+            m_color = '#c77f13'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            mindex = 2
+            m_color = '#9cbf0d'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            mindex = 3
+            m_color = '#0dbf7f'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            #plt.ylim([-0.05,1.05])
+            if slice == 0.0:
+                plt.legend(fontsize=8,ncol=4,bbox_to_anchor=(1.3, 1.2))
+
+
+
+
+
+
+            ax=fig.add_subplot(5, 3, slice+4, frameon=True)
+
+            mindex = 0
+            m_color = '#c93939'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            mindex = 1
+            m_color = '#c77f13'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            mindex = 2
+            m_color = '#9cbf0d'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            mindex = 3
+            m_color = '#0dbf7f'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            #plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([-0.05,1.05])
+
+
+            # plt.plot(diff_nums,temp_row_min_d-temp_row_min_b, color='b', label='stagnant, ch_b', lw=2.0)
+
+            # ax.fill_between(diff_nums, np.zeros(len(diff_nums)), temp_row_d-temp_row_b, facecolor='#749cec', lw=0)
+            # ax.fill_between(diff_nums, temp_row_d-temp_row_b, temp_row_d, facecolor='#fc9e91', lw=0)
+
+
+
+
+
+
+
+
+
+lump_mins = [5, 7, 13, 14]
+
+for slice in range(len(q_slices)):
+    for slice_index in range(len(param_nums)):
+        if param_nums[slice_index] == q_slices[slice]:
+
+            ax=fig.add_subplot(5, 3, slice+7, frameon=True)
+
+            mindex = 0
+            m_color = '#c93939'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            mindex = 1
+            m_color = '#c77f13'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            mindex = 2
+            m_color = '#9cbf0d'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            mindex = 3
+            m_color = '#0dbf7f'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-.')
+
+            #plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([0.0,0.5])
+
+            if slice == 0.0:
+                plt.legend(fontsize=8,ncol=4,bbox_to_anchor=(1.0, 1.2))
+
+
+
+
+
+            ax=fig.add_subplot(5, 3, slice+10, frameon=True)
+
+            mindex = 0
+            m_color = '#c93939'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            mindex = 1
+            m_color = '#c77f13'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            mindex = 2
+            m_color = '#9cbf0d'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            mindex = 3
+            m_color = '#0dbf7f'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='dashed')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='-')
+
+            #plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([-0.05,1.05])
+
+
+plt.savefig(in_path+dir_path+fig_path+"a_sec_lump.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"a_sec_lump.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: a_sec_c_lump
+print "a_sec_c_lump"
+
+fig=plt.figure(figsize=(15.0,15.0))
+plt.subplots_adjust(hspace=0.25, wspace=0.1)
+
+
+
+q_slices = [1.0, 3.0, 5.0]
+# q_slices = [1.0]
+
+
+
+lump_mins = [2, 11, 13, 31]
+
+l_style = ['solid', '--', '-.']
+
+for slice in range(len(q_slices)):
+    for slice_index in range(len(param_nums)):
+        if param_nums[slice_index] == q_slices[slice]:
+
+            ax=fig.add_subplot(5, 3, slice+1, frameon=True)
+
+            mindex = 0
+            m_color = '#c93939'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+
+
+            m_color = '#4d0aba' # nontronite(s)
+            # temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            # temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            # temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+
+            temp_row_min_d = (value_dsec_d[slice_index,:cont_x_diff_max,2,0]/4.0) + (value_dsec_d[slice_index,:cont_x_diff_max,11,0]/4.0)
+            temp_row_min_a = (value_dsec_a[slice_index,:cont_x_diff_max,2,0]/4.0) + (value_dsec_a[slice_index,:cont_x_diff_max,11,0]/4.0)
+            temp_row_min_b = (value_dsec_b[slice_index,:cont_x_diff_max,2,0]/4.0) + (value_dsec_b[slice_index,:cont_x_diff_max,11,0]/4.0)
+
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,2,0]/4.0) + (value_dsec_d[:,:cont_x_diff_max,11,0]/4.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,2,0]/4.0) + (value_dsec_a[:,:cont_x_diff_max,11,0]/4.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,2,0]/4.0) + (value_dsec_b[:,:cont_x_diff_max,11,0]/4.0)
+
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=1.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=1.0, ls='--')
+
+
+
+
+            mindex = 1
+            m_color = '#c77f13'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            mindex = 2
+            m_color = '#9cbf0d'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            mindex = 3
+            m_color = '#0dbf7f'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([0.0,0.5])
+            if slice == 0.0:
+                plt.legend(fontsize=8,ncol=4,bbox_to_anchor=(1.3, 1.2))
+
+
+
+
+
+
+
+
+
+lump_mins = [5, 7, 13, 14]
+
+for slice in range(len(q_slices)):
+    for slice_index in range(len(param_nums)):
+        if param_nums[slice_index] == q_slices[slice]:
+
+            ax=fig.add_subplot(5, 3, slice+4, frameon=True)
+
+            mindex = 0
+            m_color = '#c93939'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            mindex = 1
+            m_color = '#c77f13'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+            
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            mindex = 2
+            m_color = '#9cbf0d' # nontronite(s)
+            # temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            # temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            # temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+
+            temp_row_min_d = (value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/4.0) + (value_dsec_d[slice_index,:cont_x_diff_max,15,0]/4.0)
+            temp_row_min_a = (value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/4.0) + (value_dsec_a[slice_index,:cont_x_diff_max,15,0]/4.0)
+            temp_row_min_b = (value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/4.0) + (value_dsec_b[slice_index,:cont_x_diff_max,15,0]/4.0)
+
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+
+            temp_for_max_d = (value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]/4.0) + (value_dsec_d[:,:cont_x_diff_max,15,0]/4.0)
+            temp_for_max_a = (value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/4.0) + (value_dsec_a[:,:cont_x_diff_max,15,0]/4.0)
+            temp_for_max_b = (value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/4.0) + (value_dsec_b[:,:cont_x_diff_max,15,0]/4.0)
+            max_all = np.max([np.max(temp_for_max_d), np.max(temp_for_max_a), np.max(temp_for_max_b)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            mindex = 3
+            m_color = '#0dbf7f'
+            temp_row_min_d = value_dsec_d[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_a = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0
+            max_all = np.max(temp_row_min_d)
+            if np.max(temp_row_min_a) > max_all:
+                max_all = np.max(temp_row_min_a)
+            if np.max(temp_row_min_b) > max_all:
+                max_all = np.max(temp_row_min_b)
+            max_all = np.max([np.max(value_dsec_d[:,:cont_x_diff_max,lump_mins[mindex],0]), np.max(value_dsec_a[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0), np.max(value_dsec_b[:,:cont_x_diff_max,lump_mins[mindex],0]/2.0)])
+            temp_row_min_d = temp_row_min_d/max_all
+            temp_row_min_a = temp_row_min_a/max_all
+            temp_row_min_b = temp_row_min_b/max_all
+            # plt.plot(diff_nums,temp_row_min_d, color=m_color, label=secondary[lump_mins[mindex]], lw=2.0)
+            plt.plot(diff_nums,temp_row_min_a, color=m_color, lw=2.0, ls='-')
+            plt.plot(diff_nums,temp_row_min_b, color=m_color, lw=2.0, ls='--')
+
+            #plt.title('q = ' + param_strings[slice_index], fontsize=10.0)
+            plt.ylim([0.0,0.5])
+
+            if slice == 0.0:
+                plt.legend(fontsize=8,ncol=4,bbox_to_anchor=(1.0, 1.2))
+
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"a_sec_c_lump.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"a_sec_c_lump.eps",bbox_inches='tight')
 
 
 
