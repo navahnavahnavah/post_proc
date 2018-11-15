@@ -1,5 +1,6 @@
 # bb_lateral_grid.py
 
+#poop: packages
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -7,6 +8,8 @@ import math
 import os.path
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy import interpolate
+import scipy.ndimage
+import numpy.ma as ma
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 plt.rc('font', family='Arial')
 plt.rc('xtick', labelsize=8)
@@ -1407,7 +1410,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "60"
+temp_string = "40"
 in_path = "../output/revival/winter_basalt_box/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral/"
@@ -2672,7 +2675,310 @@ plt.savefig(in_path+dir_path+fig_path+"yy_alt_vol_pcolor_full.eps",bbox_inches='
 
 #hack: FIG: z_nov_overlap_dom
 print "Z NOV OVERLAP DOM"
-fig=plt.figure(figsize=(10.0,7.0))
+fig=plt.figure(figsize=(14.0,7.0))
+plt.subplots_adjust(hspace=0.15)
+
+
+the_mins = [2, 11, 31, 13]
+the_fix = ['#ba4316', '#83dd1e', '#1667a7', '#db16df']
+
+#the_mins = [7, 5, 14, 13]
+# dom pcolor trial??
+
+dom_mg_d = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_d = np.zeros(value_dsec[:,:,0,0].shape)
+
+dom_mg_a = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_a = np.zeros(value_dsec[:,:,0,0].shape)
+
+dom_mg_b = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_b = np.zeros(value_dsec[:,:,0,0].shape)
+
+dom_mg_s = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_s = np.zeros(value_dsec[:,:,0,0].shape)
+
+
+dom_mg_overlay_d = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_overlay_d = np.zeros(value_dsec[:,:,0,0].shape)
+
+dom_mg_overlay_a = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_overlay_a = np.zeros(value_dsec[:,:,0,0].shape)
+
+dom_mg_overlay_b = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_overlay_b = np.zeros(value_dsec[:,:,0,0].shape)
+
+dom_mg_overlay_s = np.zeros(value_dsec[:,:,0,0].shape)
+dom_fe_overlay_s = np.zeros(value_dsec[:,:,0,0].shape)
+
+value_mat_2_d = value_dsec_d[:,:,2,0]
+value_mat_11_d = value_dsec_d[:,:,11,0]
+value_mat_31_d = value_dsec_d[:,:,31,0]
+value_mat_13_d = value_dsec_d[:,:,13,0]
+
+value_mat_2_a = value_dsec_a[:,:,2,0]
+value_mat_11_a = value_dsec_a[:,:,11,0]
+value_mat_31_a = value_dsec_a[:,:,31,0]
+value_mat_13_a = value_dsec_a[:,:,13,0]
+
+value_mat_2_b = value_dsec_b[:,:,2,0]
+value_mat_11_b = value_dsec_b[:,:,11,0]
+value_mat_31_b = value_dsec_b[:,:,31,0]
+value_mat_13_b = value_dsec_b[:,:,13,0]
+
+value_mat_2_s = value_dsec[:,:,2,0]
+value_mat_11_s = value_dsec[:,:,11,0]
+value_mat_31_s = value_dsec[:,:,31,0]
+value_mat_13_s = value_dsec[:,:,13,0]
+
+
+
+
+
+value_mat_7_d = value_dsec_d[:,:,7,0]
+value_mat_5_d = value_dsec_d[:,:,5,0]
+value_mat_14_d = value_dsec_d[:,:,14,0]
+value_mat_15_d = value_dsec_d[:,:,13,0] + value_dsec_d[:,:,15,0]
+
+value_mat_7_a = value_dsec_a[:,:,7,0]
+value_mat_5_a = value_dsec_a[:,:,5,0]
+value_mat_14_a = value_dsec_a[:,:,14,0]
+value_mat_15_a = value_dsec_a[:,:,13,0] + value_dsec_a[:,:,15,0]
+
+value_mat_7_b = value_dsec_b[:,:,7,0]
+value_mat_5_b = value_dsec_b[:,:,5,0]
+value_mat_14_b = value_dsec_b[:,:,14,0]
+value_mat_15_b = value_dsec_b[:,:,13,0] + value_dsec_b[:,:,15,0]
+
+value_mat_7_s = value_dsec[:,:,7,0]
+value_mat_5_s = value_dsec[:,:,5,0]
+value_mat_14_s = value_dsec[:,:,14,0]
+value_mat_15_s = value_dsec[:,:,13,0] + value_dsec[:,:,15,0]
+
+for ee in range(len(param_nums)):
+    for eee in range(len(diff_nums)):
+
+
+        if np.max([value_mat_2_d[ee,eee], value_mat_11_d[ee,eee], value_mat_31_d[ee,eee], value_mat_13_d[ee,eee]]) == value_mat_2_d[ee,eee]:
+            dom_mg_d[ee,eee] = 0.0
+        if np.max([value_mat_2_d[ee,eee], value_mat_11_d[ee,eee], value_mat_31_d[ee,eee], value_mat_13_d[ee,eee]]) == value_mat_11_d[ee,eee]:
+            dom_mg_d[ee,eee] = 1.0
+        if np.max([value_mat_2_d[ee,eee], value_mat_11_d[ee,eee], value_mat_31_d[ee,eee], value_mat_13_d[ee,eee]]) == value_mat_31_d[ee,eee]:
+            dom_mg_d[ee,eee] = 2.0
+        if np.max([value_mat_2_d[ee,eee], value_mat_11_d[ee,eee], value_mat_31_d[ee,eee], value_mat_13_d[ee,eee]]) == value_mat_13_d[ee,eee]:
+            dom_mg_d[ee,eee] = 3.0
+        if value_mat_13_d[ee,eee] > 0.0:
+            dom_mg_overlay_d[ee,eee] = 4.0
+        if value_mat_13_d[ee,eee] == 0.0:
+            dom_mg_overlay_d[ee,eee] = None
+
+        if np.max([value_mat_2_a[ee,eee], value_mat_11_a[ee,eee], value_mat_31_a[ee,eee], value_mat_13_a[ee,eee]]) == value_mat_2_a[ee,eee]:
+            dom_mg_a[ee,eee] = 0.0
+        if np.max([value_mat_2_a[ee,eee], value_mat_11_a[ee,eee], value_mat_31_a[ee,eee], value_mat_13_a[ee,eee]]) == value_mat_11_a[ee,eee]:
+            dom_mg_a[ee,eee] = 1.0
+        if np.max([value_mat_2_a[ee,eee], value_mat_11_a[ee,eee], value_mat_31_a[ee,eee], value_mat_13_a[ee,eee]]) == value_mat_31_a[ee,eee]:
+            dom_mg_a[ee,eee] = 2.0
+        if np.max([value_mat_2_a[ee,eee], value_mat_11_a[ee,eee], value_mat_31_a[ee,eee], value_mat_13_a[ee,eee]]) == value_mat_13_a[ee,eee]:
+            dom_mg_a[ee,eee] = 3.0
+        if value_mat_13_a[ee,eee] > 0.0:
+            dom_mg_overlay_a[ee,eee] = 4.0
+        if value_mat_13_a[ee,eee] == 0.0:
+            dom_mg_overlay_a[ee,eee] = None
+
+        if np.max([value_mat_2_b[ee,eee], value_mat_11_b[ee,eee], value_mat_31_b[ee,eee], value_mat_13_b[ee,eee]]) == value_mat_2_b[ee,eee]:
+            dom_mg_b[ee,eee] = 0.0
+        if np.max([value_mat_2_b[ee,eee], value_mat_11_b[ee,eee], value_mat_31_b[ee,eee], value_mat_13_b[ee,eee]]) == value_mat_11_b[ee,eee]:
+            dom_mg_b[ee,eee] = 1.0
+        if np.max([value_mat_2_b[ee,eee], value_mat_11_b[ee,eee], value_mat_31_b[ee,eee], value_mat_13_b[ee,eee]]) == value_mat_31_b[ee,eee]:
+            dom_mg_b[ee,eee] = 2.0
+        if np.max([value_mat_2_b[ee,eee], value_mat_11_b[ee,eee], value_mat_31_b[ee,eee], value_mat_13_b[ee,eee]]) == value_mat_13_b[ee,eee]:
+            dom_mg_b[ee,eee] = 3.0
+        if value_mat_13_b[ee,eee] > 0.0:
+            dom_mg_overlay_b[ee,eee] = 4.0
+        if value_mat_13_b[ee,eee] == 0.0:
+            dom_mg_overlay_b[ee,eee] = None
+
+        if np.max([value_mat_2_s[ee,eee], value_mat_11_s[ee,eee], value_mat_31_s[ee,eee], value_mat_13_s[ee,eee]]) == value_mat_2_s[ee,eee]:
+            dom_mg_s[ee,eee] = 0.0
+        if np.max([value_mat_2_s[ee,eee], value_mat_11_s[ee,eee], value_mat_31_s[ee,eee], value_mat_13_s[ee,eee]]) == value_mat_11_s[ee,eee]:
+            dom_mg_s[ee,eee] = 1.0
+        if np.max([value_mat_2_s[ee,eee], value_mat_11_s[ee,eee], value_mat_31_s[ee,eee], value_mat_13_s[ee,eee]]) == value_mat_31_s[ee,eee]:
+            dom_mg_s[ee,eee] = 2.0
+        if np.max([value_mat_2_s[ee,eee], value_mat_11_s[ee,eee], value_mat_31_s[ee,eee], value_mat_13_s[ee,eee]]) == value_mat_13_s[ee,eee]:
+            dom_mg_s[ee,eee] = 3.0
+        if value_mat_13_s[ee,eee] > 0.0:
+            dom_mg_overlay_s[ee,eee] = 4.0
+        if value_mat_13_s[ee,eee] == 0.0:
+            dom_mg_overlay_s[ee,eee] = None
+
+
+
+
+        if np.max([value_mat_7_d[ee,eee], value_mat_5_d[ee,eee], value_mat_14_d[ee,eee], value_mat_15_d[ee,eee]]) == value_mat_7_d[ee,eee]:
+            dom_fe_d[ee,eee] = 0.0
+        if np.max([value_mat_7_d[ee,eee], value_mat_5_d[ee,eee], value_mat_14_d[ee,eee], value_mat_15_d[ee,eee]]) == value_mat_5_d[ee,eee]:
+            dom_fe_d[ee,eee] = 1.0
+        if np.max([value_mat_7_d[ee,eee], value_mat_5_d[ee,eee], value_mat_14_d[ee,eee], value_mat_15_d[ee,eee]]) == value_mat_14_d[ee,eee]:
+            dom_fe_d[ee,eee] = 2.0
+        if np.max([value_mat_7_d[ee,eee], value_mat_5_d[ee,eee], value_mat_14_d[ee,eee], value_mat_15_d[ee,eee]]) == value_mat_15_d[ee,eee]:
+            dom_fe_d[ee,eee] = 3.0
+        if value_mat_15_d[ee,eee] > 0.0:
+            dom_fe_overlay_d[ee,eee] = 4.0
+        if value_mat_15_d[ee,eee] == 0.0:
+            dom_fe_overlay_d[ee,eee] = None
+
+        if np.max([value_mat_7_a[ee,eee], value_mat_5_a[ee,eee], value_mat_14_a[ee,eee], value_mat_15_a[ee,eee]]) == value_mat_7_a[ee,eee]:
+            dom_fe_a[ee,eee] = 0.0
+        if np.max([value_mat_7_a[ee,eee], value_mat_5_a[ee,eee], value_mat_14_a[ee,eee], value_mat_15_a[ee,eee]]) == value_mat_5_a[ee,eee]:
+            dom_fe_a[ee,eee] = 1.0
+        if np.max([value_mat_7_a[ee,eee], value_mat_5_a[ee,eee], value_mat_14_a[ee,eee], value_mat_15_a[ee,eee]]) == value_mat_14_a[ee,eee]:
+            dom_fe_a[ee,eee] = 2.0
+        if np.max([value_mat_7_a[ee,eee], value_mat_5_a[ee,eee], value_mat_14_a[ee,eee], value_mat_15_a[ee,eee]]) == value_mat_15_a[ee,eee]:
+            dom_fe_a[ee,eee] = 3.0
+        if value_mat_15_a[ee,eee] > 0.0:
+            dom_fe_overlay_a[ee,eee] = 4.0
+        if value_mat_15_a[ee,eee] == 0.0:
+            dom_fe_overlay_a[ee,eee] = None
+
+        if np.max([value_mat_7_b[ee,eee], value_mat_5_b[ee,eee], value_mat_14_b[ee,eee], value_mat_15_b[ee,eee]]) == value_mat_7_b[ee,eee]:
+            dom_fe_b[ee,eee] = 0.0
+        if np.max([value_mat_7_b[ee,eee], value_mat_5_b[ee,eee], value_mat_14_b[ee,eee], value_mat_15_b[ee,eee]]) == value_mat_5_b[ee,eee]:
+            dom_fe_b[ee,eee] = 1.0
+        if np.max([value_mat_7_b[ee,eee], value_mat_5_b[ee,eee], value_mat_14_b[ee,eee], value_mat_15_b[ee,eee]]) == value_mat_14_b[ee,eee]:
+            dom_fe_b[ee,eee] = 2.0
+        if np.max([value_mat_7_b[ee,eee], value_mat_5_b[ee,eee], value_mat_14_b[ee,eee], value_mat_15_b[ee,eee]]) == value_mat_15_b[ee,eee]:
+            dom_fe_b[ee,eee] = 3.0
+        if value_mat_15_b[ee,eee] > 0.0:
+            dom_fe_overlay_b[ee,eee] = 4.0
+        if value_mat_15_b[ee,eee] == 0.0:
+            dom_fe_overlay_b[ee,eee] = None
+
+        if np.max([value_mat_7_s[ee,eee], value_mat_5_s[ee,eee], value_mat_14_s[ee,eee], value_mat_15_s[ee,eee]]) == value_mat_7_s[ee,eee]:
+            dom_fe_s[ee,eee] = 0.0
+        if np.max([value_mat_7_s[ee,eee], value_mat_5_s[ee,eee], value_mat_14_s[ee,eee], value_mat_15_s[ee,eee]]) == value_mat_5_s[ee,eee]:
+            dom_fe_s[ee,eee] = 1.0
+        if np.max([value_mat_7_s[ee,eee], value_mat_5_s[ee,eee], value_mat_14_s[ee,eee], value_mat_15_s[ee,eee]]) == value_mat_14_s[ee,eee]:
+            dom_fe_s[ee,eee] = 2.0
+        if np.max([value_mat_7_s[ee,eee], value_mat_5_s[ee,eee], value_mat_14_s[ee,eee], value_mat_15_s[ee,eee]]) == value_mat_15_s[ee,eee]:
+            dom_fe_s[ee,eee] = 3.0
+        if value_mat_15_s[ee,eee] > 0.0:
+            dom_fe_overlay_s[ee,eee] = 4.0
+        if value_mat_15_s[ee,eee] == 0.0:
+            dom_fe_overlay_s[ee,eee] = None
+
+
+
+our_cmap = cm.YlOrBr
+
+ax=fig.add_subplot(2, 4, 1, frameon=True)
+dom_col = plt.pcolor(x_grid,y_grid,dom_mg_s, vmin=0.0, vmax=3.0, cmap=our_cmap)
+dom_col.set_edgecolor('face')
+plt.title(temp_string + ' dom_Mg ch_s')
+
+bbox = ax.get_position()
+cax = fig.add_axes([bbox.xmin-0.04, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+cbar = plt.colorbar(dom_col, cax = cax,orientation='vertical')
+cax.yaxis.set_ticks_position('left')
+cbar.set_ticks([0.0,1.0,2.0,3.0])
+cbar.ax.tick_params(labelsize=10)
+cbar.solids.set_edgecolor("face")
+
+ax=fig.add_subplot(2, 4, 2, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_mg_d, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_d),dom_mg_overlay_d)
+plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.title(temp_string + ' dom_Mg ch_d')
+
+
+ax=fig.add_subplot(2, 4, 3, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_mg_a, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_a),dom_mg_overlay_a)
+plt.pcolor(x_grid,y_grid,Zm, facecolor=None, edgecolors='r', lw=2.25)
+plt.title(temp_string + ' dom_Mg ch_a')
+
+
+ax=fig.add_subplot(2, 4, 4, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_mg_b, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
+plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.title(temp_string + ' dom_Mg ch_b')
+
+
+
+
+
+ax=fig.add_subplot(2, 4, 5, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_fe_s, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
+plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.title(temp_string + ' dom_Fe ch_s')
+
+
+ax=fig.add_subplot(2, 4, 6, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_fe_d, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
+plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.title(temp_string + ' dom_Fe ch_d')
+
+
+ax=fig.add_subplot(2, 4, 7, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_fe_a, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
+plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.title(temp_string + ' dom_Fe ch_a')
+# plt.colorbar(orientation='horizontal')
+
+ax=fig.add_subplot(2, 4, 8, frameon=True)
+p_bit = plt.pcolor(x_grid,y_grid,dom_fe_b, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit.set_edgecolor('face')
+Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
+plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.title(temp_string + ' dom_Fe ch_b')
+# plt.colorbar(orientation='horizontal')
+
+
+
+# ax=fig.add_subplot(2, 4, 3, frameon=True)
+#
+# plt.contourf(x_grid,y_grid,dom_mg)
+# print dom_mg
+# plt.title(temp_string + ' dom_Mg')
+# plt.colorbar(orientation='horizontal')
+#
+#
+#
+#
+# ax=fig.add_subplot(2, 4, 4, frameon=True)
+#
+# plt.contourf(x_grid,y_grid,dom_fe)
+# print dom_mg
+# plt.title(temp_string + ' dom_Fe')
+# plt.colorbar(orientation='horizontal')
+
+
+
+
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap_DOM.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap_DOM.eps",bbox_inches='tight',rasterized=True)
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: z_nov_overlap_dom_contour
+print "Z NOV OVERLAP DOM CONTOUR"
+fig=plt.figure(figsize=(14.0,7.0))
+plt.subplots_adjust(hspace=0.15)
 
 
 the_mins = [2, 11, 31, 13]
@@ -2708,10 +3014,10 @@ value_mat_11_b = value_dsec_b[:,:,11,0]
 value_mat_31_b = value_dsec_b[:,:,31,0]
 value_mat_13_b = value_dsec_b[:,:,13,0]
 
-value_mat_2_s = value_dsec_s[:,:,2,0]
-value_mat_11_s = value_dsec_s[:,:,11,0]
-value_mat_31_s = value_dsec_s[:,:,31,0]
-value_mat_13_s = value_dsec_s[:,:,13,0]
+value_mat_2_s = value_dsec[:,:,2,0]
+value_mat_11_s = value_dsec[:,:,11,0]
+value_mat_31_s = value_dsec[:,:,31,0]
+value_mat_13_s = value_dsec[:,:,13,0]
 
 
 
@@ -2732,10 +3038,10 @@ value_mat_5_b = value_dsec_b[:,:,5,0]
 value_mat_14_b = value_dsec_b[:,:,14,0]
 value_mat_15_b = value_dsec_b[:,:,13,0] + value_dsec_b[:,:,15,0]
 
-value_mat_7_s = value_dsec_s[:,:,7,0]
-value_mat_5_s = value_dsec_s[:,:,5,0]
-value_mat_14_s = value_dsec_s[:,:,14,0]
-value_mat_15_s = value_dsec_s[:,:,13,0] + value_dsec_s[:,:,15,0]
+value_mat_7_s = value_dsec[:,:,7,0]
+value_mat_5_s = value_dsec[:,:,5,0]
+value_mat_14_s = value_dsec[:,:,14,0]
+value_mat_15_s = value_dsec[:,:,13,0] + value_dsec[:,:,15,0]
 
 for ee in range(len(param_nums)):
     for eee in range(len(diff_nums)):
@@ -2816,48 +3122,98 @@ for ee in range(len(param_nums)):
         if np.max([value_mat_7_s[ee,eee], value_mat_5_s[ee,eee], value_mat_14_s[ee,eee], value_mat_15_s[ee,eee]]) == value_mat_15_s[ee,eee]:
             dom_fe_s[ee,eee] = 3.0
 
+norm_levels = [0.0, 1.0, 2.0, 3.0]
+# norm_levels = []
+
 ax=fig.add_subplot(2, 4, 1, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_mg_s)
+dom_col = plt.contourf(x_grid,y_grid,dom_mg_s,levels=norm_levels)
 plt.title(temp_string + ' dom_Mg ch_s')
-plt.colorbar(orientation='horizontal')
+# plt.colorbar(orientation='horizontal')
+bbox = ax.get_position()
+cax = fig.add_axes([bbox.xmin-0.04, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+cbar = plt.colorbar(dom_col, cax = cax,orientation='vertical')
+cax.yaxis.set_ticks_position('left')
+cbar.set_ticks([0.0,1.0,2.0,3.0])
+cbar.ax.tick_params(labelsize=10)
+# cbar.solids.set_edgecolor("face")
 
 ax=fig.add_subplot(2, 4, 2, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_mg_d)
+dom_col = plt.contourf(x_grid,y_grid,dom_mg_d,levels=norm_levels)
 plt.title(temp_string + ' dom_Mg ch_d')
-plt.colorbar(orientation='horizontal')
 
 ax=fig.add_subplot(2, 4, 3, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_mg_a)
+dom_col = plt.contourf(x_grid,y_grid,dom_mg_a,levels=norm_levels)
 plt.title(temp_string + ' dom_Mg ch_a')
-plt.colorbar(orientation='horizontal')
 
 ax=fig.add_subplot(2, 4, 4, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_mg_b)
+dom_mg_b = scipy.ndimage.zoom(dom_mg_b, 3)
+# dom_col = plt.contourf(x_grid,y_grid,dom_mg_b,levels=norm_levels)
+# dom_col = plt.contourf(dom_mg_b,levels=norm_levels)
+
+dom_col = plt.contour(dom_mg_b,levels=[0.1],colors='r')
+dom_col = plt.contour(dom_mg_b,levels=[1.1],colors='g')
+dom_col = plt.contour(dom_mg_b,levels=[2.1],colors='b')
+dom_col = plt.contour(dom_mg_b,levels=[3.1],colors='m')
+
+# # dom_col = plt.contourf(x_grid,y_grid,dom_mg_b,levels=[-1.0, 0.0], colors='r')
+# # dom_col = plt.contourf(x_grid,y_grid,dom_mg_b,levels=[0.5, 1.0], colors='g')
+# # dom_col = plt.contourf(x_grid,y_grid,dom_mg_b,levels=[1.5, 2.0], colors='b')
+# # dom_col = plt.contourf(x_grid,y_grid,dom_mg_b,levels=[2.5, 3.0], colors='m')
+#
+# dom_col = plt.contour(x_grid,y_grid,dom_mg_b,levels=[0.0], colors='r')
+# dom_col = plt.contour(x_grid,y_grid,dom_mg_b,levels=[1.0], colors='g')
+# dom_col = plt.contour(x_grid,y_grid,dom_mg_b,levels=[2.0], colors='b')
+# dom_col = plt.contour(x_grid,y_grid,dom_mg_b,levels=[3.0], colors='m')
 plt.title(temp_string + ' dom_Mg ch_b')
-plt.colorbar(orientation='horizontal')
+
 
 
 
 
 ax=fig.add_subplot(2, 4, 5, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_fe_s)
-plt.title(temp_string + ' dom_Fe ch_s')
-plt.colorbar(orientation='horizontal')
+dom_col = plt.contour(x_grid,y_grid,dom_fe_s,levels=norm_levels)
+plt.title(temp_string + ' dom_Fe ch_d')
+bbox = ax.get_position()
+cax = fig.add_axes([bbox.xmin-0.04, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+cbar = plt.colorbar(dom_col, cax = cax,orientation='vertical')
+cax.yaxis.set_ticks_position('left')
+cbar.set_ticks([0.0,1.0,2.0,3.0])
+cbar.ax.tick_params(labelsize=10)
 
 ax=fig.add_subplot(2, 4, 6, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_fe_d)
+dom_col = plt.contour(x_grid,y_grid,dom_fe_d,levels=norm_levels)
 plt.title(temp_string + ' dom_Fe ch_d')
-plt.colorbar(orientation='horizontal')
 
 ax=fig.add_subplot(2, 4, 7, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_fe_a)
+dom_col = plt.contour(x_grid,y_grid,dom_fe_a,levels=norm_levels)
 plt.title(temp_string + ' dom_Fe ch_a')
-plt.colorbar(orientation='horizontal')
 
 ax=fig.add_subplot(2, 4, 8, frameon=True)
-plt.pcolor(x_grid,y_grid,dom_fe_b)
+dom_col = plt.contour(x_grid,y_grid,dom_fe_b,levels=norm_levels)
 plt.title(temp_string + ' dom_Fe ch_b')
-plt.colorbar(orientation='horizontal')
+
+#
+# ax=fig.add_subplot(2, 4, 5, frameon=True)
+# plt.pcolor(x_grid,y_grid,dom_fe_s, vmin=0.0, vmax=3.0)
+# plt.title(temp_string + ' dom_Fe ch_s')
+# # plt.colorbar(orientation='horizontal')
+#
+# ax=fig.add_subplot(2, 4, 6, frameon=True)
+# plt.pcolor(x_grid,y_grid,dom_fe_d, vmin=0.0, vmax=3.0)
+# plt.title(temp_string + ' dom_Fe ch_d')
+# # plt.colorbar(orientation='horizontal')
+#
+# ax=fig.add_subplot(2, 4, 7, frameon=True)
+# plt.pcolor(x_grid,y_grid,dom_fe_a, vmin=0.0, vmax=3.0)
+# plt.title(temp_string + ' dom_Fe ch_a')
+# # plt.colorbar(orientation='horizontal')
+#
+# ax=fig.add_subplot(2, 4, 8, frameon=True)
+# plt.pcolor(x_grid,y_grid,dom_fe_b, vmin=0.0, vmax=3.0)
+# plt.title(temp_string + ' dom_Fe ch_b')
+# # plt.colorbar(orientation='horizontal')
+
+
 
 # ax=fig.add_subplot(2, 4, 3, frameon=True)
 #
@@ -2879,10 +3235,8 @@ plt.colorbar(orientation='horizontal')
 
 
 
-plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap_DOM.png",bbox_inches='tight')
-plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap_DOM.eps",bbox_inches='tight',rasterized=True)
-
-
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap_DOM_CONTOUR.png",bbox_inches='tight')
+plt.savefig(in_path+dir_path+fig_path+"z_nov_overlap_DOM_CONTOUR.eps",bbox_inches='tight',rasterized=True)
 
 
 
