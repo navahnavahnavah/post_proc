@@ -1410,7 +1410,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "40"
+temp_string = "60"
 in_path = "../output/revival/winter_basalt_box/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral/"
@@ -2867,12 +2867,16 @@ for ee in range(len(param_nums)):
 
 
 
-our_cmap = cm.YlOrBr
+our_cmap = cm.autumn_r
 
 ax=fig.add_subplot(2, 4, 1, frameon=True)
-dom_col = plt.pcolor(x_grid,y_grid,dom_mg_s, vmin=0.0, vmax=3.0, cmap=our_cmap)
+dom_col = plt.pcolor(dom_mg_s, vmin=0.0, vmax=3.0, cmap=our_cmap)
 dom_col.set_edgecolor('face')
 plt.title(temp_string + ' dom_Mg ch_s')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 
 bbox = ax.get_position()
 cax = fig.add_axes([bbox.xmin-0.04, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
@@ -2883,62 +2887,90 @@ cbar.ax.tick_params(labelsize=10)
 cbar.solids.set_edgecolor("face")
 
 ax=fig.add_subplot(2, 4, 2, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_mg_d, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_mg_d, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
 Zm = ma.masked_where(np.isnan(dom_mg_overlay_d),dom_mg_overlay_d)
-plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Mg ch_d')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 
 
 ax=fig.add_subplot(2, 4, 3, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_mg_a, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_mg_a, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
 Zm = ma.masked_where(np.isnan(dom_mg_overlay_a),dom_mg_overlay_a)
-plt.pcolor(x_grid,y_grid,Zm, facecolor=None, edgecolors='r', lw=2.25)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Mg ch_a')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 
 
 ax=fig.add_subplot(2, 4, 4, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_mg_b, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_mg_b, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
 Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
-plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Mg ch_b')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 
 
 
 
 
 ax=fig.add_subplot(2, 4, 5, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_fe_s, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_fe_s, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
-Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
-plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+Zm = ma.masked_where(np.isnan(dom_fe_overlay_s),dom_fe_overlay_s)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Fe ch_s')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 
 
 ax=fig.add_subplot(2, 4, 6, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_fe_d, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_fe_d, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
-Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
-plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+Zm = ma.masked_where(np.isnan(dom_fe_overlay_d),dom_fe_overlay_d)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Fe ch_d')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 
 
 ax=fig.add_subplot(2, 4, 7, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_fe_a, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_fe_a, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
-Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
-plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+Zm = ma.masked_where(np.isnan(dom_fe_overlay_a),dom_fe_overlay_a)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Fe ch_a')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 # plt.colorbar(orientation='horizontal')
 
 ax=fig.add_subplot(2, 4, 8, frameon=True)
-p_bit = plt.pcolor(x_grid,y_grid,dom_fe_b, vmin=0.0, vmax=3.0, cmap=our_cmap)
+p_bit = plt.pcolor(dom_fe_b, vmin=0.0, vmax=3.0, cmap=our_cmap)
 p_bit.set_edgecolor('face')
-Zm = ma.masked_where(np.isnan(dom_mg_overlay_b),dom_mg_overlay_b)
-plt.pcolor(x_grid,y_grid,Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
+Zm = ma.masked_where(np.isnan(dom_fe_overlay_b),dom_fe_overlay_b)
+plt.pcolor(Zm, facecolor='None', hatch='//', edgecolor='r', lw=1.3)
 plt.title(temp_string + ' dom_Fe ch_b')
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
 # plt.colorbar(orientation='horizontal')
 
 
