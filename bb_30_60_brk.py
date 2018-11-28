@@ -232,6 +232,8 @@ fill_color = '#e4e4e4'
 site_locations = np.array([22.742, 25.883, 33.872, 40.706, 45.633, 55.765, 75.368, 99.006, 102.491])
 site_locations = (site_locations - 00.00)*1000.0
 
+site_ages = np.array([0.86, 0.971, 1.237, 1.434, 1.615, 1.952, 2.621, 3.511, 3.586])
+
 site_names = ["1023", "1024", "1025", "1031", "1028", "1029", "1032", "1026", "1027"]
 alt_values = np.array([0.3219, 2.1072, 2.3626, 2.9470, 10.0476, 4.2820, 8.9219, 11.8331, 13.2392])
 lower_eb = np.array([0.3219, 0.04506, 0.8783, 1.7094, 5.0974, 0.8994, 5.3745, 2.5097, 3.0084])
@@ -1274,6 +1276,19 @@ for iii in nn:
 
 plt.plot([25.0,70.0], [1.11, 1.11], color='m', ls='--')
 plt.plot([25.0,70.0], [10.28, 10.28], color='m', ls='--')
+
+the_slope_age, the_intercept_age = np.polyfit(site_ages, alt_values, 1)
+
+print "polyfit the_slope_age FULL" , np.polyfit(site_ages, alt_values, 1, full=True)
+
+plt.plot([25.0,70.0], [the_slope_age, the_slope_age], color='g', ls='--')
+print "the_slope_age", the_slope_age
+plt.plot([25.0,70.0], [the_slope+(2.64e-5)+(2.64e-5), the_slope+(2.64e-5)+(2.64e-5)], color='g', ls='--')
+plt.plot([25.0,70.0], [the_slope-(2.64e-5)-(2.64e-5), the_slope+(2.64e-5)+(2.64e-5)], color='g', ls='--')
+
+# plt.plot(site_locations, site_locations*the_slope + the_intercept, lw=2.0, color='k')
+# plt.plot(site_locations,site_locations*(the_slope+(2.64e-5)+(2.64e-5)) + the_intercept, lw=1.0, color='k')
+# plt.plot(site_locations,site_locations*(the_slope-(2.64e-5)-(2.64e-5)) + the_intercept, lw=1.0, color='k')
 
 plt.xlim([25.0, 70.0])
 plt.xlabel('temperature [C]')
