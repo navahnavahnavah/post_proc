@@ -1421,94 +1421,36 @@ def square_pcolor_grad_block(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, yl
         solo_count_2 = sign_change*solo_cont_2/2.0
         solo_count_3 = sign_change*solo_cont_3/2.0
 
-
-
-    # zgrad = np.zeros(pcolor_block.shape)
-    # for ix in range(pcolor_block.shape[1]-1):
-    #     for iy in range(pcolor_block.shape[0]-1):
-    #         if np.abs((pcolor_block[iy,ix+1] - pcolor_block[iy,ix])/pcolor_block[iy,ix+1]) < 0.1:
-    #             zgrad[iy,ix] = 1.0
-
-
-
-
     zgrad_lr = np.zeros(pcolor_block.shape)
-    zgrad_lr_cut_off = np.zeros(pcolor_block.shape)
-    for iy in range(pcolor_block.shape[1]-1):
+    zgrad_lr_cut_off = 2.5*np.ones(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]):
         zgrad_lr[:,iy] = np.abs(pcolor_block[:,0] - pcolor_block[:,iy])/pcolor_block[:,0]
 
 
-    for iy in range(pcolor_block.shape[1]-1):
-        for ix in range(pcolor_block.shape[0]-1):
-            if zgrad_lr[ix,iy]/pcolor_block[ix,0] > 0.1:
-                zgrad_lr_cut_off[ix,iy] = 1.0
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr[ix,iy] < 0.1:
+                # zgrad_lr_cut_off[ix,iy] = 1.0
+                zgrad_lr_cut_off[ix,iy] = zgrad_lr[ix,iy]#/pcolor_block[ix,iy]
+            if zgrad_lr_cut_off[ix,iy] == 2.5:
+                zgrad_lr_cut_off[ix,iy]=np.max(zgrad_lr_cut_off[zgrad_lr_cut_off<2.5])
 
-    pCol_lr = plt.pcolor(zgrad_lr,cmap=cm.Reds)
+    max_cut_off = np.max(zgrad_lr_cut_off)
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr_cut_off[ix,iy] == max_cut_off:
+                zgrad_lr_cut_off[ix:,iy] = 1.1*max_cut_off
+
+
+
+    pCol_lr = ax2.pcolor(zgrad_lr_cut_off,cmap=cm.cool)
+
     if np.max(zgrad_lr_cut_off) > 0.0:
-        pCont_lr = plt.contour(zgrad_lr_cut_off,levels=[1.0])
-        bbox = ax2.get_position()
-        cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
-        cbar = plt.colorbar(pCont_lr, cax = cax,orientation='vertical')
-        cax.yaxis.set_ticks_position('left')
-        # cbar.set_ticks(inter_levels1)
-        cbar.ax.tick_params(labelsize=7)
-        # cbar.solids.set_edgecolor("face")
-    # pCont_lr = ax2.contour(zgrad_lr,cmap=cm.cool)
+        plt.contour(zgrad_lr_cut_off,5,colors=['#323232'],linewidths=[0.5])
+        plt.contour(zgrad_lr_cut_off,[max_cut_off],colors=['#2d2d2d'],linewidths=[2.0])
 
-
-    # zgrad_temp = np.gradient(pcolor_block)
-    # zgrad_temp_red = zgrad_temp[1]
-    # zgrad_temp_blue = zgrad_temp[0]
-    #
-    # # zgrad = np.zeros(pcolor_block.shape)
-    # # for ix in range(pcolor_block.shape[1]-1):
-    # #     for iy in range(pcolor_block.shape[0]-1):
-    # #         # zgrad[iy,ix] = np.abs((pcolor_block[iy,ix+1] - pcolor_block[iy,ix])/np.max([pcolor_block[iy,ix],pcolor_block[iy,ix+1]]))
-    # #         zgrad[iy,ix] = np.abs((pcolor_block[iy,ix+1] - pcolor_block[iy,ix])/pcolor_block[iy,ix])
-    #
-    # zgrad_red_plot = zgrad_temp_red / (np.sqrt((zgrad_temp_red**2)+(zgrad_temp_blue**2)))
-    #
-    #
-    #
-    #
-    # zgrad1 = np.zeros(pcolor_block.shape)
-    # for ix in range(pcolor_block.shape[1]-1):
-    #     for iy in range(pcolor_block.shape[0]-1):
-    #         if np.abs((pcolor_block[iy+1,ix] - pcolor_block[iy,ix])/pcolor_block[iy+1,ix]) < 0.1:
-    #             zgrad1[iy,ix] = 1.0
-    #
-    #
-    # pCol = plt.pcolor(zgrad_red_plot,cmap=cm.Reds, alpha=0.5)
-    # #pCol1 = plt.pcolor(zgrad1,cmap=cm.Blues, alpha=0.5)
-
-    # pcolor_block = scipy.ndimage.filters.gaussian_filter(pcolor_block,2.0)
-
-    # zgrad = np.gradient(pcolor_block*block_scale)
-    # zgrad_piece = zgrad[0]
-    # zgrad_piece1 = zgrad[1]
-    #
-    # # zgrad_piece = np.abs(zgrad_piece)
-    # # zgrad_piece1 = np.abs(zgrad_piece1)
-    #
-    # inter_levels = np.linspace(np.min(zgrad_piece), np.max(zgrad_piece), 10)
-    # inter_levels1 = np.linspace(np.min(zgrad_piece1), np.max(zgrad_piece1), 10)
-    #
-    # pContf = ax2.contour(zgrad_piece, levels=inter_levels, linewidths=[1.1], cmap=cm.winter_r, antialiased=True)
-    # temp_zero = np.max(np.abs(zgrad_piece))/10.0
-    # temp_zero_n = np.min(zgrad_piece)/10.0
-    # pContf_thick = ax2.contour(zgrad_piece, levels=[temp_zero_n, temp_zero], linewidths=[2.0], colors=['b'], antialiased=True)
-    # pContf_thick00 = ax2.contourf(zgrad_piece, levels=[temp_zero_n, temp_zero], colors=['#a1dafa'], antialiased=True, zorder=0, alpha=0.5)
-    #
-    #
-    # pContf1 = ax2.contour(zgrad_piece1, levels=inter_levels1, linewidths=[1.1], cmap=cm.autumn_r, antialiased=True)
-    # temp_zero1 = np.max(np.abs(zgrad_piece1))/10.0
-    # temp_zero1_n = np.min(zgrad_piece1)/10.0
-    # pContf_thick1 = ax2.contour(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], linewidths=[2.0], colors=['r'], antialiased=True)
-    # pContf_thick11 = ax2.contourf(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], colors=['#fac2c2'], antialiased=True, zorder=0, alpha=0.5)
-    # # for c in pContf.collections:
-    # #     c.set_edgecolor("face")
-    # # for c in pContf1.collections:
-    # #     c.set_edgecolor("face")
 
     plt.xlim([0.0,17.0])
     plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
@@ -1518,29 +1460,196 @@ def square_pcolor_grad_block(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, yl
     plt.title(cb_title, fontsize=8)
     plt.tick_params(top='off', right='off', which='both')
 
-    # if the_cbar == 1:
-    #     bbox = ax2.get_position()
-    #     cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
-    #     cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
-    #     cax.yaxis.set_ticks_position('left')
-    #     cbar.set_ticks(inter_levels)
-    #     cbar.ax.tick_params(labelsize=7)
-    #     # cbar.solids.set_edgecolor("face")
-    #
-    #     if np.max(zgrad_piece1) > 0.0:
-    #         bbox = ax2.get_position()
-    #         cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
-    #         cbar = plt.colorbar(pContf1, cax = cax,orientation='vertical')
-    #         cax.yaxis.set_ticks_position('left')
-    #         cbar.set_ticks(inter_levels1)
-    #         cbar.ax.tick_params(labelsize=7)
-    #         # cbar.solids.set_edgecolor("face")
+    if np.max(zgrad_lr_cut_off) > 0.0:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin-0.025, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pCol_lr, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        # cbar.set_ticks(inter_levels1)
+        cbar.ax.tick_params(labelsize=7)
 
 
     return square_pcolor_grad_block
 
 
 
+
+
+
+
+def square_pcolor_grad_block_rhs(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+
+    block_scale = 0.856
+
+    solo_cont_1 = np.array([0.027, 0.926])
+    solo_cont_2 = np.array([0.05, 4.8])
+    solo_cont_3 = np.array([0.0667, 9.26])
+
+    if scale_in == 1:
+        solo_count_1 = sign_change*solo_cont_1/2.0
+        solo_count_2 = sign_change*solo_cont_2/2.0
+        solo_count_3 = sign_change*solo_cont_3/2.0
+
+    zgrad_lr = np.zeros(pcolor_block.shape)
+    zgrad_lr_cut_off = 1.0*np.ones(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]):
+        zgrad_lr[:,iy] = np.abs(pcolor_block[:,-1] - pcolor_block[:,iy])/pcolor_block[:,-1]
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr[ix,iy] < 0.9:
+                zgrad_lr_cut_off[ix,iy] = zgrad_lr[ix,iy]
+            # if zgrad_lr_cut_off[ix,iy] == 1.0:
+            #     zgrad_lr_cut_off[ix,iy]=np.max(zgrad_lr_cut_off[zgrad_lr_cut_off<1.0])
+
+    max_cut_off = np.max(zgrad_lr_cut_off)
+
+
+    # for iy in range(pcolor_block.shape[1]):
+    #     for ix in range(pcolor_block.shape[0]):
+    #         if zgrad_lr_cut_off[ix,iy]==max_cut_off:
+    #             zgrad_lr_cut_off[ix,iy:] = max_cut_off
+
+
+
+    pCol_lr = ax2.pcolor(zgrad_lr_cut_off,cmap=cm.cool)
+
+    if np.max(zgrad_lr_cut_off) > 0.0:
+        plt.contour(zgrad_lr_cut_off,5,colors=['#323232'],linewidths=[0.5])
+        plt.contour(zgrad_lr_cut_off,[max_cut_off*0.95],colors=['#2d2d2d'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off,[0.1],colors=['#2d2d2d'],linewidths=[2.0],linestyles=['--'])
+
+
+    plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    if np.max(zgrad_lr_cut_off) > 0.0:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin-0.025, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pCol_lr, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        # cbar.set_ticks(inter_levels1)
+        cbar.ax.tick_params(labelsize=7)
+
+
+    return square_pcolor_grad_block_rhs
+
+
+
+
+
+
+
+def square_pcolor_stack(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+    block_scale = 0.856
+
+    zgrad_lr = np.zeros(pcolor_block.shape)
+    zgrad_lr_cut_off = 2.5*np.ones(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]):
+        zgrad_lr[:,iy] = np.abs(pcolor_block[:,0] - pcolor_block[:,iy])/pcolor_block[:,0]
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr[ix,iy] < 0.1:
+                # zgrad_lr_cut_off[ix,iy] = 1.0
+                zgrad_lr_cut_off[ix,iy] = zgrad_lr[ix,iy]#/pcolor_block[ix,iy]
+            if zgrad_lr_cut_off[ix,iy] == 2.5:
+                zgrad_lr_cut_off[ix,iy]=np.max(zgrad_lr_cut_off[zgrad_lr_cut_off<2.5])
+
+    max_cut_off = np.max(zgrad_lr_cut_off)
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr_cut_off[ix,iy]==max_cut_off:
+                zgrad_lr_cut_off[ix:,iy] = 1.1*max_cut_off
+
+
+    if np.max(zgrad_lr_cut_off) > 0.0:
+        plt.contour(zgrad_lr_cut_off,5,colors=['#ba0000'],linewidths=[0.5])
+        plt.contour(zgrad_lr_cut_off,[max_cut_off],colors=['#ba0000'],linewidths=[2.0])
+
+
+
+
+
+
+
+
+
+    zgrad_lr_rhs = np.zeros(pcolor_block.shape)
+    zgrad_lr_cut_off_rhs = 1.0*np.ones(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]):
+        zgrad_lr_rhs[:,iy] = np.abs(pcolor_block[:,-1] - pcolor_block[:,iy])/pcolor_block[:,-1]
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr_rhs[ix,iy] < 0.5:
+                zgrad_lr_cut_off_rhs[ix,iy] = zgrad_lr_rhs[ix,iy]
+            # if zgrad_lr_cut_off[ix,iy] == 1.0:
+            #     zgrad_lr_cut_off[ix,iy]=np.max(zgrad_lr_cut_off[zgrad_lr_cut_off<1.0])
+
+    max_cut_off_rhs = np.max(zgrad_lr_cut_off_rhs)
+
+    if np.max(zgrad_lr_cut_off_rhs) > 0.0:
+        plt.contour(zgrad_lr_cut_off_rhs,5,colors=['#679e0e'],linewidths=[0.5])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.1],colors=['#679e0e'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.2],colors=['#30c467'],linewidths=[1.0])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.5],colors=['#305ac4'],linewidths=[1.0])
+
+
+
+
+
+
+
+
+
+
+    plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+
+
+
+
+
+    return square_pcolor_stack
 
 
 
@@ -2000,7 +2109,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "60"
+temp_string = "40"
 in_path = "../output/revival/winter_broken/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral_"+temp_string+"/"
@@ -2842,6 +2951,8 @@ plt.savefig(brk_path+"yy_alt_vol_pcolor_grad.png",bbox_inches='tight')
 
 
 
+
+
 #hack: FIG: yy_alt_vol_pcolor_grad_block
 print "yy_alt_vol_pcolor_grad_block"
 
@@ -2851,19 +2962,14 @@ sp2 = 5
 cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
-
-fig=plt.figure(figsize=(26.0,11.0))
-plt.subplots_adjust(hspace=0.4, wspace=0.85)
-
+fig=plt.figure(figsize=(16.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.55)
 
 
 the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
 the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
 the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
 the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
-
-# the_a = the_d
-# the_b = the_d
 
 min_all = np.min(the_s)
 if np.min(the_d) < min_all:
@@ -2881,37 +2987,13 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-# min_all = 1.0
-# max_all = 17.0
+square_pcolor_grad_block(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-bi_col_1 = "#c3fe46"
-bi_col_a = "#19ffa5"
-bi_col_2 = "#139ef7"
+square_pcolor_grad_block(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-bi_col_3 = "#f4f10c"
-bi_col_b = "#e38901"
-bi_col_4 = "#c31414"
+square_pcolor_grad_block(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1)
 
-bi_col_5 = "#ef3ef9"
-bi_col_c = "#a034ff"
-bi_col_6 = "#522cd1"
-
-fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
-# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
-
-square_pcolor_grad_block(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
-
-square_pcolor_grad_block(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
-
-square_pcolor_grad_block(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
-
-square_pcolor_grad_block(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
-
-# square_pcolor_grad(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
-
-
-
-
+square_pcolor_grad_block(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1)
 
 
 
@@ -2921,9 +3003,6 @@ the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
 the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
 the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
 
-# the_a = the_d
-# the_b = the_d
-
 min_all = np.min(the_s)
 if np.min(the_d) < min_all:
     min_all = np.min(the_d)
@@ -2940,21 +3019,15 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-# min_all = 1.0
-# max_all = 17.0
+square_pcolor_grad_block(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
 
-# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
-# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+square_pcolor_grad_block(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
 
-square_pcolor_grad_block(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+square_pcolor_grad_block(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
 
-square_pcolor_grad_block(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+square_pcolor_grad_block(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
 
-square_pcolor_grad_block(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
 
-square_pcolor_grad_block(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
-
-# square_pcolor_grad(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
 
 
 the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
@@ -2962,8 +3035,61 @@ the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
 the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
 the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
 
-# the_a = the_d
-# the_b = the_d
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor_grad_block(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
+
+square_pcolor_grad_block(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
+
+square_pcolor_grad_block(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
+
+square_pcolor_grad_block(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_grad_block.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_grad_block_rhs
+print "yy_alt_vol_pcolor_grad_block_rhs"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+fig=plt.figure(figsize=(16.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.55)
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
 
 min_all = np.min(the_s)
 if np.min(the_d) < min_all:
@@ -2981,25 +3107,213 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-# min_all = 0.005
-# max_all = 0.10
+square_pcolor_grad_block_rhs(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
-# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+square_pcolor_grad_block_rhs(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
-square_pcolor_grad_block(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+square_pcolor_grad_block_rhs(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1)
 
-square_pcolor_grad_block(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
-
-square_pcolor_grad_block(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
-
-square_pcolor_grad_block(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
-
-# square_pcolor_grad(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+square_pcolor_grad_block_rhs(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1)
 
 
 
-plt.savefig(brk_path+"yy_alt_vol_pcolor_grad_block.png",bbox_inches='tight')
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor_grad_block_rhs(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
+
+square_pcolor_grad_block_rhs(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
+
+square_pcolor_grad_block_rhs(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
+
+square_pcolor_grad_block_rhs(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
+
+
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor_grad_block_rhs(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
+
+square_pcolor_grad_block_rhs(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
+
+square_pcolor_grad_block_rhs(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
+
+square_pcolor_grad_block_rhs(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_grad_block_rhs.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_STACK
+print "yy_alt_vol_pcolor_STACK"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+fig=plt.figure(figsize=(18.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.55)
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor_stack(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor_stack(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
+
+square_pcolor_stack(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1)
+
+square_pcolor_stack(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1)
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor_stack(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
+
+square_pcolor_stack(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
+
+square_pcolor_stack(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
+
+square_pcolor_stack(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
+
+
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+square_pcolor_stack(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
+
+square_pcolor_stack(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
+
+square_pcolor_stack(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
+
+square_pcolor_stack(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_STACK.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
 
 
 
