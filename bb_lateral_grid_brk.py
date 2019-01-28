@@ -1180,6 +1180,10 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
         min_all_in = 0.0
         max_all_in = 0.05
 
+    # temp
+    # min_all_in = np.min(pcolor_block*block_scale)
+    # max_all_in = np.max(pcolor_block*block_scale)
+
     inter_levels = np.linspace(sign_change*min_all_in,sign_change*max_all_in,num=21,endpoint=True)#*block_scale
     # print inter_levels
 
@@ -1214,9 +1218,9 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
     fill_trial_fe = np.array([(1.31968788388e-06)-(3.32e-7)-(3.32e-7),1.31968788388e-06,(1.31968788388e-06)+(3.32e-7)+(3.32e-7)])/(3.677e-5)
     fill_trial_fe_1028 = np.array([(1.41493932225e-06)-(1.87e-7)-(1.87e-7),1.41493932225e-06,(1.41493932225e-06)+(1.87e-7)+(1.87e-7)])/(3.677e-5)
 
-    print " "
-    print "fill_trial: " , fill_trial
-    print "fill_trial_fe: " , fill_trial_fe
+    # print " "
+    # print "fill_trial: " , fill_trial
+    # print "fill_trial_fe: " , fill_trial_fe
 
     pContff = ax2.contour(pcolor_block*block_scale, fill_trial, colors=['k','k','k'], antialiased=True, linewidths=1.0, zorder=10)
     pContff = ax2.contour(pcolor_block*block_scale, fill_trial_fe, colors=['k','k','k'], antialiased=True, linewidths=1.0, zorder=10)
@@ -1289,22 +1293,593 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
         #cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
         cbar.solids.set_edgecolor("face")
 
-    # zgrad = np.gradient(pcolor_block*block_scale)
-    # fulgrad = np.sqrt(zgrad[0]**2 + zgrad[1]**2)
-    # # plt.contour(fulgrad,colors='w', zorder=25)
-    #
-    #
-    # grad_int_blue = np.linspace(0.0,0.000048,10)
-    # grad_plot = plt.contour(np.abs(zgrad[0]), levels=grad_int_blue, cmap=cm.Blues, zorder=15, lw=0.5)
-    # plt.colorbar(grad_plot)
-    # # if np.max(np.abs(zgrad[1])) > 0:
-    # #     print zgrad[1]
-    #     # grad_int_red = np.linspace(0.0,0.000030,10)
-    #     # grad_plot = plt.contour(np.abs(zgrad[1]), levels=grad_int_red, cmap=cm.Reds, zorder=15, lw=0.5)
-    #     # plt.colorbar(grad_plot)
 
 
     return square_pcolor_f
+
+
+
+
+
+
+
+
+
+
+
+
+def square_pcolor_grad(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+
+    block_scale = 0.856
+
+    solo_cont_1 = np.array([0.027, 0.926])
+    solo_cont_2 = np.array([0.05, 4.8])
+    solo_cont_3 = np.array([0.0667, 9.26])
+
+    if scale_in == 1:
+        solo_count_1 = sign_change*solo_cont_1/2.0
+        solo_count_2 = sign_change*solo_cont_2/2.0
+        solo_count_3 = sign_change*solo_cont_3/2.0
+
+
+
+    # pcolor_block = scipy.ndimage.filters.gaussian_filter(pcolor_block,2.0)
+
+    zgrad = np.gradient(pcolor_block*block_scale)
+    zgrad_piece = zgrad[0]
+    zgrad_piece1 = zgrad[1]
+
+    zgrad_piece = np.abs(zgrad_piece)
+    zgrad_piece1 = np.abs(zgrad_piece1)
+
+    inter_levels = np.linspace(np.min(zgrad_piece), np.max(zgrad_piece), 10)
+    inter_levels1 = np.linspace(np.min(zgrad_piece1), np.max(zgrad_piece1), 10)
+
+    pContf = ax2.contour(zgrad_piece, levels=inter_levels, linewidths=[1.1], cmap=cm.winter_r, antialiased=True)
+    temp_zero = np.max(np.abs(zgrad_piece))/10.0
+    temp_zero_n = np.min(zgrad_piece)/10.0
+    pContf_thick = ax2.contour(zgrad_piece, levels=[temp_zero_n, temp_zero], linewidths=[2.0], colors=['b'], antialiased=True)
+    pContf_thick00 = ax2.contourf(zgrad_piece, levels=[temp_zero_n, temp_zero], colors=['#a1dafa'], antialiased=True, zorder=0, alpha=0.5)
+
+
+    pContf1 = ax2.contour(zgrad_piece1, levels=inter_levels1, linewidths=[1.1], cmap=cm.autumn_r, antialiased=True)
+    temp_zero1 = np.max(np.abs(zgrad_piece1))/10.0
+    temp_zero1_n = np.min(zgrad_piece1)/10.0
+    pContf_thick1 = ax2.contour(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], linewidths=[2.0], colors=['r'], antialiased=True)
+    pContf_thick11 = ax2.contourf(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], colors=['#fac2c2'], antialiased=True, zorder=0, alpha=0.5)
+    # for c in pContf.collections:
+    #     c.set_edgecolor("face")
+    # for c in pContf1.collections:
+    #     c.set_edgecolor("face")
+
+    plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        cbar.set_ticks(inter_levels)
+        cbar.ax.tick_params(labelsize=7)
+        # cbar.solids.set_edgecolor("face")
+
+        if np.max(zgrad_piece1) > 0.0:
+            bbox = ax2.get_position()
+            cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+            cbar = plt.colorbar(pContf1, cax = cax,orientation='vertical')
+            cax.yaxis.set_ticks_position('left')
+            cbar.set_ticks(inter_levels1)
+            cbar.ax.tick_params(labelsize=7)
+            # cbar.solids.set_edgecolor("face")
+
+
+    return square_pcolor_grad
+
+
+
+
+
+
+def square_pcolor_grad_block(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+
+    block_scale = 0.856
+
+    solo_cont_1 = np.array([0.027, 0.926])
+    solo_cont_2 = np.array([0.05, 4.8])
+    solo_cont_3 = np.array([0.0667, 9.26])
+
+    if scale_in == 1:
+        solo_count_1 = sign_change*solo_cont_1/2.0
+        solo_count_2 = sign_change*solo_cont_2/2.0
+        solo_count_3 = sign_change*solo_cont_3/2.0
+
+
+
+    # zgrad = np.zeros(pcolor_block.shape)
+    # for ix in range(pcolor_block.shape[1]-1):
+    #     for iy in range(pcolor_block.shape[0]-1):
+    #         if np.abs((pcolor_block[iy,ix+1] - pcolor_block[iy,ix])/pcolor_block[iy,ix+1]) < 0.1:
+    #             zgrad[iy,ix] = 1.0
+
+
+
+
+    zgrad_lr = np.zeros(pcolor_block.shape)
+    zgrad_lr_cut_off = np.zeros(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]-1):
+        zgrad_lr[:,iy] = np.abs(pcolor_block[:,0] - pcolor_block[:,iy])/pcolor_block[:,0]
+
+
+    for iy in range(pcolor_block.shape[1]-1):
+        for ix in range(pcolor_block.shape[0]-1):
+            if zgrad_lr[ix,iy]/pcolor_block[ix,0] > 0.1:
+                zgrad_lr_cut_off[ix,iy] = 1.0
+
+    pCol_lr = plt.pcolor(zgrad_lr,cmap=cm.Reds)
+    if np.max(zgrad_lr_cut_off) > 0.0:
+        pCont_lr = plt.contour(zgrad_lr_cut_off,levels=[1.0])
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pCont_lr, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        # cbar.set_ticks(inter_levels1)
+        cbar.ax.tick_params(labelsize=7)
+        # cbar.solids.set_edgecolor("face")
+    # pCont_lr = ax2.contour(zgrad_lr,cmap=cm.cool)
+
+
+    # zgrad_temp = np.gradient(pcolor_block)
+    # zgrad_temp_red = zgrad_temp[1]
+    # zgrad_temp_blue = zgrad_temp[0]
+    #
+    # # zgrad = np.zeros(pcolor_block.shape)
+    # # for ix in range(pcolor_block.shape[1]-1):
+    # #     for iy in range(pcolor_block.shape[0]-1):
+    # #         # zgrad[iy,ix] = np.abs((pcolor_block[iy,ix+1] - pcolor_block[iy,ix])/np.max([pcolor_block[iy,ix],pcolor_block[iy,ix+1]]))
+    # #         zgrad[iy,ix] = np.abs((pcolor_block[iy,ix+1] - pcolor_block[iy,ix])/pcolor_block[iy,ix])
+    #
+    # zgrad_red_plot = zgrad_temp_red / (np.sqrt((zgrad_temp_red**2)+(zgrad_temp_blue**2)))
+    #
+    #
+    #
+    #
+    # zgrad1 = np.zeros(pcolor_block.shape)
+    # for ix in range(pcolor_block.shape[1]-1):
+    #     for iy in range(pcolor_block.shape[0]-1):
+    #         if np.abs((pcolor_block[iy+1,ix] - pcolor_block[iy,ix])/pcolor_block[iy+1,ix]) < 0.1:
+    #             zgrad1[iy,ix] = 1.0
+    #
+    #
+    # pCol = plt.pcolor(zgrad_red_plot,cmap=cm.Reds, alpha=0.5)
+    # #pCol1 = plt.pcolor(zgrad1,cmap=cm.Blues, alpha=0.5)
+
+    # pcolor_block = scipy.ndimage.filters.gaussian_filter(pcolor_block,2.0)
+
+    # zgrad = np.gradient(pcolor_block*block_scale)
+    # zgrad_piece = zgrad[0]
+    # zgrad_piece1 = zgrad[1]
+    #
+    # # zgrad_piece = np.abs(zgrad_piece)
+    # # zgrad_piece1 = np.abs(zgrad_piece1)
+    #
+    # inter_levels = np.linspace(np.min(zgrad_piece), np.max(zgrad_piece), 10)
+    # inter_levels1 = np.linspace(np.min(zgrad_piece1), np.max(zgrad_piece1), 10)
+    #
+    # pContf = ax2.contour(zgrad_piece, levels=inter_levels, linewidths=[1.1], cmap=cm.winter_r, antialiased=True)
+    # temp_zero = np.max(np.abs(zgrad_piece))/10.0
+    # temp_zero_n = np.min(zgrad_piece)/10.0
+    # pContf_thick = ax2.contour(zgrad_piece, levels=[temp_zero_n, temp_zero], linewidths=[2.0], colors=['b'], antialiased=True)
+    # pContf_thick00 = ax2.contourf(zgrad_piece, levels=[temp_zero_n, temp_zero], colors=['#a1dafa'], antialiased=True, zorder=0, alpha=0.5)
+    #
+    #
+    # pContf1 = ax2.contour(zgrad_piece1, levels=inter_levels1, linewidths=[1.1], cmap=cm.autumn_r, antialiased=True)
+    # temp_zero1 = np.max(np.abs(zgrad_piece1))/10.0
+    # temp_zero1_n = np.min(zgrad_piece1)/10.0
+    # pContf_thick1 = ax2.contour(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], linewidths=[2.0], colors=['r'], antialiased=True)
+    # pContf_thick11 = ax2.contourf(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], colors=['#fac2c2'], antialiased=True, zorder=0, alpha=0.5)
+    # # for c in pContf.collections:
+    # #     c.set_edgecolor("face")
+    # # for c in pContf1.collections:
+    # #     c.set_edgecolor("face")
+
+    plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    # if the_cbar == 1:
+    #     bbox = ax2.get_position()
+    #     cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+    #     cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
+    #     cax.yaxis.set_ticks_position('left')
+    #     cbar.set_ticks(inter_levels)
+    #     cbar.ax.tick_params(labelsize=7)
+    #     # cbar.solids.set_edgecolor("face")
+    #
+    #     if np.max(zgrad_piece1) > 0.0:
+    #         bbox = ax2.get_position()
+    #         cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+    #         cbar = plt.colorbar(pContf1, cax = cax,orientation='vertical')
+    #         cax.yaxis.set_ticks_position('left')
+    #         cbar.set_ticks(inter_levels1)
+    #         cbar.ax.tick_params(labelsize=7)
+    #         # cbar.solids.set_edgecolor("face")
+
+
+    return square_pcolor_grad_block
+
+
+
+
+
+
+
+
+
+def square_pcolor_grad_bb(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri",lcol="r"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+
+    block_scale = 0.856
+
+    solo_cont_1 = np.array([0.027, 0.926])
+    solo_cont_2 = np.array([0.05, 4.8])
+    solo_cont_3 = np.array([0.0667, 9.26])
+
+    if scale_in == 1:
+        solo_count_1 = sign_change*solo_cont_1/2.0
+        solo_count_2 = sign_change*solo_cont_2/2.0
+        solo_count_3 = sign_change*solo_cont_3/2.0
+
+
+
+    zgrad = np.gradient(pcolor_block*block_scale,edge_order=2)
+    zgrad_piece = zgrad[0]
+    zgrad_piece1 = zgrad[1]
+
+    zgrad_piece = np.abs(zgrad_piece)
+    zgrad_piece1 = np.abs(zgrad_piece1)
+
+    inter_levels = np.linspace(np.min(zgrad_piece), np.max(zgrad_piece), 10)
+    inter_levels1 = np.linspace(np.min(zgrad_piece1), np.max(zgrad_piece1), 10)
+
+    # pContf = ax2.contour(zgrad_piece, levels=inter_levels, linewidths=[1.1], cmap=cm.winter_r, antialiased=True)
+    # temp_zero = np.max(np.abs(zgrad_piece))/10.0
+    # pContf_thick = ax2.contour(zgrad_piece, levels=[temp_zero], linewidths=[2.0], colors=['b'], antialiased=True)
+    # pContf_thick00 = ax2.contourf(zgrad_piece, levels=[0.0, temp_zero], colors=['#a1dafa'], antialiased=True, zorder=0, alpha=0.5)
+
+
+    # pContf1 = ax2.contour(zgrad_piece1, levels=inter_levels1, linewidths=[1.1], cmap=cm.autumn_r, antialiased=True)
+    temp_zero1 = np.max(np.abs(zgrad_piece1))/10.0
+    temp_zero1_n = np.min(zgrad_piece1)/10.0
+    pContf_thick1 = ax2.contour(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], linewidths=[1.5], colors=[lcol], antialiased=True)
+    pContf_thick11 = ax2.contourf(zgrad_piece1, levels=[temp_zero1_n, temp_zero1], colors=['#fac2c2'], antialiased=True, zorder=0, alpha=0.5)
+    # for c in pContf.collections:
+    #     c.set_edgecolor("face")
+    # for c in pContf1.collections:
+    #     c.set_edgecolor("face")
+
+    plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    # if the_cbar == 1:
+    #     bbox = ax2.get_position()
+    #     cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+    #     cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
+    #     cax.yaxis.set_ticks_position('left')
+    #     cbar.set_ticks(inter_levels)
+    #     cbar.ax.tick_params(labelsize=7)
+    #     # cbar.solids.set_edgecolor("face")
+    #
+    #     if np.max(zgrad_piece1) > 0.0:
+    #         bbox = ax2.get_position()
+    #         cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+    #         cbar = plt.colorbar(pContf1, cax = cax,orientation='vertical')
+    #         cax.yaxis.set_ticks_position('left')
+    #         cbar.set_ticks(inter_levels1)
+    #         cbar.ax.tick_params(labelsize=7)
+    #         # cbar.solids.set_edgecolor("face")
+
+
+    return square_pcolor_grad_bb
+
+
+
+
+
+
+
+
+
+def square_pcolor_reg_interp(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = np.abs(sign_change*pcolor_block)
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+    ix = np.arange(pcolor_block.shape[0])
+    iy = np.arange(pcolor_block.shape[1])
+
+    iix = np.linspace(ix[0],ix[-1],len(ix)*2)
+    iiy = np.linspace(iy[0],iy[-1],len(iy)*2)
+
+    f_contour = interpolate.interp2d(iy, ix, pcolor_block, kind='cubic')
+    pcolor_block_interp = f_contour(iiy,iix)
+
+    block_scale = 0.856
+
+    solo_cont_1 = np.array([0.027, 0.926])
+    solo_cont_2 = np.array([0.05, 4.8])
+    solo_cont_3 = np.array([0.0667, 9.26])
+
+    if scale_in == 1:
+        solo_count_1 = sign_change*solo_cont_1/2.0
+        solo_count_2 = sign_change*solo_cont_2/2.0
+        solo_count_3 = sign_change*solo_cont_3/2.0
+
+
+    inter_levels = np.linspace(np.min(pcolor_block_interp), np.max(pcolor_block_interp),num=21,endpoint=True)
+
+    pContf = ax2.contourf(pcolor_block_interp, levels=inter_levels, cmap=cm.rainbow, antialiased=True)
+    for c in pContf.collections:
+        c.set_edgecolor("face")
+
+
+    #plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        cbar.set_ticks(inter_levels)
+        cbar.ax.tick_params(labelsize=7)
+        cbar.solids.set_edgecolor("face")
+
+
+    return square_pcolor_reg_interp
+
+
+
+
+
+
+def square_pcolor_grad_interp(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+    ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+
+    if xlab == 10:
+        plt.xlabel('log10(mixing time [years])', fontsize=7)
+    if ylab == 11:
+        plt.ylabel('discharge q [m/yr]', fontsize=7)
+
+    ix = np.arange(pcolor_block.shape[0])
+    iy = np.arange(pcolor_block.shape[1])
+
+    iix = np.linspace(ix[0],ix[-1],len(ix)*4)
+    iiy = np.linspace(iy[0],iy[-1],len(iy)*4)
+
+
+    f_contour = interpolate.interp2d(iy, ix, pcolor_block, kind='cubic')
+    pcolor_block_interp = f_contour(iiy,iix)
+
+    block_scale = 0.856
+
+    solo_cont_1 = np.array([0.027, 0.926])
+    solo_cont_2 = np.array([0.05, 4.8])
+    solo_cont_3 = np.array([0.0667, 9.26])
+
+    if scale_in == 1:
+        solo_count_1 = sign_change*solo_cont_1/2.0
+        solo_count_2 = sign_change*solo_cont_2/2.0
+        solo_count_3 = sign_change*solo_cont_3/2.0
+
+
+
+    zgrad = np.gradient(pcolor_block_interp*block_scale)
+    zgrad_piece = zgrad[0]
+    zgrad_piece1 = zgrad[1]
+
+    # zgrad_piece = np.abs(zgrad_piece)
+    # zgrad_piece1 = np.abs(zgrad_piece1)
+
+    inter_levels = np.linspace(np.min(zgrad_piece), np.max(zgrad_piece), 10)
+    inter_levels1 = np.linspace(np.min(zgrad_piece1), np.max(zgrad_piece1), 10)
+
+    pContf = ax2.contour(zgrad_piece, levels=inter_levels, linewidths=[1.1], cmap=cm.winter_r, antialiased=True)
+    temp_zero = np.max(np.abs(zgrad_piece))/10.0
+    pContf_thick = ax2.contour(zgrad_piece, levels=[temp_zero], linewidths=[2.0], colors=['b'], antialiased=True)
+
+
+    pContf1 = ax2.contour(zgrad_piece1, levels=inter_levels1, linewidths=[1.1], cmap=cm.autumn_r, antialiased=True)
+    temp_zero1 = np.max(np.abs(zgrad_piece1))/10.0
+    pContf_thick1 = ax2.contour(zgrad_piece1, levels=[temp_zero1], linewidths=[2.0], colors=['r'], antialiased=True)
+    # for c in pContf.collections:
+    #     c.set_edgecolor("face")
+    # for c in pContf1.collections:
+    #     c.set_edgecolor("face")
+
+    #plt.xlim([0.0,17.0])
+    plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+    plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+    plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+    plt.title(cb_title, fontsize=8)
+    plt.tick_params(top='off', right='off', which='both')
+
+    if the_cbar == 1:
+        bbox = ax2.get_position()
+        cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+        cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
+        cax.yaxis.set_ticks_position('left')
+        cbar.set_ticks(inter_levels)
+        cbar.ax.tick_params(labelsize=7)
+        # cbar.solids.set_edgecolor("face")
+
+        if np.max(zgrad_piece1) > 0.0:
+            bbox = ax2.get_position()
+            cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+            cbar = plt.colorbar(pContf1, cax = cax,orientation='vertical')
+            cax.yaxis.set_ticks_position('left')
+            cbar.set_ticks(inter_levels1)
+            cbar.ax.tick_params(labelsize=7)
+            # cbar.solids.set_edgecolor("face")
+
+
+    return square_pcolor_grad_interp
+
+
+
+
+
+
+
+
+
+
+
+# def square_pcolor_grad_solo(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the_cbar=0, min_all_in=0.0, max_all_in=1.0, fn_cmap_in=cm.jet, scale_in=0, the_type="dpri"):
+#     ax2=fig.add_subplot(sp1, sp2, sp, frameon=True)
+#
+#     sign_change = 1.0
+#
+#     pcolor_block = sign_change*pcolor_block
+#
+#     if xlab == 10:
+#         plt.xlabel('log10(mixing time [years])', fontsize=7)
+#     if ylab == 11:
+#         plt.ylabel('discharge q [m/yr]', fontsize=7)
+#
+#
+#     block_scale = 0.856
+#
+#     solo_cont_1 = np.array([0.027, 0.926])
+#     solo_cont_2 = np.array([0.05, 4.8])
+#     solo_cont_3 = np.array([0.0667, 9.26])
+#
+#     if scale_in == 1:
+#         solo_count_1 = sign_change*solo_cont_1/2.0
+#         solo_count_2 = sign_change*solo_cont_2/2.0
+#         solo_count_3 = sign_change*solo_cont_3/2.0
+#
+#
+#
+#     zgrad = np.gradient(pcolor_block*block_scale)
+#     zgrad_piece = zgrad[0]
+#     zgrad_piece1 = zgrad[1]
+#
+#     zgrad_piece = np.abs(zgrad_piece)
+#     zgrad_piece1 = np.abs(zgrad_piece1)
+#
+#     zgrad_piece2 = zgrad_piece1/zgrad_piece
+#
+#     inter_levels = np.linspace(np.min(zgrad_piece2), np.max(zgrad_piece2), 10)
+#     # inter_levels1 = np.linspace(np.min(zgrad_piece1), np.max(zgrad_piece1), 10)
+#
+#     pContf = ax2.contour(zgrad_piece2, levels=inter_levels, linewidths=[1.1], cmap=cm.winter_r, antialiased=True)
+#     temp_zero = np.max(np.abs(zgrad_piece2))/10.0
+#     # pContf_thick = ax2.contour(zgrad_piece, levels=[temp_zero], linewidths=[2.0], colors=['b'], antialiased=True)
+#     # pContf_thick00 = ax2.contourf(zgrad_piece, levels=[0.0, temp_zero], colors=['#a1dafa'], antialiased=True, zorder=0, alpha=0.5)
+#
+#
+#     # pContf1 = ax2.contour(zgrad_piece1, levels=inter_levels1, linewidths=[1.1], cmap=cm.autumn_r, antialiased=True)
+#     # temp_zero1 = np.max(np.abs(zgrad_piece1))/10.0
+#     # pContf_thick1 = ax2.contour(zgrad_piece1, levels=[temp_zero1], linewidths=[2.0], colors=['r'], antialiased=True)
+#     # pContf_thick11 = ax2.contourf(zgrad_piece1, levels=[0.0, temp_zero1], colors=['#fac2c2'], antialiased=True, zorder=0, alpha=0.5)
+#     # for c in pContf.collections:
+#     #     c.set_edgecolor("face")
+#     # for c in pContf1.collections:
+#     #     c.set_edgecolor("face")
+#
+#     plt.xlim([0.0,17.0])
+#     plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+#     plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+#     plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+#
+#     plt.title(cb_title, fontsize=8)
+#     plt.tick_params(top='off', right='off', which='both')
+#
+#     if np.max(zgrad_piece2) > 0.0:
+#         if the_cbar == 1:
+#             bbox = ax2.get_position()
+#             cax = fig.add_axes([bbox.xmin-0.02, bbox.ymin-0.0, bbox.width*0.07, bbox.height*1.05])
+#             cbar = plt.colorbar(pContf, cax = cax,orientation='vertical')
+#             cax.yaxis.set_ticks_position('left')
+#             cbar.set_ticks(inter_levels)
+#             cbar.ax.tick_params(labelsize=7)
+#             # cbar.solids.set_edgecolor("face")
+#
+#         # if np.max(zgrad_piece1) > 0.0:
+#         #     bbox = ax2.get_position()
+#         #     cax = fig.add_axes([bbox.xmin-0.05, bbox.ymin-0.00, bbox.width*0.07, bbox.height*1.05])
+#         #     cbar = plt.colorbar(pContf1, cax = cax,orientation='vertical')
+#         #     cax.yaxis.set_ticks_position('left')
+#         #     cbar.set_ticks(inter_levels1)
+#         #     cbar.ax.tick_params(labelsize=7)
+#         #     # cbar.solids.set_edgecolor("face")
+#
+#
+#     return square_pcolor_grad_solo
 
 
 
@@ -1935,7 +2510,7 @@ cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
 
-fig=plt.figure(figsize=(15.0,11.0))
+fig=plt.figure(figsize=(18.0,11.0))
 plt.subplots_adjust(hspace=0.4, wspace=0.55)
 
 
@@ -1990,7 +2565,7 @@ square_pcolor_f(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=
 
 square_pcolor_f(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
 
-square_pcolor_f(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+# square_pcolor_f(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
 
 
 
@@ -2037,7 +2612,7 @@ square_pcolor_f(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xl
 
 square_pcolor_f(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
 
-square_pcolor_f(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+# square_pcolor_f(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
 
 
 the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
@@ -2078,11 +2653,1031 @@ square_pcolor_f(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xl
 
 square_pcolor_f(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
 
-square_pcolor_f(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+# square_pcolor_f(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
 
 
 
 plt.savefig(brk_path+"yy_alt_vol_pcolor_full.png",bbox_inches='tight')
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_full.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_grad
+print "yy_alt_vol_pcolor_grad"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(26.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.85)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor_grad(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+square_pcolor_grad(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+# square_pcolor_grad(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor_grad(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+square_pcolor_grad(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+# square_pcolor_grad(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor_grad(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+square_pcolor_grad(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+# square_pcolor_grad(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_grad.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_grad_block
+print "yy_alt_vol_pcolor_grad_block"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(26.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.85)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor_grad_block(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad_block(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad_block(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+square_pcolor_grad_block(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+# square_pcolor_grad(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor_grad_block(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad_block(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad_block(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+square_pcolor_grad_block(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+# square_pcolor_grad(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor_grad_block(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad_block(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad_block(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+square_pcolor_grad_block(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+# square_pcolor_grad(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_grad_block.png",bbox_inches='tight')
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_grad_bb
+print "yy_alt_vol_pcolor_grad_bb"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(26.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.85)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor_grad_bb(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad_bb(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap,lcol="r")
+
+square_pcolor_grad_bb(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1,lcol="r")
+
+square_pcolor_grad_bb(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1,lcol="r")
+
+# square_pcolor_grad(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor_grad_bb(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad_bb(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1",lcol="g")
+
+square_pcolor_grad_bb(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1",lcol="g")
+
+square_pcolor_grad_bb(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1",lcol="g")
+
+# square_pcolor_grad(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor_grad_bb(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad_bb(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2",lcol="b")
+
+square_pcolor_grad_bb(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2",lcol="b")
+
+square_pcolor_grad_bb(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2",lcol="b")
+
+# square_pcolor_grad(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+
+
+plt.savefig(brk_path+"yy_"+temp_string+"_alt_vol_pcolor_grad_bb.png",bbox_inches='tight')
+plt.savefig(brk_path+"yy_"+temp_string+"_alt_vol_pcolor_grad_bb.eps",bbox_inches='tight')
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_grad_solo
+print "yy_alt_vol_pcolor_grad_solo"
+
+# sp1 = 4
+# sp2 = 5
+#
+# cont_x_diff_max = len(diff_strings) - 0
+# cont_y_param_max = len(param_strings) - 0
+#
+#
+# fig=plt.figure(figsize=(26.0,11.0))
+# plt.subplots_adjust(hspace=0.4, wspace=0.85)
+#
+#
+#
+# the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+# the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+# the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+# the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+#
+# # the_a = the_d
+# # the_b = the_d
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# # min_all = 1.0
+# # max_all = 17.0
+#
+# bi_col_1 = "#c3fe46"
+# bi_col_a = "#19ffa5"
+# bi_col_2 = "#139ef7"
+#
+# bi_col_3 = "#f4f10c"
+# bi_col_b = "#e38901"
+# bi_col_4 = "#c31414"
+#
+# bi_col_5 = "#ef3ef9"
+# bi_col_c = "#a034ff"
+# bi_col_6 = "#522cd1"
+#
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+#
+# square_pcolor_grad_solo(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+#
+# square_pcolor_grad_solo(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+#
+# square_pcolor_grad_solo(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+#
+# square_pcolor_grad_solo(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+#
+# # square_pcolor_grad(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+#
+#
+#
+#
+#
+#
+#
+#
+# the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+# the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+#
+# # the_a = the_d
+# # the_b = the_d
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# # min_all = 1.0
+# # max_all = 17.0
+#
+# # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+#
+# square_pcolor_grad_solo(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+#
+# square_pcolor_grad_solo(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+#
+# square_pcolor_grad_solo(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+#
+# square_pcolor_grad_solo(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+#
+# # square_pcolor_grad(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+#
+#
+# the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+# the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+# the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+# the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+#
+# # the_a = the_d
+# # the_b = the_d
+#
+# min_all = np.min(the_s)
+# if np.min(the_d) < min_all:
+#     min_all = np.min(the_d)
+# if np.min(the_a) < min_all:
+#     min_all = np.min(the_a)
+# if np.min(the_b) < min_all:
+#     min_all = np.min(the_b)
+#
+# max_all = np.max(the_s)
+# if np.max(the_d) > max_all:
+#     max_all = np.max(the_d)
+# if np.max(the_a) > max_all:
+#     max_all = np.max(the_a)
+# if np.max(the_b) > max_all:
+#     max_all = np.max(the_b)
+#
+# # min_all = 0.005
+# # max_all = 0.10
+#
+# # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# # fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+#
+# square_pcolor_grad_solo(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+#
+# square_pcolor_grad_solo(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+#
+# square_pcolor_grad_solo(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+#
+# square_pcolor_grad_solo(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+#
+# # square_pcolor_grad(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+#
+#
+#
+# plt.savefig(brk_path+"yy_alt_vol_pcolor_grad_solo.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_grad_interp
+print "yy_alt_vol_pcolor_grad_interp"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(26.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.85)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor_grad_interp(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad_interp(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_grad_interp(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+square_pcolor_grad_interp(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+# square_pcolor_grad_interp(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor_grad_interp(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad_interp(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_grad_interp(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+square_pcolor_grad_interp(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+# square_pcolor_grad_interp(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor_grad_interp(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad_interp(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_grad_interp(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+square_pcolor_grad_interp(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+# square_pcolor_grad_interp(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_grad_interp.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: FIG: yy_alt_vol_pcolor_reg_interp
+print "yy_alt_vol_pcolor_reg_interp"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+
+fig=plt.figure(figsize=(26.0,11.0))
+plt.subplots_adjust(hspace=0.4, wspace=0.85)
+
+
+
+the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
+the_d = np.abs(value_dpri_mean_d[:cont_y_param_max,:cont_x_diff_max,0])
+the_a = np.abs(value_dpri_mean_a[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+the_b = np.abs(value_dpri_mean_b[:cont_y_param_max,:cont_x_diff_max,0])#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+bi_col_1 = "#c3fe46"
+bi_col_a = "#19ffa5"
+bi_col_2 = "#139ef7"
+
+bi_col_3 = "#f4f10c"
+bi_col_b = "#e38901"
+bi_col_4 = "#c31414"
+
+bi_col_5 = "#ef3ef9"
+bi_col_c = "#a034ff"
+bi_col_6 = "#522cd1"
+
+fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_2])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_1,bi_col_a,bi_col_2])
+
+square_pcolor_reg_interp(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_reg_interp(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap)
+
+square_pcolor_reg_interp(sp1, sp2, 3, the_a, cb_title=temp_string + " " + "a dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+square_pcolor_reg_interp(sp1, sp2, 4, the_b, cb_title=temp_string + " " + "b dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+# square_pcolor_reg_interp(sp1, sp2, 5, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1)
+
+
+
+
+
+
+
+
+the_s = value_alt_vol_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_vol_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_vol_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_vol_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 1.0
+# max_all = 17.0
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_4])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_3,bi_col_b,bi_col_4])
+
+square_pcolor_reg_interp(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_reg_interp(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai1")
+
+square_pcolor_reg_interp(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+square_pcolor_reg_interp(sp1, sp2, 9, the_b, cb_title=temp_string + " " + "b alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+# square_pcolor_reg_interp(sp1, sp2, 10, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai1")
+
+
+the_s = value_alt_fe_mean[:cont_y_param_max,:cont_x_diff_max,0]
+the_d = value_alt_fe_mean_d[:cont_y_param_max,:cont_x_diff_max,0]
+the_a = value_alt_fe_mean_a[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+the_b = value_alt_fe_mean_b[:cont_y_param_max,:cont_x_diff_max,0]#/2.0
+
+# the_a = the_d
+# the_b = the_d
+
+min_all = np.min(the_s)
+if np.min(the_d) < min_all:
+    min_all = np.min(the_d)
+if np.min(the_a) < min_all:
+    min_all = np.min(the_a)
+if np.min(the_b) < min_all:
+    min_all = np.min(the_b)
+
+max_all = np.max(the_s)
+if np.max(the_d) > max_all:
+    max_all = np.max(the_d)
+if np.max(the_a) > max_all:
+    max_all = np.max(the_a)
+if np.max(the_b) > max_all:
+    max_all = np.max(the_b)
+
+# min_all = 0.005
+# max_all = 0.10
+
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_6])
+# fn_cmap =  LinearSegmentedColormap.from_list("", [bi_col_5,bi_col_c,bi_col_6])
+
+square_pcolor_reg_interp(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_reg_interp(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, the_type="ai2")
+
+square_pcolor_reg_interp(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+square_pcolor_reg_interp(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+# square_pcolor_reg_interp(sp1, sp2, 15, (the_a+the_b)/2.0, cb_title=temp_string + " " + "a+b", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, fn_cmap_in=fn_cmap, scale_in=1, the_type="ai2")
+
+
+
+plt.savefig(brk_path+"yy_alt_vol_pcolor_reg_interp.png",bbox_inches='tight')
+
+
+
+
+
+
 
 
 
