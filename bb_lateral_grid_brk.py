@@ -1583,6 +1583,8 @@ def square_pcolor_stack(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0,
     if np.max(zgrad_lr_cut_off) > 0.0:
         plt.contour(zgrad_lr_cut_off,5,colors=['#ba0000'],linewidths=[0.5])
         plt.contour(zgrad_lr_cut_off,[max_cut_off*0.99],colors=['#ba0000'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off,[0.025],colors=['#d07000'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off,[0.01],colors=['#ad9700'],linewidths=[2.0])
 
 
 
@@ -1607,7 +1609,9 @@ def square_pcolor_stack(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0,
     if np.max(zgrad_lr_cut_off_rhs) > 0.0:
         plt.contour(zgrad_lr_cut_off_rhs,5,colors=['#0038c7'],linewidths=[0.5],zorder=10)
         plt.contour(zgrad_lr_cut_off_rhs,[0.1],colors=['#577fe4'],linewidths=[2.0])
-        plt.contour(zgrad_lr_cut_off_rhs,[0.2],colors=['#b865f2'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.2],colors=['#c784f6'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.05],colors=['#fa00ff'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.025],colors=['#02bbdb'],linewidths=[2.0])
         # plt.contour(zgrad_lr_cut_off_rhs,[0.5],colors=['#30bbc4'],linewidths=[1.0])
 
 
@@ -2092,7 +2096,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "60"
+temp_string = "30"
 in_path = "../output/revival/winter_broken/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral_"+temp_string+"/"
@@ -3188,8 +3192,8 @@ sp2 = 5
 cont_x_diff_max = len(diff_strings) - 0
 cont_y_param_max = len(param_strings) - 0
 
-fig=plt.figure(figsize=(15.0,11.0))
-plt.subplots_adjust(hspace=0.4, wspace=0.45)
+fig=plt.figure(figsize=(18.0,14.0))
+plt.subplots_adjust(hspace=0.25, wspace=0.25)
 
 
 the_s = np.abs(value_dpri_mean[:cont_y_param_max,:cont_x_diff_max,0])
@@ -3212,8 +3216,6 @@ if np.max(the_a) > max_all:
     max_all = np.max(the_a)
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
-
-# square_pcolor_stack(sp1, sp2, 1, the_s, cb_title=temp_string + " " + "s dpri", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
 square_pcolor_stack(sp1, sp2, 2, the_d, cb_title=temp_string + " " + "d dpri", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all)
 
@@ -3245,8 +3247,6 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-# square_pcolor_stack(sp1, sp2, 6, the_s, cb_title=temp_string + " " + "s alt_vol", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
-
 square_pcolor_stack(sp1, sp2, 7, the_d, cb_title=temp_string + " " + "d alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai1")
 
 square_pcolor_stack(sp1, sp2, 8, the_a, cb_title=temp_string + " " + "a alt_vol", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai1")
@@ -3277,8 +3277,6 @@ if np.max(the_a) > max_all:
 if np.max(the_b) > max_all:
     max_all = np.max(the_b)
 
-# square_pcolor_stack(sp1, sp2, 11, the_s, cb_title=temp_string + " " + "s alt_fe", xlab=1, ylab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
-
 square_pcolor_stack(sp1, sp2, 12, the_d, cb_title=temp_string + " " + "d alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, the_type="ai2")
 
 square_pcolor_stack(sp1, sp2, 13, the_a, cb_title=temp_string + " " + "a alt_fe", xlab=1, the_cbar=1, min_all_in=min_all, max_all_in=max_all, scale_in=1, the_type="ai2")
@@ -3287,7 +3285,7 @@ square_pcolor_stack(sp1, sp2, 14, the_b, cb_title=temp_string + " " + "b alt_fe"
 
 
 plt.savefig(brk_path+"yy_alt_vol_pcolor_STACK.png",bbox_inches='tight')
-
+plt.savefig(brk_path+"0_STACK_"+temp_string+".eps",bbox_inches='tight')
 
 
 
