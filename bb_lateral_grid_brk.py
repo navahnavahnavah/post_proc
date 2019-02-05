@@ -1250,7 +1250,10 @@ def square_pcolor_f(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0, the
 
     #pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=cmap_oct, antialiased=True)
     # pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=plasma_flip, antialiased=True)
-    pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=cm.rainbow, antialiased=True)
+
+
+    #pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=cm.rainbow, antialiased=True)
+    pContf = ax2.contourf(pcolor_block*block_scale, inter_levels, cmap=plasma_flip, antialiased=True)
     for c in pContf.collections:
         c.set_edgecolor("face")
 
@@ -1552,6 +1555,7 @@ def square_pcolor_stack(sp1, sp2, sp, pcolor_block, cb_title="", xlab=0, ylab=0,
     sign_change = 1.0
 
     pcolor_block = sign_change*pcolor_block
+    pcolor_block = scipy.ndimage.filters.gaussian_filter(pcolor_block,1.5)
 
     if xlab == 10:
         plt.xlabel('log10(mixing time [years])', fontsize=7)
@@ -2096,7 +2100,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "30"
+temp_string = "65"
 in_path = "../output/revival/winter_broken/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "fig_lateral_"+temp_string+"/"
@@ -6889,3 +6893,208 @@ for a_min in range(4):
         square_contour_nov(fo_sp1, fo_sp2, 4, the_b, cb_title="", xlab=0, cont_levels_in=cont_levels,cmap_in=the_cmap_in,is_xtick=1,is_ytick=1,col=fixed_col)
 
 plt.savefig(brk_path+"zs_nov_fe_b_overlap.png",bbox_inches='tight')
+
+
+
+
+
+
+
+
+#poop: stack
+def square_pcolor_stack_cycle(pcolor_block, con_col="#0d0d0e"):
+
+    print "np.max(pcolor_block)" , np.max(pcolor_block)
+
+    sign_change = 1.0
+
+    pcolor_block = sign_change*pcolor_block
+    pcolor_block = scipy.ndimage.filters.gaussian_filter(pcolor_block,1.5)
+
+
+    block_scale = 0.856
+
+    zgrad_lr = np.zeros(pcolor_block.shape)
+    zgrad_lr_cut_off = -0.05*np.ones(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]):
+        zgrad_lr[:,iy] = np.abs(pcolor_block[:,0] - pcolor_block[:,iy])/pcolor_block[:,iy]
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr[ix,iy] < 0.05:
+                if zgrad_lr[ix,iy] >= 0.0:
+                    zgrad_lr_cut_off[ix,iy] = zgrad_lr[ix,iy]
+
+    max_cut_off = np.max(zgrad_lr_cut_off)
+
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr_cut_off[ix,iy] == -0.05:#max_cut_off:
+                zgrad_lr_cut_off[ix,iy:] = max_cut_off
+
+    print "np.max(zgrad_lr_cut_off)" , np.max(zgrad_lr_cut_off)
+    if np.max(zgrad_lr_cut_off) > 0.0:
+        # plt.contour(zgrad_lr_cut_off,5,colors=['#ba0000'],linewidths=[0.5])
+        # plt.contour(zgrad_lr_cut_off,[max_cut_off*0.99],colors=['#ba0000'],linewidths=[2.0])
+        # plt.contour(zgrad_lr_cut_off,[0.025],colors=['#d07000'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off,[0.01],colors=[con_col],linewidths=[2.0])
+
+
+
+
+
+
+
+
+
+    zgrad_lr_rhs = np.zeros(pcolor_block.shape)
+    zgrad_lr_cut_off_rhs = 1.0*np.ones(pcolor_block.shape)
+    for iy in range(pcolor_block.shape[1]):
+        zgrad_lr_rhs[:,iy] = np.abs(pcolor_block[:,-1] - pcolor_block[:,iy])/pcolor_block[:,-1]
+
+    for iy in range(pcolor_block.shape[1]):
+        for ix in range(pcolor_block.shape[0]):
+            if zgrad_lr_rhs[ix,iy] < 0.5:
+                zgrad_lr_cut_off_rhs[ix,iy] = zgrad_lr_rhs[ix,iy]
+
+    max_cut_off_rhs = np.max(zgrad_lr_cut_off_rhs)
+
+    if np.max(zgrad_lr_cut_off_rhs) > 0.0:
+        # plt.contour(zgrad_lr_cut_off_rhs,5,colors=['#0038c7'],linewidths=[0.5],zorder=10)
+        # plt.contour(zgrad_lr_cut_off_rhs,[0.1],colors=['#577fe4'],linewidths=[2.0])
+        # plt.contour(zgrad_lr_cut_off_rhs,[0.2],colors=['#c784f6'],linewidths=[2.0])
+        plt.contour(zgrad_lr_cut_off_rhs,[0.05],colors=[con_col],linewidths=[2.0])
+        # plt.contour(zgrad_lr_cut_off_rhs,[0.025],colors=['#02bbdb'],linewidths=[2.0])
+        # plt.contour(zgrad_lr_cut_off_rhs,[0.5],colors=['#30bbc4'],linewidths=[1.0])
+
+
+
+
+
+
+
+
+
+
+    return square_pcolor_stack_cycle
+
+
+
+
+#poop: 30-65 load
+
+temps_avail_string = ['30', '35', '40', '45', '50', '55', '60', '65']
+temps_avail = np.array([30, 35, 40, 45, 50, 55, 60, 65])
+n_temps = len(temps_avail_string)
+
+value_alt_vol_mean = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_alt_vol_mean_d = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_alt_vol_mean_a = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_alt_vol_mean_b = np.zeros([len(param_strings),len(diff_strings),n_temps])
+
+value_alt_fe_mean = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_alt_fe_mean_d = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_alt_fe_mean_a = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_alt_fe_mean_b = np.zeros([len(param_strings),len(diff_strings),n_temps])
+
+value_dpri_mean = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_dpri_mean_d = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_dpri_mean_a = np.zeros([len(param_strings),len(diff_strings),n_temps])
+value_dpri_mean_b = np.zeros([len(param_strings),len(diff_strings),n_temps])
+
+
+for i_cycle in range(len(temps_avail_string)):
+
+    temp_now_string = temps_avail_string[i_cycle]
+
+    dir_path = "z_h_h_"+temp_now_string+"/"
+
+    #todo: LOAD IN 2d alt index grids
+    value_alt_vol_mean[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_vol_mean.txt')
+    value_alt_vol_mean_d[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_vol_mean_d.txt')
+    value_alt_vol_mean_a[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_vol_mean_a.txt')
+    value_alt_vol_mean_b[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_vol_mean_b.txt')
+
+    value_alt_fe_mean[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean.txt')
+    value_alt_fe_mean_d[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_d.txt')
+    value_alt_fe_mean_a[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_a.txt')
+    value_alt_fe_mean_b[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_alt_fe_mean_b.txt')
+
+    value_dpri_mean[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_dpri_mean.txt')
+    value_dpri_mean_d[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_dpri_mean_d.txt')
+    value_dpri_mean_a[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_dpri_mean_a.txt')
+    value_dpri_mean_b[:,:,i_cycle] = np.loadtxt(in_path + dir_path + 'value_dpri_mean_b.txt')
+
+
+
+
+fav_cols = ['#b51212', '#de6f1f', '#e2c502', '#98be00', '#089f32', '#0baba1', '#045ec8', '#6f36af']
+
+
+#hack: FIG: yy_alt_vol_pcolor_STACK_cycle
+print "yy_alt_vol_pcolor_STACK_cycle"
+
+sp1 = 4
+sp2 = 5
+
+cont_x_diff_max = len(diff_strings) - 0
+cont_y_param_max = len(param_strings) - 0
+
+fig=plt.figure(figsize=(18.0,14.0))
+plt.subplots_adjust(hspace=0.25, wspace=0.25)
+
+
+
+ax2=fig.add_subplot(4, 5, 1, frameon=True)
+
+for i_cycle in range(len(temps_avail_string)):
+    square_pcolor_stack_cycle(np.abs(value_dpri_mean_d[:,:,i_cycle]), con_col=fav_cols[i_cycle])
+
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+plt.title("dpri d", fontsize=8)
+plt.tick_params(top='off', right='off', which='both')
+
+
+
+
+
+ax2=fig.add_subplot(4, 5, 2, frameon=True)
+
+for i_cycle in range(len(temps_avail_string)):
+    square_pcolor_stack_cycle(np.abs(value_alt_vol_mean_d[:,:,i_cycle]), con_col=fav_cols[i_cycle])
+
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+plt.title("alt_vol d", fontsize=8)
+plt.tick_params(top='off', right='off', which='both')
+
+
+
+
+
+
+ax2=fig.add_subplot(4, 5, 3, frameon=True)
+
+for i_cycle in range(len(temps_avail_string)):
+    square_pcolor_stack_cycle(np.abs(value_alt_fe_mean_d[:,:,i_cycle]), con_col=fav_cols[i_cycle])
+
+plt.xlim([0.0,17.0])
+plt.xticks(np.arange(0.5,17.5,2.0),np.arange(2.0,6.5,0.5))
+plt.xticks(np.arange(0.5,17.5,4.0),np.arange(2.0,6.5,1.0))
+plt.yticks(np.arange(1.5,10.5,2.0),np.arange(1.0,5.5,1.0))
+
+plt.title("feo/feot d", fontsize=8)
+plt.tick_params(top='off', right='off', which='both')
+
+
+plt.savefig(brk_path+"00_STACK.png",bbox_inches='tight')
+plt.savefig(brk_path+"00_STACK.eps",bbox_inches='tight')
