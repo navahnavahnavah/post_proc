@@ -2069,23 +2069,23 @@ def square_contour_min(sp1, sp2, sp, cont_block, cb_title="", xlab=0, ylab=0, th
     if ylab == 1:
         plt.ylabel('discharge q [m/yr]', fontsize=8)
 
-    pCont = ax2.contourf(x_grid,y_grid,cont_block, levels=cont_levels_in, cmap=cont_cmap, antialiased=True, linewidth=0.0)
+    pCont = ax2.contourf(x_grid,y_grid,cont_block, levels=15, cmap=cont_cmap, antialiased=True, linewidth=0.0)
     for c in pCont.collections:
         c.set_edgecolor("face")
 
     plt.xticks(diff_nums[::xskip],diff_strings[::xskip], fontsize=8)
     plt.yticks(param_nums[::yskip],param_strings[::yskip], fontsize=8)
 
-    plt.title(cb_title, fontsize=9)
+    plt.title(cb_title + "---" + temp_string + "---", fontsize=10)
 
-    if the_cbar == 1:
-        bbox = ax2.get_position()
-        cax = fig.add_axes([bbox.xmin, bbox.ymin-0.02, bbox.width*2.0, bbox.height*0.04])
-        cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
-        cbar.set_ticks(cont_levels_in[::cont_skip])
-        cbar.ax.tick_params(labelsize=7)
-        # cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
-        cbar.solids.set_edgecolor("face")
+    # if the_cbar == 1:
+    #     bbox = ax2.get_position()
+    #     cax = fig.add_axes([bbox.xmin, bbox.ymin-0.02, bbox.width*2.0, bbox.height*0.04])
+    #     cbar = plt.colorbar(pCont, cax = cax,orientation='horizontal')
+    #     cbar.set_ticks(cont_levels_in[::cont_skip])
+    #     cbar.ax.tick_params(labelsize=7)
+    #     # cbar.ax.set_xlabel(cb_title,fontsize=9,labelpad=clabelpad)
+    #     cbar.solids.set_edgecolor("face")
 
     return square_contour_min
 
@@ -2100,7 +2100,7 @@ def any_2d_interp(x_in, y_in, z_in, x_diff_path, y_param_path, kind_in='linear')
 
 
 #todo: path + params
-temp_string = "60"
+temp_string = "45"
 in_path = "../output/revival/winter_broken/"
 dir_path = "z_h_h_"+temp_string+"/"
 fig_path = "zone_figure_"+temp_string+"/"
@@ -6044,6 +6044,12 @@ q_slices = [1.0, 3.0, 5.0]
 
 
 lump_mins = [5, 7, 14, 13, 2, 11, 31, 15, 9, 25, 30, 1]
+y_lump_mins = ['#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb', '#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb']
+
+for et in range(len(lump_mins)):
+    y_lump_mins[et] = secondary[lump_mins[et]]
+print(y_lump_mins)
+
 mg_colors = ['#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb', '#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb']
 mg_style=["-", "-", "-", "-", "-", "-", "-.", "-.", "-.", "-.", "-.", "-."]
 
@@ -6062,15 +6068,19 @@ for slice in range(len(q_slices)):
 
             for mindex in range(len(mg_colors)):
                 m_color = mg_colors[mindex]
-                temp_row_min_b = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0/np.max(value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+                temp_row_min_b_temp = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0/np.max(value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
                 for ee in range(len(temp_row_min_b)):
-                    if temp_row_min_b[ee] > 0.0:
-                        temp_row_min_b[mindex] = mindex
+                    #if temp_row_min_b[ee] > 0.0:
+                    temp_row_min_b[ee] = None
+                    if temp_row_min_b_temp[ee] > 0.1*np.max(temp_row_min_b_temp):
+                        temp_row_min_b[ee] = mindex
                 plt.plot(diff_nums,temp_row_min_b, color=m_color, label=secondary[lump_mins[mindex]], lw=cool_lw, ls=mg_style[mindex])
 
 
             #plt.ylim([-0.05,1.05])
             #hack: legend1
+
+            plt.yticks(np.arange(len(lump_mins)), y_lump_mins)
             plt.title("q="+str(q_slices[slice]))
             if slice == 0.0:
                 plt.legend(fontsize=8,ncol=4,bbox_to_anchor=(1.5, 1.3))
@@ -6097,6 +6107,303 @@ plt.savefig(brk_path+"a_sec_lump_BB_LINES.eps",bbox_inches='tight')
 
 
 
+#hack: q STACKKKKK
+
+fig=plt.figure(figsize=(17.0,5.5))
+plt.subplots_adjust(hspace=0.25, wspace=0.1)
+
+cool_lw = 1.5
+cool_lw_b = 2.5
+
+q_slices = [1.0, 3.0, 5.0]
+# q_slices = [1.0]
+
+
+lump_mins = [5, 7, 14, 13, 2, 11, 31, 15, 9, 25, 30, 1]
+y_lump_mins = ['#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb', '#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb']
+
+for et in range(len(lump_mins)):
+    y_lump_mins[et] = secondary[lump_mins[et]]
+print(y_lump_mins)
+
+mg_colors = ['#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb', '#830b0b', '#b86300', '#90b400', '#00cb93', '#0085ff', '#8136fb']
+mg_style=["-", "-", "-", "-", "-", "-", "-.", "-.", "-.", "-.", "-.", "-."]
+
+l_style = ['solid', '--', '-.']
+
+
+for slice in range(len(q_slices)):
+    slice_col = 0
+
+
+    ax=fig.add_subplot(1, 3, slice+1, frameon=True)
+
+    for slice_index in range(len(param_nums)):
+
+        if param_nums[slice_index] == q_slices[slice]:
+
+            for mindex in range(len(mg_colors)):
+                m_color = mg_colors[mindex]
+                temp_row_min_b_temp = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0/np.max(value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+                for ee in range(len(temp_row_min_b)):
+                    #if temp_row_min_b[ee] > 0.0:
+                    temp_row_min_b[ee] = mindex + 0.8*(temp_row_min_b_temp[ee])
+                    # if temp_row_min_b_temp[ee] > 0.1*np.max(temp_row_min_b_temp):
+                    #     temp_row_min_b[ee] = mindex
+                plt.plot(diff_nums,temp_row_min_b, color=m_color, label=secondary[lump_mins[mindex]], lw=cool_lw, ls=mg_style[0])
+                ax.fill_between(diff_nums, temp_row_min_b, mindex, color='#b6b6b6')
+
+
+            if slice == 0.0:
+                plt.yticks(np.arange(len(lump_mins)), y_lump_mins)
+                plt.title("q="+str(q_slices[slice]))
+                plt.legend(fontsize=8,ncol=4,bbox_to_anchor=(1.65, 1.2))
+
+
+plt.savefig(brk_path+"a_sec_lump_STACK.png",bbox_inches='tight')
+plt.savefig(brk_path+"a_sec_lump_STACK.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+
+
+
+#hack: q OVERSTACK
+
+fig=plt.figure(figsize=(6.0,10))
+plt.subplots_adjust(hspace=0.25, wspace=0.1)
+
+cool_lw = 1.5
+cool_lw_b = 2.5
+
+q_slices = [1.0, 2.0, 3.0, 4.0, 5.0]
+# q_slices = [1.0]
+
+
+#lump_mins = [5, 7, 14, 13, 2, 11, 31, 15, 9, 25, 30, 1]
+lump_mins = [14, 7, 2, 1, 5, 9, 31, 13, 11, 15, 30, 28]
+lump_mins = lump_mins[::-1]
+y_lump_mins = ['#5c1919', '#bf0707', '#f46500', '#b38615', '#9ccb16', '#16b62b', '#248f8f', '#1969aa', '#001bcf', '#5e2987', '#a90dac', '#c42e76']
+y_lump_mins = y_lump_mins[::-1]
+
+for et in range(len(lump_mins)):
+    y_lump_mins[et] = secondary[lump_mins[et]] + " " + str(lump_mins[et])
+print(y_lump_mins)
+
+mg_colors = ['#5c1919', '#bf0707', '#f46500', '#b38615', '#9ccb16', '#16b62b', '#248f8f', '#1969aa', '#001bcf', '#5e2987', '#a90dac', '#c42e76']
+mg_colors = mg_colors[::-1]
+mg_style=["-", "-", "-", "-", "-", "-", "-.", "-.", "-.", "-.", "-.", "-."]
+
+l_style = ['solid', '--', '-.']
+
+
+
+slice_col = 0
+
+
+ax=fig.add_subplot(1, 1, 1, frameon=True)
+
+
+for slice_index in range(len(param_nums)):
+
+
+    for slice in range(len(q_slices)):
+
+        if param_nums[slice_index] == q_slices[slice]:
+
+            for mindex in range(len(mg_colors)):
+                m_color = mg_colors[mindex]
+                temp_row_min_b_temp = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0/np.max(value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+                for ee in range(len(temp_row_min_b)):
+                    #if temp_row_min_b[ee] > 0.0:
+                    temp_row_min_b[ee] = mindex + 0.7*(temp_row_min_b_temp[ee])
+                    # if temp_row_min_b_temp[ee] > 0.1*np.max(temp_row_min_b_temp):
+                    #     temp_row_min_b[ee] = mindex
+                plt.plot(diff_nums,temp_row_min_b, color=m_color, label=secondary[lump_mins[mindex]], lw=1.1, ls=mg_style[0])
+                ax.fill_between(diff_nums, temp_row_min_b, mindex, color=m_color, alpha=0.08)
+
+
+
+plt.yticks(np.arange(len(lump_mins))+0.5, y_lump_mins,fontsize=11)
+#plt.legend(fontsize=9,ncol=5,bbox_to_anchor=(1.0, 1.3))
+plt.xlim([2.0,6.0])
+plt.ylim([0,mindex+1])
+plt.title("temp = " + temp_string, fontsize=11)
+
+
+plt.savefig(brk_path+"a_sec_lump_OVERSTACK.png",bbox_inches='tight')
+plt.savefig(brk_path+"a_sec_lump_OVERSTACK.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+#hack: q RATIO STACKs
+
+fig=plt.figure(figsize=(6.0,10))
+plt.subplots_adjust(hspace=0.25, wspace=0.1)
+
+cool_lw = 1.5
+cool_lw_b = 2.5
+
+q_slices = [1.0, 2.0, 3.0, 4.0, 5.0]
+# q_slices = [1.0]
+
+
+#lump_mins = [5, 7, 14, 13, 2, 11, 31, 15, 9, 25, 30, 1]
+#lump_mins = [14, 7, 2, 1, 5, 9, 31, 13, 11, 15, 30, 28]
+lump_mins = [31, 14, 7, 5, 9, 1, 2, 11, 13, 15, 30, 28]
+lump_mins = lump_mins[::-1]
+y_lump_mins = ['#5c1919', '#bf0707', '#f46500', '#b38615', '#9ccb16', '#16b62b', '#248f8f', '#1969aa', '#001bcf', '#5e2987', '#a90dac', '#c42e76']
+y_lump_mins = y_lump_mins[::-1]
+
+for et in range(len(lump_mins)):
+    y_lump_mins[et] = secondary[lump_mins[et]] + " " + str(lump_mins[et])
+print(y_lump_mins)
+
+mg_colors = ['#5c1919', '#bf0707', '#f46500', '#b38615', '#9ccb16', '#16b62b', '#248f8f', '#1969aa', '#001bcf', '#5e2987', '#a90dac', '#c42e76']
+mg_colors = mg_colors[::-1]
+mg_style=["-", "-", "-", "-", "-", "-", "-.", "-.", "-.", "-.", "-.", "-."]
+
+l_style = ['solid', '--', '-.']
+
+
+
+slice_col = 0
+
+
+ax=fig.add_subplot(1, 1, 1, frameon=True)
+
+
+for slice_index in range(len(param_nums)):
+
+
+    for slice in range(len(q_slices)):
+
+        if param_nums[slice_index] == q_slices[slice]:
+
+            for mindex in range(len(mg_colors)):
+                m_color = mg_colors[mindex]
+                temp_row_min_b_temp = value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0/np.max(value_dsec_b[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+
+                for ee in range(len(temp_row_min_b)):
+                    temp_row_min_b_temp[ee] = temp_row_min_b_temp[ee]/np.sum(value_dsec_b[slice_index,ee,:,0])
+
+
+                temp_row_min_b_temp = temp_row_min_b_temp/np.max(temp_row_min_b_temp)
+                for ee in range(len(temp_row_min_b)):
+                    #if temp_row_min_b[ee] > 0.0:
+                    temp_row_min_b[ee] = mindex + 0.7*(temp_row_min_b_temp[ee])
+                    # if temp_row_min_b_temp[ee] > 0.1*np.max(temp_row_min_b_temp):
+                    #     temp_row_min_b[ee] = mindex
+                plt.plot(diff_nums,temp_row_min_b, color=m_color, label=secondary[lump_mins[mindex]], lw=1.1, ls=mg_style[0])
+                ax.fill_between(diff_nums, temp_row_min_b, mindex, color=m_color, alpha=0.08)
+
+
+
+plt.yticks(np.arange(len(lump_mins))+0.5, y_lump_mins,fontsize=11)
+#plt.legend(fontsize=9,ncol=5,bbox_to_anchor=(1.0, 1.3))
+plt.xlim([2.0,6.0])
+plt.ylim([0,mindex+1])
+plt.title("ratio stack, temp = " + temp_string, fontsize=11)
+
+
+plt.savefig(brk_path+"a_sec_lump_RATIO_STACK.png",bbox_inches='tight')
+plt.savefig(brk_path+"a_sec_lump_RATIO_STACK.eps",bbox_inches='tight')
+
+
+
+
+
+
+
+
+
+
+#hack: q ch_a RATIO STACKs
+
+fig=plt.figure(figsize=(6.0,10))
+plt.subplots_adjust(hspace=0.25, wspace=0.1)
+
+cool_lw = 1.5
+cool_lw_b = 2.5
+
+q_slices = [1.0, 2.0, 3.0, 4.0, 5.0]
+# q_slices = [1.0]
+
+
+#lump_mins = [5, 7, 14, 13, 2, 11, 31, 15, 9, 25, 30, 1]
+#lump_mins = [14, 7, 2, 1, 5, 9, 31, 13, 11, 15, 30, 28]
+lump_mins = [31, 14, 7, 5, 9, 1, 2, 11, 13, 15, 30, 28]
+lump_mins = lump_mins[::-1]
+y_lump_mins = ['#5c1919', '#bf0707', '#f46500', '#b38615', '#9ccb16', '#16b62b', '#248f8f', '#1969aa', '#001bcf', '#5e2987', '#a90dac', '#c42e76']
+y_lump_mins = y_lump_mins[::-1]
+
+for et in range(len(lump_mins)):
+    y_lump_mins[et] = secondary[lump_mins[et]] + " " + str(lump_mins[et])
+print(y_lump_mins)
+
+mg_colors = ['#5c1919', '#bf0707', '#f46500', '#b38615', '#9ccb16', '#16b62b', '#248f8f', '#1969aa', '#001bcf', '#5e2987', '#a90dac', '#c42e76']
+mg_colors = mg_colors[::-1]
+mg_style=["-", "-", "-", "-", "-", "-", "-.", "-.", "-.", "-.", "-.", "-."]
+
+l_style = ['solid', '--', '-.']
+
+
+
+slice_col = 0
+
+
+ax=fig.add_subplot(1, 1, 1, frameon=True)
+
+
+for slice_index in range(len(param_nums)):
+
+
+    for slice in range(len(q_slices)):
+
+        if param_nums[slice_index] == q_slices[slice]:
+
+            for mindex in range(len(mg_colors)):
+                m_color = mg_colors[mindex]
+                temp_row_min_b_temp = value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0/np.max(value_dsec_a[slice_index,:cont_x_diff_max,lump_mins[mindex],0]/2.0)
+
+                for ee in range(len(temp_row_min_b)):
+                    temp_row_min_b_temp[ee] = temp_row_min_b_temp[ee]/np.sum(value_dsec_a[slice_index,ee,:,0])
+
+
+                temp_row_min_b_temp = temp_row_min_b_temp/np.max(temp_row_min_b_temp)
+                for ee in range(len(temp_row_min_b)):
+                    #if temp_row_min_b[ee] > 0.0:
+                    temp_row_min_b[ee] = mindex + 0.7*(temp_row_min_b_temp[ee])
+                    # if temp_row_min_b_temp[ee] > 0.1*np.max(temp_row_min_b_temp):
+                    #     temp_row_min_b[ee] = mindex
+                plt.plot(diff_nums,temp_row_min_b, color=m_color, label=secondary[lump_mins[mindex]], lw=1.1, ls=mg_style[0])
+                ax.fill_between(diff_nums, temp_row_min_b, mindex, color=m_color, alpha=0.08)
+
+
+
+plt.yticks(np.arange(len(lump_mins))+0.5, y_lump_mins,fontsize=11)
+#plt.legend(fontsize=9,ncol=5,bbox_to_anchor=(1.0, 1.3))
+plt.xlim([2.0,6.0])
+plt.ylim([0,mindex+1])
+plt.title("ratio stack, temp = " + temp_string, fontsize=11)
+
+
+plt.savefig(brk_path+"a_sec_lump_RATIO_STACK_A.png",bbox_inches='tight')
+plt.savefig(brk_path+"a_sec_lump_RATIO_STACK_A.eps",bbox_inches='tight')
 
 
 
